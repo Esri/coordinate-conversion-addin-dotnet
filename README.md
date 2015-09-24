@@ -1,16 +1,14 @@
-# military-planner-application-csharp
+# coordinate-tool-addin-dotnet
 
-This is an Esri ArcGIS Runtime for .NET Application Prototype Template that can be used for demonstrating military operations planning.
+This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for converting coordinates.
 
-![Image of Military Planner Application](ScreenShot.PNG) 
+![Image of Coordinate Tool Addin](ScreenShot.PNG) 
 
 ## Features
 
-* Time enabled layers, grouped by Courses of Action and Phases of the Operation
-* Order of Battle Widget customizable for individual units
-* What You See Is What You Get (WYSIWYG) editing of military symbols and control measures
-* Military symbol search
-* MIL-STD-2525C symbology
+* Parses input coordinates and outputs multiple formats of the input coordinate
+* Addin for ArcMAP 10.3
+* Works with DD, DMS, MGRS, USNG, GARS
 
 ## Sections
 
@@ -23,9 +21,9 @@ This is an Esri ArcGIS Runtime for .NET Application Prototype Template that can 
 
 ## Requirements
 
-* Visual Studio 2012 or later
-* ArcGIS Runtime SDK for .NET 10.2.6 (Basic License)
-	* [ArcGIS Runtime for .NET Requirements](https://developers.arcgis.com/net/desktop/guide/system-requirements.htm)
+* Visual Studio 2013
+* ArcGIS Desktop SDK for .NET 10.3
+	* [ArcGIS Runtime for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
 
 ## Instructions
 
@@ -33,33 +31,32 @@ This is an Esri ArcGIS Runtime for .NET Application Prototype Template that can 
 
 * [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
-### Getting Started with the Military Planner Application (.NET)
+### Getting Started with the Coordinate Tool Addin (.NET)
 
 * Building
 	* To Build Using Visual Studio
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* cd military-planner-application-csharp\source
-		* msbuild MilitaryPlanner.sln /property:Configuration=Release
+		* cd coordinate-tool-addin-dotnet\source\CoordinateTool
+		* msbuild CoordinateTool.sln /property:Configuration=Release
 
 * Running
 	* Run or debug from Visual Studio
 	* To run from a stand-alone deployment
-        * A pre-built [application folder](./application) has been provided
-		* You may add the runtime deployment folder (ex. `arcgisruntime10.2.6`) to this folder to quickly create a runtime deployment (ex. `./application/arcgisruntime10.2.6`)
-        * Run MilitaryPlanner.exe from the deployment folder
+        * TBA 
+		
 
 ## Resources
 
-* [ArcGIS Runtime for .NET Resource Center](https://developers.arcgis.com/net/)
+* [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
 * [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/ArcGIS/military-planner-application-csharp/issues).
+Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/ArcGIS/coordinate-tool-addin-dotnet/issues).
 
 ## Contributing
 
@@ -83,5 +80,5 @@ limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
-[](Esri Tags: Military Defense ArcGIS Runtime .NET Planning WPF ArcGISSolutions)
+[](Esri Tags: Military Defense ArcGIS ArcObjects .NET Planning WPF ArcGISSolutions)
 [](Esri Language: C#) 
