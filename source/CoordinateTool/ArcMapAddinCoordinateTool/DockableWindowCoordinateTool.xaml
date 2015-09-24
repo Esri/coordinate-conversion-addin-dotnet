@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="ArcMapAddinCoordinateTool.DockableWindowCoordinateTool"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewModels="clr-namespace:ArcMapAddinCoordinateTool.ViewModels"
+    Height="300" Width="300">
+    <UserControl.Resources>
+        <viewModels:MainViewModel x:Key="viewModelMain" />
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <StaticResourceExtension ResourceKey="viewModelMain" />
+    </UserControl.DataContext>
+    <Grid>
+        <UserControl Content="{Binding CTView}" />
+    </Grid>
+</UserControl>

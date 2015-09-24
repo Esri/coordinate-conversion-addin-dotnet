@@ -1,0 +1,25 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ArcMapAddinCoordinateTool</Name>
+  <AddInID>{19b92973-746a-4114-9232-3467ca1fc631}</AddInID>
+  <Description>Type in a description for this Add-in.</Description>
+  <Version>1.0</Version>
+  <Image>Images\ArcMapAddinCoordinateTool.png</Image>
+  <Author>ESRI</Author>
+  <Company>ESRI</Company>
+  <Date>9/23/2015</Date>
+  <Targets>
+    <Target name="Desktop" version="10.3" />
+  </Targets>
+  <AddIn language="CLR4.5" library="ArcMapAddinCoordinateTool.dll" namespace="ArcMapAddinCoordinateTool">
+    <ArcMap>
+      <Commands>
+        <Button id="Microsoft_ArcMapAddinCoordinateTool_CoordinateToolButton" class="CoordinateToolButton" message="Add-in command to show Coordinate Tool." caption="CoordinateTool" tip="Add-in command tooltip." category="Add-In Controls" image="Images\CoordinateToolButton.png" />
+      </Commands>
+      <DockableWindows>
+        <DockableWindow id="Microsoft_ArcMapAddinCoordinateTool_DockableWindowCoordinateTool" class="DockableWindowCoordinateTool+AddinImpl" caption="Coordinate Tool" image="Images\DockableWindowCoordinateTool.png">
+          <InitialPlacement height="300" width="300" state="pinned" position="left" />
+        </DockableWindow>
+      </DockableWindows>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
