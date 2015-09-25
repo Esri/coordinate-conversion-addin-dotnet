@@ -9,7 +9,7 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <Grid>
+    <Grid Margin="3,3,3,3">
         <UserControl Content="{Binding CTView}" />
     </Grid>
 </UserControl>
