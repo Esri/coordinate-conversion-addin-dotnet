@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:CoordinateToolLibrary.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="400">
+             d:DesignHeight="150" d:DesignWidth="425">
     <UserControl.Resources>
         <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
     </UserControl.Resources>
@@ -26,7 +26,7 @@
             CanUserSortColumns="False">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
-                    <Image Source="/Images/RowHandle.png" Width="16" Height="16" />
+                    <Image Source="/CoordinateToolLibrary;component/Images/RowHandle.png" Width="16" Height="16" />
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
             <DataGrid.RowStyle>
@@ -55,7 +55,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding OutputCoordinate}" ToolTip="Copy">
-                                <Image Source="/Images/copy.png" Width="16" Height="16" />
+                                <Image Source="/CoordinateToolLibrary;component/Images/copy.png" Width="16" Height="16" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -64,7 +64,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Command="{Binding DataContext.ConfigCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Name}" ToolTip="Configure">
-                                <Image Source="/Images/gears.png" Width="16" Height="16" />
+                                <Image Source="/CoordinateToolLibrary;component/Images/gears.png" Width="16" Height="16" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -73,7 +73,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Name}" ToolTip="Delete">
-                                <Image Source="/Images/Delete.png" Width="16" Height="16" />
+                                <Image Source="/CoordinateToolLibrary;component/Images/Delete.png" Width="16" Height="16" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -126,7 +126,7 @@
         <Popup x:Name="popup1" IsHitTestVisible="False" Placement="RelativePoint" PlacementTarget="{Binding ElementName=ocView}" AllowsTransparency="True">
             <Border BorderBrush="LightSteelBlue" BorderThickness="2" Background="White" Opacity="0.85">
                 <StackPanel Orientation="Horizontal" Margin="4,3,8,3">
-                    <Image Source="/Images/hand.png" Width="16" Height="16" Margin="5,0,0,0" />
+                    <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="16" Height="16" Margin="5,0,0,0" />
                     <TextBlock FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding ElementName=ocView, Path=DraggedItem.Name}" Margin="8,0,0,0" />
                 </StackPanel>
             </Border>
