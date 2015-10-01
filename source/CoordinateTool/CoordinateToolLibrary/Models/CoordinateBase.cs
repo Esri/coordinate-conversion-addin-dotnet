@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace CoordinateToolLibrary.Models
 {
+    public enum CoordinateType
+    {
+        DD,
+        DDM,
+        DMS,
+        GARS,
+        MGRS,
+        Unknown,
+        USNG,
+        UTM
+    }
+
     public class CoordinateBase
     {
         // TODO add required and optional group names?
