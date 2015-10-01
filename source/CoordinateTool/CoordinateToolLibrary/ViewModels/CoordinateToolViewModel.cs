@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoordinateToolLibrary.Models;
+using CoordinateToolLibrary.Views;
 
 namespace CoordinateToolLibrary.ViewModels
 {
     public class CoordinateToolViewModel : BaseViewModel
     {
         public CoordinateToolViewModel()
-        { }
+        {
+            OCView = new OutputCoordinateView();
+        }
+
+        public OutputCoordinateView OCView { get; set; }
 
         private CoordinateHandler ch = new CoordinateHandler();
         private CoordinateDD coord = new CoordinateDD(70.49, -40.32);

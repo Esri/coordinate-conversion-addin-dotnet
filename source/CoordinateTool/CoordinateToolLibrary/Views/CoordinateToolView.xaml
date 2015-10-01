@@ -31,6 +31,8 @@
             <TextBlock Text="{Binding CustomDMS}"/>
             <TextBlock Text="{Binding CustomDD}"/>
             <TextBlock Text="{Binding CustomDD2}"/>
+            <Separator />
+            <UserControl Content="{Binding OCView}" />
         </StackPanel>
     </Grid>
 </UserControl>
