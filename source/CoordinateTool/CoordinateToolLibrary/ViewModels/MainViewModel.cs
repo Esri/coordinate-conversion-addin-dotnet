@@ -11,21 +11,21 @@ namespace CoordinateToolLibrary.ViewModels
     {
         public CTMainViewModel()
         {
-            _coordinateToolView = new CoordinateToolView();
+            //_coordinateToolView = new CoordinateToolView();
         }
 
-        private CoordinateToolView _coordinateToolView;
+        //private CoordinateToolView _coordinateToolView;
 
-        public CoordinateToolView CTView
-        {
-            get
-            {
-                return _coordinateToolView;
-            }
-            set
-            {
-                _coordinateToolView = value;
-            }
-        }
+        //public CoordinateToolView CTView
+        //{
+        //    get
+        //    {
+        //        return _coordinateToolView;
+        //    }
+        //    set
+        //    {
+        //        _coordinateToolView = value;
+        //    }
+        //}
     }
 }

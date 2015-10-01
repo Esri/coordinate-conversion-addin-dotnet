@@ -34,6 +34,9 @@ namespace CoordinateToolLibrary.ViewModels
                 if (ch.Parse(inputCoordinate, out dd))
                 {
                     coord = dd;
+
+                    UpdateOutputs();
+
                     RaisePropertyChanged(() => InputCoordinate);
                     RaisePropertyChanged(() => DD);
                     RaisePropertyChanged(() => DMS);
@@ -50,6 +53,47 @@ namespace CoordinateToolLibrary.ViewModels
                 }
 
                 RaisePropertyChanged(() => HasInputError);
+            }
+        }
+
+        private void UpdateOutputs()
+        {
+            foreach( var output in (OCView.DataContext as OutputCoordinateViewModel).OutputCoordinateList)
+            {
+                var props = new Dictionary<string, string>();
+
+                switch(output.CType)
+                {
+                    case CoordinateType.DD:
+                        output.OutputCoordinate = coord.ToString(output.Format, new CoordinateDDFormatter());
+                        props.Add("Lat", coord.Lat.ToString());
+                        props.Add("Lon", coord.Lon.ToString());
+                        output.Props = props;
+                        break;
+                    case CoordinateType.DMS:
+                        var dms = ch.GetDMS(coord);
+                        output.OutputCoordinate = dms.ToString(output.Format, new CoordinateDMSFormatter());
+                        props.Add("Lat D", dms.LatDegrees.ToString());
+                        props.Add("Lat M", dms.LatMinutes.ToString());
+                        props.Add("Lat S", Math.Truncate(dms.LatSeconds).ToString("##"));
+                        props.Add("Lon D", dms.LonDegrees.ToString());
+                        props.Add("Lon M", dms.LonMinutes.ToString());
+                        props.Add("Lon S", Math.Truncate(dms.LonSeconds).ToString("##"));
+                        output.Props = props;
+                        break;
+                    case CoordinateType.DDM:
+                        break;
+                    case CoordinateType.GARS:
+                        break;
+                    case CoordinateType.MGRS:
+                        break;
+                    case CoordinateType.USNG:
+                        break;
+                    case CoordinateType.UTM:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

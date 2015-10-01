@@ -23,10 +23,10 @@ namespace CoordinateToolLibrary.ViewModels
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
             var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DD", OutputCoordinate = "70.49N 40.32W", Props = tempProps });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", OutputCoordinate = "40°26'46\"N,79°58'56\"W", Props = tempProps });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", OutputCoordinate = @"17TNE8630977770", Props = mgrsProps });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", OutputCoordinate = @"17T 586309mE 4477770mN", Props = tempProps });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DD", CType = CoordinateType.DD, OutputCoordinate = "70.49N 40.32W", Props = tempProps });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", CType = CoordinateType.DMS, OutputCoordinate = "40°26'46\"N,79°58'56\"W", Props = tempProps, Format = "A##°B##'C##\"N X###°Y##'Z##\"E" });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", CType = CoordinateType.MGRS, OutputCoordinate = @"17TNE8630977770", Props = mgrsProps });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", CType = CoordinateType.UTM, OutputCoordinate = @"17T 586309mE 4477770mN", Props = tempProps });
         }
 
         /// <summary>
@@ -38,6 +38,8 @@ namespace CoordinateToolLibrary.ViewModels
         public RelayCommand ConfigCommand { get; set; }
         public RelayCommand ExpandCommand { get; set; }
         public RelayCommand CopyCommand { get; set; }
+
+        //public void UpdateCoordinates()
 
         // copy parameter to clipboard
         private void OnCopyCommand(object obj)

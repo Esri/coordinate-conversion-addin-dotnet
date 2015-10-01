@@ -279,8 +279,5 @@ namespace CoordinateToolLibrary.Models
                 return arg.ToString();
             }
         }
-
     }
-
-
 }

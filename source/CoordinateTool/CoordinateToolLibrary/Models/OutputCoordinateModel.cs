@@ -14,9 +14,12 @@ namespace CoordinateToolLibrary.Models
         public OutputCoordinateModel()
         {
             DVisibility = Visibility.Collapsed;
+            _props = new Dictionary<string, string>();
         }
 
+        #region Details Visibility
         public Visibility DVisibility { get; set; }
+        #endregion
 
         #region Name
 
@@ -34,7 +37,21 @@ namespace CoordinateToolLibrary.Models
 
         #endregion
 
-        public Dictionary<string, string> Props { get; set; }
+        #region Props
+        private Dictionary<string, string> _props;
+        public Dictionary<string, string> Props 
+        {
+            get
+            {
+                return _props;
+            }
+            set
+            {
+                _props = value;
+                RaisePropertyChanged(() => Props);
+            }
+        }
+        #endregion
 
         #region OutputCoordinate
 
@@ -53,6 +70,27 @@ namespace CoordinateToolLibrary.Models
 
         #endregion
 
+        #region CType
+        public CoordinateType CType { get; set; }
+        #endregion
+
+        #region Format
+        private string format = "Y-+##.0000 X-+###.0000";
+        public string Format
+        {
+            get
+            {
+                return format;
+            }
+            set
+            {
+                format = value;
+                RaisePropertyChanged(() => Format);
+            }
+        }
+        #endregion Format
+
+        #region Methods
         public void ToggleVisibility()
         {
             if (this.DVisibility == Visibility.Collapsed)
@@ -62,5 +100,6 @@ namespace CoordinateToolLibrary.Models
 
             RaisePropertyChanged(() => DVisibility);
         }
+        #endregion
     }
 }

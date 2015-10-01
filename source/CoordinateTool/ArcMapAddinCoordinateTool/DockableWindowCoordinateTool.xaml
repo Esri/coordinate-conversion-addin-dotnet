@@ -25,14 +25,14 @@
                     </Style>
                 </TextBox.Style>
             </TextBox>
-            <TextBlock Text="{Binding DD}"/>
+            <!--<TextBlock Text="{Binding DD}"/>
             <TextBlock Text="{Binding DDM}"/>
             <TextBlock Text="{Binding DMS}"/>
             <TextBlock Text="{Binding GARS}"/>
             <TextBlock Text="{Binding MGRS}"/>
             <TextBlock Text="{Binding USNG}"/>
             <TextBlock Text="{Binding UTM}"/>
-            <Separator />
+            <Separator />-->
             <UserControl Content="{Binding CTView}" />
         </StackPanel>
     </Grid>

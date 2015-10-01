@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
              xmlns:viewModels="clr-namespace:CoordinateToolLibrary.ViewModels"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="160" d:DesignWidth="300">
     <UserControl.Resources>
         <viewModels:CoordinateToolViewModel x:Key="CTViewModel" />
     </UserControl.Resources>
     <Grid DataContext="{StaticResource CTViewModel}">
         <StackPanel Orientation="Vertical">
-            <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
+            <!--<TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Style>
                     <Style>
                         <Style.Triggers>
@@ -24,14 +24,14 @@
                         </Style.Triggers>
                     </Style>
                 </TextBox.Style>
-            </TextBox>
-            <TextBlock Text="{Binding DD}"/>
+            </TextBox>-->
+            <!--<TextBlock Text="{Binding DD}"/>
             <TextBlock Text="{Binding AlternateDD}"/>
             <TextBlock Text="{Binding DMS}"/>
             <TextBlock Text="{Binding CustomDMS}"/>
             <TextBlock Text="{Binding CustomDD}"/>
             <TextBlock Text="{Binding CustomDD2}"/>
-            <Separator />
+            <Separator />-->
             <UserControl Content="{Binding OCView}" />
         </StackPanel>
     </Grid>
