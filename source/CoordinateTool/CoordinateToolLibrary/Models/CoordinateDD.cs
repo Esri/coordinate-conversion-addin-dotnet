@@ -85,27 +85,22 @@ namespace CoordinateToolLibrary.Models
 
         #region ToString
 
-        public override string ToString()
+        public override string ToString(string format, IFormatProvider formatProvider)
         {
-            return this.ToString(null);
-        }
+            var temp = base.ToString(format, formatProvider);
 
-        public string ToString(string format)
-        {
-            return this.ToString(format, null);
-        }
+            if (!string.IsNullOrWhiteSpace(temp))
+                return temp;
 
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            if (formatProvider != null)
-            {
-                if (formatProvider is CoordinateDDFormatter && !format.Contains("{0:"))
-                {
-                    format = string.Format("{{0:{0}}}", format);
-                }
+            //if (formatProvider != null)
+            //{
+            //    if (formatProvider is CoordinateDDFormatter && !format.Contains("{0:"))
+            //    {
+            //        format = string.Format("{{0:{0}}}", format);
+            //    }
 
-                return string.Format(formatProvider, format, new object[] { this });
-            }
+            //    return string.Format(formatProvider, format, new object[] { this });
+            //}
 
             var sb = new StringBuilder();
 
@@ -131,14 +126,14 @@ namespace CoordinateToolLibrary.Models
         #endregion ToString
     }
 
-    public class CoordinateDDFormatter : IFormatProvider, ICustomFormatter
+    public class CoordinateDDFormatter : CoordinateFormatterBase
     {
-        public object GetFormat(Type formatType)
-        {
-            return (formatType == typeof(ICustomFormatter)) ? this : null;
-        }
+        //public object GetFormat(Type formatType)
+        //{
+        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
+        //}
 
-        public string Format(string format, object arg, IFormatProvider formatProvider)
+        public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDD)
             {

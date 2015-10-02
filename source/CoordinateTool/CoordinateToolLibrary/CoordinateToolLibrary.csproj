@@ -50,6 +50,7 @@
     <Compile Include="Models\CoordinateBase.cs" />
     <Compile Include="Models\CoordinateDD.cs" />
     <Compile Include="Models\CoordinateDMS.cs" />
+    <Compile Include="Models\CoordinateFormatterBase.cs" />
     <Compile Include="Models\CoordinateGetBase.cs" />
     <Compile Include="Models\CoordinateHandler.cs" />
     <Compile Include="Models\OutputCoordinateModel.cs" />

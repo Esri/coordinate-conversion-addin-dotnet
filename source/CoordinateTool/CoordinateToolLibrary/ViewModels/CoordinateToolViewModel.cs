@@ -117,7 +117,12 @@ namespace CoordinateToolLibrary.ViewModels
                         if(coordinateGetter.CanGetMGRS(out coord) &&
                             CoordinateMGRS.TryParse(coord, out mgrs))
                         {
-
+                            output.OutputCoordinate = mgrs.ToString(output.Format, new CoordinateMGRSFormatter());
+                            props.Add("GZD", mgrs.GZD);
+                            props.Add("Grid Sq", mgrs.GS);
+                            props.Add("Easting", mgrs.Easting.ToString());
+                            props.Add("Northing", mgrs.Northing.ToString());
+                            output.Props = props;
                         }
                         break;
                     case CoordinateType.USNG:

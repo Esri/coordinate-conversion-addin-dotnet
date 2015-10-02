@@ -115,27 +115,32 @@ namespace CoordinateToolLibrary.Models
             return false;
         }
 
-        public override string ToString()
-        {
-            return this.ToString(null);
-        }
+        //public override string ToString()
+        //{
+        //    return this.ToString(null);
+        //}
 
-        public string ToString(string format)
-        {
-            return this.ToString(format, null);
-        }
+        //public string ToString(string format)
+        //{
+        //    return this.ToString(format, null);
+        //}
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString(string format, IFormatProvider formatProvider)
         {
-            if (formatProvider != null)
-            {
-                if (formatProvider is CoordinateDMSFormatter && !format.Contains("{0:"))
-                {
-                    format = string.Format("{{0:{0}}}", format);
-                }
-                var temp = string.Format(formatProvider, format, new object[] { this });
+            var temp = base.ToString(format, formatProvider);
+
+            if (!string.IsNullOrWhiteSpace(temp))
                 return temp;
-            }
+
+            //if (formatProvider != null)
+            //{
+            //    if (formatProvider is CoordinateDMSFormatter && !format.Contains("{0:"))
+            //    {
+            //        format = string.Format("{{0:{0}}}", format);
+            //    }
+            //    var temp = string.Format(formatProvider, format, new object[] { this });
+            //    return temp;
+            //}
 
             var sb = new StringBuilder();
 
@@ -160,14 +165,14 @@ namespace CoordinateToolLibrary.Models
 
     }
 
-    public class CoordinateDMSFormatter : IFormatProvider, ICustomFormatter
+    public class CoordinateDMSFormatter : CoordinateFormatterBase
     {
-        public object GetFormat(Type formatType)
-        {
-            return (formatType == typeof(ICustomFormatter)) ? this : null;
-        }
+        //public object GetFormat(Type formatType)
+        //{
+        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
+        //}
 
-        public string Format(string format, object arg, IFormatProvider formatProvider)
+        public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDMS)
             {
