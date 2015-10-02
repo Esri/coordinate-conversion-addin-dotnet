@@ -13,14 +13,19 @@ namespace CoordinateToolLibrary.ViewModels
         public CoordinateToolViewModel()
         {
             OCView = new OutputCoordinateView();
+
+            // set default CoordinateGetter
+            coordinateGetter = new CoordinateGetBase();
         }
 
         public OutputCoordinateView OCView { get; set; }
 
         private CoordinateHandler ch = new CoordinateHandler();
-        private CoordinateDD coord = new CoordinateDD(70.49, -40.32);
+        //private CoordinateDD coord = new CoordinateDD(70.49, -40.32);
         private string inputCoordinate = "70.49N40.32W";
+        private CoordinateGetBase coordinateGetter;
 
+        // InputCoordinate
         public string InputCoordinate
         {
             get
@@ -30,30 +35,37 @@ namespace CoordinateToolLibrary.ViewModels
             set
             {
                 inputCoordinate = value;
-                CoordinateDD dd;
-                if (ch.Parse(inputCoordinate, out dd))
-                {
-                    coord = dd;
+                coordinateGetter.InputCoordinate = value;
+                UpdateOutputs();
+                //CoordinateDD dd;
+                //if (ch.Parse(inputCoordinate, out dd))
+                //{
+                //    coord = dd;
 
-                    UpdateOutputs();
+                //    UpdateOutputs();
 
-                    RaisePropertyChanged(() => InputCoordinate);
-                    RaisePropertyChanged(() => DD);
-                    RaisePropertyChanged(() => DMS);
-                    RaisePropertyChanged(() => AlternateDD);
-                    RaisePropertyChanged(() => CustomDD);
-                    RaisePropertyChanged(() => CustomDD2);
-                    RaisePropertyChanged(() => CustomDMS);
+                //    RaisePropertyChanged(() => InputCoordinate);
+                //    //RaisePropertyChanged(() => DD);
+                //    //RaisePropertyChanged(() => DMS);
+                //    //RaisePropertyChanged(() => AlternateDD);
+                //    //RaisePropertyChanged(() => CustomDD);
+                //    //RaisePropertyChanged(() => CustomDD2);
+                //    //RaisePropertyChanged(() => CustomDMS);
 
-                    HasInputError = false;
-                }
-                else
-                {
-                    HasInputError = true;
-                }
+                //    HasInputError = false;
+                //}
+                //else
+                //{
+                //    HasInputError = true;
+                //}
 
-                RaisePropertyChanged(() => HasInputError);
+                //RaisePropertyChanged(() => HasInputError);
             }
+        }
+
+        public void SetCoordinateGetter(CoordinateGetBase coordGetter)
+        {
+            coordinateGetter = coordGetter;
         }
 
         private void UpdateOutputs()
@@ -61,31 +73,52 @@ namespace CoordinateToolLibrary.ViewModels
             foreach( var output in (OCView.DataContext as OutputCoordinateViewModel).OutputCoordinateList)
             {
                 var props = new Dictionary<string, string>();
+                string coord = string.Empty;
 
                 switch(output.CType)
                 {
                     case CoordinateType.DD:
-                        output.OutputCoordinate = coord.ToString(output.Format, new CoordinateDDFormatter());
-                        props.Add("Lat", coord.Lat.ToString());
-                        props.Add("Lon", coord.Lon.ToString());
-                        output.Props = props;
+                        CoordinateDD cdd;
+                        if (coordinateGetter.CanGetDD(out coord) &&
+                            CoordinateDD.TryParse(coord, out cdd))
+                        {
+                            output.OutputCoordinate = cdd.ToString(output.Format, new CoordinateDDFormatter());
+                            props.Add("Lat", cdd.Lat.ToString());
+                            props.Add("Lon", cdd.Lon.ToString());
+                            output.Props = props;
+                        }
                         break;
                     case CoordinateType.DMS:
-                        var dms = ch.GetDMS(coord);
-                        output.OutputCoordinate = dms.ToString(output.Format, new CoordinateDMSFormatter());
-                        props.Add("Lat D", dms.LatDegrees.ToString());
-                        props.Add("Lat M", dms.LatMinutes.ToString());
-                        props.Add("Lat S", Math.Truncate(dms.LatSeconds).ToString("##"));
-                        props.Add("Lon D", dms.LonDegrees.ToString());
-                        props.Add("Lon M", dms.LonMinutes.ToString());
-                        props.Add("Lon S", Math.Truncate(dms.LonSeconds).ToString("##"));
-                        output.Props = props;
+                        CoordinateDMS cdms;
+                        if (coordinateGetter.CanGetDMS(out coord) &&
+                            CoordinateDMS.TryParse(coord, out cdms))
+                        {
+                            output.OutputCoordinate = cdms.ToString(output.Format, new CoordinateDMSFormatter());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add("Lat", cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
+                                props.Add("Lon", cdms.ToString("X" + splits[1].Trim(), new CoordinateDMSFormatter()));
+                            }
+                            else
+                            {
+                                props.Add("Lat", cdms.ToString("A##°B##'C##.0\"N", new CoordinateDDFormatter()));
+                                props.Add("Lon", cdms.ToString("X###°Y##'Z##\"E", new CoordinateDDFormatter()));
+                            }
+                            output.Props = props;
+                        }
                         break;
                     case CoordinateType.DDM:
                         break;
                     case CoordinateType.GARS:
                         break;
                     case CoordinateType.MGRS:
+                        CoordinateMGRS mgrs;
+                        if(coordinateGetter.CanGetMGRS(out coord) &&
+                            CoordinateMGRS.TryParse(coord, out mgrs))
+                        {
+
+                        }
                         break;
                     case CoordinateType.USNG:
                         break;
@@ -100,54 +133,56 @@ namespace CoordinateToolLibrary.ViewModels
         public bool HasInputError
         { get; set; }
 
-        public string DD
-        {
-            get
-            {
-                return String.Format("x = {0:#.0000} y = {1:#.0000}", coord.Lon, coord.Lat);
-            }
-        }
+        #region OLD CODE
+        //public string DD
+        //{
+        //    get
+        //    {
+        //        return String.Format("x = {0:#.0000} y = {1:#.0000}", coord.Lon, coord.Lat);
+        //    }
+        //}
 
-        public string DMS
-        {
-            get
-            {
-                var dms = ch.GetDMS(coord);
-                return String.Format("{0}° {1}\' {2:##}\" {3} {4}° {5}\' {6:##}\" {7}", Math.Abs(dms.LatDegrees), dms.LatMinutes, dms.LatSeconds, dms.LatDegrees < 0 ? "S" : "N", Math.Abs(dms.LonDegrees), dms.LonMinutes, dms.LonSeconds, dms.LonDegrees < 0 ? "W" : "E");
-            }
-        }
+        //public string DMS
+        //{
+        //    get
+        //    {
+        //        var dms = ch.GetDMS(coord);
+        //        return String.Format("{0}° {1}\' {2:##}\" {3} {4}° {5}\' {6:##}\" {7}", Math.Abs(dms.LatDegrees), dms.LatMinutes, dms.LatSeconds, dms.LatDegrees < 0 ? "S" : "N", Math.Abs(dms.LonDegrees), dms.LonMinutes, dms.LonSeconds, dms.LonDegrees < 0 ? "W" : "E");
+        //    }
+        //}
 
-        public string AlternateDD
-        {
-            get
-            {
-                return coord.ToString("DD");
-            }
-        }
+        //public string AlternateDD
+        //{
+        //    get
+        //    {
+        //        return coord.ToString("DD");
+        //    }
+        //}
 
-        public string CustomDD
-        {
-            get
-            {
-                return coord.ToString("Y-+##.0000 X-+###.0000", new CoordinateDDFormatter());
-            }
-        }
+        //public string CustomDD
+        //{
+        //    get
+        //    {
+        //        return coord.ToString("Y-+##.0000 X-+###.0000", new CoordinateDDFormatter());
+        //    }
+        //}
 
-        public string CustomDD2
-        {
-            get
-            {
-                return coord.ToString("Y##.0000 N X###.0000 E", new CoordinateDDFormatter());
-            }
-        }
+        //public string CustomDD2
+        //{
+        //    get
+        //    {
+        //        return coord.ToString("Y##.0000 N X###.0000 E", new CoordinateDDFormatter());
+        //    }
+        //}
 
-        public string CustomDMS
-        {
-            get
-            {
-                var dms = ch.GetDMS(coord);
-                return dms.ToString("A##°B##'C##\"N X###°Y##'Z##\"E", new CoordinateDMSFormatter());
-            }
-        }
+        //public string CustomDMS
+        //{
+        //    get
+        //    {
+        //        var dms = ch.GetDMS(coord);
+        //        return dms.ToString("A##°B##'C##\"N X###°Y##'Z##\"E", new CoordinateDMSFormatter());
+        //    }
+        //}
+        #endregion
     }
 }

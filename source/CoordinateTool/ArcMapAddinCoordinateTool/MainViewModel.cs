@@ -19,6 +19,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             HasInputError = false;
         }
 
+        private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
+
         public bool HasInputError { get; set; }
 
         //public string DD { get; set; }
@@ -42,10 +44,13 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
 
-                // do this or use a mediator
+                // update tool view model
                 var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
                 if (ctvm != null)
+                {
+                    ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
+                }
             }
         }
 
@@ -76,6 +81,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 HasInputError = true;
             else
             {
+                amCoordGetter.Point = point;
                 //UpdateOutputs(point);
                 result = (point as IConversionNotation).GetDDFromCoords(6);
             }

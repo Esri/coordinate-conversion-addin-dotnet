@@ -121,10 +121,6 @@ namespace CoordinateToolLibrary.Models
                     sb.AppendFormat(fi, "x = {0:#.0000}", this.Lon);
                     sb.AppendFormat(fi, " y = {0:#.0000}", this.Lat);
                     break;
-                //case "DMS":
-                //    //sb.AppendFormat(fi, "{0}° {1}\' {2:##}\" {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatSeconds, this.Lat < 0.0 ? "S" : "N");
-                //    //sb.AppendFormat(fi, " {0}° {1}\' {2:##}\" {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonSeconds, this.Lon < 0.0 ? "W" : "E");
-                //    break;
                 default:
                     throw new Exception("CoordinateDD.ToString(): Invalid formatting string.");
             }
