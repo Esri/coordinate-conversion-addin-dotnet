@@ -1,66 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using CoordinateToolLibrary.Models;
 using System.Text.RegularExpressions;
-using System.Globalization;
+using System.Threading.Tasks;
 
-namespace CoordinateToolLibrary
+namespace CoordinateToolLibrary.Models
 {
-    public class CoordinateMGRS : CoordinateBase
+    public class CoordinateUTM : CoordinateBase
     {
-        public CoordinateMGRS() 
+        public CoordinateUTM()
         {
-            GZD = string.Empty;
-            GS = string.Empty;
-            Easting = 0;
-            Northing = 0;
+            Zone = 17;
+            Hemi = "N";
+            Easting = 1000;
+            Northing = 1000;
         }
 
-        // grid zone, grid square, easting, northing 5 digits is 1m
-        public CoordinateMGRS(string gzd, string gsquare, int easting, int northing)
+        public CoordinateUTM(int zone, string hemi, int easting, int northing)
         {
-            GZD = gzd;
-            GS = gsquare;
-            Northing = northing;
+            Zone = zone;
+            Hemi = hemi;
             Easting = easting;
+            Northing = northing;
         }
 
-        public string GZD { get; set; }
-        public string GS { get; set; }
+        public int Zone { get; set; }
+        public string Hemi { get; set; } 
         public int Easting { get; set; }
         public int Northing { get; set; }
 
         #region Methods
 
-        public static bool TryParse(string input, out CoordinateMGRS mgrs)
+        public static bool TryParse(string input, out CoordinateUTM utm)
         {
-            mgrs = new CoordinateMGRS();
+            utm = new CoordinateUTM();
 
             input = input.Trim();
 
-            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[ ]*(?<gs>[A-HJ-NP-Z]{2})[ ]*(?<numlocation>\d{0,10})\s*");
+            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)\s*(?<easting>\d{1,9})\s*(?<northing>\d{1,9})\s*");
 
-            var matchMGRS = regexMGRS.Match(input);
+            var matchUTM = regexUTM.Match(input);
 
-            if(matchMGRS.Success && matchMGRS.Length == input.Length)
+            if (matchUTM.Success && matchUTM.Length == input.Length)
             {
-                if (ValidateNumericCoordinateMatch(matchMGRS, new string[] { "numlocation" }))
+                if (ValidateNumericCoordinateMatch(matchUTM, new string[] { "zone","easting","northing" }))
                 {
                     // need to validate the gzd and gs
                     try
                     {
-                        mgrs.GZD = matchMGRS.Groups["gzd"].Value;
-                        mgrs.GS = matchMGRS.Groups["gs"].Value;
-                        var tempEN = matchMGRS.Groups["numlocation"].Value;
-                        if (tempEN.Length % 2 == 0 && tempEN.Length > 0)
-                        {
-                            int numSize = tempEN.Length / 2;
-                            mgrs.Easting = Int32.Parse(tempEN.Substring(0, numSize));
-                            mgrs.Northing = Int32.Parse(tempEN.Substring(numSize, numSize));
-                        }
+                        utm.Zone = Int32.Parse(matchUTM.Groups["zone"].Value);
+                        utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
+                        utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
+                        utm.Hemi = matchUTM.Groups["hemi"].Value;
                     }
                     catch
                     {
@@ -88,21 +81,21 @@ namespace CoordinateToolLibrary
             var sb = new StringBuilder();
 
             if (format == null)
-                format = "MGRS";
+                format = "UTM";
 
             NumberFormatInfo fi = NumberFormatInfo.InvariantInfo;
 
             switch (format.ToUpper())
             {
                 case "":
-                case "MGRS":
-                    sb.Append(GZD);
-                    sb.Append(GS);
-                    sb.AppendFormat(fi, "{0:#}", this.Easting);
-                    sb.AppendFormat(fi, "{0:#}", this.Northing);
+                case "UTM":
+                    sb.Append(Zone);
+                    sb.Append(Hemi+" ");
+                    sb.AppendFormat(fi, "{0:#}", Easting);
+                    sb.AppendFormat(fi, "{0:#}", Northing);
                     break;
                 default:
-                    throw new Exception("CoordinateMGRS.ToString(): Invalid formatting string.");
+                    throw new Exception("CoordinateUTM.ToString(): Invalid formatting string.");
             }
 
             return sb.ToString();
@@ -111,25 +104,20 @@ namespace CoordinateToolLibrary
         #endregion
     }
 
-    public class CoordinateMGRSFormatter : CoordinateFormatterBase
+    public class CoordinateUTMFormatter : CoordinateFormatterBase
     {
-        //public object GetFormat(Type formatType)
-        //{
-        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
-        //}
-
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            if (arg is CoordinateMGRS)
+            if (arg is CoordinateUTM)
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSE#N#", arg, this);
+                    return this.Format("Z#H E#m N#m", arg, this);
                 }
                 else
                 {
-                    var coord = arg as CoordinateMGRS;
-                    var cnum = coord.Easting;
+                    var coord = arg as CoordinateUTM;
+                    var cnum = coord.Zone;
                     var sb = new StringBuilder();
                     var olist = new List<object>();
                     bool startIndexNeeded = false;
@@ -154,7 +142,12 @@ namespace CoordinateToolLibrary
 
                         switch (c)
                         {
-                            case 'E': // longitude coordinate
+                            case 'Z': 
+                                cnum = coord.Zone;
+                                olist.Add(Math.Abs(cnum));
+                                startIndexNeeded = true;
+                                break;
+                            case 'E': // latitude coordinate
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
@@ -164,11 +157,19 @@ namespace CoordinateToolLibrary
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'Z': // show +
-                                sb.Append(coord.GZD);
+                            case '+': // show +
+                                if (coord.Hemi == "N")
+                                    sb.Append("+");
                                 break;
-                            case 'S': // show -
-                                sb.Append(coord.GS);
+                            case '-': // show -
+                                if (coord.Hemi == "S")
+                                    sb.Append("-");
+                                break;
+                            case 'H': // N or S
+                                sb.Append(coord.Hemi);
+                                break;
+                            case 'M': // E or W
+                                sb.Append("m");
                                 break;
                             default:
                                 sb.Append(c);
@@ -197,5 +198,4 @@ namespace CoordinateToolLibrary
             }
         }
     }
-
 }

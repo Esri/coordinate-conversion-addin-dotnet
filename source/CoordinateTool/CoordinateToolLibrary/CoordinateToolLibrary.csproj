@@ -53,6 +53,7 @@
     <Compile Include="Models\CoordinateFormatterBase.cs" />
     <Compile Include="Models\CoordinateGetBase.cs" />
     <Compile Include="Models\CoordinateHandler.cs" />
+    <Compile Include="Models\CoordinateUTM.cs" />
     <Compile Include="Models\OutputCoordinateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />

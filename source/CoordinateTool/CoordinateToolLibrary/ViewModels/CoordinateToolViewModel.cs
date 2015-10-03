@@ -128,6 +128,16 @@ namespace CoordinateToolLibrary.ViewModels
                     case CoordinateType.USNG:
                         break;
                     case CoordinateType.UTM:
+                        CoordinateUTM utm;
+                        if(coordinateGetter.CanGetUTM(out coord) &&
+                            CoordinateUTM.TryParse(coord, out utm))
+                        {
+                            output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
+                            props.Add("Zone", utm.Zone.ToString() + utm.Hemi);
+                            props.Add("Easting", utm.Easting.ToString());
+                            props.Add("Northing", utm.Northing.ToString());
+                            output.Props = props;
+                        }
                         break;
                     default:
                         break;
