@@ -27,6 +27,7 @@ namespace CoordinateToolLibrary.ViewModels
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", CType = CoordinateType.DMS, OutputCoordinate = "40°26'46\"N,79°58'56\"W", Props = tempProps, Format = "A##°B##'C##\"N X###°Y##'Z##\"E" });
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", CType = CoordinateType.MGRS, OutputCoordinate = @"", Props = mgrsProps, Format = "Z S E# N#" });
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", CType = CoordinateType.UTM, OutputCoordinate = @"", Format = "Z#H E# N#" });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "GARS", CType = CoordinateType.GARS, OutputCoordinate = @"", Format = "X#YQK" });
         }
 
         /// <summary>
@@ -91,7 +92,5 @@ namespace CoordinateToolLibrary.ViewModels
         {
             //System.Windows.MessageBox.Show(string.Format("Configure {0}.", obj as string));
         }
-
-
     }
 }

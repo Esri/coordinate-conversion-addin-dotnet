@@ -102,15 +102,27 @@ namespace CoordinateToolLibrary.ViewModels
                             }
                             else
                             {
-                                props.Add("Lat", cdms.ToString("A##°B##'C##.0\"N", new CoordinateDDFormatter()));
-                                props.Add("Lon", cdms.ToString("X###°Y##'Z##\"E", new CoordinateDDFormatter()));
+                                props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDDFormatter()));
+                                props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDDFormatter()));
                             }
                             output.Props = props;
                         }
                         break;
                     case CoordinateType.DDM:
+
                         break;
                     case CoordinateType.GARS:
+                        CoordinateGARS gars;
+                        if(coordinateGetter.CanGetGARS(out coord) &&
+                            CoordinateGARS.TryParse(coord, out gars))
+                        {
+                            output.OutputCoordinate = gars.ToString(output.Format, new CoordinateGARSFormatter());
+                            props.Add("Lon", gars.LonBand.ToString());
+                            props.Add("Lat", gars.LatBand);
+                            props.Add("Quadrant", gars.Quadrant.ToString());
+                            props.Add("Key", gars.Quadrant.ToString());
+                            output.Props = props;
+                        }
                         break;
                     case CoordinateType.MGRS:
                         CoordinateMGRS mgrs;
