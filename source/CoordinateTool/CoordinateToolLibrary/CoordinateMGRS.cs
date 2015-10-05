@@ -113,11 +113,6 @@ namespace CoordinateToolLibrary
 
     public class CoordinateMGRSFormatter : CoordinateFormatterBase
     {
-        //public object GetFormat(Type formatType)
-        //{
-        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
-        //}
-
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateMGRS)

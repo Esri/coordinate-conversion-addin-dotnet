@@ -105,7 +105,7 @@ namespace ArcMapAddinCoordinateTool
                 try
                 {
                     var cn = Point as IConversionNotation;
-                    coord = cn.GetUSNGFromCoords(6, false, true);
+                    coord = cn.GetUSNGFromCoords(5, false, false);
                     return true;
                 }
                 catch { }

@@ -138,6 +138,17 @@ namespace CoordinateToolLibrary.ViewModels
                         }
                         break;
                     case CoordinateType.USNG:
+                        CoordinateUSNG usng;
+                        if(coordinateGetter.CanGetUSNG(out coord) &&
+                            CoordinateUSNG.TryParse(coord, out usng))
+                        {
+                            output.OutputCoordinate = usng.ToString(output.Format, new CoordinateMGRSFormatter());
+                            props.Add("GZD", usng.GZD);
+                            props.Add("Grid Sq", usng.GS);
+                            props.Add("Easting", usng.Easting.ToString());
+                            props.Add("Northing", usng.Northing.ToString());
+                            output.Props = props;
+                        }
                         break;
                     case CoordinateType.UTM:
                         CoordinateUTM utm;

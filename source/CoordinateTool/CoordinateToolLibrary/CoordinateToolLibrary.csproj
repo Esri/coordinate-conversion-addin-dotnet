@@ -54,6 +54,7 @@
     <Compile Include="Models\CoordinateGARS.cs" />
     <Compile Include="Models\CoordinateGetBase.cs" />
     <Compile Include="Models\CoordinateHandler.cs" />
+    <Compile Include="Models\CoordinateUSNG.cs" />
     <Compile Include="Models\CoordinateUTM.cs" />
     <Compile Include="Models\OutputCoordinateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
