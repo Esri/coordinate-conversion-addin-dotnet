@@ -43,12 +43,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoordinateMGRS.cs" />
+    <Compile Include="Models\CoordinateMGRS.cs" />
     <Compile Include="Helpers\NotificationObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\UIHelpers.cs" />
     <Compile Include="Models\CoordinateBase.cs" />
     <Compile Include="Models\CoordinateDD.cs" />
+    <Compile Include="Models\CoordinateDDM.cs" />
     <Compile Include="Models\CoordinateDMS.cs" />
     <Compile Include="Models\CoordinateFormatterBase.cs" />
     <Compile Include="Models\CoordinateGARS.cs" />

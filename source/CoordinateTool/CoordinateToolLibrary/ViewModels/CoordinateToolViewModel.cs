@@ -102,14 +102,31 @@ namespace CoordinateToolLibrary.ViewModels
                             }
                             else
                             {
-                                props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDDFormatter()));
-                                props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDDFormatter()));
+                                props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDMSFormatter()));
+                                props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDMSFormatter()));
                             }
                             output.Props = props;
                         }
                         break;
                     case CoordinateType.DDM:
-
+                        CoordinateDDM ddm;
+                        if(coordinateGetter.CanGetDDM(out coord) &&
+                            CoordinateDDM.TryParse(coord, out ddm))
+                        {
+                            output.OutputCoordinate = ddm.ToString(output.Format, new CoordinateDDMFormatter());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add("Lat", ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
+                                props.Add("Lon", ddm.ToString("X" + splits[1].Trim(), new CoordinateDDMFormatter()));
+                            }
+                            else
+                            {
+                                props.Add("Lat", ddm.ToString("A#°B#.######'N", new CoordinateDDMFormatter()));
+                                props.Add("Lon", ddm.ToString("X#°Y#.######'E", new CoordinateDDMFormatter()));
+                            }
+                            output.Props = props;
+                        }
                         break;
                     case CoordinateType.GARS:
                         CoordinateGARS gars;

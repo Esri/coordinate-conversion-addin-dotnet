@@ -8,91 +8,60 @@ using System.Threading.Tasks;
 
 namespace CoordinateToolLibrary.Models
 {
-    public class CoordinateDMS : CoordinateBase
+    public class CoordinateDDM : CoordinateBase
     {
-        public CoordinateDMS() { }
+        public CoordinateDDM() { }
 
-        public CoordinateDMS(int latd, int latm, double lats, int lond, int lonm, double lons)
+        public CoordinateDDM(int latd, double latm, int lond, double lonm)
         {
             LatDegrees = latd;
             LatMinutes = latm;
-            LatSeconds = lats;
             LonDegrees = lond;
             LonMinutes = lonm;
-            LonSeconds = lons;
         }
 
         #region Properties
 
         public int LatDegrees { get; set; }
-
-        public int LatMinutes
-        {
-            get;
-            set;
-        }
-
-        public double LatSeconds
-        {
-            get;
-            set;
-        }
-        public int LonDegrees
-        {
-            get;
-            set;
-        }
-
-        public int LonMinutes
-        {
-            get;
-            set;
-        }
-
-        public double LonSeconds
-        {
-            get;
-            set;
-        }
+        public double LatMinutes { get; set; }
+        public int LonDegrees { get; set; }
+        public double LonMinutes { get; set; }
 
         #endregion Properties
 
-        public static bool TryParse(string input, out CoordinateDMS dms)
+        public static bool TryParse(string input, out CoordinateDDM ddm)
         {
-            dms = new CoordinateDMS();
+            ddm = new CoordinateDDM();
 
             input = input.Trim();
 
-            Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?", RegexOptions.ExplicitCapture); 
-            //Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?");
+            Regex regexDDM = new Regex(@"^\s*[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*°,:\s]*)?[Dd*°,:\s]*(?<latitudeM>[^NS',:\s]*)?[',:\s]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*°,:\s]*)?[Dd*°,:\s]*(?<longitudeM>[^EW',:\s]*)?[',:\s]*(?<longitudeSuffix>[EW])?");
 
-            var matchDMS = regexDMS.Match(input);
-            
-            if (matchDMS.Success && matchDMS.Length == input.Length)
+            var matchDDM = regexDDM.Match(input);
+
+            if (matchDDM.Success && matchDDM.Length == input.Length)
             {
-                if (ValidateNumericCoordinateMatch(matchDMS, new string[] { "latitudeD", "latitudeM", "latitudeS", "longitudeD", "longitudeM", "longitudeS" }))
+                if (ValidateNumericCoordinateMatch(matchDDM, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" }))
                 {
                     try
                     {
-                        var LatDegrees = int.Parse(matchDMS.Groups["latitudeD"].Value);
-                        var LatMinutes = int.Parse(matchDMS.Groups["latitudeM"].Value);
-                        var LatSeconds = double.Parse(matchDMS.Groups["latitudeS"].Value);
-                        var LonDegrees = int.Parse(matchDMS.Groups["longitudeD"].Value);
-                        var LonMinutes = int.Parse(matchDMS.Groups["longitudeM"].Value);
-                        var LonSeconds = double.Parse(matchDMS.Groups["longitudeS"].Value);
+                        var LatDegrees = int.Parse(matchDDM.Groups["latitudeD"].Value);
+                        var LatMinutes = double.Parse(matchDDM.Groups["latitudeM"].Value);
+                        var LonDegrees = int.Parse(matchDDM.Groups["longitudeD"].Value);
+                        var LonMinutes = double.Parse(matchDDM.Groups["longitudeM"].Value);
 
-                        var temp = matchDMS.Groups["latitudeSuffix"];
+                        var temp = matchDDM.Groups["latitudeSuffix"];
                         if (temp.Success && temp.Value.ToUpper().Equals("S"))
                         {
                             LatDegrees = Math.Abs(LatDegrees) * -1;
                         }
-                        temp = matchDMS.Groups["longitudeSuffix"];
+                        temp = matchDDM.Groups["longitudeSuffix"];
                         if (temp.Success && temp.Value.ToUpper().Equals("W"))
                         {
                             LonDegrees = Math.Abs(LonDegrees) * -1;
                         }
 
-                        dms = new CoordinateDMS(LatDegrees, LatMinutes, LatSeconds, LonDegrees, LonMinutes, LonSeconds);
+                        ddm = new CoordinateDDM(LatDegrees, LatMinutes, LonDegrees, LonMinutes);
                     }
                     catch
                     {
@@ -115,39 +84,38 @@ namespace CoordinateToolLibrary.Models
             var sb = new StringBuilder();
 
             if (format == null)
-                format = "DMS";
+                format = "DDM";
 
             NumberFormatInfo fi = NumberFormatInfo.InvariantInfo;
 
             switch (format.ToUpper())
             {
                 case "":
-                case "DMS":
-                    sb.AppendFormat(fi, "{0}° {1}\' {2:#}\" {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatSeconds, this.LatDegrees < 0 ? "S" : "N");
-                    sb.AppendFormat(fi, " {0}° {1}\' {2:#}\" {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonSeconds, this.LonDegrees < 0 ? "W" : "E");
+                case "DDM":
+                    sb.AppendFormat(fi, "{0}° {1:#.######}\' {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatDegrees < 0 ? "S" : "N");
+                    sb.AppendFormat(fi, " {0}° {1:#.######}\' {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
-                    throw new Exception("CoordinateDMS.ToString(): Invalid formatting string.");
+                    throw new Exception("CoordinateDDM.ToString(): Invalid formatting string.");
             }
 
             return sb.ToString();
         }
-
     }
 
-    public class CoordinateDMSFormatter : CoordinateFormatterBase
+    public class CoordinateDDMFormatter : CoordinateFormatterBase
     {
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            if (arg is CoordinateDMS)
+            if (arg is CoordinateDDM)
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A##°B##'C##.0\" X###°Y##'Z##\"", arg, this);
+                    return this.Format("A#°B#.######' X#°Y#.######'", arg, this);
                 }
                 else
                 {
-                    var coord = arg as CoordinateDMS;
+                    var coord = arg as CoordinateDDM;
                     double cnum = coord.LatDegrees;
                     var sb = new StringBuilder();
                     var olist = new List<object>();
@@ -183,11 +151,6 @@ namespace CoordinateToolLibrary.Models
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'C':
-                                cnum = coord.LatSeconds;
-                                olist.Add(Math.Abs(cnum));
-                                startIndexNeeded = true;
-                                break;
                             case 'X':
                                 cnum = coord.LonDegrees;
                                 olist.Add(Math.Abs(cnum));
@@ -195,11 +158,6 @@ namespace CoordinateToolLibrary.Models
                                 break;
                             case 'Y':
                                 cnum = coord.LonMinutes;
-                                olist.Add(Math.Abs(cnum));
-                                startIndexNeeded = true;
-                                break;
-                            case 'Z':
-                                cnum = coord.LonSeconds;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
