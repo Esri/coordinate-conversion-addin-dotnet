@@ -10,30 +10,24 @@
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
     <Grid Margin="3,3,3,3">
-        <StackPanel Orientation="Vertical">
-            <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
-                <TextBox.Style>
-                    <Style>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                <Setter Property="TextBox.Background" Value="LightPink"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                <Setter Property="TextBox.Background" Value="White"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
-            <!--<TextBlock Text="{Binding DD}"/>
-            <TextBlock Text="{Binding DDM}"/>
-            <TextBlock Text="{Binding DMS}"/>
-            <TextBlock Text="{Binding GARS}"/>
-            <TextBlock Text="{Binding MGRS}"/>
-            <TextBlock Text="{Binding USNG}"/>
-            <TextBlock Text="{Binding UTM}"/>
-            <Separator />-->
-            <UserControl Content="{Binding CTView}" />
-        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                    <Setter Property="TextBox.Background" Value="LightPink"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                    <Setter Property="TextBox.Background" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <UserControl Content="{Binding CTView}" />
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
