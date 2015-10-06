@@ -11,27 +11,6 @@
     </UserControl.Resources>
     <Grid DataContext="{StaticResource CTViewModel}">
         <StackPanel Orientation="Vertical">
-            <!--<TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
-                <TextBox.Style>
-                    <Style>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                <Setter Property="TextBox.Background" Value="LightPink"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                <Setter Property="TextBox.Background" Value="White"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>-->
-            <!--<TextBlock Text="{Binding DD}"/>
-            <TextBlock Text="{Binding AlternateDD}"/>
-            <TextBlock Text="{Binding DMS}"/>
-            <TextBlock Text="{Binding CustomDMS}"/>
-            <TextBlock Text="{Binding CustomDD}"/>
-            <TextBlock Text="{Binding CustomDD2}"/>
-            <Separator />-->
             <UserControl Content="{Binding OCView}" />
         </StackPanel>
     </Grid>

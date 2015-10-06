@@ -130,51 +130,5 @@ namespace ArcMapAddinCoordinateTool
         }
 
         #endregion
-
-        //#region Getters
-        //public override string GetDD()
-        //{
-        //    if (Point != null)
-        //    {
-        //        try
-        //        {
-        //            var cn = Point as IConversionNotation;
-        //            return cn.GetDDFromCoords(6);
-        //        }
-        //        catch { }
-        //    }
-        //    return string.Empty;
-        //}
-
-        //public override string GetDDM()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public override string GetDMS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public override string GetGARS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public override string GetMGRS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public override string GetUSNG()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public override string GetUTM()
-        //{
-        //    return string.Empty;
-        //}
-        //#endregion
     }
 }

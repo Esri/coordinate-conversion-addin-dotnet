@@ -143,7 +143,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A##°B##'C##.0\" X###°Y##'Z##\"", arg, this);
+                    return this.Format("A#°B0'C0.0\" X#°Y0'Z0.0\"", arg, this);
                 }
                 else
                 {

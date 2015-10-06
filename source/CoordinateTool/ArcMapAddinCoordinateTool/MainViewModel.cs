@@ -23,14 +23,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         public bool HasInputError { get; set; }
 
-        //public string DD { get; set; }
-        //public string DDM { get; set; }
-        //public string DMS { get; set; }
-        //public string GARS { get; set; }
-        //public string MGRS { get; set; }
-        //public string USNG { get; set; }
-        //public string UTM { get; set; }
-
         private string _inputCoordinate;
         public string InputCoordinate
         {
@@ -74,6 +66,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             HasInputError = false;
 
+            if (string.IsNullOrWhiteSpace(input))
+                return result;
 
             var coordType = GetCoordinateType(input, out point);
 
@@ -82,7 +76,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             else
             {
                 amCoordGetter.Point = point;
-                //UpdateOutputs(point);
                 result = (point as IConversionNotation).GetDDFromCoords(6);
             }
 
@@ -90,27 +83,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             
             return result;
         }
-
-        //private void UpdateOutputs(IPoint point)
-        //{
-        //    var cn = point as IConversionNotation;
-
-        //    DD = cn.GetDDFromCoords(4);
-        //    DDM = cn.GetDDMFromCoords(4);
-        //    DMS = cn.GetDMSFromCoords(4);
-        //    GARS = cn.GetGARSFromCoords();
-        //    MGRS = (point as IConversionMGRS).CreateMGRS(4, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
-        //    USNG = cn.GetUSNGFromCoords(4, true, true);
-        //    UTM = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMUseNS);
-
-        //    RaisePropertyChanged(() => DD); 
-        //    RaisePropertyChanged(() => DDM);
-        //    RaisePropertyChanged(() => DMS);
-        //    RaisePropertyChanged(() => GARS);
-        //    RaisePropertyChanged(() => MGRS);
-        //    RaisePropertyChanged(() => USNG);
-        //    RaisePropertyChanged(() => UTM);
-        //}
 
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         {

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
 using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Helpers;
 
@@ -21,14 +20,14 @@ namespace CoordinateToolLibrary.ViewModels
 
             //init a few sample items
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
-            var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
-            var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DD", CType = CoordinateType.DD, OutputCoordinate = "70.49N 40.32W", Props = tempProps });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", CType = CoordinateType.DMS, OutputCoordinate = "40°26'46\"N,79°58'56\"W", Props = tempProps, Format = "A##°B##'C##\"N X###°Y##'Z##\"E" });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", CType = CoordinateType.MGRS, OutputCoordinate = @"", Props = mgrsProps, Format = "Z S E# N#" });
+            //var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
+            //var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DD", CType = CoordinateType.DD, OutputCoordinate = "70.49N 40.32W" });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", CType = CoordinateType.DMS, OutputCoordinate = "40°26'46\"N,79°58'56\"W", Format = "A#°B0'C0\"N X#°Y0'Z0\"E" });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", CType = CoordinateType.MGRS, OutputCoordinate = @"", Format = "Z S E# N#" });
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", CType = CoordinateType.UTM, OutputCoordinate = @"", Format = "Z#H E# N#" });
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "GARS", CType = CoordinateType.GARS, OutputCoordinate = @"", Format = "X#YQK" });
-            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "USNG", CType = CoordinateType.USNG, OutputCoordinate = @"", Props = mgrsProps, Format = "Z S E# N#" });
+            OutputCoordinateList.Add(new OutputCoordinateModel { Name = "USNG", CType = CoordinateType.USNG, OutputCoordinate = @"", Format = "Z S E# N#" });
             OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DDM", CType = CoordinateType.DDM, OutputCoordinate = @"", Format = "A# B#.#### N X# Y#.#### E" });
         }
 
@@ -37,12 +36,12 @@ namespace CoordinateToolLibrary.ViewModels
         /// </summary>
         public ObservableCollection<OutputCoordinateModel> OutputCoordinateList { get; set; }
 
+        #region relay commands
+
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ConfigCommand { get; set; }
         public RelayCommand ExpandCommand { get; set; }
         public RelayCommand CopyCommand { get; set; }
-
-        //public void UpdateCoordinates()
 
         // copy parameter to clipboard
         private void OnCopyCommand(object obj)
@@ -98,5 +97,7 @@ namespace CoordinateToolLibrary.ViewModels
         {
             //System.Windows.MessageBox.Show(string.Format("Configure {0}.", obj as string));
         }
+
+        #endregion
     }
 }
