@@ -62,6 +62,10 @@ namespace CoordinateToolLibrary.ViewModels
 
             if (!string.IsNullOrEmpty(name))
             {
+                // lets make sure
+                if (System.Windows.MessageBoxResult.Yes != System.Windows.MessageBox.Show(string.Format("Remove {0}?", name), "Confirm removal?", System.Windows.MessageBoxButton.YesNo))
+                    return;
+
                 foreach (var item in OutputCoordinateList)
                 {
                     if (item.Name == name)
