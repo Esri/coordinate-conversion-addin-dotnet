@@ -19,7 +19,7 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Category" Margin="3,3,3,3" />
                 <ListBox ItemsSource="{Binding CategoryList}" SelectedItem="{Binding CategorySelection, Mode=TwoWay}"
-                         SelectionChanged="ListBox_SelectionChanged"  MinWidth="150" Margin="3,3,3,3" />
+                         SelectionChanged="CategoryListBox_SelectionChanged"  MinWidth="150" Margin="3,3,3,3" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
@@ -30,7 +30,8 @@
                     <TextBox Text="{Binding Format, UpdateSourceTrigger=PropertyChanged}" MinWidth="150" Margin="3,3,3,3" />
                 </Expander>
                 <TextBlock Text="Formats" Margin="3,3,3,3" />
-                <ListBox ItemsSource="{Binding FormatList}" SelectedItem="{Binding FormatSelection, Mode=TwoWay}" MinWidth="150" Margin="3,3,3,3" />
+                <ListBox ItemsSource="{Binding FormatList}" SelectedItem="{Binding FormatSelection, Mode=TwoWay}" 
+                         SelectionChanged="FormatListBox_SelectionChanged" MinWidth="150" Margin="3,3,3,3" />
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

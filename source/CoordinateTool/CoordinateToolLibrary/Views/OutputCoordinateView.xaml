@@ -6,6 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:CoordinateToolLibrary.ViewModels"
              mc:Ignorable="d" 
+             Loaded="ocView_Loaded"
+             Unloaded="ocView_Unloaded"
              d:DesignHeight="150" d:DesignWidth="425">
     <UserControl.Resources>
         <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>

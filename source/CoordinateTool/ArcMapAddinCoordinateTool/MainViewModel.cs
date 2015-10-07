@@ -8,6 +8,7 @@ using CoordinateToolLibrary.ViewModels;
 using ESRI.ArcGIS.Geometry;
 using System.Windows;
 using CoordinateToolLibrary.Models;
+using CoordinateToolLibrary.Helpers;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {

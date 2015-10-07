@@ -31,7 +31,7 @@ namespace CoordinateToolLibrary.Views
             DialogResult = true;
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CategoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var vm = this.DataContext as EditOutputCoordinateViewModel;
 
@@ -39,6 +39,16 @@ namespace CoordinateToolLibrary.Views
                 return;
 
             vm.UpdateSample();
+        }
+
+        private void FormatListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vm = this.DataContext as EditOutputCoordinateViewModel;
+
+            if (vm == null)
+                return;
+
+            vm.UpdateFormat();
         }
     }
 }

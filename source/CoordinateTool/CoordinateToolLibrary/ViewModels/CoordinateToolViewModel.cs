@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Views;
+using CoordinateToolLibrary.Helpers;
 
 namespace CoordinateToolLibrary.ViewModels
 {

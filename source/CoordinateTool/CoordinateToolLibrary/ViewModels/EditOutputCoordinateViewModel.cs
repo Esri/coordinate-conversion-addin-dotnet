@@ -49,6 +49,11 @@ namespace CoordinateToolLibrary.ViewModels
         //    UpdateSample();
         //}
 
+        public void UpdateFormat()
+        {
+
+        }
+
         public void UpdateSample()
         {
             var type = GetCoordinateType();
