@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Helpers;
+using CoordinateToolLibrary.Views;
 
 namespace CoordinateToolLibrary.ViewModels
 {
@@ -95,7 +96,14 @@ namespace CoordinateToolLibrary.ViewModels
 
         private void OnConfigCommand(object obj)
         {
-            //System.Windows.MessageBox.Show(string.Format("Configure {0}.", obj as string));
+            var dlg = new EditOutputCoordinateView();
+
+            //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
+
+            if(dlg.ShowDialog() == true)
+            {
+
+            }
         }
 
         #endregion

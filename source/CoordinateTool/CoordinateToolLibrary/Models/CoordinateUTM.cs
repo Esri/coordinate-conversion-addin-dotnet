@@ -147,12 +147,12 @@ namespace CoordinateToolLibrary.Models
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'E': // latitude coordinate
+                            case 'E': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // latitude coordinate
+                            case 'N': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
@@ -168,7 +168,7 @@ namespace CoordinateToolLibrary.Models
                             case 'H': // N or S
                                 sb.Append(coord.Hemi);
                                 break;
-                            case 'M': // E or W
+                            case 'M': 
                                 sb.Append("m");
                                 break;
                             default:
