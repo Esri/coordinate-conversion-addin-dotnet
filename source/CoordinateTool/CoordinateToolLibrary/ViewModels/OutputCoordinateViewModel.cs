@@ -109,7 +109,9 @@ namespace CoordinateToolLibrary.ViewModels
 
         private void OnConfigCommand(object obj)
         {
-            var dlg = new EditOutputCoordinateView();
+            var outputCoordItem = GetOCMByName(obj as string);
+
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, outputCoordItem);
 
             //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
 
@@ -169,6 +171,22 @@ namespace CoordinateToolLibrary.ViewModels
         private string GetConfigFilename()
         {
             return this.GetType().Assembly.Location + ".config";
+        }
+
+        private OutputCoordinateModel GetOCMByName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                foreach (var item in OutputCoordinateList)
+                {
+                    if (item.Name == name)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

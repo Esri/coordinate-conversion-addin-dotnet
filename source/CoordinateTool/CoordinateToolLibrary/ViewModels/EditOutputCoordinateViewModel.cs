@@ -19,6 +19,7 @@ namespace CoordinateToolLibrary.ViewModels
             Format = "Y-+0.####,X-+0.####";
 
             //UpdateSampleCommand = new RelayCommand(OnUpdateSampleCommand);
+            FormatExpanded = false;
         }
 
         public ObservableCollection<string> CategoryList { get; set; }
@@ -39,22 +40,92 @@ namespace CoordinateToolLibrary.ViewModels
                 UpdateSample();
             }
         }
-        public string CategorySelection { get; set; }
-        public string FormatSelection { get; set; }
-
-        //public RelayCommand UpdateSampleCommand{get;set;}
-
-        //private void OnUpdateSampleCommand(object obj)
-        //{
-        //    UpdateSample();
-        //}
-
-        public void UpdateFormat()
+        private string _categorySelection = string.Empty;
+        public string CategorySelection 
         {
-
+            get
+            {
+                return _categorySelection;
+            }
+            set
+            {
+                if(_categorySelection != value)
+                {
+                    _categorySelection = value;
+                    OnCategorySelectionChanged();
+                }
+            }
         }
 
-        public void UpdateSample()
+        public bool FormatExpanded { get; set; }
+
+        private void OnCategorySelectionChanged()
+        {
+            if (string.IsNullOrWhiteSpace(CategorySelection))
+                return;
+
+            var list = GetFormatList(CategorySelection);
+
+            if (list == null)
+                return;
+
+            list.Add("Custom");
+
+            FormatList = list;
+
+            RaisePropertyChanged(() => FormatList);
+        }
+        private string _formatSelection;
+        public string FormatSelection 
+        {
+            get
+            {
+                return _formatSelection;
+            }
+            set
+            {
+                if(_formatSelection != value)
+                { 
+                    _formatSelection = value;
+                    OnFormatSelectionChanged();
+                }
+            }
+        }
+
+        public ObservableCollection<DefaultFormatModel> DefaultFormats { get; set; }
+        public OutputCoordinateModel OutputCoordItem { get; set; }
+
+        private void OnFormatSelectionChanged()
+        {
+            // if not custom, change format
+            // and update sample
+
+            if(FormatSelection != "Custom")
+            {
+                // get format from defaults
+
+                Format = GetFormatFromDefaults();
+
+                UpdateSample();
+            }
+            else
+            {
+                FormatExpanded = true;
+                RaisePropertyChanged(() => FormatExpanded);
+            }
+        }
+
+        private string GetFormatFromDefaults()
+        {
+            var item = DefaultFormats.First(i => i.CType == GetCoordinateType());
+
+            if (item == null)
+                return "No Format Found";
+
+            return item.DefaultNameFormatDictionary[FormatSelection];
+        }
+
+        private void UpdateSample()
         {
             var type = GetCoordinateType();
 
@@ -96,6 +167,16 @@ namespace CoordinateToolLibrary.ViewModels
                 return type;
 
             return CoordinateType.Unknown;
+        }
+
+        private ObservableCollection<string> GetFormatList(string CategorySelection)
+        {
+            var item = DefaultFormats.First(i => i.CType == GetCoordinateType());
+
+            if (item == null)
+                return null;
+
+            return new ObservableCollection<string>(item.DefaultNameFormatDictionary.Keys);
         }
     }
 }
