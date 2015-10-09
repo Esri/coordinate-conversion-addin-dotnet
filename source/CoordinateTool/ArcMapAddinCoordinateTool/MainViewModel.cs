@@ -25,12 +25,21 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             // Get name from user
             string name = "Temp";
-            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD });
+            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y#.##N X#.##E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
-        public bool HasInputError { get; set; }
+        private bool _hasInputError = false;
+        public bool HasInputError 
+        {
+            get { return _hasInputError; }
+            set
+            {
+                _hasInputError = value;
+                RaisePropertyChanged(() => HasInputError);
+            }
+        }
 
         public RelayCommand AddNewOCCommand { get; set; }
 
@@ -90,8 +99,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 result = (point as IConversionNotation).GetDDFromCoords(6);
             }
 
-            RaisePropertyChanged(() => HasInputError);
-            
             return result;
         }
 
