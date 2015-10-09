@@ -24,6 +24,9 @@ namespace CoordinateToolLibrary.ViewModels
 
             Mediator.Register("AddNewOutputCoordinate", OnAddNewOutputCoordinate);
 
+            OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
+            DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
+
             //init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };

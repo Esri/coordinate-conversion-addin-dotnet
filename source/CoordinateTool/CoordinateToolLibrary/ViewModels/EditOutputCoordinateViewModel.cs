@@ -198,7 +198,7 @@ namespace CoordinateToolLibrary.ViewModels
 
         private ObservableCollection<string> GetFormatList(string CategorySelection)
         {
-            var item = DefaultFormats.First(i => i.CType == GetCoordinateType());
+            var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
 
             if (item == null)
                 return null;
@@ -217,6 +217,7 @@ namespace CoordinateToolLibrary.ViewModels
                     FormatSelection = item;
                     
                     RaisePropertyChanged(() => FormatSelection);
+                    return;
                 }
             }
         }
@@ -226,7 +227,7 @@ namespace CoordinateToolLibrary.ViewModels
             if (OutputCoordItem == null)
                 return string.Empty;
 
-            var def = DefaultFormats.First(i => i.CType == OutputCoordItem.CType);
+            var def = DefaultFormats.FirstOrDefault(i => i.CType == OutputCoordItem.CType);
 
             if (def == null)
                 return string.Empty;
