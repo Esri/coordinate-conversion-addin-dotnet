@@ -22,6 +22,8 @@ namespace CoordinateToolLibrary.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteCommand);
             CopyCommand = new RelayCommand(OnCopyCommand);
 
+            Mediator.Register("AddNewOutputCoordinate", OnAddNewOutputCoordinate);
+
             //init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
@@ -39,6 +41,36 @@ namespace CoordinateToolLibrary.ViewModels
             //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y#.##N X#.##E" }, { "70.49N,40.32W", "Y#.##N,X#.##E" } } });
 
             //LoadOutputConfiguration();
+        }
+
+        private void OnAddNewOutputCoordinate(object obj)
+        {
+            var outputCoordItem = obj as OutputCoordinateModel;
+
+            if (outputCoordItem == null)
+                return;
+
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name });
+
+            var vm = dlg.DataContext as EditOutputCoordinateViewModel;
+            vm.WindowTitle = "Add New Output Coordinate";
+            
+            if (dlg.ShowDialog() == true)
+            {
+                outputCoordItem.Format = vm.Format;
+
+                CoordinateType type;
+                if (Enum.TryParse<CoordinateType>(vm.CategorySelection, out type))
+                {
+                    outputCoordItem.CType = type;
+                }
+
+                outputCoordItem.Name = vm.OutputCoordItem.Name;
+
+                OutputCoordinateList.Add(outputCoordItem);
+                Mediator.NotifyColleagues("UpdateOutputRequired", null);
+                SaveOutputConfiguration();
+            }
         }
 
         /// <summary>
@@ -111,12 +143,24 @@ namespace CoordinateToolLibrary.ViewModels
         {
             var outputCoordItem = GetOCMByName(obj as string);
 
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, outputCoordItem);
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, new OutputCoordinateModel() {CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name });
 
             //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
 
-            if(dlg.ShowDialog() == true)
+            var vm = dlg.DataContext as EditOutputCoordinateViewModel;
+            vm.WindowTitle = "Edit Output Coordinate";
+
+            if (dlg.ShowDialog() == true)
             {
+                outputCoordItem.Format = vm.Format;
+
+                CoordinateType type;
+                if (Enum.TryParse<CoordinateType>(vm.CategorySelection, out type))
+                {
+                    outputCoordItem.CType = type;
+                }
+
+                Mediator.NotifyColleagues("UpdateOutputRequired", null);
             }
 
             SaveOutputConfiguration();

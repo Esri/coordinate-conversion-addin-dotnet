@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:CoordinateToolLibrary.ViewModels"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
+             Title="{Binding WindowTitle}"
              SizeToContent="WidthAndHeight"
              d:DesignHeight="275" d:DesignWidth="350">
     <Window.Resources>
@@ -20,6 +21,14 @@
                 <TextBlock Text="Category" Margin="3,3,3,3" />
                 <ListBox ItemsSource="{Binding CategoryList}" SelectedItem="{Binding CategorySelection, Mode=TwoWay}"
                          MinWidth="150" Margin="3,3,3,3" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Name" Margin="3,3,3,3" />
+                    <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="3,3,3,3" />
+                </Grid>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Formats" Margin="3,3,3,3" />

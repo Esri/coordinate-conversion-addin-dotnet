@@ -24,6 +24,7 @@ namespace CoordinateToolLibrary.ViewModels
 
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
+        public string WindowTitle { get; set; }
         public string Sample { get; set; }
         private string _format = string.Empty;
         public string Format 
@@ -93,7 +94,32 @@ namespace CoordinateToolLibrary.ViewModels
         }
 
         public ObservableCollection<DefaultFormatModel> DefaultFormats { get; set; }
-        public OutputCoordinateModel OutputCoordItem { get; set; }
+        private OutputCoordinateModel _outputCoordItem = null;
+        public OutputCoordinateModel OutputCoordItem
+        {
+            get
+            {
+                return _outputCoordItem;
+            }
+            set
+            {
+                _outputCoordItem = value;
+                OnOutputCoordItemChanged();
+                RaisePropertyChanged(() => OutputCoordItem);
+            }
+        }
+
+        private void OnOutputCoordItemChanged()
+        {
+            if (OutputCoordItem == null)
+                return;
+
+            SelectCategory(OutputCoordItem.CType);
+
+            SelectFormat(OutputCoordItem.Format);
+
+            Format = OutputCoordItem.Format;
+        }
 
         private void OnFormatSelectionChanged()
         {
@@ -177,6 +203,54 @@ namespace CoordinateToolLibrary.ViewModels
                 return null;
 
             return new ObservableCollection<string>(item.DefaultNameFormatDictionary.Keys);
+        }
+
+        private void SelectFormat(string format)
+        {
+            var defaultFormat = GetFormatSample(format);
+
+            foreach( var item in FormatList)
+            {
+                if (item == defaultFormat)
+                {
+                    FormatSelection = item;
+                    
+                    RaisePropertyChanged(() => FormatSelection);
+                }
+            }
+        }
+
+        private string GetFormatSample(string format)
+        {
+            if (OutputCoordItem == null)
+                return string.Empty;
+
+            var def = DefaultFormats.First(i => i.CType == OutputCoordItem.CType);
+
+            if (def == null)
+                return string.Empty;
+
+            foreach(var item in def.DefaultNameFormatDictionary)
+            {
+                if(item.Value == format)
+                {
+                    return item.Key;
+                }
+            }
+
+            return "Custom";
+        }
+
+        private void SelectCategory(CoordinateType coordinateType)
+        {
+            foreach(var item in CategoryList)
+            {
+                if(item == coordinateType.ToString())
+                {
+                    CategorySelection = item;
+                    RaisePropertyChanged(() => CategorySelection);
+                }
+            }
         }
     }
 }

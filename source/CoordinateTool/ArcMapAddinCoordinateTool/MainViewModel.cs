@@ -18,11 +18,21 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
+            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+        }
+
+        private void OnAddNewOCCommand(object obj)
+        {
+            // Get name from user
+            string name = "Temp";
+            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
         public bool HasInputError { get; set; }
+
+        public RelayCommand AddNewOCCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate

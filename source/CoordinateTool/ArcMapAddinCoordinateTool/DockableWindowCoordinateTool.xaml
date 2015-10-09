@@ -12,20 +12,27 @@
     <Grid Margin="3,3,3,3">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-                <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                    <Setter Property="TextBox.Background" Value="LightPink"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                    <Setter Property="TextBox.Background" Value="White"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Margin="0,0,0,3">
+                        <TextBox.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                        <Setter Property="TextBox.Background" Value="LightPink"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                        <Setter Property="TextBox.Background" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Button Grid.Column="1" Content="Add" Command="{Binding AddNewOCCommand}" Margin="3,3,3,3"/>
+                </Grid>
                 <UserControl Content="{Binding CTView}" />
             </StackPanel>
         </ScrollViewer>

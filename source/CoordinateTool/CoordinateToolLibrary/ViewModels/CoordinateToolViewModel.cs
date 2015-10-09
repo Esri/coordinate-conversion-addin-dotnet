@@ -17,6 +17,8 @@ namespace CoordinateToolLibrary.ViewModels
 
             // set default CoordinateGetter
             coordinateGetter = new CoordinateGetBase();
+
+            Mediator.Register("UpdateOutputRequired", OnUpdateOutputs);
         }
 
         public OutputCoordinateView OCView { get; set; }
@@ -41,6 +43,11 @@ namespace CoordinateToolLibrary.ViewModels
         public void SetCoordinateGetter(CoordinateGetBase coordGetter)
         {
             coordinateGetter = coordGetter;
+        }
+
+        private void OnUpdateOutputs(object obj)
+        {
+            UpdateOutputs();
         }
 
         private void UpdateOutputs()
@@ -159,5 +166,7 @@ namespace CoordinateToolLibrary.ViewModels
                 }
             }
         }
+
+        // TODO ADD NEW Coordinate Output
     }
 }

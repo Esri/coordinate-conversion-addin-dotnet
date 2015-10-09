@@ -151,7 +151,7 @@ namespace CoordinateToolLibrary.Models
                                 sb.Append(coord.Quadrant.ToString());
                                 break;
                             case 'K':
-                                sb.Append(coord.Quadrant.ToString());
+                                sb.Append(coord.Key.ToString());
                                 break;
                             default:
                                 sb.Append(c);

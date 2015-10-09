@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
     <Compile Include="Models\CoordinateMGRS.cs" />
     <Compile Include="Helpers\NotificationObject.cs" />
