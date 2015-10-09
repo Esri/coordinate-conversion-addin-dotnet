@@ -25,6 +25,7 @@ namespace CoordinateToolLibrary.ViewModels
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
         public string WindowTitle { get; set; }
+        public List<string> Names { get; set; }
         public string Sample { get; set; }
         private string _format = string.Empty;
         public string Format 

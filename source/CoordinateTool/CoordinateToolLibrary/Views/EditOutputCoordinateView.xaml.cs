@@ -28,7 +28,7 @@ namespace CoordinateToolLibrary.Views
             InitializeComponent();
         }
 
-        public EditOutputCoordinateView(ObservableCollection<DefaultFormatModel> formats, OutputCoordinateModel outputCoordItem)
+        public EditOutputCoordinateView(ObservableCollection<DefaultFormatModel> formats, List<string> names, OutputCoordinateModel outputCoordItem)
         {
             InitializeComponent();
 
@@ -39,11 +39,32 @@ namespace CoordinateToolLibrary.Views
 
             vm.DefaultFormats = formats;
             vm.OutputCoordItem = outputCoordItem;
+            vm.Names = names;
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var vm = this.DataContext as EditOutputCoordinateViewModel;
+
+            if (vm == null)
+                return;
+
+            if(vm.Names.Contains(vm.OutputCoordItem.Name))
+            {
+                // no duplicates please
+                e.Handled = false;
+                MessageBox.Show(string.Format("The name '{0}' is already used.", vm.OutputCoordItem.Name));
+                return;
+            }
+
+            if(string.IsNullOrWhiteSpace(vm.OutputCoordItem.Name))
+            {
+                e.Handled = false;
+                MessageBox.Show("Name is required.");
+                return;
+            }
+
             DialogResult = true;
         }
     }

@@ -50,7 +50,7 @@ namespace CoordinateToolLibrary.ViewModels
             if (outputCoordItem == null)
                 return;
 
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name });
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Add New Output Coordinate";
@@ -71,6 +71,11 @@ namespace CoordinateToolLibrary.ViewModels
                 Mediator.NotifyColleagues("UpdateOutputRequired", null);
                 SaveOutputConfiguration();
             }
+        }
+
+        private List<string> GetInUseNames()
+        {
+            return OutputCoordinateList.Select(oc => oc.Name).ToList();
         }
 
         /// <summary>
@@ -142,8 +147,9 @@ namespace CoordinateToolLibrary.ViewModels
         private void OnConfigCommand(object obj)
         {
             var outputCoordItem = GetOCMByName(obj as string);
-
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, new OutputCoordinateModel() {CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name });
+            var InUseNames = GetInUseNames();
+            InUseNames.Remove(outputCoordItem.Name);
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, InUseNames, new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name });
 
             //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
 
@@ -152,6 +158,7 @@ namespace CoordinateToolLibrary.ViewModels
 
             if (dlg.ShowDialog() == true)
             {
+                outputCoordItem.Name = vm.OutputCoordItem.Name;
                 outputCoordItem.Format = vm.Format;
 
                 CoordinateType type;
