@@ -40,7 +40,7 @@ namespace CoordinateToolLibrary.Models
 
             input = input.Trim();
 
-            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[ ]*(?<gs>[A-HJ-NP-Z]{2})[ ]*(?<numlocation>\d{0,10})\s*");
+            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[-,;:\s]*(?<gs>[A-HJ-NP-Z]{2})[-,;:\s]*(?<numlocation>\d{0,10})\s*");
 
             var matchMGRS = regexMGRS.Match(input);
 

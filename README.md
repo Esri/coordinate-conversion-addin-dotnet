@@ -8,7 +8,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 
 * Parses input coordinates and outputs multiple formats of the input coordinate
 * Addin for ArcMAP 10.3
-* Works with DD, DMS, MGRS, USNG, GARS
+* Works with DD, DMS, MGRS, USNG, GARS, UTM
 
 ## Sections
 
@@ -44,8 +44,17 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 * Running
 	* Run or debug from Visual Studio
 	* To run from a stand-alone deployment
-        * TBA 
-		
+        * Install the add-in from the application folder by double clicking it
+		* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+			* C:\Users\YOUUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
+		* Add the add-in command to a toolbar via menu option 
+			* "Customize -> Customize mode"
+			* Select "Commands" Tab
+			* Select "Add-In Controls"
+			* Drag/Drop "CoordinateTool" command onto a toolbar
+			* Close customize mode
+			* open tool by clicking the "Coordinate Tool" command you just added
+			* dockable coordinate tool appears
 
 ## Resources
 

@@ -39,7 +39,7 @@ namespace CoordinateToolLibrary.Models
 
             input = input.Trim();
 
-            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)\s*(?<easting>\d{1,9})\s*(?<northing>\d{1,9})\s*");
+            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
 
             var matchUTM = regexUTM.Match(input);
 

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcMapAddinCoordinateTool",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateToolLibrary", "CoordinateToolLibrary\CoordinateToolLibrary.csproj", "{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateToolLibrary.Tests", "CoordinateToolLibrary.Tests\CoordinateToolLibrary.Tests.csproj", "{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
