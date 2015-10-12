@@ -75,6 +75,12 @@ namespace CoordinateToolLibrary.ViewModels
 
             FormatList = list;
 
+            if(!FormatList.Contains(FormatSelection) || FormatSelection == "Custom")
+            {
+                // update format selection
+                FormatSelection = FormatList.FirstOrDefault();
+            }
+
             RaisePropertyChanged(() => FormatList);
         }
         private string _formatSelection;
@@ -90,6 +96,7 @@ namespace CoordinateToolLibrary.ViewModels
                 { 
                     _formatSelection = value;
                     OnFormatSelectionChanged();
+                    RaisePropertyChanged(() => FormatSelection);
                 }
             }
         }
@@ -215,11 +222,11 @@ namespace CoordinateToolLibrary.ViewModels
                 if (item == defaultFormat)
                 {
                     FormatSelection = item;
-                    
-                    RaisePropertyChanged(() => FormatSelection);
                     return;
                 }
             }
+
+            FormatSelection = FormatList.FirstOrDefault();
         }
 
         private string GetFormatSample(string format)

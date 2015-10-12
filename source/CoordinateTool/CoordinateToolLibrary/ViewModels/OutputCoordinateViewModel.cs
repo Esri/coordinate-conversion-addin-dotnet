@@ -201,7 +201,10 @@ namespace CoordinateToolLibrary.ViewModels
                 var filename = GetConfigFilename();
 
                 if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
+                {
+                    LoadSomeDefaults();
                     return;
+                }
 
                 XmlSerializer x = new XmlSerializer(GetType());
                 TextReader tr = new StreamReader(filename);
@@ -220,6 +223,17 @@ namespace CoordinateToolLibrary.ViewModels
             {
 
             }
+        }
+
+        private void LoadSomeDefaults()
+        {
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.49N 40.32W", "Y#.##N X#.##E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.12'N 40° 18.32'W", "A#° B#.##'N X#° Y#.##'E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.2\"N 40° 18' 45.4\"W", "A#° B#' C#.#\"N X#° Y#' Z#.#E\"" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.GARS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "221LW37", "X#YQK" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSE#N#" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSE#N#" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19N 414639m 4428236m", "Z#H E#m N#m" } } });
         }
 
         private string GetConfigFilename()
