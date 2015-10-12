@@ -40,6 +40,18 @@ namespace CoordinateToolLibrary.ViewModels
                 _format = value;
                 RaisePropertyChanged(() => Format);
                 UpdateSample();
+                if (DefaultFormats != null)
+                {
+                    var temp = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
+                    if (temp != null && temp.DefaultNameFormatDictionary != null && temp.DefaultNameFormatDictionary.Values != null)
+                    {
+                        if (!temp.DefaultNameFormatDictionary.Values.Contains(Format))
+                        {
+                            FormatSelection = "Custom";
+                            FormatExpanded = true;
+                        }
+                    }
+                }
             }
         }
         private string _categorySelection = string.Empty;
