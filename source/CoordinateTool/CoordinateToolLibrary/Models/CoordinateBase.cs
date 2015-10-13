@@ -61,29 +61,6 @@ namespace CoordinateToolLibrary.Models
                 return string.Format(formatProvider, format, new object[] { this });
             }
 
-            #region OLD CODE
-            //var sb = new StringBuilder();
-
-            //if (format == null)
-            //    format = "DD";
-
-            //NumberFormatInfo fi = NumberFormatInfo.InvariantInfo;
-
-            //switch (format.ToUpper())
-            //{
-            //    case "":
-            //    case "DD":
-            //        sb.AppendFormat(fi, "x = {0:#.0000}", this.Lon);
-            //        sb.AppendFormat(fi, " y = {0:#.0000}", this.Lat);
-            //        break;
-            //    default:
-            //        throw new Exception("CoordinateDD.ToString(): Invalid formatting string.");
-            //}
-
-            //return sb.ToString();
-
-            #endregion
-
             return string.Empty;
         }
     }

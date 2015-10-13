@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CoordinateToolLibrary.Helpers;
+using System.Xml.Serialization;
 
 namespace CoordinateToolLibrary.Models
 {
@@ -39,6 +40,7 @@ namespace CoordinateToolLibrary.Models
 
         #region Props
         private Dictionary<string, string> _props;
+        [XmlIgnore]
         public Dictionary<string, string> Props 
         {
             get
@@ -57,7 +59,7 @@ namespace CoordinateToolLibrary.Models
 
         private string outputCoordinate = String.Empty;
 
-
+        [XmlIgnore]
         public string OutputCoordinate
         {
             get { return outputCoordinate; }

@@ -60,6 +60,8 @@ namespace CoordinateToolLibrary.Views
         /// </summary>
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+
+
             DependencyObject dep = (DependencyObject)e.OriginalSource;
 
             while ((dep != null) && !(dep is DataGridRowHeader))
@@ -163,6 +165,26 @@ namespace CoordinateToolLibrary.Views
         }
 
         #endregion
+
+        private void ocView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as OutputCoordinateViewModel;
+            if (vm == null)
+                return;
+
+            // load the config file
+            vm.LoadOutputConfiguration();
+        }
+
+        private void ocView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as OutputCoordinateViewModel;
+            if (vm == null)
+                return;
+
+            // save the config file
+            vm.SaveOutputConfiguration();
+        }
 
     }
 }

@@ -24,11 +24,7 @@ namespace CoordinateToolLibrary.Models
 
         #region Properties
 
-        public int LatDegrees
-        {
-            get;
-            set;
-        }
+        public int LatDegrees { get; set; }
 
         public int LatMinutes
         {
@@ -85,20 +81,14 @@ namespace CoordinateToolLibrary.Models
                         var LonMinutes = int.Parse(matchDMS.Groups["longitudeM"].Value);
                         var LonSeconds = double.Parse(matchDMS.Groups["longitudeS"].Value);
 
-                        // convert to DD
-                        //coord.Lat = latD + (latM / 60.0) + (latS / 3600.0);
-                        //coord.Lon = lonD + (lonM / 60.0) + (lonS / 3600.0);
-
                         var temp = matchDMS.Groups["latitudeSuffix"];
                         if (temp.Success && temp.Value.ToUpper().Equals("S"))
                         {
-                            //coord.Lat = Math.Abs(coord.Lat) * -1;
                             LatDegrees = Math.Abs(LatDegrees) * -1;
                         }
                         temp = matchDMS.Groups["longitudeSuffix"];
                         if (temp.Success && temp.Value.ToUpper().Equals("W"))
                         {
-                            //coord.Lon = Math.Abs(coord.Lon) * -1;
                             LonDegrees = Math.Abs(LonDegrees) * -1;
                         }
 
@@ -115,32 +105,12 @@ namespace CoordinateToolLibrary.Models
             return false;
         }
 
-        //public override string ToString()
-        //{
-        //    return this.ToString(null);
-        //}
-
-        //public string ToString(string format)
-        //{
-        //    return this.ToString(format, null);
-        //}
-
         public override string ToString(string format, IFormatProvider formatProvider)
         {
             var temp = base.ToString(format, formatProvider);
 
             if (!string.IsNullOrWhiteSpace(temp))
                 return temp;
-
-            //if (formatProvider != null)
-            //{
-            //    if (formatProvider is CoordinateDMSFormatter && !format.Contains("{0:"))
-            //    {
-            //        format = string.Format("{{0:{0}}}", format);
-            //    }
-            //    var temp = string.Format(formatProvider, format, new object[] { this });
-            //    return temp;
-            //}
 
             var sb = new StringBuilder();
 
@@ -153,8 +123,8 @@ namespace CoordinateToolLibrary.Models
             {
                 case "":
                 case "DMS":
-                    sb.AppendFormat(fi, "{0}° {1}\' {2:##}\" {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatSeconds, this.LatDegrees < 0 ? "S" : "N");
-                    sb.AppendFormat(fi, " {0}° {1}\' {2:##}\" {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonSeconds, this.LonDegrees < 0 ? "W" : "E");
+                    sb.AppendFormat(fi, "{0}° {1}\' {2:#}\" {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatSeconds, this.LatDegrees < 0 ? "S" : "N");
+                    sb.AppendFormat(fi, " {0}° {1}\' {2:#}\" {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonSeconds, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
                     throw new Exception("CoordinateDMS.ToString(): Invalid formatting string.");
@@ -167,18 +137,13 @@ namespace CoordinateToolLibrary.Models
 
     public class CoordinateDMSFormatter : CoordinateFormatterBase
     {
-        //public object GetFormat(Type formatType)
-        //{
-        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
-        //}
-
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDMS)
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A##°B##'C##.0\" X###°Y##'Z##\"", arg, this);
+                    return this.Format("A#°B0'C0.0\"N X#°Y0'Z0.0\"E", arg, this);
                 }
                 else
                 {
@@ -190,7 +155,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -247,12 +212,14 @@ namespace CoordinateToolLibrary.Models
                                     sb.Append("-");
                                 break;
                             case 'N': // N or S
+                            case 'S':
                                 if (coord.LatDegrees > 0)
                                     sb.Append("N"); // do we always want UPPER
                                 else
                                     sb.Append("S");
                                 break;
                             case 'E': // E or W
+                            case 'W':
                                 if (coord.LonDegrees > 0)
                                     sb.Append("E");
                                 else

@@ -8,52 +8,49 @@ using System.Threading.Tasks;
 
 namespace CoordinateToolLibrary.Models
 {
-    public class CoordinateUTM : CoordinateBase
+    public class CoordinateGARS : CoordinateBase
     {
-        public CoordinateUTM()
+        public CoordinateGARS()
         {
-            Zone = 17;
-            Hemi = "N";
-            Easting = 1000;
-            Northing = 1000;
+
         }
 
-        public CoordinateUTM(int zone, string hemi, int easting, int northing)
+        public CoordinateGARS(int lonBand, string latBand, int quadrant, int key)
         {
-            Zone = zone;
-            Hemi = hemi;
-            Easting = easting;
-            Northing = northing;
+            LonBand = lonBand;
+            LatBand = latBand;
+            Quadrant = quadrant;
+            Key = key;
         }
 
-        public int Zone { get; set; }
-        public string Hemi { get; set; } 
-        public int Easting { get; set; }
-        public int Northing { get; set; }
+        public int LonBand { get; set; }
+        public string LatBand { get; set; }
+        public int Quadrant { get; set; }
+        public int Key { get; set; }
 
         #region Methods
 
-        public static bool TryParse(string input, out CoordinateUTM utm)
+        public static bool TryParse(string input, out CoordinateGARS gars)
         {
-            utm = new CoordinateUTM();
+            gars = new CoordinateGARS();
 
             input = input.Trim();
 
-            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
+            Regex regexGARS = new Regex(@"^\s*(?<lonband>\d{3})[-,;:\s]*(?<latband>[A-HJ-NP-Z]{2}?)[-,;:\s]*(?<quadrant>\d?)[-,;:\s]*(?<key>\d?)\s*");
 
-            var matchUTM = regexUTM.Match(input);
+            var matchGARS = regexGARS.Match(input);
 
-            if (matchUTM.Success && matchUTM.Length == input.Length)
+            if (matchGARS.Success && matchGARS.Length == input.Length)
             {
-                if (ValidateNumericCoordinateMatch(matchUTM, new string[] { "zone","easting","northing" }))
+                if (ValidateNumericCoordinateMatch(matchGARS, new string[] { "lonband", "quadrant", "key" }))
                 {
-                    // need to validate the gzd and gs
+                    // need to validate the latband
                     try
                     {
-                        utm.Zone = Int32.Parse(matchUTM.Groups["zone"].Value);
-                        utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
-                        utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
-                        utm.Hemi = matchUTM.Groups["hemi"].Value;
+                        gars.LonBand = Int32.Parse(matchGARS.Groups["lonband"].Value);
+                        gars.LatBand = matchGARS.Groups["latband"].Value;
+                        gars.Quadrant = Int32.Parse(matchGARS.Groups["quadrant"].Value);
+                        gars.Key = Int32.Parse(matchGARS.Groups["key"].Value);
                     }
                     catch
                     {
@@ -81,21 +78,21 @@ namespace CoordinateToolLibrary.Models
             var sb = new StringBuilder();
 
             if (format == null)
-                format = "UTM";
+                format = "GARS";
 
             NumberFormatInfo fi = NumberFormatInfo.InvariantInfo;
 
             switch (format.ToUpper())
             {
                 case "":
-                case "UTM":
-                    sb.Append(Zone);
-                    sb.Append(Hemi+" ");
-                    sb.AppendFormat(fi, "{0:#}", Easting);
-                    sb.AppendFormat(fi, "{0:#}", Northing);
+                case "GARS":
+                    sb.AppendFormat(fi, "{0:000}", LonBand);
+                    sb.Append(LatBand);
+                    sb.AppendFormat(fi, "{0:#}", Quadrant);
+                    sb.AppendFormat(fi, "{0:#}", Key);
                     break;
                 default:
-                    throw new Exception("CoordinateUTM.ToString(): Invalid formatting string.");
+                    throw new Exception("CoordinateGARS.ToString(): Invalid formatting string.");
             }
 
             return sb.ToString();
@@ -104,20 +101,20 @@ namespace CoordinateToolLibrary.Models
         #endregion
     }
 
-    public class CoordinateUTMFormatter : CoordinateFormatterBase
+    public class CoordinateGARSFormatter : CoordinateFormatterBase
     {
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            if (arg is CoordinateUTM)
+            if (arg is CoordinateGARS)
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H X#m Y#m", arg, this);
+                    return this.Format("X#YQK", arg, this);
                 }
                 else
                 {
-                    var coord = arg as CoordinateUTM;
-                    var cnum = coord.Zone;
+                    var coord = arg as CoordinateGARS;
+                    var cnum = coord.LonBand;
                     var sb = new StringBuilder();
                     var olist = new List<object>();
                     bool startIndexNeeded = false;
@@ -142,31 +139,19 @@ namespace CoordinateToolLibrary.Models
 
                         switch (c)
                         {
-                            case 'Z': 
-                                cnum = coord.Zone;
+                            case 'X':
+                                cnum = coord.LonBand;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'X': // easting
-                                cnum = coord.Easting;
-                                olist.Add(Math.Abs(cnum));
-                                startIndexNeeded = true;
+                            case 'Y':
+                                sb.Append(coord.LatBand);
                                 break;
-                            case 'Y': // northing
-                                cnum = coord.Northing;
-                                olist.Add(Math.Abs(cnum));
-                                startIndexNeeded = true;
+                            case 'Q':
+                                sb.Append(coord.Quadrant.ToString());
                                 break;
-                            case '+': // show +
-                                if (coord.Hemi == "N")
-                                    sb.Append("+");
-                                break;
-                            case '-': // show -
-                                if (coord.Hemi == "S")
-                                    sb.Append("-");
-                                break;
-                            case 'H': // N or S
-                                sb.Append(coord.Hemi);
+                            case 'K':
+                                sb.Append(coord.Key.ToString());
                                 break;
                             default:
                                 sb.Append(c);

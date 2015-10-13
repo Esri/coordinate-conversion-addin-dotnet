@@ -8,6 +8,7 @@ using CoordinateToolLibrary.ViewModels;
 using ESRI.ArcGIS.Geometry;
 using System.Windows;
 using CoordinateToolLibrary.Models;
+using CoordinateToolLibrary.Helpers;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -17,19 +18,30 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
+            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+        }
+
+        private void OnAddNewOCCommand(object obj)
+        {
+            // Get name from user
+            string name = "Temp";
+            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y#.##N X#.##E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
-        public bool HasInputError { get; set; }
+        private bool _hasInputError = false;
+        public bool HasInputError 
+        {
+            get { return _hasInputError; }
+            set
+            {
+                _hasInputError = value;
+                RaisePropertyChanged(() => HasInputError);
+            }
+        }
 
-        //public string DD { get; set; }
-        //public string DDM { get; set; }
-        //public string DMS { get; set; }
-        //public string GARS { get; set; }
-        //public string MGRS { get; set; }
-        //public string USNG { get; set; }
-        //public string UTM { get; set; }
+        public RelayCommand AddNewOCCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -74,6 +86,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             HasInputError = false;
 
+            if (string.IsNullOrWhiteSpace(input))
+                return result;
 
             var coordType = GetCoordinateType(input, out point);
 
@@ -82,35 +96,11 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             else
             {
                 amCoordGetter.Point = point;
-                //UpdateOutputs(point);
                 result = (point as IConversionNotation).GetDDFromCoords(6);
             }
 
-            RaisePropertyChanged(() => HasInputError);
-            
             return result;
         }
-
-        //private void UpdateOutputs(IPoint point)
-        //{
-        //    var cn = point as IConversionNotation;
-
-        //    DD = cn.GetDDFromCoords(4);
-        //    DDM = cn.GetDDMFromCoords(4);
-        //    DMS = cn.GetDMSFromCoords(4);
-        //    GARS = cn.GetGARSFromCoords();
-        //    MGRS = (point as IConversionMGRS).CreateMGRS(4, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
-        //    USNG = cn.GetUSNGFromCoords(4, true, true);
-        //    UTM = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMUseNS);
-
-        //    RaisePropertyChanged(() => DD); 
-        //    RaisePropertyChanged(() => DDM);
-        //    RaisePropertyChanged(() => DMS);
-        //    RaisePropertyChanged(() => GARS);
-        //    RaisePropertyChanged(() => MGRS);
-        //    RaisePropertyChanged(() => USNG);
-        //    RaisePropertyChanged(() => UTM);
-        //}
 
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         {

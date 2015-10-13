@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Models;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace CoordinateToolLibrary
+namespace CoordinateToolLibrary.Models
 {
     public class CoordinateMGRS : CoordinateBase
     {
@@ -41,7 +40,7 @@ namespace CoordinateToolLibrary
 
             input = input.Trim();
 
-            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[ ]*(?<gs>[A-HJ-NP-Z]{2})[ ]*(?<numlocation>\d{0,10})\s*");
+            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[-,;:\s]*(?<gs>[A-HJ-NP-Z]{2})[-,;:\s]*(?<numlocation>\d{0,10})\s*");
 
             var matchMGRS = regexMGRS.Match(input);
 
@@ -113,11 +112,6 @@ namespace CoordinateToolLibrary
 
     public class CoordinateMGRSFormatter : CoordinateFormatterBase
     {
-        //public object GetFormat(Type formatType)
-        //{
-        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
-        //}
-
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateMGRS)
@@ -136,7 +130,7 @@ namespace CoordinateToolLibrary
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -154,20 +148,20 @@ namespace CoordinateToolLibrary
 
                         switch (c)
                         {
-                            case 'E': // longitude coordinate
+                            case 'E': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // latitude coordinate
+                            case 'N': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'Z': // show +
+                            case 'Z': // grid zone
                                 sb.Append(coord.GZD);
                                 break;
-                            case 'S': // show -
+                            case 'S': // grid segment
                                 sb.Append(coord.GS);
                                 break;
                             default:
