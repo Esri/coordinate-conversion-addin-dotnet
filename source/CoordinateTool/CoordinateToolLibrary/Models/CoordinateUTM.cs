@@ -112,7 +112,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H E#m N#m", arg, this);
+                    return this.Format("Z#H X#m Y#m", arg, this);
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -147,12 +147,12 @@ namespace CoordinateToolLibrary.Models
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'E': // easting
+                            case 'X': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // northing
+                            case 'Y': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
@@ -167,9 +167,6 @@ namespace CoordinateToolLibrary.Models
                                 break;
                             case 'H': // N or S
                                 sb.Append(coord.Hemi);
-                                break;
-                            case 'M': 
-                                sb.Append("m");
                                 break;
                             default:
                                 sb.Append(c);

@@ -45,7 +45,7 @@ namespace CoordinateToolLibrary.Models
 
             input = input.Trim();
 
-            Regex regexDD = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitude>[^NSDd*° ,]*)?[Dd*° ,]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitude>[^EWDd*° ]*)?[Dd*° ]*(?<longitudeSuffix>[EW])?");
+            Regex regexDD = new Regex(@"^ *[+]*(?<latitudeSuffix>[NS])?(?<latitude>[^NSDd*° ,]*)?[Dd*° ,]*(?<latitudeSuffix>[NS])?[+,;:\s]*(?<longitudeSuffix>[EW])?(?<longitude>[^EWDd*° ]*)?[Dd*° ]*(?<longitudeSuffix>[EW])?");
 
             var matchDD = regexDD.Match(input);
 
@@ -128,18 +128,13 @@ namespace CoordinateToolLibrary.Models
 
     public class CoordinateDDFormatter : CoordinateFormatterBase
     {
-        //public object GetFormat(Type formatType)
-        //{
-        //    return (formatType == typeof(ICustomFormatter)) ? this : null;
-        //}
-
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDD)
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Y-##.0000 X-###.0000", arg, this);
+                    return this.Format("Y-0.0000 X-0.0000", arg, this);
                 }
                 else
                 {
@@ -151,7 +146,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -187,13 +182,15 @@ namespace CoordinateToolLibrary.Models
                                 if (cnum < 0.0)
                                     sb.Append("-");
                                 break;
-                            case 'N': // N or S
+                            case 'N':
+                            case 'S': // N or S
                                 if (coord.Lat > 0.0)
                                     sb.Append("N"); // do we always want UPPER
                                 else
                                     sb.Append("S");
                                 break;
-                            case 'E': // E or W
+                            case 'E':
+                            case 'W': // E or W
                                 if (coord.Lon > 0.0)
                                     sb.Append("E");
                                 else

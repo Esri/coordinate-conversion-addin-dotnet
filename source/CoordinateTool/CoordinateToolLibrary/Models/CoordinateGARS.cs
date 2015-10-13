@@ -121,7 +121,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {

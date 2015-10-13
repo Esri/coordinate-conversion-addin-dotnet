@@ -130,7 +130,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -148,20 +148,20 @@ namespace CoordinateToolLibrary.Models
 
                         switch (c)
                         {
-                            case 'E': // longitude coordinate
+                            case 'E': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // latitude coordinate
+                            case 'N': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'Z': // show +
+                            case 'Z': // grid zone
                                 sb.Append(coord.GZD);
                                 break;
-                            case 'S': // show -
+                            case 'S': // grid segment
                                 sb.Append(coord.GS);
                                 break;
                             default:

@@ -111,7 +111,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A#°B#.######' X#°Y#.######'", arg, this);
+                    return this.Format("A-0°B0.0#####' X-0°Y0.0#####'", arg, this);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace CoordinateToolLibrary.Models
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
 
-                    foreach (char c in format.ToUpper())
+                    foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
@@ -170,12 +170,14 @@ namespace CoordinateToolLibrary.Models
                                     sb.Append("-");
                                 break;
                             case 'N': // N or S
+                            case 'S':
                                 if (coord.LatDegrees > 0)
                                     sb.Append("N"); // do we always want UPPER
                                 else
                                     sb.Append("S");
                                 break;
                             case 'E': // E or W
+                            case 'W':
                                 if (coord.LonDegrees > 0)
                                     sb.Append("E");
                                 else
