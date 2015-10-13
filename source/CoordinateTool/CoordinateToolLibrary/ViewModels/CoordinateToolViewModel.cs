@@ -65,8 +65,26 @@ namespace CoordinateToolLibrary.ViewModels
                             CoordinateDD.TryParse(coord, out cdd))
                         {
                             output.OutputCoordinate = cdd.ToString(output.Format, new CoordinateDDFormatter());
-                            props.Add("Lat", cdd.Lat.ToString());
-                            props.Add("Lon", cdd.Lon.ToString());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add("Lat", cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
+                                props.Add("Lon", cdd.ToString("X" + splits[1].Trim(), new CoordinateDDFormatter()));
+                            }
+                            else
+                            {
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add("Lon", cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
+                                    props.Add("Lat", cdd.ToString("Y" + splits[1].Trim(), new CoordinateDDFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add("Lat", cdd.Lat.ToString());
+                                    props.Add("Lon", cdd.Lon.ToString());
+                                }
+                            }
                             output.Props = props;
                         }
                         break;
