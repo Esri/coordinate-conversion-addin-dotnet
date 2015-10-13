@@ -8,7 +8,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 
 * Parses input coordinates and outputs multiple formats of the input coordinate
 * Addin for ArcMAP 10.3
-* Works with DD, DMS, MGRS, USNG, GARS, UTM
+* Works with DD, DMS, GARS, MGRS, USNG, UTM
 
 ## Sections
 
