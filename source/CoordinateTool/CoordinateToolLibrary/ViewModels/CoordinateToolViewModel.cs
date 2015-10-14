@@ -88,7 +88,7 @@ namespace CoordinateToolLibrary.ViewModels
                             output.Props = props;
                         }
                         break;
-                    case CoordinateType.DMS:
+                    case CoordinateType.DMS:  //TODO Update splits to work either way, lat lon or lon lat
                         CoordinateDMS cdms;
                         if (coordinateGetter.CanGetDMS(out coord) &&
                             CoordinateDMS.TryParse(coord, out cdms))
@@ -167,7 +167,7 @@ namespace CoordinateToolLibrary.ViewModels
                             output.Props = props;
                         }
                         break;
-                    case CoordinateType.UTM:
+                    case CoordinateType.UTM: //TODO do splits to get custom formatting for each part, (zone, easting, northing, etc)
                         CoordinateUTM utm;
                         if(coordinateGetter.CanGetUTM(out coord) &&
                             CoordinateUTM.TryParse(coord, out utm))
@@ -185,6 +185,5 @@ namespace CoordinateToolLibrary.ViewModels
             }
         }
 
-        // TODO ADD NEW Coordinate Output
     }
 }

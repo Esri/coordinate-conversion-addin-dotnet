@@ -19,6 +19,7 @@ namespace CoordinateToolLibrary.Models
         }
 
         #region Details Visibility
+        [XmlIgnore]
         public Visibility DVisibility { get; set; }
         #endregion
 
