@@ -18,7 +18,6 @@ namespace CoordinateToolLibrary.ViewModels
             Sample = "Sample";
             Format = "Y-+0.####,X-+0.####";
 
-            //UpdateSampleCommand = new RelayCommand(OnUpdateSampleCommand);
             FormatExpanded = false;
         }
 

@@ -247,5 +247,13 @@ namespace CoordinateToolLibrary.Tests
             temp = coord.ToString("Z#H X# E Y# N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
         }
+
+        [TestMethod]
+        public void CTViewModel()
+        {
+            var ctvm = new CoordinateToolViewModel();
+
+            Assert.IsNotNull(ctvm.OCView);
+        }
     }
 }
