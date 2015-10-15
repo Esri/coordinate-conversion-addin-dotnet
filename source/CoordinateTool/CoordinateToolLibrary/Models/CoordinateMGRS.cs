@@ -12,10 +12,10 @@ namespace CoordinateToolLibrary.Models
     {
         public CoordinateMGRS() 
         {
-            GZD = string.Empty;
-            GS = string.Empty;
-            Easting = 0;
-            Northing = 0;
+            GZD = "17T";
+            GS = "QQ";
+            Easting = 16777;
+            Northing = 44511;
         }
 
         // grid zone, grid square, easting, northing 5 digits is 1m

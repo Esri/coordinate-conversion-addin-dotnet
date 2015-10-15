@@ -10,6 +10,10 @@ namespace CoordinateToolLibrary.Models
     {
         public CoordinateUSNG() : base()
         {
+            GZD = "17T";
+            GS = "QE";
+            Easting = 16777;
+            Northing = 44511;
         }
 
         public CoordinateUSNG(string gzd, string gsquare, int easting, int northing)
@@ -22,7 +26,7 @@ namespace CoordinateToolLibrary.Models
 
         public static bool TryParse(string input, out CoordinateUSNG usng)
         {
-            CoordinateMGRS mgrs;
+            CoordinateMGRS mgrs = new CoordinateMGRS();
 
             if (CoordinateMGRS.TryParse(input, out mgrs))
             {

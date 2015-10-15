@@ -10,7 +10,7 @@ namespace CoordinateToolLibrary.Models
 {
     public class CoordinateDDM : CoordinateBase
     {
-        public CoordinateDDM() { }
+        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.38; LonDegrees = -78; LonMinutes = 27.36; }
 
         public CoordinateDDM(int latd, double latm, int lond, double lonm)
         {

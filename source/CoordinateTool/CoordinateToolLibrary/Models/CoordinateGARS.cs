@@ -12,7 +12,10 @@ namespace CoordinateToolLibrary.Models
     {
         public CoordinateGARS()
         {
-
+            LonBand = 204;
+            LatBand = "LW";
+            Quadrant = 3;
+            Key = 4;
         }
 
         public CoordinateGARS(int lonBand, string latBand, int quadrant, int key)

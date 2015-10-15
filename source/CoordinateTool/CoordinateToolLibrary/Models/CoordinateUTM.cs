@@ -14,8 +14,8 @@ namespace CoordinateToolLibrary.Models
         {
             Zone = 17;
             Hemi = "N";
-            Easting = 1000;
-            Northing = 1000;
+            Easting = 716777;
+            Northing = 4444511;
         }
 
         public CoordinateUTM(int zone, string hemi, int easting, int northing)

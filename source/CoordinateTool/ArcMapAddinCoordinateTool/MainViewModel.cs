@@ -19,6 +19,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+            Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
         }
 
         private void OnAddNewOCCommand(object obj)
@@ -189,6 +190,65 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             catch { }
 
             return CoordinateType.Unknown;
+        }
+
+        private void OnBCNeeded(object obj)
+        {
+            if(amCoordGetter == null || amCoordGetter.Point == null)
+                return;
+
+            BroadcastCoordinateValues(amCoordGetter.Point);
+        }
+
+        private void BroadcastCoordinateValues(ESRI.ArcGIS.Geometry.IPoint point)
+        {
+
+            var dict = new Dictionary<CoordinateType, string>();
+            if (point == null)
+                return;
+
+            var cn = point as IConversionNotation;
+
+            if(cn == null)
+                return;
+
+            try
+            {
+                dict.Add(CoordinateType.DD, cn.GetDDFromCoords(6));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.DDM, cn.GetDDMFromCoords(6));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.DMS, cn.GetDMSFromCoords(6));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.GARS, cn.GetGARSFromCoords());
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.USNG, cn.GetUSNGFromCoords(5, false,false));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.UTM, cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces|esriUTMConversionOptionsEnum.esriUTMUseNS));
+            }
+            catch { }
+
+            Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
     }
 }

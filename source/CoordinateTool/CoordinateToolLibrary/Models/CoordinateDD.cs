@@ -10,7 +10,7 @@ namespace CoordinateToolLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { }
+        public CoordinateDD() { Lat = 40.123; Lon = -78.456; }
 
         public CoordinateDD(double lat, double lon)
         {
@@ -41,7 +41,7 @@ namespace CoordinateToolLibrary.Models
 
         public static bool TryParse(string input, out CoordinateDD coord)
         {
-            coord = new CoordinateDD(0.0,0.0);
+            coord = new CoordinateDD();
 
             input = input.Trim();
 
