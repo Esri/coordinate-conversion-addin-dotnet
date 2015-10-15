@@ -92,16 +92,6 @@ namespace CoordinateToolLibrary.Models
             if (!string.IsNullOrWhiteSpace(temp))
                 return temp;
 
-            //if (formatProvider != null)
-            //{
-            //    if (formatProvider is CoordinateDDFormatter && !format.Contains("{0:"))
-            //    {
-            //        format = string.Format("{{0:{0}}}", format);
-            //    }
-
-            //    return string.Format(formatProvider, format, new object[] { this });
-            //}
-
             var sb = new StringBuilder();
 
             if (format == null)

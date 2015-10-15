@@ -58,6 +58,9 @@ namespace CoordinateToolLibrary.Models
                     format = string.Format("{{0:{0}}}", format);
                 }
 
+                // Support Tabs
+                format = format.Replace(@"\t", "\t");
+
                 return string.Format(formatProvider, format, new object[] { this });
             }
 
