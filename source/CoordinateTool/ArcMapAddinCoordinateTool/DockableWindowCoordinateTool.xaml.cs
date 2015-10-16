@@ -35,6 +35,12 @@ namespace ArcMapAddinCoordinateTool
 
             public AddinImpl()
             {
+                //ArcMap.Document.ActiveView.FocusMap.
+            }
+
+            public void TestMe()
+            {
+
             }
 
             protected override IntPtr OnCreateChild()
