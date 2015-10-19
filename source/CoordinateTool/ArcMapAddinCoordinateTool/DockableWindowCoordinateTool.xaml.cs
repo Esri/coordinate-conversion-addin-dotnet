@@ -44,7 +44,7 @@ namespace ArcMapAddinCoordinateTool
                 if(tool == null)
                     return;
 
-                tool.input.Text = String.Format("{0} {1}", y, x);
+                tool.input.Text = String.Format("{0:0.0####} {1:0.0####}", y, x);
             }
 
             protected override IntPtr OnCreateChild()
