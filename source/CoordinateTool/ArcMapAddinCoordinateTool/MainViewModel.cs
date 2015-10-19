@@ -9,6 +9,8 @@ using ESRI.ArcGIS.Geometry;
 using System.Windows;
 using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Helpers;
+using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.ArcMapUI;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -19,7 +21,24 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+            ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+        }
+
+        private void OnActivatePointToolCommand(object obj)
+        {
+            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateTool_PointTool");
+        }
+
+        public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
+        {
+            ESRI.ArcGIS.Framework.ICommandBars commandBars = application.Document.CommandBars;
+            ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
+            commandID.Value = toolName; // example: "esriArcMapUI.ZoomInTool";
+            ESRI.ArcGIS.Framework.ICommandItem commandItem = commandBars.Find(commandID, false, false);
+
+            if (commandItem != null)
+                application.CurrentTool = commandItem;
         }
 
         private void OnAddNewOCCommand(object obj)
@@ -43,6 +62,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         }
 
         public RelayCommand AddNewOCCommand { get; set; }
+        public RelayCommand ActivatePointToolCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -250,5 +270,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
+
     }
 }

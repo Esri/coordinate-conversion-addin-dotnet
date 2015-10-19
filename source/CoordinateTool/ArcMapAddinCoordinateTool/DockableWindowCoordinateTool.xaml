@@ -16,6 +16,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Margin="0,0,0,3">
                         <TextBox.Style>
@@ -34,6 +35,7 @@
                     <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,3,3">
                         <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
                     </Button>
+                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Content="MPT" />
                 </Grid>
                 <UserControl Content="{Binding CTView}" />
             </StackPanel>
