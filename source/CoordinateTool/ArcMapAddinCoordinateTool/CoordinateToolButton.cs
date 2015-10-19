@@ -33,9 +33,9 @@ namespace ArcMapAddinCoordinateTool
         }
     }
 
-    public class Tool1 : ESRI.ArcGIS.Desktop.AddIns.Tool
+    public class PointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
     {
-        public Tool1()
+        public PointTool()
         {
         }
 

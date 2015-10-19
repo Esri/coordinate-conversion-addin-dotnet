@@ -21,23 +21,13 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
-            ActivePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
+            ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
-            var map = ArcMap.Document.ActiveView.FocusMap as IMap;
-
-            if(map != null)
-            {
-                
-            }
-            else
-            {
-                MessageBox.Show("I don't have the map.");
-            }
         }
 
         private void OnActivatePointToolCommand(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddin3_Tool1");
+            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateTool_PointTool");
         }
 
         public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
@@ -46,8 +36,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
             commandID.Value = toolName; // example: "esriArcMapUI.ZoomInTool";
             ESRI.ArcGIS.Framework.ICommandItem commandItem = commandBars.Find(commandID, false, false);
-
-            commandItem.Tag = "Microsoft_ArcMapAddinCoordinateTool_DockableWindowCoordinateTool";
 
             if (commandItem != null)
                 application.CurrentTool = commandItem;
@@ -74,7 +62,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         }
 
         public RelayCommand AddNewOCCommand { get; set; }
-        public RelayCommand ActivePointToolCommand { get; set; }
+        public RelayCommand ActivatePointToolCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -283,23 +271,5 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
 
-        public void MapControlLeftAndRightMouseClicks(ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseDownEvent e)
-        {
-            MessageBox.Show("I have the mouse!");
-            if (e.button == 1) // Left mouse click
-            {
-
-                // TODO: Your implementation code.....
-
-            }
-
-            if (e.button == 2) // Right mouse click
-            {
-
-                // TODO: Your implementation code.....
-
-            }
-
-        }
     }
 }
