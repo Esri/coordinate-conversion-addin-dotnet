@@ -22,6 +22,20 @@ namespace CoordinateToolLibrary.Models
             LonSeconds = lons;
         }
 
+        public CoordinateDMS(CoordinateDD dd)
+        {
+            LatDegrees = (int)Math.Truncate(dd.Lat);
+            double latm = (dd.Lat - Math.Truncate(dd.Lat)) * 60.0;
+            LatMinutes = (int)Math.Truncate(latm);
+            LatSeconds = (latm - LatMinutes) * 60.0;
+
+            LonDegrees = (int)Math.Truncate(dd.Lon);
+            double lonm = (dd.Lon - Math.Truncate(dd.Lon)) * 60.0;
+            LonMinutes = (int)Math.Truncate(lonm);
+            LonSeconds = (lonm - LonMinutes) * 60.0;
+        }
+
+
         #region Properties
 
         public int LatDegrees { get; set; }

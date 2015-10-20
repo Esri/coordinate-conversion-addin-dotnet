@@ -10,6 +10,8 @@ using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Helpers;
 using ArcGIS.Core.Geometry;
 using CoordinateToolLibrary.ViewModels;
+using System.ComponentModel;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProAppCoordToolModule
 {
@@ -22,6 +24,9 @@ namespace ProAppCoordToolModule
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
+            //TODO add activate point tool command
+            //TODO add flash point command
+            //TODO register broadcast coordinate needed
         }
 
         private ProCoordinateGet proCoordGetter = new ProCoordinateGet();
@@ -33,7 +38,7 @@ namespace ProAppCoordToolModule
             set
             {
                 _hasInputError = value;
-                //TODO RaisePropertyChanged(() => HasInputError);
+                NotifyPropertyChanged(new PropertyChangedEventArgs("HasInputError"));
             }
         }
 
@@ -87,112 +92,124 @@ namespace ProAppCoordToolModule
             string result = string.Empty;
             //ESRI.ArcGIS.Geometry.IPoint point;
             MapPoint point;
-            //HasInputError = false;
+            HasInputError = false;
 
-            //if (string.IsNullOrWhiteSpace(input))
-            //    return result;
+            if (string.IsNullOrWhiteSpace(input))
+                return result;
 
-            //var coordType = GetCoordinateType(input, out point);
+            var coordType = GetCoordinateType(input, out point);
 
-            //if (coordType == CoordinateType.Unknown)
-            //    HasInputError = true;
-            //else
-            //{
-            //    proCoordGetter.Point = point;
-            //    result = (point as IConversionNotation).GetDDFromCoords(6);
-            //}
+            if (coordType == CoordinateType.Unknown)
+                HasInputError = true;
+            else
+            {
+                proCoordGetter.Point = point;
+                //TODO result = (point as IConversionNotation).GetDDFromCoords(6);
+                result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
+            }
 
             return result;
         }
 
         //private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
-        //{
-        //    point = new PointClass();
-        //    var cn = point as IConversionNotation;
-        //    Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
-        //    System.Object obj = Activator.CreateInstance(t);
-        //    ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+        private CoordinateType GetCoordinateType(string input, out MapPoint point)
+        {
+            //point = new MapPoint();
+            point = null;
+            //var cn = point as IConversionNotation;
+            //Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            //System.Object obj = Activator.CreateInstance(t);
+            //ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
 
-        //    // Use the enumeration to create an instance of the predefined object.
+            //// Use the enumeration to create an instance of the predefined object.
 
-        //    IGeographicCoordinateSystem geographicCS =
-        //        srFact.CreateGeographicCoordinateSystem((int)
-        //        esriSRGeoCSType.esriSRGeoCS_WGS1984);
+            //IGeographicCoordinateSystem geographicCS =
+            //    srFact.CreateGeographicCoordinateSystem((int)
+            //    esriSRGeoCSType.esriSRGeoCS_WGS1984);
 
-        //    point.SpatialReference = geographicCS;
+            //point.SpatialReference = geographicCS;
+            CoordinateDD dd;
+            if(CoordinateDD.TryParse(input, out dd))
+            {
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                }).Result;
+                return CoordinateType.DD;
+            }
+            //try
+            //{
+            //    cn.PutCoordsFromDD(input);
+            //    return CoordinateType.DD;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromDD(input);
-        //        return CoordinateType.DD;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromDDM(input);
+            //    return CoordinateType.DDM;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromDDM(input);
-        //        return CoordinateType.DDM;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromDMS(input);
+            //    return CoordinateType.DMS;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromDMS(input);
-        //        return CoordinateType.DMS;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, input);
+            //    return CoordinateType.GARS;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, input);
-        //        return CoordinateType.GARS;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeLL, input);
+            //    return CoordinateType.GARS;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeLL, input);
-        //        return CoordinateType.GARS;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_Automatic);
+            //    return CoordinateType.MGRS;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_Automatic);
-        //        return CoordinateType.MGRS;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromUSNG(input);
+            //    return CoordinateType.USNG;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromUSNG(input);
-        //        return CoordinateType.USNG;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMAddSpaces, input);
+            //    return CoordinateType.UTM;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMAddSpaces, input);
-        //        return CoordinateType.UTM;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, input);
+            //    return CoordinateType.UTM;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, input);
-        //        return CoordinateType.UTM;
-        //    }
-        //    catch { }
+            //try
+            //{
+            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMUseNS, input);
+            //    return CoordinateType.UTM;
+            //}
+            //catch { }
 
-        //    try
-        //    {
-        //        cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMUseNS, input);
-        //        return CoordinateType.UTM;
-        //    }
-        //    catch { }
-
-        //    return CoordinateType.Unknown;
-        //}
+            return CoordinateType.Unknown;
+        }
 
         /// <summary>
         /// Show the DockPane.
