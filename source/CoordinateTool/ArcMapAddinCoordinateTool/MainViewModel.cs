@@ -11,6 +11,7 @@ using CoordinateToolLibrary.Models;
 using CoordinateToolLibrary.Helpers;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
+using ESRI.ArcGIS.Display;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -22,7 +23,71 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             HasInputError = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
+            FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+        }
+
+        private void OnFlashPointCommand(object obj)
+        {
+            if(amCoordGetter != null && amCoordGetter.Point != null)
+            {
+                
+                IPoint address = amCoordGetter.Point;//new PointClass();
+
+                // Map und View
+                IMxDocument mxdoc = ArcMap.Application.Document as IMxDocument;
+                IActiveView activeView = mxdoc.ActivatedView;
+                IMap map = mxdoc.FocusMap;
+                IEnvelope envelope = activeView.Extent;
+
+                // WGS 84 
+                ISpatialReferenceFactory spatialRefereceFactory = new SpatialReferenceEnvironmentClass();
+                IGeographicCoordinateSystem geographicCoordinateSystem = spatialRefereceFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
+                ISpatialReference spatialReference = geographicCoordinateSystem;
+
+                IScreenDisplay screenDisplay = activeView.ScreenDisplay;
+                short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
+
+                ISpatialReference outgoingCoordSystem = map.SpatialReference;
+                address.Project(outgoingCoordSystem);
+
+                
+                IRgbColor color = new RgbColorClass();
+                color.Green = 80;
+                color.Red = 22;
+                color.Blue = 68;
+
+                ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+                simpleMarkerSymbol.Color = color;
+                simpleMarkerSymbol.Size = 15;
+                simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+
+                IElement element = null;
+
+                IMarkerElement markerElement = new MarkerElementClass();
+
+                markerElement.Symbol = simpleMarkerSymbol;
+                element = markerElement as IElement;
+
+                if (element != null)
+                {
+                    element.Geometry = address;
+                }
+
+                
+                ESRI.ArcGIS.Carto.IGraphicsLayer graphicsLayer = new CompositeGraphicsLayerClass();
+                ((ILayer)graphicsLayer).Name = "Flashy Coordinates Layer";
+                ((ILayer)graphicsLayer).SpatialReference = spatialReference;
+                (graphicsLayer as IGraphicsContainer).AddElement(element, 0);
+
+                
+                FlashGeometry(address, color, mxdoc.ActiveView.ScreenDisplay, 500);
+
+                
+                envelope.CenterAt(address);
+                activeView.Extent = envelope;
+                activeView.Refresh();
+            }
         }
 
         private void OnActivatePointToolCommand(object obj)
@@ -63,6 +128,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand ActivatePointToolCommand { get; set; }
+        public RelayCommand FlashPointCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -271,5 +337,96 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
 
+        ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>
+        ///
+        ///<param name="geometry"> An IGeometry interface</param>
+        ///<param name="color">An IRgbColor interface</param>
+        ///<param name="display">An IDisplay interface</param>
+        ///<param name="delay">A System.Int32 that is the time im milliseconds to wait.</param>
+        /// 
+        ///<remarks></remarks>
+        public void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay)
+        {
+            if (geometry == null || color == null || display == null)
+            {
+                return;
+            }
+
+            display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
+
+
+            switch (geometry.GeometryType)
+            {
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolygon:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleFillSymbol simpleFillSymbol = new ESRI.ArcGIS.Display.SimpleFillSymbolClass();
+                        simpleFillSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleFillSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input polygon geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawPolygon(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPolygon(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolyline:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleLineSymbol simpleLineSymbol = new ESRI.ArcGIS.Display.SimpleLineSymbolClass();
+                        simpleLineSymbol.Width = 4;
+                        simpleLineSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleLineSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input polyline geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawPolyline(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPolyline(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPoint:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Size = 12;
+                        simpleMarkerSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input point geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawPoint(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPoint(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryMultipoint:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Size = 12;
+                        simpleMarkerSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input multipoint geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawMultipoint(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawMultipoint(geometry);
+                        break;
+                    }
+            }
+            display.FinishDrawing();
+        }
     }
 }
