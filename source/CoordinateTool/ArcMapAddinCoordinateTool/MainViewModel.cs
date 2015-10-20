@@ -26,7 +26,25 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
         }
+        private ISpatialReference GetSR()
+        {
+            // create wgs84 spatial reference
+            //var spatialFactory = new ESRI.ArcGIS.Geometry.SpatialReferenceEnvironmentClass();
+            //var temp = spatialFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
+            //return temp as ISpatialReference;
 
+            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            System.Object obj = Activator.CreateInstance(t);
+            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+
+            // Use the enumeration to create an instance of the predefined object.
+
+            IGeographicCoordinateSystem geographicCS =
+                srFact.CreateGeographicCoordinateSystem((int)
+                esriSRGeoCSType.esriSRGeoCS_WGS1984);
+
+            return geographicCS as ISpatialReference;
+        }
         private void OnFlashPointCommand(object obj)
         {
             if(amCoordGetter != null && amCoordGetter.Point != null)
@@ -39,11 +57,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 IActiveView activeView = mxdoc.ActivatedView;
                 IMap map = mxdoc.FocusMap;
                 IEnvelope envelope = activeView.Extent;
-
-                // WGS 84 
-                ISpatialReferenceFactory spatialRefereceFactory = new SpatialReferenceEnvironmentClass();
-                IGeographicCoordinateSystem geographicCoordinateSystem = spatialRefereceFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
-                ISpatialReference spatialReference = geographicCoordinateSystem;
 
                 IScreenDisplay screenDisplay = activeView.ScreenDisplay;
                 short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
@@ -77,7 +90,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 
                 ESRI.ArcGIS.Carto.IGraphicsLayer graphicsLayer = new CompositeGraphicsLayerClass();
                 ((ILayer)graphicsLayer).Name = "Flashy Coordinates Layer";
-                ((ILayer)graphicsLayer).SpatialReference = spatialReference;
+                ((ILayer)graphicsLayer).SpatialReference = GetSR();
                 (graphicsLayer as IGraphicsContainer).AddElement(element, 0);
 
                 
