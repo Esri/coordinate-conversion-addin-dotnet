@@ -12,6 +12,8 @@ using ArcGIS.Core.Geometry;
 using CoordinateToolLibrary.ViewModels;
 using System.ComponentModel;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Core.CIM;
 
 namespace ProAppCoordToolModule
 {
@@ -25,8 +27,47 @@ namespace ProAppCoordToolModule
             HasInputError = false;
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            //TODO add flash point command
+            FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             //TODO register broadcast coordinate needed
+        }
+        private static System.IDisposable _overlayObject = null;
+        private async void OnFlashPointCommand(object obj)
+        {
+            CoordinateDD dd;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
+                    return;
+            }
+            else { return; }
+
+            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
+            var point = await QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+            });
+
+            await QueuedTask.Run(() =>
+            {
+                // Construct point symbol
+                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
+            });
+
+            //Get symbol reference from the symbol 
+            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
+
+            await QueuedTask.Run(() =>
+            {
+                if(_overlayObject != null)
+                {
+                    _overlayObject.Dispose();
+                    _overlayObject = null;
+                }
+                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            });
         }
 
         private void OnMapToolCommand(object obj)
@@ -49,6 +90,7 @@ namespace ProAppCoordToolModule
 
         public CoordinateToolLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
         public CoordinateToolLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
+        public CoordinateToolLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
