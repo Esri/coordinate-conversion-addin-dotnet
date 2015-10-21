@@ -24,9 +24,14 @@ namespace ProAppCoordToolModule
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
-            //TODO add activate point tool command
+            ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
             //TODO add flash point command
             //TODO register broadcast coordinate needed
+        }
+
+        private void OnMapToolCommand(object obj)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
         }
 
         private ProCoordinateGet proCoordGetter = new ProCoordinateGet();
@@ -43,6 +48,7 @@ namespace ProAppCoordToolModule
         }
 
         public CoordinateToolLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
+        public CoordinateToolLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -64,6 +70,8 @@ namespace ProAppCoordToolModule
                     ctvm.SetCoordinateGetter(proCoordGetter);
                     ctvm.InputCoordinate = tempDD;
                 }
+
+                NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
             }
         }
 
@@ -104,14 +112,12 @@ namespace ProAppCoordToolModule
             else
             {
                 proCoordGetter.Point = point;
-                //TODO result = (point as IConversionNotation).GetDDFromCoords(6);
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
             }
 
             return result;
         }
 
-        //private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         private CoordinateType GetCoordinateType(string input, out MapPoint point)
         {
             point = null;

@@ -124,6 +124,7 @@ namespace CoordinateToolLibrary.ViewModels
                     if (item.Name == name)
                     {
                         OutputCoordinateList.Remove(item);
+                        SaveOutputConfiguration();
                         return;
                     }
                 }

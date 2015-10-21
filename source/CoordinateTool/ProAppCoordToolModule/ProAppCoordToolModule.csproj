@@ -92,6 +92,7 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoordinateMapTool.cs" />
     <Compile Include="CoordinateToolDockpane.xaml.cs">
       <DependentUpon>CoordinateToolDockpane.xaml</DependentUpon>
     </Compile>
@@ -117,6 +118,12 @@
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
       <Name>CoordinateToolLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\GenericButtonRed16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\GenericButtonRed32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
