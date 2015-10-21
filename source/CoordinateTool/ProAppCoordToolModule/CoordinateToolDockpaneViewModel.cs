@@ -28,7 +28,43 @@ namespace ProAppCoordToolModule
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
-            //TODO register broadcast coordinate needed
+            Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+        }
+
+        private void OnBCNeeded(object obj)
+        {
+            if (proCoordGetter == null || proCoordGetter.Point == null)
+                return;
+
+            BroadcastCoordinateValues(proCoordGetter.Point);
+        }
+
+        private void BroadcastCoordinateValues(MapPoint mapPoint)
+        {
+            var dict = new Dictionary<CoordinateType, string>();
+            if (mapPoint == null)
+                return;
+
+            var dd = new CoordinateDD(mapPoint.Y, mapPoint.X);
+
+            try
+            {
+                dict.Add(CoordinateType.DD, dd.ToString("", new CoordinateDDFormatter()));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.DDM, new CoordinateDDM(dd).ToString("", new CoordinateDDMFormatter()));
+            }
+            catch { }
+            try
+            {
+                dict.Add(CoordinateType.DMS, new CoordinateDMS(dd).ToString("", new CoordinateDMSFormatter()));
+            }
+            catch { }
+
+            Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
+
         }
         private static System.IDisposable _overlayObject = null;
         private async void OnFlashPointCommand(object obj)
