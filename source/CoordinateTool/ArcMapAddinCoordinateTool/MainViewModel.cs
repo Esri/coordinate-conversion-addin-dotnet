@@ -24,7 +24,13 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
+            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+        }
+
+        private void OnCopyAllCommand(object obj)
+        {
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
         }
         private ISpatialReference GetSR()
         {
@@ -142,6 +148,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
+        public RelayCommand CopyAllCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate

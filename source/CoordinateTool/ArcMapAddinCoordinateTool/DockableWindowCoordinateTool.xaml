@@ -18,6 +18,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Margin="0,0,0,3">
                         <TextBox.Style>
@@ -41,6 +42,9 @@
                     </Button>
                     <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="0,0,3,3">
                         <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="0,0,3,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
                     </Button>
                 </Grid>
                 <UserControl Content="{Binding CTView}" />

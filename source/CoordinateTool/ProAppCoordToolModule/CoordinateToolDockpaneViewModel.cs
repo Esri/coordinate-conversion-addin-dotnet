@@ -28,7 +28,13 @@ namespace ProAppCoordToolModule
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
+            CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+        }
+
+        private void OnCopyAllCommand(object obj)
+        {
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
         }
 
         private void OnBCNeeded(object obj)
@@ -127,6 +133,7 @@ namespace ProAppCoordToolModule
         public CoordinateToolLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
         public CoordinateToolLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateToolLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
+        public CoordinateToolLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
