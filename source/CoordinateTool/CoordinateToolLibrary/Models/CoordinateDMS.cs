@@ -77,8 +77,7 @@ namespace CoordinateToolLibrary.Models
 
             input = input.Trim();
 
-            Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?", RegexOptions.ExplicitCapture); 
-            //Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?");
+            Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?[\\\"]*", RegexOptions.ExplicitCapture); 
 
             var matchDMS = regexDMS.Match(input);
             

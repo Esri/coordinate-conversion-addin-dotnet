@@ -114,20 +114,9 @@ namespace ProAppCoordToolModule
         //private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         private CoordinateType GetCoordinateType(string input, out MapPoint point)
         {
-            //point = new MapPoint();
             point = null;
-            //var cn = point as IConversionNotation;
-            //Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
-            //System.Object obj = Activator.CreateInstance(t);
-            //ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
 
-            //// Use the enumeration to create an instance of the predefined object.
-
-            //IGeographicCoordinateSystem geographicCS =
-            //    srFact.CreateGeographicCoordinateSystem((int)
-            //    esriSRGeoCSType.esriSRGeoCS_WGS1984);
-
-            //point.SpatialReference = geographicCS;
+            // DD
             CoordinateDD dd;
             if(CoordinateDD.TryParse(input, out dd))
             {
@@ -138,75 +127,31 @@ namespace ProAppCoordToolModule
                 }).Result;
                 return CoordinateType.DD;
             }
-            //try
-            //{
-            //    cn.PutCoordsFromDD(input);
-            //    return CoordinateType.DD;
-            //}
-            //catch { }
 
-            //try
-            //{
-            //    cn.PutCoordsFromDDM(input);
-            //    return CoordinateType.DDM;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromDMS(input);
-            //    return CoordinateType.DMS;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, input);
-            //    return CoordinateType.GARS;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeLL, input);
-            //    return CoordinateType.GARS;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_Automatic);
-            //    return CoordinateType.MGRS;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromUSNG(input);
-            //    return CoordinateType.USNG;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMAddSpaces, input);
-            //    return CoordinateType.UTM;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, input);
-            //    return CoordinateType.UTM;
-            //}
-            //catch { }
-
-            //try
-            //{
-            //    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMUseNS, input);
-            //    return CoordinateType.UTM;
-            //}
-            //catch { }
+            // DDM
+            CoordinateDDM ddm;
+            if(CoordinateDDM.TryParse(input, out ddm))
+            {
+                dd = new CoordinateDD(ddm);
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                }).Result;
+                return CoordinateType.DDM;
+            }
+            // DMS
+            CoordinateDMS dms;
+            if (CoordinateDMS.TryParse(input, out dms))
+            {
+                dd = new CoordinateDD(dms);
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                }).Result;
+                return CoordinateType.DMS;
+            }
 
             return CoordinateType.Unknown;
         }
