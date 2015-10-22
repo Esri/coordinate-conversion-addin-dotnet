@@ -13,7 +13,14 @@ namespace CoordinateToolLibrary.ViewModels
     {
         public EditOutputCoordinateViewModel() 
         {
-            CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM"};
+            if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
+            {
+                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS" };
+            }
+            else
+            {
+                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM" };
+            }
             FormatList = new ObservableCollection<string>() { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Custom" };
             Sample = "Sample";
             Format = "Y-+0.####,X-+0.####";

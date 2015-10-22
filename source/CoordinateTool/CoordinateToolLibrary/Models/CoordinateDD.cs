@@ -18,6 +18,18 @@ namespace CoordinateToolLibrary.Models
             Lon = lon;
         }
 
+        public CoordinateDD(CoordinateDDM ddm)
+        {
+            Lat = (double)ddm.LatDegrees + (ddm.LatMinutes / 60.0);
+            Lon = (double)ddm.LonDegrees + (ddm.LonMinutes / 60.0);
+        }
+
+        public CoordinateDD(CoordinateDMS dms)
+        {
+            Lat = (double)dms.LatDegrees + ((double)dms.LatMinutes / 60.0) + (dms.LatSeconds / 3600.0);
+            Lon = (double)dms.LonDegrees + ((double)dms.LonMinutes / 60.0) + (dms.LatSeconds / 3600.0);
+        }
+
         #region Properties
 
         private double _lat = 40.446;

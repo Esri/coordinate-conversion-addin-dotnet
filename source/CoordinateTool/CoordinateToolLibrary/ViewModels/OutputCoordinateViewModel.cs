@@ -23,6 +23,7 @@ namespace CoordinateToolLibrary.ViewModels
             CopyCommand = new RelayCommand(OnCopyCommand);
 
             Mediator.Register("AddNewOutputCoordinate", OnAddNewOutputCoordinate);
+            Mediator.Register("COPY_ALL_COORDINATE_OUTPUTS", OnCopyAllCoordinateOutputs);
 
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
@@ -44,6 +45,22 @@ namespace CoordinateToolLibrary.ViewModels
             //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y#.##N X#.##E" }, { "70.49N,40.32W", "Y#.##N,X#.##E" } } });
 
             //LoadOutputConfiguration();
+        }
+
+        private void OnCopyAllCoordinateOutputs(object obj)
+        {
+            var sb = new StringBuilder();
+
+            foreach(var output in OutputCoordinateList)
+            {
+                sb.AppendLine(output.OutputCoordinate);
+            }
+
+            if(sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
         }
 
         private void OnAddNewOutputCoordinate(object obj)
@@ -124,6 +141,7 @@ namespace CoordinateToolLibrary.ViewModels
                     if (item.Name == name)
                     {
                         OutputCoordinateList.Remove(item);
+                        SaveOutputConfiguration();
                         return;
                     }
                 }

@@ -1,14 +1,17 @@
-﻿<UserControl x:Class="ArcMapAddinCoordinateTool.DockableWindowCoordinateTool"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:viewModels="clr-namespace:ArcMapAddinCoordinateTool.ViewModels"
-    Height="300" Width="300">
+﻿<UserControl x:Class="ProAppCoordToolModule.CoordinateToolDockpaneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                                             
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <viewModels:MainViewModel x:Key="viewModelMain" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <UserControl.DataContext>
-        <StaticResourceExtension ResourceKey="viewModelMain" />
-    </UserControl.DataContext>
     <Grid Margin="3,3,3,3">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">

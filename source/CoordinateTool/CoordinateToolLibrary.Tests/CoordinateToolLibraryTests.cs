@@ -44,6 +44,7 @@ namespace CoordinateToolLibrary.Tests
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -78°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -078°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40° 16' 22.9728\", -78° 50' 50.7372\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40° 7' 22.8\"N 77° 32' 38.4W\"", out coord));
 
             Assert.IsFalse(CoordinateDMS.TryParse("This is not a coordinate", out coord));
         }
