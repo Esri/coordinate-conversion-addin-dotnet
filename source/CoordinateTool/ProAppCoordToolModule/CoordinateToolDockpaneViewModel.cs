@@ -14,6 +14,7 @@ using System.ComponentModel;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.CIM;
+using System.Collections.ObjectModel;
 
 namespace ProAppCoordToolModule
 {
@@ -30,7 +31,10 @@ namespace ProAppCoordToolModule
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            InputCoordinateHistoryList = new ObservableCollection<string>();
         }
+
+        public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void OnCopyAllCommand(object obj)
         {
@@ -102,14 +106,19 @@ namespace ProAppCoordToolModule
 
             await QueuedTask.Run(() =>
             {
-                if(_overlayObject != null)
-                {
-                    _overlayObject.Dispose();
-                    _overlayObject = null;
-                }
+                ClearOverlay();
                 _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
                 MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
             });
+        }
+
+        private void ClearOverlay()
+        {
+            if (_overlayObject != null)
+            {
+                _overlayObject.Dispose();
+                _overlayObject = null;
+            }
         }
 
         private void OnMapToolCommand(object obj)
@@ -145,6 +154,11 @@ namespace ProAppCoordToolModule
 
             set
             {
+                ClearOverlay();
+
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
 
@@ -198,9 +212,51 @@ namespace ProAppCoordToolModule
             {
                 proCoordGetter.Point = point;
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
+                UpdateHistory(input);
             }
 
             return result;
+        }
+
+        private void UpdateHistory(string input)
+        {
+            // lets do last 5 coordinates
+            if(!InputCoordinateHistoryList.Any())
+            {
+                InputCoordinateHistoryList.Add(input);
+                return;
+            }
+
+            if(InputCoordinateHistoryList.Contains(input))
+            {
+                InputCoordinateHistoryList.Remove(input);
+                InputCoordinateHistoryList.Insert(0, input);
+            }
+            else
+            {
+                if(input.Length > 1)
+                {
+                    // check to see if someone is typing the coordinate
+                    // only keep the latest
+                    var temp = input.Substring(0, input.Length - 1);
+
+                    if(InputCoordinateHistoryList[0] == temp)
+                    {
+                        // replace
+                        InputCoordinateHistoryList.Remove(temp);
+                        InputCoordinateHistoryList.Insert(0, input);
+                    }
+                    else
+                    {
+                        InputCoordinateHistoryList.Insert(0, input);
+
+                        while (InputCoordinateHistoryList.Count > 5)
+                        {
+                            InputCoordinateHistoryList.RemoveAt(5);
+                        }
+                    }
+                }
+            }
         }
 
         private CoordinateType GetCoordinateType(string input, out MapPoint point)

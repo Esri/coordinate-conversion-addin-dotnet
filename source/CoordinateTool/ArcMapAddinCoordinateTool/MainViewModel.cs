@@ -12,6 +12,7 @@ using CoordinateToolLibrary.Helpers;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
+using System.Collections.ObjectModel;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -26,7 +27,10 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            InputCoordinateHistoryList = new ObservableCollection<string>();
         }
+
+        public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void OnCopyAllCommand(object obj)
         {
@@ -160,6 +164,9 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             set
             {
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
 
@@ -170,6 +177,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                     ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
                 }
+
+                RaisePropertyChanged(() => InputCoordinate);
             }
         }
 
@@ -204,6 +213,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             {
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
+                UpdateHistory(input);
             }
 
             return result;
@@ -356,6 +366,46 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
+        private void UpdateHistory(string input)
+        {
+            // lets do last 5 coordinates
+            if (!InputCoordinateHistoryList.Any())
+            {
+                InputCoordinateHistoryList.Add(input);
+                return;
+            }
+
+            if (InputCoordinateHistoryList.Contains(input))
+            {
+                InputCoordinateHistoryList.Remove(input);
+                InputCoordinateHistoryList.Insert(0, input);
+            }
+            else
+            {
+                if (input.Length > 1)
+                {
+                    // check to see if someone is typing the coordinate
+                    // only keep the latest
+                    var temp = input.Substring(0, input.Length - 1);
+
+                    if (InputCoordinateHistoryList[0] == temp)
+                    {
+                        // replace
+                        InputCoordinateHistoryList.Remove(temp);
+                        InputCoordinateHistoryList.Insert(0, input);
+                    }
+                    else
+                    {
+                        InputCoordinateHistoryList.Insert(0, input);
+
+                        while (InputCoordinateHistoryList.Count > 5)
+                        {
+                            InputCoordinateHistoryList.RemoveAt(5);
+                        }
+                    }
+                }
+            }
+        }
 
         ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>
         ///
@@ -365,7 +415,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         ///<param name="delay">A System.Int32 that is the time im milliseconds to wait.</param>
         /// 
         ///<remarks></remarks>
-        public void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay)
+        private void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay)
         {
             if (geometry == null || color == null || display == null)
             {
