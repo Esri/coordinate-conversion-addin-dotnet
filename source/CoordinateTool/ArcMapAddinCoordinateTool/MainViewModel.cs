@@ -12,6 +12,7 @@ using CoordinateToolLibrary.Helpers;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
+using System.Collections.ObjectModel;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -26,7 +27,10 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            InputCoordinateHistoryList = new ObservableCollection<string>();
         }
+
+        public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void OnCopyAllCommand(object obj)
         {
@@ -55,7 +59,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             if(amCoordGetter != null && amCoordGetter.Point != null)
             {
-                
+
                 IPoint address = amCoordGetter.Point;//new PointClass();
 
                 // Map und View
@@ -99,9 +103,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 ((ILayer)graphicsLayer).SpatialReference = GetSR();
                 (graphicsLayer as IGraphicsContainer).AddElement(element, 0);
 
-                
                 FlashGeometry(address, color, mxdoc.ActiveView.ScreenDisplay, 500);
-
                 
                 envelope.CenterAt(address);
                 activeView.Extent = envelope;
@@ -160,6 +162,9 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             set
             {
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
 
@@ -170,6 +175,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                     ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
                 }
+
+                RaisePropertyChanged(() => InputCoordinate);
             }
         }
 
@@ -204,6 +211,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             {
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
+                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
             }
 
             return result;
@@ -365,7 +373,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         ///<param name="delay">A System.Int32 that is the time im milliseconds to wait.</param>
         /// 
         ///<remarks></remarks>
-        public void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay)
+        private void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay)
         {
             if (geometry == null || color == null || display == null)
             {
@@ -414,7 +422,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                     {
                         //Set the flash geometry's symbol.
                         ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
-                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSDiamond;
                         simpleMarkerSymbol.Size = 12;
                         simpleMarkerSymbol.Color = color;
                         ESRI.ArcGIS.Display.ISymbol symbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast

@@ -14,6 +14,7 @@ using System.ComponentModel;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.CIM;
+using System.Collections.ObjectModel;
 
 namespace ProAppCoordToolModule
 {
@@ -30,20 +31,10 @@ namespace ProAppCoordToolModule
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            InputCoordinateHistoryList = new ObservableCollection<string>();
         }
 
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
-        }
-
-        private void OnBCNeeded(object obj)
-        {
-            if (proCoordGetter == null || proCoordGetter.Point == null)
-                return;
-
-            BroadcastCoordinateValues(proCoordGetter.Point);
-        }
+        public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void BroadcastCoordinateValues(MapPoint mapPoint)
         {
@@ -73,48 +64,14 @@ namespace ProAppCoordToolModule
 
         }
         private static System.IDisposable _overlayObject = null;
-        private async void OnFlashPointCommand(object obj)
+
+        private void ClearOverlay()
         {
-            CoordinateDD dd;
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
-            if (ctvm != null)
+            if (_overlayObject != null)
             {
-                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
-                    return;
+                _overlayObject.Dispose();
+                _overlayObject = null;
             }
-            else { return; }
-
-            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
-            var point = await QueuedTask.Run(() =>
-            {
-                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-            });
-
-            await QueuedTask.Run(() =>
-            {
-                // Construct point symbol
-                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
-            });
-
-            //Get symbol reference from the symbol 
-            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
-
-            await QueuedTask.Run(() =>
-            {
-                if(_overlayObject != null)
-                {
-                    _overlayObject.Dispose();
-                    _overlayObject = null;
-                }
-                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            });
-        }
-
-        private void OnMapToolCommand(object obj)
-        {
-            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
         }
 
         private ProCoordinateGet proCoordGetter = new ProCoordinateGet();
@@ -145,6 +102,11 @@ namespace ProAppCoordToolModule
 
             set
             {
+                ClearOverlay();
+
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
 
@@ -173,6 +135,8 @@ namespace ProAppCoordToolModule
             }
         }
 
+        #region command handlers
+
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
@@ -180,10 +144,64 @@ namespace ProAppCoordToolModule
             Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
+        private void OnMapToolCommand(object obj)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
+        }
+
+        private async void OnFlashPointCommand(object obj)
+        {
+            CoordinateDD dd;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
+                    return;
+            }
+            else { return; }
+
+            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
+            var point = await QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+            });
+
+            await QueuedTask.Run(() =>
+            {
+                // Construct point symbol
+                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
+            });
+
+            //Get symbol reference from the symbol 
+            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
+
+            await QueuedTask.Run(() =>
+            {
+                ClearOverlay();
+                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            });
+        }
+
+        private void OnCopyAllCommand(object obj)
+        {
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
+        }
+
+        private void OnBCNeeded(object obj)
+        {
+            if (proCoordGetter == null || proCoordGetter.Point == null)
+                return;
+
+            BroadcastCoordinateValues(proCoordGetter.Point);
+        }
+
+        #endregion command handlers
+
         private string ProcessInput(string input)
         {
             string result = string.Empty;
-            //ESRI.ArcGIS.Geometry.IPoint point;
             MapPoint point;
             HasInputError = false;
 
@@ -198,6 +216,7 @@ namespace ProAppCoordToolModule
             {
                 proCoordGetter.Point = point;
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
+                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
             }
 
             return result;
@@ -259,18 +278,6 @@ namespace ProAppCoordToolModule
             pane.Activate();
         }
 
-        /// <summary>
-        /// Text shown near the top of the DockPane.
-        /// </summary>
-        private string _heading = "Coordinate Notation Tool";
-        public string Heading
-        {
-            get { return _heading; }
-            set
-            {
-                SetProperty(ref _heading, value, () => Heading);
-            }
-        }
     }
 
     /// <summary>
