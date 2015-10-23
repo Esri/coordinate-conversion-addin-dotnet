@@ -36,19 +36,6 @@ namespace ProAppCoordToolModule
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
-        }
-
-        private void OnBCNeeded(object obj)
-        {
-            if (proCoordGetter == null || proCoordGetter.Point == null)
-                return;
-
-            BroadcastCoordinateValues(proCoordGetter.Point);
-        }
-
         private void BroadcastCoordinateValues(MapPoint mapPoint)
         {
             var dict = new Dictionary<CoordinateType, string>();
@@ -77,40 +64,6 @@ namespace ProAppCoordToolModule
 
         }
         private static System.IDisposable _overlayObject = null;
-        private async void OnFlashPointCommand(object obj)
-        {
-            CoordinateDD dd;
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
-            if (ctvm != null)
-            {
-                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
-                    return;
-            }
-            else { return; }
-
-            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
-            var point = await QueuedTask.Run(() =>
-            {
-                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-            });
-
-            await QueuedTask.Run(() =>
-            {
-                // Construct point symbol
-                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
-            });
-
-            //Get symbol reference from the symbol 
-            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
-
-            await QueuedTask.Run(() =>
-            {
-                ClearOverlay();
-                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            });
-        }
 
         private void ClearOverlay()
         {
@@ -119,11 +72,6 @@ namespace ProAppCoordToolModule
                 _overlayObject.Dispose();
                 _overlayObject = null;
             }
-        }
-
-        private void OnMapToolCommand(object obj)
-        {
-            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
         }
 
         private ProCoordinateGet proCoordGetter = new ProCoordinateGet();
@@ -187,6 +135,8 @@ namespace ProAppCoordToolModule
             }
         }
 
+        #region command handlers
+
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
@@ -194,10 +144,64 @@ namespace ProAppCoordToolModule
             Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
+        private void OnMapToolCommand(object obj)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
+        }
+
+        private async void OnFlashPointCommand(object obj)
+        {
+            CoordinateDD dd;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
+                    return;
+            }
+            else { return; }
+
+            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
+            var point = await QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+            });
+
+            await QueuedTask.Run(() =>
+            {
+                // Construct point symbol
+                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
+            });
+
+            //Get symbol reference from the symbol 
+            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
+
+            await QueuedTask.Run(() =>
+            {
+                ClearOverlay();
+                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            });
+        }
+
+        private void OnCopyAllCommand(object obj)
+        {
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
+        }
+
+        private void OnBCNeeded(object obj)
+        {
+            if (proCoordGetter == null || proCoordGetter.Point == null)
+                return;
+
+            BroadcastCoordinateValues(proCoordGetter.Point);
+        }
+
+        #endregion command handlers
+
         private string ProcessInput(string input)
         {
             string result = string.Empty;
-            //ESRI.ArcGIS.Geometry.IPoint point;
             MapPoint point;
             HasInputError = false;
 
@@ -212,51 +216,10 @@ namespace ProAppCoordToolModule
             {
                 proCoordGetter.Point = point;
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
-                UpdateHistory(input);
+                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
             }
 
             return result;
-        }
-
-        private void UpdateHistory(string input)
-        {
-            // lets do last 5 coordinates
-            if(!InputCoordinateHistoryList.Any())
-            {
-                InputCoordinateHistoryList.Add(input);
-                return;
-            }
-
-            if(InputCoordinateHistoryList.Contains(input))
-            {
-                InputCoordinateHistoryList.Remove(input);
-                InputCoordinateHistoryList.Insert(0, input);
-            }
-            else
-            {
-                if(input.Length > 1)
-                {
-                    // check to see if someone is typing the coordinate
-                    // only keep the latest
-                    var temp = input.Substring(0, input.Length - 1);
-
-                    if(InputCoordinateHistoryList[0] == temp)
-                    {
-                        // replace
-                        InputCoordinateHistoryList.Remove(temp);
-                        InputCoordinateHistoryList.Insert(0, input);
-                    }
-                    else
-                    {
-                        InputCoordinateHistoryList.Insert(0, input);
-
-                        while (InputCoordinateHistoryList.Count > 5)
-                        {
-                            InputCoordinateHistoryList.RemoveAt(5);
-                        }
-                    }
-                }
-            }
         }
 
         private CoordinateType GetCoordinateType(string input, out MapPoint point)
@@ -315,18 +278,6 @@ namespace ProAppCoordToolModule
             pane.Activate();
         }
 
-        /// <summary>
-        /// Text shown near the top of the DockPane.
-        /// </summary>
-        private string _heading = "Coordinate Notation Tool";
-        public string Heading
-        {
-            get { return _heading; }
-            set
-            {
-                SetProperty(ref _heading, value, () => Heading);
-            }
-        }
     }
 
     /// <summary>

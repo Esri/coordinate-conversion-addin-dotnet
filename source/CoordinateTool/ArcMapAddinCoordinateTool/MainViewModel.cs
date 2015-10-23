@@ -59,7 +59,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             if(amCoordGetter != null && amCoordGetter.Point != null)
             {
-                
+
                 IPoint address = amCoordGetter.Point;//new PointClass();
 
                 // Map und View
@@ -103,9 +103,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 ((ILayer)graphicsLayer).SpatialReference = GetSR();
                 (graphicsLayer as IGraphicsContainer).AddElement(element, 0);
 
-                
                 FlashGeometry(address, color, mxdoc.ActiveView.ScreenDisplay, 500);
-
                 
                 envelope.CenterAt(address);
                 activeView.Extent = envelope;
@@ -213,7 +211,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             {
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
-                UpdateHistory(input);
+                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
             }
 
             return result;
@@ -366,46 +364,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
         }
-        private void UpdateHistory(string input)
-        {
-            // lets do last 5 coordinates
-            if (!InputCoordinateHistoryList.Any())
-            {
-                InputCoordinateHistoryList.Add(input);
-                return;
-            }
-
-            if (InputCoordinateHistoryList.Contains(input))
-            {
-                InputCoordinateHistoryList.Remove(input);
-                InputCoordinateHistoryList.Insert(0, input);
-            }
-            else
-            {
-                if (input.Length > 1)
-                {
-                    // check to see if someone is typing the coordinate
-                    // only keep the latest
-                    var temp = input.Substring(0, input.Length - 1);
-
-                    if (InputCoordinateHistoryList[0] == temp)
-                    {
-                        // replace
-                        InputCoordinateHistoryList.Remove(temp);
-                        InputCoordinateHistoryList.Insert(0, input);
-                    }
-                    else
-                    {
-                        InputCoordinateHistoryList.Insert(0, input);
-
-                        while (InputCoordinateHistoryList.Count > 5)
-                        {
-                            InputCoordinateHistoryList.RemoveAt(5);
-                        }
-                    }
-                }
-            }
-        }
 
         ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>
         ///
@@ -464,7 +422,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                     {
                         //Set the flash geometry's symbol.
                         ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
-                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSDiamond;
                         simpleMarkerSymbol.Size = 12;
                         simpleMarkerSymbol.Color = color;
                         ESRI.ArcGIS.Display.ISymbol symbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
