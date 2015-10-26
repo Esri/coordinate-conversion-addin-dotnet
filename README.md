@@ -44,18 +44,40 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 * Running
 	* Run or debug from Visual Studio
 	* To run from a stand-alone deployment
-        * Install the add-in from the application folder by double clicking it
-		* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
-			* C:\Users\YOUUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
-		* Add the add-in command to a toolbar via menu option 
-			* "Customize -> Customize mode"
-			* Select "Commands" Tab
-			* Select "Add-In Controls"
-			* Drag/Drop "CoordinateTool" command onto a toolbar
-			* Close customize mode
-			* open tool by clicking the "Coordinate Tool" command you just added
-			* dockable coordinate tool appears
-
+		* ArcMAP
+			* Install the add-in from the application folder by double clicking it
+			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
+			* Add the add-in command to a toolbar via menu option 
+				* "Customize -> Customize mode"
+				* Select "Commands" Tab
+				* Select "Add-In Controls"
+				* Drag/Drop "CoordinateTool" command onto a toolbar
+				* Close customize mode
+				* open tool by clicking the "Coordinate Tool" command you just added
+				* dockable coordinate tool appears
+		* Pro
+			* Install the add-in from the application folder by double clicking it
+			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c}
+			* The ADD-IN appears under the "ADD-IN" tab in Pro	
+				* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
+				
+* Custom Formatters
+	* Each coordinate type has its own custom formatter.  The following guide will help build a custom format string for each particular coordinate type.  If a character is not part of the formatting code it is simply transferred to the output string.
+	* Formatting numbers
+		* Numbers found in DD, DDM and DMS can be formatted using the first three ("0" Zero placeholder, "#" digit placeholder and "." decimal point) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
+		* Numbers found in GARS, MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
+	* Formatting string output for each coordinate type
+		* DD Decimal Degrees
+			* "X" = Longitude
+			* "Y" = Latitude
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "+-Y0.0 +-X0.0" will output "+41.1 -78.2"
+	
 ## Resources
 
 * [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)

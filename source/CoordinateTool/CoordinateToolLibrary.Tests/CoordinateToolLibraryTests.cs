@@ -137,22 +137,22 @@ namespace CoordinateToolLibrary.Tests
         public void FormatterMGRS()
         {
             var coord = new CoordinateMGRS("17T", "PE", 83016, 60286);
-            var temp = coord.ToString("ZSE#N#", new CoordinateMGRSFormatter());
+            var temp = coord.ToString("ZSX#Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE8301660286");
 
-            temp = coord.ToString("Z S E# N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z S X# Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T PE 83016 60286");
 
-            temp = coord.ToString("Z,S,E#,N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z,S,X#,Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T,PE,83016,60286");
             
-            temp = coord.ToString("Z-S-E#-N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z-S-X#-Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T-PE-83016-60286");
             
-            temp = coord.ToString("ZS E#N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X#Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 8301660286");
             
-            temp = coord.ToString("ZS E# N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X# Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 83016 60286");
 
             // test the default

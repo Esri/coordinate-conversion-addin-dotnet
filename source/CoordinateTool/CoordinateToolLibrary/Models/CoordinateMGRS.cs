@@ -118,7 +118,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSE#N#", arg, this);
+                    return this.Format("ZSX#Y#", arg, this);
                 }
                 else
                 {
@@ -148,12 +148,12 @@ namespace CoordinateToolLibrary.Models
 
                         switch (c)
                         {
-                            case 'E': // easting
+                            case 'X': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // northing
+                            case 'Y': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
