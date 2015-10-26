@@ -77,7 +77,30 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "+-Y0.0 +-X0.0" will output "+41.1 -78.2"
-	
+		* DDM Decimal Degrees Minutes
+			* "A" = Latitude Degrees
+			* "B" = Latitude Minutes
+			* "X" = Longitude Degrees
+			* "Y" = Longitude Minutes
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "A#° B#.##'N X#° Y#.##'E" will output "41° 22.12'N 78° 36.45'W"
+		* DMS Degrees Minutes Seconds
+			* "A" = Latitude Degrees
+			* "B" = Latitude Minutes
+			* "C" = Latitude Seconds
+			* "X" = Longitude Degrees
+			* "Y" = Longitude Minutes
+			* "Z" = Longitude Seconds
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "A#° B#' C#.#\"N X#° Y#' Z#.#E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
+				* Note : escape " like \" to get double quotes in the output
+
 ## Resources
 
 * [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)
