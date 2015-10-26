@@ -100,7 +100,27 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "A#° B#' C#.#\"N X#° Y#' Z#.#E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
 				* Note : escape " like \" to get double quotes in the output
-
+		* GARS
+			* "X" = Longitude Band
+			* "Y" = Latitude Band
+			* "Q" = Quadrant
+			* "K" = Key
+			* Example : "X#YQK" will output "221LW37"
+		* MGRS/USNG
+			* "Z" = Grid Zone
+			* "S" = Grid Segment
+			* "X" = Easting
+			* "Y" = Northing
+			* Example : "Z S X# Y#" will output "19T DE 14639 28236"
+		* UTM
+			* "Z" = Zone
+			* "H" = Hemisphere
+			* "X" = Easting
+			* "Y" = Northing
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* Example : "Z#H X#m Y#m" will output "19N 414639m 4428236m"	
+			
 ## Resources
 
 * [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)
