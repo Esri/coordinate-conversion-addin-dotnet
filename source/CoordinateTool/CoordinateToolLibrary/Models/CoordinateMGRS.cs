@@ -132,7 +132,7 @@ namespace CoordinateToolLibrary.Models
 
                     foreach (char c in format)
                     {
-                        if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
+                        if (startIndexNeeded && (c == '#' || c == '0'))
                         {
                             // add {<index>:
                             sb.AppendFormat("{{{0}:", currentIndex++);
@@ -140,7 +140,7 @@ namespace CoordinateToolLibrary.Models
                             endIndexNeeded = true;
                         }
 
-                        if (endIndexNeeded && (c != '#' && c != '.' && c != '0'))
+                        if (endIndexNeeded && (c != '#' && c != '0'))
                         {
                             sb.Append("}");
                             endIndexNeeded = false;
