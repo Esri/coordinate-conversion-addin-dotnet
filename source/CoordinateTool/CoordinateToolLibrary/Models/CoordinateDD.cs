@@ -10,12 +10,24 @@ namespace CoordinateToolLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { }
+        public CoordinateDD() { Lat = 40.123; Lon = -78.456; }
 
         public CoordinateDD(double lat, double lon)
         {
             Lat = lat;
             Lon = lon;
+        }
+
+        public CoordinateDD(CoordinateDDM ddm)
+        {
+            Lat = (double)ddm.LatDegrees + (ddm.LatMinutes / 60.0);
+            Lon = (double)ddm.LonDegrees + (ddm.LonMinutes / 60.0);
+        }
+
+        public CoordinateDD(CoordinateDMS dms)
+        {
+            Lat = (double)dms.LatDegrees + ((double)dms.LatMinutes / 60.0) + (dms.LatSeconds / 3600.0);
+            Lon = (double)dms.LonDegrees + ((double)dms.LonMinutes / 60.0) + (dms.LatSeconds / 3600.0);
         }
 
         #region Properties
@@ -41,7 +53,7 @@ namespace CoordinateToolLibrary.Models
 
         public static bool TryParse(string input, out CoordinateDD coord)
         {
-            coord = new CoordinateDD(0.0,0.0);
+            coord = new CoordinateDD();
 
             input = input.Trim();
 
@@ -91,16 +103,6 @@ namespace CoordinateToolLibrary.Models
 
             if (!string.IsNullOrWhiteSpace(temp))
                 return temp;
-
-            //if (formatProvider != null)
-            //{
-            //    if (formatProvider is CoordinateDDFormatter && !format.Contains("{0:"))
-            //    {
-            //        format = string.Format("{{0:{0}}}", format);
-            //    }
-
-            //    return string.Format(formatProvider, format, new object[] { this });
-            //}
 
             var sb = new StringBuilder();
 

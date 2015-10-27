@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,6 +14,46 @@ namespace CoordinateToolLibrary.Helpers
   /// </summary>
   public static class UIHelpers
   {
+      public static void UpdateHistory(string input, ObservableCollection<string> list)
+      {
+            // lets do last 5 coordinates
+            if(!list.Any())
+            {
+                list.Add(input);
+                return;
+            }
+
+            if(list.Contains(input))
+            {
+                list.Remove(input);
+                list.Insert(0, input);
+            }
+            else
+            {
+                if(input.Length > 1)
+                {
+                    // check to see if someone is typing the coordinate
+                    // only keep the latest
+                    var temp = input.Substring(0, input.Length - 1);
+
+                    if(list[0] == temp)
+                    {
+                        // replace
+                        list.Remove(temp);
+                        list.Insert(0, input);
+                    }
+                    else
+                    {
+                        list.Insert(0, input);
+
+                        while (list.Count > 5)
+                        {
+                            list.RemoveAt(5);
+                        }
+                    }
+                }
+            }
+      }
 
     #region find parent
 

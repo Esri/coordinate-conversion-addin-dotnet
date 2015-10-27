@@ -14,8 +14,8 @@ namespace CoordinateToolLibrary.Models
         {
             Zone = 17;
             Hemi = "N";
-            Easting = 1000;
-            Northing = 1000;
+            Easting = 716777;
+            Northing = 4444511;
         }
 
         public CoordinateUTM(int zone, string hemi, int easting, int northing)
@@ -126,7 +126,7 @@ namespace CoordinateToolLibrary.Models
 
                     foreach (char c in format)
                     {
-                        if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
+                        if (startIndexNeeded && (c == '#' || c == '0'))
                         {
                             // add {<index>:
                             sb.AppendFormat("{{{0}:", currentIndex++);
@@ -134,7 +134,7 @@ namespace CoordinateToolLibrary.Models
                             endIndexNeeded = true;
                         }
 
-                        if (endIndexNeeded && (c != '#' && c != '.' && c != '0'))
+                        if (endIndexNeeded && (c != '#' && c != '0'))
                         {
                             sb.Append("}");
                             endIndexNeeded = false;

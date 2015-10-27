@@ -88,7 +88,7 @@ namespace CoordinateToolLibrary.ViewModels
                             output.Props = props;
                         }
                         break;
-                    case CoordinateType.DMS:
+                    case CoordinateType.DMS:  
                         CoordinateDMS cdms;
                         if (coordinateGetter.CanGetDMS(out coord) &&
                             CoordinateDMS.TryParse(coord, out cdms))
@@ -102,8 +102,17 @@ namespace CoordinateToolLibrary.ViewModels
                             }
                             else
                             {
-                                props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDMSFormatter()));
-                                props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDMSFormatter()));
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add("Lon", cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
+                                    props.Add("Lat", cdms.ToString("Y" + splits[1].Trim(), new CoordinateDMSFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDMSFormatter()));
+                                    props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDMSFormatter()));
+                                }
                             }
                             output.Props = props;
                         }
@@ -122,8 +131,17 @@ namespace CoordinateToolLibrary.ViewModels
                             }
                             else
                             {
-                                props.Add("Lat", ddm.ToString("A#°B#.######'N", new CoordinateDDMFormatter()));
-                                props.Add("Lon", ddm.ToString("X#°Y#.######'E", new CoordinateDDMFormatter()));
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add("Lon", ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
+                                    props.Add("Lat", ddm.ToString("Y" + splits[1].Trim(), new CoordinateDDMFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add("Lat", ddm.ToString("A#°B#.######'N", new CoordinateDDMFormatter()));
+                                    props.Add("Lon", ddm.ToString("X#°Y#.######'E", new CoordinateDDMFormatter()));
+                                }
                             }
                             output.Props = props;
                         }
@@ -137,7 +155,7 @@ namespace CoordinateToolLibrary.ViewModels
                             props.Add("Lon", gars.LonBand.ToString());
                             props.Add("Lat", gars.LatBand);
                             props.Add("Quadrant", gars.Quadrant.ToString());
-                            props.Add("Key", gars.Quadrant.ToString());
+                            props.Add("Key", gars.Key.ToString());
                             output.Props = props;
                         }
                         break;
@@ -167,7 +185,7 @@ namespace CoordinateToolLibrary.ViewModels
                             output.Props = props;
                         }
                         break;
-                    case CoordinateType.UTM:
+                    case CoordinateType.UTM: 
                         CoordinateUTM utm;
                         if(coordinateGetter.CanGetUTM(out coord) &&
                             CoordinateUTM.TryParse(coord, out utm))
@@ -185,6 +203,5 @@ namespace CoordinateToolLibrary.ViewModels
             }
         }
 
-        // TODO ADD NEW Coordinate Output
     }
 }

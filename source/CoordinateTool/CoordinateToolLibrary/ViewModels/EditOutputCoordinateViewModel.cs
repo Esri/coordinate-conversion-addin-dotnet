@@ -13,15 +13,25 @@ namespace CoordinateToolLibrary.ViewModels
     {
         public EditOutputCoordinateViewModel() 
         {
-            CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM"};
+            if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
+            {
+                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS" };
+            }
+            else
+            {
+                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM" };
+            }
             FormatList = new ObservableCollection<string>() { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Custom" };
             Sample = "Sample";
             Format = "Y-+0.####,X-+0.####";
 
-            //UpdateSampleCommand = new RelayCommand(OnUpdateSampleCommand);
             FormatExpanded = false;
+
+            Mediator.Register("BROADCAST_COORDINATE_VALUES", OnHandleBCCValues);
+            Mediator.NotifyColleagues("BROADCAST_COORDINATE_NEEDED", null);
         }
 
+        private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType,string>();
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
         public string WindowTitle { get; set; }
@@ -178,25 +188,74 @@ namespace CoordinateToolLibrary.ViewModels
             switch(type)
             {
                 case CoordinateType.DD:
-                    Sample = new CoordinateDD(40.1234, -70.5678).ToString(Format, new CoordinateDDFormatter());
+                    var dd = new CoordinateDD();
+
+                    if (ctdict.ContainsKey(CoordinateType.DD))
+                    {
+                        CoordinateDD.TryParse(ctdict[type], out dd);
+                    }
+
+                    Sample = dd.ToString(Format, new CoordinateDDFormatter());
+
                     break;
                 case CoordinateType.DDM:
-                    Sample = new CoordinateDDM(40, 20.1234, -70, 14.5678).ToString(Format, new CoordinateDDMFormatter());
+                    var ddm = new CoordinateDDM();
+                    
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateDDM.TryParse(ctdict[type], out ddm);
+                    }
+
+                    Sample = ddm.ToString(Format, new CoordinateDDMFormatter());
                     break;
                 case CoordinateType.DMS:
-                    Sample = new CoordinateDMS(40, 20, 17.1234, -70, 30, 18.5678).ToString(Format, new CoordinateDMSFormatter());
+                    var dms = new CoordinateDMS();
+
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateDMS.TryParse(ctdict[type], out dms);
+                    }
+                    Sample = dms.ToString(Format, new CoordinateDMSFormatter());
                     break;
                 case CoordinateType.GARS:
-                    Sample = new CoordinateGARS(201, "LW", 1, 2).ToString(Format, new CoordinateGARSFormatter());
+                    var gars = new CoordinateGARS();
+
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateGARS.TryParse(ctdict[type], out gars);
+                    }
+
+                    Sample = gars.ToString(Format, new CoordinateGARSFormatter());
                     break;
                 case CoordinateType.MGRS:
-                    Sample = new CoordinateMGRS("24W", "VC", 61830, 66186).ToString(Format, new CoordinateMGRSFormatter());
+                    var mgrs = new CoordinateMGRS();
+
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateMGRS.TryParse(ctdict[type], out mgrs);
+                    }
+
+                    Sample = mgrs.ToString(Format, new CoordinateMGRSFormatter());
                     break;
                 case CoordinateType.USNG:
-                    Sample = new CoordinateUSNG("24W", "VC", 61830, 66186).ToString(Format, new CoordinateMGRSFormatter());
+                    var usng = new CoordinateUSNG();
+
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateUSNG.TryParse(ctdict[type], out usng);
+                    }
+
+                    Sample = usng.ToString(Format, new CoordinateMGRSFormatter());
                     break;
                 case CoordinateType.UTM:
-                    Sample = new CoordinateUTM(24, "N", 461830, 776618).ToString(Format, new CoordinateUTMFormatter());
+                    var utm = new CoordinateUTM();
+
+                    if(ctdict.ContainsKey(type))
+                    {
+                        CoordinateUTM.TryParse(ctdict[type], out utm);
+                    }
+
+                    Sample = utm.ToString(Format, new CoordinateUTMFormatter());
                     break;
                 default:
                     break;
@@ -204,6 +263,20 @@ namespace CoordinateToolLibrary.ViewModels
 
             RaisePropertyChanged(() => Sample);
         }
+
+        private void OnHandleBCCValues(object obj)
+        {
+            var dict = obj as Dictionary<CoordinateType, string>;
+
+            if (dict != null)
+            {
+                ctdict.Clear();
+                foreach (var item in dict)
+                    ctdict.Add(item.Key, item.Value);
+            }
+        }
+
+
 
         private CoordinateType GetCoordinateType()
         {

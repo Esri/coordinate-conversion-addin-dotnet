@@ -44,6 +44,7 @@ namespace CoordinateToolLibrary.Tests
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -78°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -078°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40° 16' 22.9728\", -78° 50' 50.7372\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40° 7' 22.8\"N 77° 32' 38.4W\"", out coord));
 
             Assert.IsFalse(CoordinateDMS.TryParse("This is not a coordinate", out coord));
         }
@@ -136,22 +137,22 @@ namespace CoordinateToolLibrary.Tests
         public void FormatterMGRS()
         {
             var coord = new CoordinateMGRS("17T", "PE", 83016, 60286);
-            var temp = coord.ToString("ZSE#N#", new CoordinateMGRSFormatter());
+            var temp = coord.ToString("ZSX#Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE8301660286");
 
-            temp = coord.ToString("Z S E# N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z S X# Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T PE 83016 60286");
 
-            temp = coord.ToString("Z,S,E#,N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z,S,X#,Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T,PE,83016,60286");
             
-            temp = coord.ToString("Z-S-E#-N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z-S-X#-Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T-PE-83016-60286");
             
-            temp = coord.ToString("ZS E#N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X#Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 8301660286");
             
-            temp = coord.ToString("ZS E# N#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X# Y#", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 83016 60286");
 
             // test the default
@@ -246,6 +247,14 @@ namespace CoordinateToolLibrary.Tests
             
             temp = coord.ToString("Z#H X# E Y# N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
+        }
+
+        [TestMethod]
+        public void CTViewModel()
+        {
+            var ctvm = new CoordinateToolViewModel();
+
+            Assert.IsNotNull(ctvm.OCView);
         }
     }
 }

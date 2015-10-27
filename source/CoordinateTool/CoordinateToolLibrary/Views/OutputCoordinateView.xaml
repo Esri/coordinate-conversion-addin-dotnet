@@ -43,7 +43,7 @@
                 Header="Name"
                 Width="1*"
                 FontWeight="Bold"
-                MinWidth="100"
+                MinWidth="50"
                 Binding="{Binding Path=Name}" />
 
                 <DataGridTemplateColumn Header="Coordinate" Width="3*">

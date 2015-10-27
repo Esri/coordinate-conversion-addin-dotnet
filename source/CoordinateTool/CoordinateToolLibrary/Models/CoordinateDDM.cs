@@ -10,7 +10,7 @@ namespace CoordinateToolLibrary.Models
 {
     public class CoordinateDDM : CoordinateBase
     {
-        public CoordinateDDM() { }
+        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.38; LonDegrees = -78; LonMinutes = 27.36; }
 
         public CoordinateDDM(int latd, double latm, int lond, double lonm)
         {
@@ -18,6 +18,14 @@ namespace CoordinateToolLibrary.Models
             LatMinutes = latm;
             LonDegrees = lond;
             LonMinutes = lonm;
+        }
+
+        public CoordinateDDM(CoordinateDD dd)
+        {
+            LatDegrees = (int)Math.Truncate(dd.Lat);
+            LatMinutes = (dd.Lat - Math.Truncate(dd.Lat)) * 60.0;
+            LonDegrees = (int)Math.Truncate(dd.Lon);
+            LonMinutes = (dd.Lon - Math.Truncate(dd.Lon)) * 60.0;
         }
 
         #region Properties

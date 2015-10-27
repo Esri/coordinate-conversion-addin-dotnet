@@ -12,10 +12,10 @@ namespace CoordinateToolLibrary.Models
     {
         public CoordinateMGRS() 
         {
-            GZD = string.Empty;
-            GS = string.Empty;
-            Easting = 0;
-            Northing = 0;
+            GZD = "17T";
+            GS = "QQ";
+            Easting = 16777;
+            Northing = 44511;
         }
 
         // grid zone, grid square, easting, northing 5 digits is 1m
@@ -118,7 +118,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSE#N#", arg, this);
+                    return this.Format("ZSX#Y#", arg, this);
                 }
                 else
                 {
@@ -132,7 +132,7 @@ namespace CoordinateToolLibrary.Models
 
                     foreach (char c in format)
                     {
-                        if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
+                        if (startIndexNeeded && (c == '#' || c == '0'))
                         {
                             // add {<index>:
                             sb.AppendFormat("{{{0}:", currentIndex++);
@@ -140,7 +140,7 @@ namespace CoordinateToolLibrary.Models
                             endIndexNeeded = true;
                         }
 
-                        if (endIndexNeeded && (c != '#' && c != '.' && c != '0'))
+                        if (endIndexNeeded && (c != '#' && c != '0'))
                         {
                             sb.Append("}");
                             endIndexNeeded = false;
@@ -148,12 +148,12 @@ namespace CoordinateToolLibrary.Models
 
                         switch (c)
                         {
-                            case 'E': // easting
+                            case 'X': // easting
                                 cnum = coord.Easting;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
                                 break;
-                            case 'N': // northing
+                            case 'Y': // northing
                                 cnum = coord.Northing;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;

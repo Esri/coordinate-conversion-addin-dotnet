@@ -37,6 +37,16 @@ namespace ArcMapAddinCoordinateTool
             {
             }
 
+            public void SetInput(double x, double y)
+            {
+                var tool = this.m_windowUI.Child as DockableWindowCoordinateTool;
+
+                if(tool == null)
+                    return;
+
+                tool.input.Text = String.Format("{0:0.0####} {1:0.0####}", y, x);
+            }
+
             protected override IntPtr OnCreateChild()
             {
                 m_windowUI = new System.Windows.Forms.Integration.ElementHost();

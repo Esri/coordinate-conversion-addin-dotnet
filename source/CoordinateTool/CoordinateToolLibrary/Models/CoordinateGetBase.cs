@@ -18,20 +18,47 @@ namespace CoordinateToolLibrary.Models
         #region Can Gets
         public virtual bool CanGetDD(out string coord)
         {
-            coord = string.Empty;
-            return true;
+            CoordinateDD dd;
+            if (CoordinateDD.TryParse(InputCoordinate, out dd))
+            {
+                coord = dd.ToString("", new CoordinateDDFormatter());
+                return true;
+            }
+            else
+            {
+                coord = string.Empty;
+                return false;
+            }
         }
 
         public virtual bool CanGetDDM(out string coord)
         {
-            coord = string.Empty;
-            return false;
+            CoordinateDDM ddm;
+            if (CoordinateDDM.TryParse(InputCoordinate, out ddm))
+            {
+                coord = ddm.ToString("", new CoordinateDDMFormatter());
+                return true;
+            }
+            else
+            {
+                coord = string.Empty;
+                return false;
+            }
         }
 
         public virtual bool CanGetDMS(out string coord)
         {
-            coord = string.Empty;
-            return true;
+            CoordinateDMS dms;
+            if (CoordinateDMS.TryParse(InputCoordinate, out dms))
+            {
+                coord = dms.ToString("", new CoordinateDMSFormatter());
+                return true;
+            }
+            else
+            {
+                coord = string.Empty;
+                return false;
+            }
         }
 
         public virtual bool CanGetGARS(out string coord)
@@ -60,41 +87,5 @@ namespace CoordinateToolLibrary.Models
 
         #endregion
 
-        //#region Getters
-        //public virtual string GetDD()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetDDM()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetDMS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetGARS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetMGRS()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetUSNG()
-        //{
-        //    return string.Empty;
-        //}
-
-        //public virtual string GetUTM()
-        //{
-        //    return string.Empty;
-        //}
-        //#endregion
     }
 }

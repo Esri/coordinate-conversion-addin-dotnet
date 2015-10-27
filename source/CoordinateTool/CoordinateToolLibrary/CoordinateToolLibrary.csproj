@@ -77,7 +77,9 @@
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\pointtool.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\CoordinateToolView.xaml">
       <SubType>Designer</SubType>
@@ -98,6 +100,12 @@
     <Resource Include="Images\gears.png" />
     <Resource Include="Images\hand.png" />
     <Resource Include="Images\RowHandle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\tip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\copyall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,6 @@
 # coordinate-tool-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be used for converting coordinates.
 
 ![Image of Coordinate Tool Addin](ScreenShot.PNG) 
 
@@ -24,6 +24,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 * Visual Studio 2013
 * ArcGIS Desktop SDK for .NET 10.3
 	* [ArcGIS Runtime for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
+* ArcGIS Pro 1.1 SDK
 
 ## Instructions
 
@@ -44,18 +45,83 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 * Running
 	* Run or debug from Visual Studio
 	* To run from a stand-alone deployment
-        * Install the add-in from the application folder by double clicking it
-		* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
-			* C:\Users\YOUUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
-		* Add the add-in command to a toolbar via menu option 
-			* "Customize -> Customize mode"
-			* Select "Commands" Tab
-			* Select "Add-In Controls"
-			* Drag/Drop "CoordinateTool" command onto a toolbar
-			* Close customize mode
-			* open tool by clicking the "Coordinate Tool" command you just added
-			* dockable coordinate tool appears
-
+		* ArcMAP
+			* Install the add-in from the application folder by double clicking it
+			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
+			* Add the add-in command to a toolbar via menu option 
+				* "Customize -> Customize mode"
+				* Select "Commands" Tab
+				* Select "Add-In Controls"
+				* Drag/Drop "CoordinateTool" command onto a toolbar
+				* Close customize mode
+				* open tool by clicking the "Coordinate Tool" command you just added
+				* dockable coordinate tool appears
+		* Pro
+			* Install the add-in from the application folder by double clicking it
+			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c}
+			* The ADD-IN appears under the "ADD-IN" tab in Pro	
+				* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
+				
+* Custom Formatters
+	* Each coordinate type has its own custom formatter.  The following guide will help build a custom format string for each particular coordinate type.  If a character is not part of the formatting code it is simply transferred to the output string.
+	* Formatting numbers
+		* Numbers found in DD, DDM and DMS can be formatted using the first three ("0" Zero placeholder, "#" digit placeholder and "." decimal point) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
+		* Numbers found in GARS, MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
+	* Formatting string output for each coordinate type
+		* DD Decimal Degrees
+			* "X" = Longitude
+			* "Y" = Latitude
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "+-Y0.0 +-X0.0" will output "+41.1 -78.2"
+		* DDM Decimal Degrees Minutes
+			* "A" = Latitude Degrees
+			* "B" = Latitude Minutes
+			* "X" = Longitude Degrees
+			* "Y" = Longitude Minutes
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "A#° B#.##'N X#° Y#.##'E" will output "41° 22.12'N 78° 36.45'W"
+		* DMS Degrees Minutes Seconds
+			* "A" = Latitude Degrees
+			* "B" = Latitude Minutes
+			* "C" = Latitude Seconds
+			* "X" = Longitude Degrees
+			* "Y" = Longitude Minutes
+			* "Z" = Longitude Seconds
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* "N" or "S" = add "N" or "S" direction based on latitude
+			* "E" or "W" = add "E" or "W" direction based on longitude
+			* Example : "A#° B#' C#.#\"N X#° Y#' Z#.#E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
+				* Note : escape " like \" to get double quotes in the output
+		* GARS
+			* "X" = Longitude Band
+			* "Y" = Latitude Band
+			* "Q" = Quadrant
+			* "K" = Key
+			* Example : "X#YQK" will output "221LW37"
+		* MGRS/USNG
+			* "Z" = Grid Zone
+			* "S" = Grid Segment
+			* "X" = Easting
+			* "Y" = Northing
+			* Example : "Z S X# Y#" will output "19T DE 14639 28236"
+		* UTM
+			* "Z" = Zone
+			* "H" = Hemisphere
+			* "X" = Easting
+			* "Y" = Northing
+			* "+" = add "+" prefix if number is positive
+			* "-" = add "-" prefix if number is negative
+			* Example : "Z#H X#m Y#m" will output "19N 414639m 4428236m"	
+			
 ## Resources
 
 * [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)
