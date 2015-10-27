@@ -1,6 +1,6 @@
 # coordinate-tool-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be used for converting coordinates.
 
 ![Image of Coordinate Tool Addin](ScreenShot.PNG) 
 
@@ -24,6 +24,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 that can be used for conv
 * Visual Studio 2013
 * ArcGIS Desktop SDK for .NET 10.3
 	* [ArcGIS Runtime for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
+* ArcGIS Pro 1.1 SDK
 
 ## Instructions
 
