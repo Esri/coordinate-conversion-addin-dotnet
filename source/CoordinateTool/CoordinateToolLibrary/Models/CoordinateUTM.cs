@@ -37,6 +37,9 @@ namespace CoordinateToolLibrary.Models
         {
             utm = new CoordinateUTM();
 
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+            
             input = input.Trim();
 
             Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");

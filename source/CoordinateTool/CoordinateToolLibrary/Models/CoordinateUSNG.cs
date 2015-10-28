@@ -27,6 +27,10 @@ namespace CoordinateToolLibrary.Models
         public static bool TryParse(string input, out CoordinateUSNG usng)
         {
             CoordinateMGRS mgrs = new CoordinateMGRS();
+            usng = new CoordinateUSNG(mgrs.GZD, mgrs.GS, mgrs.Easting, mgrs.Northing);
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
 
             if (CoordinateMGRS.TryParse(input, out mgrs))
             {

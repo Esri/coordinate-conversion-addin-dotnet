@@ -38,6 +38,9 @@ namespace CoordinateToolLibrary.Models
         {
             mgrs = new CoordinateMGRS();
 
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+            
             input = input.Trim();
 
             Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[-,;:\s]*(?<gs>[A-HJ-NP-Z]{2})[-,;:\s]*(?<numlocation>\d{0,10})\s*");

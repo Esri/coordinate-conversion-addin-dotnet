@@ -113,6 +113,13 @@ namespace CoordinateToolLibrary.Views
 
                 //select the dropped item
                 ocGrid.SelectedItem = DraggedItem;
+                
+                var vm = DataContext as OutputCoordinateViewModel;
+                if (vm != null)
+                {
+                    // save the config file
+                    vm.SaveOutputConfiguration();
+                }
             }
 
             //reset
