@@ -274,6 +274,30 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 return CoordinateType.MGRS;
             }
             catch { }
+            try
+            {
+                cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_NewStyle);
+                return CoordinateType.MGRS;
+            }
+            catch { }
+            try
+            {
+                cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_NewWith180InZone01);
+                return CoordinateType.MGRS;
+            }
+            catch { }
+            try
+            {
+                cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_OldStyle);
+                return CoordinateType.MGRS;
+            }
+            catch { }
+            try
+            {
+                cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_OldWith180InZone01);
+                return CoordinateType.MGRS;
+            }
+            catch { }
 
             try
             {
