@@ -55,6 +55,9 @@ namespace CoordinateToolLibrary.Models
         {
             coord = new CoordinateDD();
 
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
             input = input.Trim();
 
             Regex regexDD = new Regex(@"^ *[+]*(?<latitudeSuffix>[NS])?(?<latitude>[^NSDd*° ,]*)?[Dd*° ,]*(?<latitudeSuffix>[NS])?[+,;:\s]*(?<longitudeSuffix>[EW])?(?<longitude>[^EWDd*° ]*)?[Dd*° ]*(?<longitudeSuffix>[EW])?");

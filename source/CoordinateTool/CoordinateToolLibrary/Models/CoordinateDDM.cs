@@ -41,6 +41,9 @@ namespace CoordinateToolLibrary.Models
         {
             ddm = new CoordinateDDM();
 
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
             input = input.Trim();
 
             Regex regexDDM = new Regex(@"^\s*[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*°,:\s]*)?[Dd*°,:\s]*(?<latitudeM>[^NS',:\s]*)?[',:\s]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*°,:\s]*)?[Dd*°,:\s]*(?<longitudeM>[^EW',:\s]*)?[',:\s]*(?<longitudeSuffix>[EW])?");

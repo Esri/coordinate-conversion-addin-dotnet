@@ -37,6 +37,9 @@ namespace CoordinateToolLibrary.Models
         {
             gars = new CoordinateGARS();
 
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+            
             input = input.Trim();
 
             Regex regexGARS = new Regex(@"^\s*(?<lonband>\d{3})[-,;:\s]*(?<latband>[A-HJ-NP-Z]{2}?)[-,;:\s]*(?<quadrant>\d?)[-,;:\s]*(?<key>\d?)\s*");
