@@ -7,8 +7,11 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 ## Features
 
 * Parses input coordinates and outputs multiple formats of the input coordinate
+* Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMAP 10.3
-* Works with DD, DMS, GARS, MGRS, USNG, UTM
+* Addin for ArcGIS Pro 1.1
+* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
+	* Note : support for GARS, MGRS, USNG and UTM for ArcGIS Pro will come with a future release
 
 ## Sections
 
