@@ -7,7 +7,6 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
-using System.Windows.Documents;
 
 namespace ProAppCoordToolModule
 {
