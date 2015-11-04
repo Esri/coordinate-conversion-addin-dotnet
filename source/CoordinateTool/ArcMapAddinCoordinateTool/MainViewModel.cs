@@ -268,6 +268,17 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             catch { }
 
+            CoordinateGARS gars;
+            if(CoordinateGARS.TryParse(input, out gars))
+            {
+                try
+                {
+                    cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, gars.ToString("", new CoordinateGARSFormatter()));
+                    return CoordinateType.GARS;
+                }
+                catch { }
+            }
+
             try
             {
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_Automatic);
@@ -299,12 +310,35 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             catch { }
 
+            // mgrs try parse
+            CoordinateMGRS mgrs;
+            if (CoordinateMGRS.TryParse(input, out mgrs))
+            {
+                try
+                {
+                    cn.PutCoordsFromMGRS(mgrs.ToString("", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_NewStyle);
+                    return CoordinateType.MGRS;
+                }
+                catch { }
+            }
+
             try
             {
                 cn.PutCoordsFromUSNG(input);
                 return CoordinateType.USNG;
             }
             catch { }
+
+            CoordinateUSNG usng;
+            if(CoordinateUSNG.TryParse(input, out usng))
+            {
+                try
+                {
+                    cn.PutCoordsFromUSNG(usng.ToString("", new CoordinateMGRSFormatter()));
+                    return CoordinateType.USNG;
+                }
+                catch { }
+            }
 
             try
             {
@@ -326,6 +360,17 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 return CoordinateType.UTM;
             }
             catch { }
+
+            CoordinateUTM utm;
+            if(CoordinateUTM.TryParse(input, out utm))
+            {
+                try
+                {
+                    cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, utm.ToString("", new CoordinateUTMFormatter()));
+                    return CoordinateType.UTM;
+                }
+                catch { }
+            }
 
             return CoordinateType.Unknown;
         }
