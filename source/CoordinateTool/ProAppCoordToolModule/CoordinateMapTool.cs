@@ -18,26 +18,6 @@ namespace ProAppCoordToolModule
             return base.OnToolActivateAsync(active);
         }
 
-        protected override void OnToolMouseMove(MapViewMouseEventArgs e)
-        {
-            base.OnToolMouseMove(e);
-
-            var mp = QueuedTask.Run(() =>
-            {
-                MapPoint temp = null;
-
-                if (MapView.Active != null)
-                {
-
-                    temp = MapView.Active.ClientToMap(e.ClientPoint);
-                }
-
-                return temp;
-            }).Result;
-
-            // get adorner layer
-            //var alayer = AdornerLayer.GetAdornerLayer(MapView.Active.);
-        }
         protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
         {
             var mp = QueuedTask.Run(() =>
