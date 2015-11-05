@@ -40,6 +40,14 @@ namespace CoordinateToolLibrary.Views
             vm.DefaultFormats = formats;
             vm.OutputCoordItem = outputCoordItem;
             vm.Names = names;
+
+            var win = Window.GetWindow(this);
+
+            if(win != null)
+            {
+                var temp = new System.Windows.Interop.WindowInteropHelper(win);
+
+            }
         }
 
 

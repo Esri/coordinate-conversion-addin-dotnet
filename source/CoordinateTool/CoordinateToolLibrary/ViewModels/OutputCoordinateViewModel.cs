@@ -70,7 +70,7 @@ namespace CoordinateToolLibrary.ViewModels
             if (outputCoordItem == null)
                 return;
 
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name });
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Add New Output Coordinate";
@@ -86,6 +86,8 @@ namespace CoordinateToolLibrary.ViewModels
                 }
 
                 outputCoordItem.Name = vm.OutputCoordItem.Name;
+                outputCoordItem.SRFactoryCode = vm.OutputCoordItem.SRFactoryCode;
+                outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 OutputCoordinateList.Add(outputCoordItem);
                 Mediator.NotifyColleagues("UpdateOutputRequired", null);
@@ -170,9 +172,14 @@ namespace CoordinateToolLibrary.ViewModels
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, InUseNames, new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name });
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, InUseNames, 
+                new OutputCoordinateModel() { CType = outputCoordItem.CType, 
+                    Format = outputCoordItem.Format, 
+                    Name = outputCoordItem.Name,
+                    SRName = outputCoordItem.SRName,
+                    SRFactoryCode = outputCoordItem.SRFactoryCode});
 
-            //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
+            //dlg.Owner = System.Windows.Application.Current.MainWindow;//System.Windows.Window.GetWindow(this.Data);
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Edit Output Coordinate";
@@ -181,6 +188,8 @@ namespace CoordinateToolLibrary.ViewModels
             {
                 outputCoordItem.Name = vm.OutputCoordItem.Name;
                 outputCoordItem.Format = vm.Format;
+                outputCoordItem.SRFactoryCode = vm.OutputCoordItem.SRFactoryCode;
+                outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 CoordinateType type;
                 if (Enum.TryParse<CoordinateType>(vm.CategorySelection, out type))

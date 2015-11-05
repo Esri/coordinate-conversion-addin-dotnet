@@ -33,16 +33,16 @@ namespace ProAppCoordToolModule
         //    return false;
         //}
 
-        public override bool CanGetDDM(out string coord)
+        public override bool CanGetDDM(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if(base.CanGetDDM(out coord))
+            if(base.CanGetDDM(srFactoryCode, out coord))
             {
                 return true;
             }
             else
             {
-                if(base.CanGetDD(out coord))
+                if(base.CanGetDD(srFactoryCode, out coord))
                 {
                     // convert dd to ddm
                     CoordinateDD dd;
@@ -57,16 +57,16 @@ namespace ProAppCoordToolModule
             return false;
         }
 
-        public override bool CanGetDMS(out string coord)
+        public override bool CanGetDMS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if (base.CanGetDMS(out coord))
+            if (base.CanGetDMS(srFactoryCode, out coord))
             {
                 return true;
             }
             else
             {
-                if (base.CanGetDD(out coord))
+                if (base.CanGetDD(srFactoryCode, out coord))
                 {
                     // convert dd to ddm
                     CoordinateDD dd;

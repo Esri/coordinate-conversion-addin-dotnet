@@ -19,6 +19,7 @@ namespace CoordinateToolLibrary.ViewModels
             coordinateGetter = new CoordinateGetBase();
 
             Mediator.Register("UpdateOutputRequired", OnUpdateOutputs);
+            Mediator.Register("SELECTSR", OnSelectSpatialReference);
         }
 
         public OutputCoordinateView OCView { get; set; }
@@ -61,7 +62,7 @@ namespace CoordinateToolLibrary.ViewModels
                 {
                     case CoordinateType.DD:
                         CoordinateDD cdd;
-                        if (coordinateGetter.CanGetDD(out coord) &&
+                        if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
                             CoordinateDD.TryParse(coord, out cdd))
                         {
                             output.OutputCoordinate = cdd.ToString(output.Format, new CoordinateDDFormatter());
@@ -90,7 +91,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.DMS:  
                         CoordinateDMS cdms;
-                        if (coordinateGetter.CanGetDMS(out coord) &&
+                        if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
                             CoordinateDMS.TryParse(coord, out cdms))
                         {
                             output.OutputCoordinate = cdms.ToString(output.Format, new CoordinateDMSFormatter());
@@ -119,7 +120,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.DDM:
                         CoordinateDDM ddm;
-                        if(coordinateGetter.CanGetDDM(out coord) &&
+                        if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
                             CoordinateDDM.TryParse(coord, out ddm))
                         {
                             output.OutputCoordinate = ddm.ToString(output.Format, new CoordinateDDMFormatter());
@@ -148,7 +149,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.GARS:
                         CoordinateGARS gars;
-                        if(coordinateGetter.CanGetGARS(out coord) &&
+                        if (coordinateGetter.CanGetGARS(output.SRFactoryCode, out coord) &&
                             CoordinateGARS.TryParse(coord, out gars))
                         {
                             output.OutputCoordinate = gars.ToString(output.Format, new CoordinateGARSFormatter());
@@ -161,7 +162,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.MGRS:
                         CoordinateMGRS mgrs;
-                        if(coordinateGetter.CanGetMGRS(out coord) &&
+                        if (coordinateGetter.CanGetMGRS(output.SRFactoryCode, out coord) &&
                             CoordinateMGRS.TryParse(coord, out mgrs))
                         {
                             output.OutputCoordinate = mgrs.ToString(output.Format, new CoordinateMGRSFormatter());
@@ -174,7 +175,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.USNG:
                         CoordinateUSNG usng;
-                        if(coordinateGetter.CanGetUSNG(out coord) &&
+                        if (coordinateGetter.CanGetUSNG(output.SRFactoryCode, out coord) &&
                             CoordinateUSNG.TryParse(coord, out usng))
                         {
                             output.OutputCoordinate = usng.ToString(output.Format, new CoordinateMGRSFormatter());
@@ -187,7 +188,7 @@ namespace CoordinateToolLibrary.ViewModels
                         break;
                     case CoordinateType.UTM: 
                         CoordinateUTM utm;
-                        if(coordinateGetter.CanGetUTM(out coord) &&
+                        if (coordinateGetter.CanGetUTM(output.SRFactoryCode, out coord) &&
                             CoordinateUTM.TryParse(coord, out utm))
                         {
                             output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
@@ -202,6 +203,15 @@ namespace CoordinateToolLibrary.ViewModels
                 }
             }
         }
+
+        private void OnSelectSpatialReference(object obj)
+        {
+            if (coordinateGetter == null)
+                return;
+
+            coordinateGetter.SelectSpatialReference();
+        }
+
 
     }
 }

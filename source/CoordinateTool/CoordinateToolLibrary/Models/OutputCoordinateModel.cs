@@ -93,6 +93,41 @@ namespace CoordinateToolLibrary.Models
         }
         #endregion Format
 
+        private int srFactoryCode = 4326;
+        public int SRFactoryCode
+        {
+            get
+            {
+                return srFactoryCode;
+            }
+            set
+            {
+                if (srFactoryCode != value)
+                {
+                    srFactoryCode = value;
+                    RaisePropertyChanged(() => SRFactoryCode);
+                }
+            }
+        }
+
+        private string srName = "WGS84";
+        public string SRName
+        {
+            get
+            {
+                return srName;
+            }
+
+            set
+            {
+                if(srName != value)
+                {
+                    srName = value;
+                    RaisePropertyChanged(() => SRName);
+                }
+            }
+        }
+
         #region Methods
         public void ToggleVisibility()
         {

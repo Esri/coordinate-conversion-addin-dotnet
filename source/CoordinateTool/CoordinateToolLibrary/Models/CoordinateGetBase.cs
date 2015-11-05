@@ -13,10 +13,13 @@ namespace CoordinateToolLibrary.Models
 
         }
 
+        //TODO add parameter with projection string
+        // override class can use string to do proper projection
+
         public string InputCoordinate { get; set; }
 
         #region Can Gets
-        public virtual bool CanGetDD(out string coord)
+        public virtual bool CanGetDD(int srFactoryCode, out string coord)
         {
             CoordinateDD dd;
             if (CoordinateDD.TryParse(InputCoordinate, out dd))
@@ -31,7 +34,7 @@ namespace CoordinateToolLibrary.Models
             }
         }
 
-        public virtual bool CanGetDDM(out string coord)
+        public virtual bool CanGetDDM(int srFactoryCode, out string coord)
         {
             CoordinateDDM ddm;
             if (CoordinateDDM.TryParse(InputCoordinate, out ddm))
@@ -46,7 +49,7 @@ namespace CoordinateToolLibrary.Models
             }
         }
 
-        public virtual bool CanGetDMS(out string coord)
+        public virtual bool CanGetDMS(int srFactoryCode, out string coord)
         {
             CoordinateDMS dms;
             if (CoordinateDMS.TryParse(InputCoordinate, out dms))
@@ -61,31 +64,44 @@ namespace CoordinateToolLibrary.Models
             }
         }
 
-        public virtual bool CanGetGARS(out string coord)
+        public virtual bool CanGetGARS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
             return false;
         }
 
-        public virtual bool CanGetMGRS(out string coord)
+        public virtual bool CanGetMGRS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
             return false;
         }
 
-        public virtual bool CanGetUSNG(out string coord)
+        public virtual bool CanGetUSNG(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
             return false;
         }
 
-        public virtual bool CanGetUTM(out string coord)
+        public virtual bool CanGetUTM(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
             return false;
         }
 
         #endregion
+
+        // support project and spatial reference
+
+        // configure
+        public virtual bool SelectSpatialReference()
+        {
+            return false;
+        }
+
+        public virtual void Project(int factoryCode)
+        {
+            // do nothing
+        }
 
     }
 }

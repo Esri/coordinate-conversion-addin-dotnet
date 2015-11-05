@@ -28,6 +28,13 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+
+            // update tool view model
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                ctvm.SetCoordinateGetter(amCoordGetter);
+            }
         }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
