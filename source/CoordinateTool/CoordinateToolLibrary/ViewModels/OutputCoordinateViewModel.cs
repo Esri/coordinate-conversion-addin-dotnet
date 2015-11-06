@@ -179,8 +179,6 @@ namespace CoordinateToolLibrary.ViewModels
                     SRName = outputCoordItem.SRName,
                     SRFactoryCode = outputCoordItem.SRFactoryCode});
 
-            //dlg.Owner = System.Windows.Application.Current.MainWindow;//System.Windows.Window.GetWindow(this.Data);
-
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Edit Output Coordinate";
 

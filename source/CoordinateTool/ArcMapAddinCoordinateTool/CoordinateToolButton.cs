@@ -75,11 +75,6 @@ namespace ArcMapAddinCoordinateTool
 
         private ISpatialReference GetSR()
         {
-            // create wgs84 spatial reference
-            //var spatialFactory = new ESRI.ArcGIS.Geometry.SpatialReferenceEnvironmentClass();
-            //var temp = spatialFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
-            //return temp as ISpatialReference;
-
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
             System.Object obj = Activator.CreateInstance(t);
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
@@ -90,58 +85,9 @@ namespace ArcMapAddinCoordinateTool
                 srFact.CreateGeographicCoordinateSystem((int)
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);
 
-
-            //testc();
-
             return geographicCS as ISpatialReference;
         }
 
-        //private void testc()
-        //{
-        //    ESRI.ArcGIS.CatalogUI.ISpatialReferenceDialog2 spatialReferenceDialog = new ESRI.ArcGIS.CatalogUI.SpatialReferenceDialogClass();
-        //    ESRI.ArcGIS.Geometry.ISpatialReference spatialReference = spatialReferenceDialog.DoModalCreate(true, false, false, 0);
-        //}
-        private void testd()
-        {
-
-            // Set up the SpatialReferenceEnvironment.
-            // SpatialReferenceEnvironment is a singleton object and needs to use the Activator class.
-
-            Type factoryType = Type.GetTypeFromProgID(
-                "esriGeometry.SpatialReferenceEnvironment");
-            System.Object obj = Activator.CreateInstance(factoryType);
-            ISpatialReferenceFactory spatialReferenceFactory = obj as
-                ISpatialReferenceFactory;
-
-            //ISet projectionSet = spatialReferenceFactory.CreatePredefinedProjections();
-
-            //System.Windows.Forms.MessageBox.Show("Number of predefined Projections = " +
-            //    projectionSet.Count);
-
-            //projectionSet.Reset();
-
-            //for (int i = 0; i < projectionSet.Count; i++)
-            //{
-            //    IProjection projection = projectionSet.Next() as IProjection;
-            //    Console.WriteLine("PCS Name: {0} (Code: {1})", projection.Name,
-            //        projection.FactoryCode);
-            //}
-
-            //ISet projectionSet = spatialReferenceFactory.CreatePredefinedSpheroids();
-
-            //System.Windows.Forms.MessageBox.Show("Number of predefined Spheroids = " +
-            //    projectionSet.Count);
-
-            //projectionSet.Reset();
-
-            //for (int i = 0; i < projectionSet.Count; i++)
-            //{
-            //    IProjection projection = projectionSet.Next() as IProjection;
-            //    Console.WriteLine("PCS Name: {0} (Code: {1})", projection.Name,
-            //        projection.FactoryCode);
-            //}
-
-        }
     }
 
 }

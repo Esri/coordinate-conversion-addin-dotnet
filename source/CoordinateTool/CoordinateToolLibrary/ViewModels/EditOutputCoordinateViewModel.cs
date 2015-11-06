@@ -43,27 +43,6 @@ namespace CoordinateToolLibrary.ViewModels
         public List<string> Names { get; set; }
         public string Sample { get; set; }
 
-        //private int srFactoryCode;
-        //public int SRFactoryCode
-        //{
-        //    get { return srFactoryCode; }
-        //    set
-        //    {
-        //        srFactoryCode = value;
-        //        RaisePropertyChanged(() => SRFactoryCode);
-        //    }
-        //}
-        //private string srName;
-        //public string SRName
-        //{
-        //    get { return srName; }
-        //    set
-        //    {
-        //        srName = value;
-        //        RaisePropertyChanged(() => SRName);
-        //    }
-        //}
-
         private string _format = string.Empty;
         public string Format 
         {
@@ -176,10 +155,6 @@ namespace CoordinateToolLibrary.ViewModels
             SelectFormat(OutputCoordItem.Format);
 
             Format = OutputCoordItem.Format;
-
-            //SRName = OutputCoordItem.SRName;
-
-            //SRFactoryCode = OutputCoordItem.SRFactoryCode;
         }
 
         private void OnFormatSelectionChanged()

@@ -140,14 +140,12 @@ namespace ArcMapAddinCoordinateTool
         }
 
         #endregion
-        [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        private static extern int FindWindow(string sClass, string sWindow);
+
         public override bool SelectSpatialReference()
         {
             // get dialog handle
-            var hWnd = FindWindow("EditOutputCoordinateView", "Edit Output Coordinate");
             ESRI.ArcGIS.CatalogUI.ISpatialReferenceDialog2 spatialReferenceDialog = new ESRI.ArcGIS.CatalogUI.SpatialReferenceDialogClass();
-            ESRI.ArcGIS.Geometry.ISpatialReference spatialReference = spatialReferenceDialog.DoModalCreate(true, false, false, hWnd);
+            ESRI.ArcGIS.Geometry.ISpatialReference spatialReference = spatialReferenceDialog.DoModalCreate(true, false, false, (int)System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle);
 
             if (spatialReference != null)
             {

@@ -13,9 +13,6 @@ namespace CoordinateToolLibrary.Models
 
         }
 
-        //TODO add parameter with projection string
-        // override class can use string to do proper projection
-
         public string InputCoordinate { get; set; }
 
         #region Can Gets

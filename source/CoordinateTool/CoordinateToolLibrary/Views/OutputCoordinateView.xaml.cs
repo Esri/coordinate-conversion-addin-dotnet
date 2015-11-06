@@ -60,8 +60,6 @@ namespace CoordinateToolLibrary.Views
         /// </summary>
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
-
             DependencyObject dep = (DependencyObject)e.OriginalSource;
 
             while ((dep != null) && !(dep is DataGridRowHeader))
