@@ -1,4 +1,6 @@
 ﻿using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 using CoordinateToolLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -146,6 +148,22 @@ namespace ProAppCoordToolModule
         //    return false;
         //}
 
+        public override bool SelectSpatialReference()
+        {
+            return false;
+        }
+
+        public override void Project(int factoryCode)
+        {
+            var temp = QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Geometry.SpatialReference spatialReference = SpatialReferenceBuilder.CreateSpatialReference(factoryCode);
+
+                Point = (MapPoint)GeometryEngine.Project(Point, spatialReference);
+
+                return true;
+            }).Result;
+        }
         #endregion
     }
 }
