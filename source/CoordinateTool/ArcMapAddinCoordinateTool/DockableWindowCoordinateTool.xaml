@@ -12,43 +12,123 @@
     <Grid Margin="3,3,3,3">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
-                              HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
-                        <ComboBox.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                        <Setter Property="TextBox.Background" Value="LightPink"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                        <Setter Property="TextBox.Background" Value="White"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ComboBox.Style>
-                    </ComboBox>
-                    <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/pointtool.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,3,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
-                    </Button>
+                <GroupBox Header="Input">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
+                                  HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
+                            <ComboBox.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                            <Setter Property="TextBox.Background" Value="LightPink"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                            <Setter Property="TextBox.Background" Value="White"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                        </ComboBox>
+                        <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3">
+                            <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
+                        </Button>
+                        <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
+                            <Image Source="/CoordinateToolLibrary;component/Images/pointtool.png" Width="18" Height="18" />
+                        </Button>
+                        <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
+                            <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
+                        </Button>
+                        <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
+                            <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
+                        </Button>
+                        <Button Grid.Column="5" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Collapsed">
+                                            <Setter Property="Content" Value="▼" />
+                                            <Setter Property="ToolTip" Value="Expand" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Visible">
+                                            <Setter Property="Content" Value="▲" />
+                                            <Setter Property="ToolTip" Value="Collapse" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Grid Grid.Row="1" Visibility="{Binding SelectedInputItemVisibility}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <DataTemplate x:Key="GARSTemplate" >
+                                    <TextBlock Text="GARS" />
+                                </DataTemplate>
+                                <DataTemplate x:Key="MGRSTemplate" >
+                                    <TextBlock Text="MGRS" />
+                                </DataTemplate>
+                                <DataTemplate x:Key="USNGTemplate" >
+                                    <TextBlock Text="USNG" />
+                                </DataTemplate>
+                                <DataTemplate x:Key="UTMTemplate" >
+                                    <TextBlock Text="UTM" />
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+                                    <ContentControl Content="{Binding }">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="GARS">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="MGRS">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource MGRSTemplate}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="USNG">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource USNGTemplate}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="UTM">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource UTMTemplate}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </DataTemplate>
+                            </Grid.Resources>
+                            <ComboBox Margin="3,3,3,3" Text="{Binding SelectedInputItem}">
+                                    <ComboBoxItem Content="GARS" IsSelected="True"/>
+                                    <ComboBoxItem Content="MGRS"/>
+                                    <ComboBoxItem Content="USNG"/>
+                                    <ComboBoxItem Content="UTM"/>
+                            </ComboBox>
+                            <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding}">
+                            </ContentControl>
+                        </Grid>                        
                 </Grid>
-                <UserControl Content="{Binding CTView}" />
+                </GroupBox>
+                <GroupBox Header="Output">
+                    <UserControl Content="{Binding CTView}" />
+                </GroupBox>
             </StackPanel>
         </ScrollViewer>
     </Grid>
