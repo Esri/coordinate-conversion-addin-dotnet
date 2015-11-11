@@ -5,6 +5,7 @@
     Height="300" Width="300">
     <UserControl.Resources>
         <viewModels:MainViewModel x:Key="viewModelMain" />
+        <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />
     </UserControl.Resources>
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
@@ -80,16 +81,102 @@
                             </Grid.RowDefinitions>
                             <Grid.Resources>
                                 <DataTemplate x:Key="GARSTemplate" >
-                                    <TextBlock Text="GARS" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="55" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Lon Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding InputGARS.LonBand, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=lonBCB, Path=IsChecked, Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Column="2"  x:Name="lonBCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Text="Lat Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputGARS.LatBand, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=latBCB, Path=IsChecked, Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="latBCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="2" Text="Quadrant" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputGARS.Quadrant, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                        <TextBlock Grid.Row="3" Text="Key" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputGARS.Key, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                    </Grid>
                                 </DataTemplate>
                                 <DataTemplate x:Key="MGRSTemplate" >
-                                    <TextBlock Text="MGRS" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="55" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding InputMGRS.GZD, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Column="2"  x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputMGRS.GS, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputMGRS.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                        <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputMGRS.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                    </Grid>
                                 </DataTemplate>
                                 <DataTemplate x:Key="USNGTemplate" >
-                                    <TextBlock Text="USNG" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="55" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding InputUSNG.GZD, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Column="2" x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUSNG.GS, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Row="1" Grid.Column="2" x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUSNG.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                        <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputUSNG.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                    </Grid>
                                 </DataTemplate>
                                 <DataTemplate x:Key="UTMTemplate" >
-                                    <TextBlock Text="UTM" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="55" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding InputUTMZoneWithHemi, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB, Path=IsChecked, Converter={StaticResource negateBool}}" />
+                                        <CheckBox Grid.Column="2" Content="Lock" VerticalAlignment="Center" x:Name="zoneCB" />
+                                        <!--<TextBlock Grid.Row="1" Text="Hemi" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Hemi, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />-->
+                                        <TextBlock Grid.Row="1" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                        <TextBlock Grid.Row="2" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUTM.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />
+                                    </Grid>
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
                                     <ContentControl Content="{Binding }">
