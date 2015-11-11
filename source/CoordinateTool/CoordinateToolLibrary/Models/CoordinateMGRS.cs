@@ -57,7 +57,7 @@ namespace CoordinateToolLibrary.Models
                         mgrs.GZD = matchMGRS.Groups["gzd"].Value;
                         mgrs.GS = matchMGRS.Groups["gs"].Value;
                         var tempEN = matchMGRS.Groups["numlocation"].Value;
-                        tempEN = matchMGRS.Groups["numlocation2"].Value;
+                        tempEN += matchMGRS.Groups["numlocation2"].Value;
                         if (tempEN.Length % 2 == 0 && tempEN.Length > 0)
                         {
                             int numSize = tempEN.Length / 2;
