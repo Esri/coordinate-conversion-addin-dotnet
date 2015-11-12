@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArcMapAddinCoordinateTool.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,5 +64,16 @@ namespace ArcMapAddinCoordinateTool
             }
 
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vm = this.DataContext as MainViewModel;
+
+            if (vm == null)
+                return;
+
+            vm.UpdateSpecificInput();
+        }
+
     }
 }

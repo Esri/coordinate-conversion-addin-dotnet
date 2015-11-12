@@ -14,6 +14,7 @@ using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Runtime.CompilerServices;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -30,6 +31,30 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             ExpandCommand = new RelayCommand(OnExpandCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+        }
+
+        internal void UpdateSpecificInput()
+        {
+            if (SelectedInputItemVisibility != Visibility.Visible)
+                return;
+
+            switch(SelectedInputItem)
+            {
+                case "GARS":
+                    InputCoordinate = InputGARS.ToString("", new CoordinateGARSFormatter());
+                    break;
+                case "MGRS":
+                    InputCoordinate = InputMGRS.ToString("", new CoordinateMGRSFormatter());
+                    break;
+                case "USNG":
+                    InputCoordinate = InputUSNG.ToString("", new CoordinateMGRSFormatter());
+                    break;
+                case "UTM":
+                    InputCoordinate = InputUTM.ToString("", new CoordinateUTMFormatter());
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void OnExpandCommand(object obj)
@@ -305,29 +330,35 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
             return result;
         }
-
+        [MethodImplAttribute(MethodImplOptions.NoInlining)]
         private void UpdateInputs()
         {
+            bool skip = false;
+
+            if (new System.Diagnostics.StackFrame(4).GetMethod().Name == "TextBox_TextChanged")
+                skip = true;
+
             string coord = string.Empty;
-            if(amCoordGetter.CanGetGARS(out coord))
+
+            if(!(SelectedInputItem == "GARS" && skip) && amCoordGetter.CanGetGARS(out coord))
             {
                 if (CoordinateGARS.TryParse(coord, out _inputGARS))
                     RaisePropertyChanged(() => InputGARS);
             }
 
-            if(amCoordGetter.CanGetMGRS(out coord))
+            if (!(SelectedInputItem == "MGRS" && skip) && amCoordGetter.CanGetMGRS(out coord))
             {
                 if (CoordinateMGRS.TryParse(coord, out _inputMGRS))
                     RaisePropertyChanged(() => InputMGRS);
             }
 
-            if(amCoordGetter.CanGetUSNG(out coord))
+            if (!(SelectedInputItem == "USNG" && skip) && amCoordGetter.CanGetUSNG(out coord))
             {
                 if (CoordinateUSNG.TryParse(coord, out _inputUSNG))
                     RaisePropertyChanged(() => InputUSNG);
             }
 
-            if(amCoordGetter.CanGetUTM(out coord))
+            if (!(SelectedInputItem == "UTM" && skip) && amCoordGetter.CanGetUTM(out coord))
             {
                 if (CoordinateUTM.TryParse(coord, out _inputUTM))
                 {
