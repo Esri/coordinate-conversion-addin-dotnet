@@ -63,11 +63,19 @@ namespace CoordinateToolLibrary.Models
                         return false;
                     }
 
-                    return true;
+                    return Validate(utm);
                 }
             }
 
             return false;
+        }
+
+        public static bool Validate(CoordinateUTM utm)
+        {
+            if (utm.Zone < 1 || utm.Zone > 60)
+                return false;
+
+            return true;
         }
 
         #endregion

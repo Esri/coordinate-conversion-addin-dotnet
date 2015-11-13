@@ -59,6 +59,13 @@ namespace CoordinateToolLibrary.Tests
             Assert.IsTrue(CoordinateGARS.TryParse("203-LW-1-8", out coord));
 
             Assert.IsFalse(CoordinateGARS.TryParse("This is not a coordinate", out coord));
+            // test some out of range coordinates
+            Assert.IsFalse(CoordinateGARS.TryParse("203RZ18", out coord));
+            Assert.IsFalse(CoordinateGARS.TryParse("800AA18", out coord));
+            Assert.IsFalse(CoordinateGARS.TryParse("000AA18", out coord));
+            Assert.IsFalse(CoordinateGARS.TryParse("203AA08", out coord));
+            Assert.IsFalse(CoordinateGARS.TryParse("203AA58", out coord));
+            Assert.IsFalse(CoordinateGARS.TryParse("203AA10", out coord));
         }
 
         [TestMethod]
@@ -73,6 +80,8 @@ namespace CoordinateToolLibrary.Tests
             Assert.IsTrue(CoordinateUTM.TryParse("17N:683016m:4460286m", out coord));
 
             Assert.IsFalse(CoordinateUTM.TryParse("This is not a coordinate", out coord));
+            Assert.IsFalse(CoordinateUTM.TryParse("00N683016m4460286m", out coord));
+            Assert.IsFalse(CoordinateUTM.TryParse("61N683016m4460286m", out coord));
         }
 
         [TestMethod]
@@ -87,6 +96,11 @@ namespace CoordinateToolLibrary.Tests
             Assert.IsTrue(CoordinateMGRS.TryParse("17T;PE;8301660286", out coord));
 
             Assert.IsFalse(CoordinateMGRS.TryParse("This is not a coordinate", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("00TPE8301660286", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("61TPE8301660286", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("17APE8301660286", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("17ZPE8301660286", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("17TPW8301660286", out coord));
         }
 
         [TestMethod]
