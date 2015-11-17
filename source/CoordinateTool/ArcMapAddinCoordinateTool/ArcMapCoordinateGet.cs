@@ -89,7 +89,7 @@ namespace ArcMapAddinCoordinateTool
                 {
                     // 5 numeric units in MGRS is 1m resolution
                     var cn = Point as IConversionNotation;
-                    coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle);
+                    coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
                 catch { }
