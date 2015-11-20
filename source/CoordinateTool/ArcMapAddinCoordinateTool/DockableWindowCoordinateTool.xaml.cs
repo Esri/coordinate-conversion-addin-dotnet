@@ -1,4 +1,7 @@
 ﻿using ArcMapAddinCoordinateTool.ViewModels;
+using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +27,76 @@ namespace ArcMapAddinCoordinateTool
         public DockableWindowCoordinateTool()
         {
             InitializeComponent();
+
+            ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
+            ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+        }
+
+        IActiveViewEvents_Event avEvents = null;
+        
+        private void ArcMap_NewOpenDocument()
+        {
+            if(avEvents != null)
+            {
+                avEvents.SelectionChanged -= OnSelectionChanged;
+                avEvents = null;
+            }
+            avEvents = ArcMap.Document.ActiveView as IActiveViewEvents_Event;
+            avEvents.SelectionChanged += OnSelectionChanged;
+        }
+
+        private void OnSelectionChanged()
+        {
+            if (ArcMap.Document.FocusMap.SelectionCount > 0)
+            {
+                for (int i = 0; i < ArcMap.Document.FocusMap.LayerCount; i++ )
+                {
+                    if(ArcMap.Document.FocusMap.get_Layer(i) is IFeatureLayer)
+                    {
+                        var fl = ArcMap.Document.FocusMap.get_Layer(i) as IFeatureLayer;
+
+                        var fselection = fl as IFeatureSelection;
+                        if (fselection == null)
+                            continue;
+
+                        if(fselection.SelectionSet.Count == 1)
+                        {
+                            ICursor cursor;
+                            fselection.SelectionSet.Search(null, false, out cursor);
+
+                            var fc = cursor as IFeatureCursor;
+                            var f = fc.NextFeature();
+
+                            if(f != null)
+                            {
+                                if(f.Shape is IPoint)
+                                {
+                                    var point = f.Shape as IPoint;
+                                    if(point != null)
+                                    {
+                                        var tempX = point.X;
+                                        var tempY = point.Y;
+
+                                        UpdateInputCoordinate(point);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void UpdateInputCoordinate(IPoint point)
+        {
+            var vm = this.DataContext as MainViewModel;
+
+            if (vm == null)
+                return;
+
+            vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
+
         }
 
         /// <summary>
