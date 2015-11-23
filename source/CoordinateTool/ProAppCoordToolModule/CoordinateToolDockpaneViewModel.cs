@@ -32,6 +32,12 @@ namespace ProAppCoordToolModule
             CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                ctvm.SetCoordinateGetter(proCoordGetter);
+            }
         }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }

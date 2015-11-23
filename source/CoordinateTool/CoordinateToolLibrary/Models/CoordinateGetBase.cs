@@ -21,6 +21,7 @@ namespace CoordinateToolLibrary.Models
             CoordinateDD dd;
             if (CoordinateDD.TryParse(InputCoordinate, out dd))
             {
+                Project(srFactoryCode);
                 coord = dd.ToString("", new CoordinateDDFormatter());
                 return true;
             }

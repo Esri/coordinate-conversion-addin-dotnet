@@ -1,6 +1,8 @@
 ﻿using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
+using CoordinateSystemAddin.UI;
+using CoordinateToolLibrary.Helpers;
 using CoordinateToolLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -148,9 +150,32 @@ namespace ProAppCoordToolModule
         //    return false;
         //}
 
+        private CoordSysDialog _dlg = null;
+        private static bool _isOpen = false;
+
         public override bool SelectSpatialReference()
         {
+            if (_isOpen)
+                return false;
+
+            _isOpen = true;
+            _dlg = new CoordSysDialog();
+            _dlg.Closing += bld_Closing;
+            //_dlg.Owner = 
+            _dlg.Show();
+
             return false;
+        }
+
+        private void bld_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_dlg.SpatialReference != null)
+            {
+                System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
+                Mediator.NotifyColleagues("SRSELECTED", string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+            }
+            _dlg = null;
+            _isOpen = false;
         }
 
         public override void Project(int factoryCode)
