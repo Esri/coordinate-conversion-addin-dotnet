@@ -42,7 +42,7 @@ namespace CoordinateToolLibrary.Models
             
             input = input.Trim();
 
-            Regex regexGARS = new Regex(@"^\s*(?<lonband>\d{3})[-,;:\s]*(?<latband>[A-HJ-NP-Z]{2}?)[-,;:\s]*(?<quadrant>\d?)[-,;:\s]*(?<key>\d?)\s*");
+            Regex regexGARS = new Regex(@"^\s*(?<lonband>\d{3})[-,;:\s]*(?<latband1>[A-HJ-NP-Q]{1}?)(?<latband2>[A-HJ-NP-Z]{1}?)[-,;:\s]*(?<quadrant>\d?)[-,;:\s]*(?<key>\d?)\s*");
 
             var matchGARS = regexGARS.Match(input);
 
@@ -54,7 +54,7 @@ namespace CoordinateToolLibrary.Models
                     try
                     {
                         gars.LonBand = Int32.Parse(matchGARS.Groups["lonband"].Value);
-                        gars.LatBand = matchGARS.Groups["latband"].Value;
+                        gars.LatBand = string.Format("{0}{1}",matchGARS.Groups["latband1"].Value,matchGARS.Groups["latband2"].Value);
                         gars.Quadrant = Int32.Parse(matchGARS.Groups["quadrant"].Value);
                         gars.Key = Int32.Parse(matchGARS.Groups["key"].Value);
                     }
@@ -63,13 +63,33 @@ namespace CoordinateToolLibrary.Models
                         return false;
                     }
 
-                    return true;
+                    return Validate(gars);
                 }
             }
 
             return false;
         }
 
+        public static bool Validate(CoordinateGARS gars)
+        {
+            if (gars.LonBand < 1 || gars.LonBand > 720)
+                return false;
+
+            Regex regexGARS = new Regex(@"^\s*(?<latband1>[A-HJ-NP-Q]{1}?)(?<latband2>[A-HJ-NP-Z]{1}?)\s*");
+
+            var matchGARS = regexGARS.Match(gars.LatBand);
+
+            if (!matchGARS.Success)
+                return false;
+
+            if (gars.Quadrant < 1 || gars.Quadrant > 4)
+                return false;
+
+            if (gars.Key < 1 || gars.Key > 9)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region ToString

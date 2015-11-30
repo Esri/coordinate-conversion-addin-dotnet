@@ -43,7 +43,7 @@ namespace CoordinateToolLibrary.Models
             
             input = input.Trim();
 
-            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[A-HJ-NP-Z])[-,;:\s]*(?<gs>[A-HJ-NP-Z]{2})[-,;:\s]*(?<numlocation>\d{0,10})[-,;:\s]*(?<numlocation2>\d{0,10})\s*");
+            Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[C-HJ-NP-X])[-,;:\s]*(?<gs1>[A-HJ-NP-Z]{1})(?<gs2>[A-HJ-NP-V]{1})[-,;:\s]*(?<numlocation>\d{0,10})[-,;:\s]*(?<numlocation2>\d{0,10})\s*");
 
             var matchMGRS = regexMGRS.Match(input);
 
@@ -55,9 +55,9 @@ namespace CoordinateToolLibrary.Models
                     try
                     {
                         mgrs.GZD = matchMGRS.Groups["gzd"].Value;
-                        mgrs.GS = matchMGRS.Groups["gs"].Value;
-                        var tempEN = matchMGRS.Groups["numlocation"].Value;
-                        tempEN += matchMGRS.Groups["numlocation2"].Value;
+                        mgrs.GS = string.Format("{0}{1}",matchMGRS.Groups["gs1"].Value,matchMGRS.Groups["gs2"].Value);
+                        var tempEN = string.Format("{0}{1}",matchMGRS.Groups["numlocation"].Value,matchMGRS.Groups["numlocation2"].Value);
+
                         if (tempEN.Length % 2 == 0 && tempEN.Length > 0)
                         {
                             int numSize = tempEN.Length / 2;
@@ -70,11 +70,24 @@ namespace CoordinateToolLibrary.Models
                         return false;
                     }
 
-                    return true;
+                    return Validate(mgrs);
                 }
             }
 
             return false;
+        }
+
+        public static bool Validate(CoordinateMGRS mgrs)
+        {
+            try
+            {
+                var zone = Convert.ToInt32(mgrs.GZD.Substring(0, mgrs.GZD.Length - 1));
+                if (zone < 1 || zone > 60)
+                    return false;
+            }
+            catch { return false; }
+
+            return true;
         }
 
         #endregion
