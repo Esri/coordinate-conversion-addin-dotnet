@@ -63,11 +63,19 @@ namespace CoordinateToolLibrary.Models
                         return false;
                     }
 
-                    return true;
+                    return Validate(utm);
                 }
             }
 
             return false;
+        }
+
+        public static bool Validate(CoordinateUTM utm)
+        {
+            if (utm.Zone < 1 || utm.Zone > 60)
+                return false;
+
+            return true;
         }
 
         #endregion
@@ -115,7 +123,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H X#m Y#m", arg, this);
+                    return this.Format("Z#H X# Y#", arg, this);
                 }
                 else
                 {
