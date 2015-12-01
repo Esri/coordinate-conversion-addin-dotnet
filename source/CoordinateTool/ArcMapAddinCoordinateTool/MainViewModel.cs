@@ -568,7 +568,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             catch { }
             try
             {
-                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle));
+                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic));
             }
             catch { }
             try
