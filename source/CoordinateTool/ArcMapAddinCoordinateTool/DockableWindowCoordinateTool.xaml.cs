@@ -95,9 +95,30 @@ namespace ArcMapAddinCoordinateTool
             if (vm == null)
                 return;
 
+            var sr = GetSR();
+
+            point.Project(sr);
+
             vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
 
         }
+
+        // always use WGS1984
+        private ISpatialReference GetSR()
+        {
+            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            System.Object obj = Activator.CreateInstance(t);
+            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+
+            // Use the enumeration to create an instance of the predefined object.
+
+            IGeographicCoordinateSystem geographicCS =
+                srFact.CreateGeographicCoordinateSystem((int)
+                esriSRGeoCSType.esriSRGeoCS_WGS1984);
+
+            return geographicCS as ISpatialReference;
+        }
+
 
         /// <summary>
         /// Implementation class of the dockable window add-in. It is responsible for 

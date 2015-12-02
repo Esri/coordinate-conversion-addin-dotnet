@@ -78,7 +78,7 @@ namespace CoordinateToolLibrary.Models
         #endregion
 
         #region Format
-        private string format = "Y-+##.0000 X-+###.0000";
+        private string format = "Y-+#0.0000 X-+##0.0000";
         public string Format
         {
             get
@@ -92,6 +92,41 @@ namespace CoordinateToolLibrary.Models
             }
         }
         #endregion Format
+
+        private int srFactoryCode = 4326;
+        public int SRFactoryCode
+        {
+            get
+            {
+                return srFactoryCode;
+            }
+            set
+            {
+                if (srFactoryCode != value)
+                {
+                    srFactoryCode = value;
+                    RaisePropertyChanged(() => SRFactoryCode);
+                }
+            }
+        }
+
+        private string srName = "WGS84";
+        public string SRName
+        {
+            get
+            {
+                return srName;
+            }
+
+            set
+            {
+                if(srName != value)
+                {
+                    srName = value;
+                    RaisePropertyChanged(() => SRName);
+                }
+            }
+        }
 
         #region Methods
         public void ToggleVisibility()

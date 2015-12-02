@@ -135,7 +135,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSX#Y#", arg, this);
+                    return this.Format("ZSX00000Y00000", arg, this);
                 }
                 else
                 {

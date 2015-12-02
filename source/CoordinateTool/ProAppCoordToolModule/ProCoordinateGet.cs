@@ -1,4 +1,8 @@
 ﻿using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
+using CoordinateSystemAddin.UI;
+using CoordinateToolLibrary.Helpers;
 using CoordinateToolLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -33,16 +37,16 @@ namespace ProAppCoordToolModule
         //    return false;
         //}
 
-        public override bool CanGetDDM(out string coord)
+        public override bool CanGetDDM(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if(base.CanGetDDM(out coord))
+            if(base.CanGetDDM(srFactoryCode, out coord))
             {
                 return true;
             }
             else
             {
-                if(base.CanGetDD(out coord))
+                if(base.CanGetDD(srFactoryCode, out coord))
                 {
                     // convert dd to ddm
                     CoordinateDD dd;
@@ -57,16 +61,16 @@ namespace ProAppCoordToolModule
             return false;
         }
 
-        public override bool CanGetDMS(out string coord)
+        public override bool CanGetDMS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if (base.CanGetDMS(out coord))
+            if (base.CanGetDMS(srFactoryCode, out coord))
             {
                 return true;
             }
             else
             {
-                if (base.CanGetDD(out coord))
+                if (base.CanGetDD(srFactoryCode, out coord))
                 {
                     // convert dd to ddm
                     CoordinateDD dd;
@@ -146,6 +150,45 @@ namespace ProAppCoordToolModule
         //    return false;
         //}
 
+        private CoordSysDialog _dlg = null;
+        private static bool _isOpen = false;
+
+        public override bool SelectSpatialReference()
+        {
+            if (_isOpen)
+                return false;
+
+            _isOpen = true;
+            _dlg = new CoordSysDialog();
+            _dlg.Closing += bld_Closing;
+            //_dlg.Owner = 
+            _dlg.Show();
+
+            return false;
+        }
+
+        private void bld_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_dlg.SpatialReference != null)
+            {
+                System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
+                Mediator.NotifyColleagues("SRSELECTED", string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+            }
+            _dlg = null;
+            _isOpen = false;
+        }
+
+        public override void Project(int factoryCode)
+        {
+            var temp = QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Geometry.SpatialReference spatialReference = SpatialReferenceBuilder.CreateSpatialReference(factoryCode);
+
+                Point = (MapPoint)GeometryEngine.Project(Point, spatialReference);
+
+                return true;
+            }).Result;
+        }
         #endregion
     }
 }

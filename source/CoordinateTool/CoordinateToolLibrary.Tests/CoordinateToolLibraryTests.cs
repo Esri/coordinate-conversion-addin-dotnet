@@ -151,22 +151,22 @@ namespace CoordinateToolLibrary.Tests
         public void FormatterMGRS()
         {
             var coord = new CoordinateMGRS("17T", "PE", 83016, 60286);
-            var temp = coord.ToString("ZSX#Y#", new CoordinateMGRSFormatter());
+            var temp = coord.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE8301660286");
 
-            temp = coord.ToString("Z S X# Y#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z S X00000 Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T PE 83016 60286");
 
-            temp = coord.ToString("Z,S,X#,Y#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z,S,X00000,Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T,PE,83016,60286");
             
-            temp = coord.ToString("Z-S-X#-Y#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("Z-S-X00000-Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T-PE-83016-60286");
             
-            temp = coord.ToString("ZS X#Y#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X00000Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 8301660286");
             
-            temp = coord.ToString("ZS X# Y#", new CoordinateMGRSFormatter());
+            temp = coord.ToString("ZS X00000 Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 83016 60286");
 
             // test the default
@@ -204,22 +204,22 @@ namespace CoordinateToolLibrary.Tests
             var temp = coord.ToString("", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40°16'23.0\"N 78°50'50.7\"W");
 
-            temp = coord.ToString("A#°B0'C0.0##\"N X#°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
+            temp = coord.ToString("A0°B0'C0.0##\"N X0°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40°16'22.973\"N 78°50'50.737\"W");
 
-            temp = coord.ToString("NA#°B0'C0.0##\" EX#°Y0'Z0.0##\"", new CoordinateDMSFormatter());
+            temp = coord.ToString("NA0°B0'C0.0##\" EX0°Y0'Z0.0##\"", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "N40°16'22.973\" W78°50'50.737\"");
             
-            temp = coord.ToString("A#° B0' C0.0##\" N X#° Y0' Z0.0##\" E", new CoordinateDMSFormatter());
+            temp = coord.ToString("A0° B0' C0.0##\" N X0° Y0' Z0.0##\" E", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40° 16' 22.973\" N 78° 50' 50.737\" W");
             
             temp = coord.ToString("A+-#°B0'C0.0##\" X+-#°Y0'Z0.0##\"", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "+40°16'22.973\" -78°50'50.737\"");
             
-            temp = coord.ToString("A# B0 C0.0## N X# Y0 Z0.0## E", new CoordinateDMSFormatter());
+            temp = coord.ToString("A0 B0 C0.0## N X0 Y0 Z0.0## E", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40 16 22.973 N 78 50 50.737 W");
             
-            temp = coord.ToString("A#°B0'C0.0##\"N, X#°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
+            temp = coord.ToString("A0°B0'C0.0##\"N, X0°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40°16'22.973\"N, 78°50'50.737\"W");
         }
 
@@ -251,7 +251,7 @@ namespace CoordinateToolLibrary.Tests
         {
             var coord = new CoordinateUTM(17, "N", 683016, 4460286);
             var temp = coord.ToString("", new CoordinateUTMFormatter());
-            Assert.AreEqual(temp, "17N 683016m 4460286m");
+            Assert.AreEqual(temp, "17N 683016 4460286");
 
             temp = coord.ToString("Z+-# X#m Y#m", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "+17 683016m 4460286m");

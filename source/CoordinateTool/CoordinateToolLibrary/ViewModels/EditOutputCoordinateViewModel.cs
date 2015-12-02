@@ -29,14 +29,20 @@ namespace CoordinateToolLibrary.ViewModels
 
             Mediator.Register("BROADCAST_COORDINATE_VALUES", OnHandleBCCValues);
             Mediator.NotifyColleagues("BROADCAST_COORDINATE_NEEDED", null);
+
+            ConfigCommand = new RelayCommand(OnConfigCommand);
+
+            Mediator.Register("SRSELECTED", OnSpatialReferenceSelected);
         }
 
+        public RelayCommand ConfigCommand { get; set; }
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType,string>();
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
         public string WindowTitle { get; set; }
         public List<string> Names { get; set; }
         public string Sample { get; set; }
+
         private string _format = string.Empty;
         public string Format 
         {
@@ -344,6 +350,29 @@ namespace CoordinateToolLibrary.ViewModels
                     CategorySelection = item;
                     RaisePropertyChanged(() => CategorySelection);
                 }
+            }
+        }
+
+        private void OnConfigCommand(object obj)
+        {
+            // need to get consumer to ask for spatial reference
+            Mediator.NotifyColleagues("SELECTSR", null);
+        }
+
+        private void OnSpatialReferenceSelected(object obj)
+        {
+            var data = obj as string;
+
+            if (string.IsNullOrWhiteSpace(data))
+                return;
+
+            var temp = data.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
+
+            if(temp.Count() == 2)
+            {
+                OutputCoordItem.SRFactoryCode = Convert.ToInt32(temp[0]);
+                OutputCoordItem.SRName = temp[1];
+                RaisePropertyChanged(() => OutputCoordItem);
             }
         }
     }
