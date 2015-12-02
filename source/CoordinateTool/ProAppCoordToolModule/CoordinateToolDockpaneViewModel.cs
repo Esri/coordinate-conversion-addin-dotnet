@@ -334,7 +334,10 @@ namespace ProAppCoordToolModule
                                     if (val is MapPoint)
                                     {
                                         var temp = val as MapPoint;
-                                        return string.Format("{0:0.0####} {1:0.0####}", temp.Y, temp.X);
+                                        // project to WGS1984
+                                        proCoordGetter.Point = temp;
+                                        proCoordGetter.Project(4326);
+                                        return string.Format("{0:0.0####} {1:0.0####}", proCoordGetter.Point.Y, proCoordGetter.Point.X);
                                     }
                                     break;
                                 }

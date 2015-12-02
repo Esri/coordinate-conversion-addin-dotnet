@@ -78,7 +78,7 @@ namespace CoordinateToolLibrary.Models
         #endregion
 
         #region Format
-        private string format = "Y-+##.0000 X-+###.0000";
+        private string format = "Y-+#0.0000 X-+##0.0000";
         public string Format
         {
             get

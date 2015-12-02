@@ -6,7 +6,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 
 ## Features
 
-* Parses input coordinates and outputs multiple formats of the input coordinate
+* Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMAP 10.3
 * Addin for ArcGIS Pro 1.1
@@ -90,7 +90,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 			* "-" = add "-" prefix if number is negative
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
-			* Example : "A#° B#.##'N X#° Y#.##'E" will output "41° 22.12'N 78° 36.45'W"
+			* Example : "A0° B0.0#'N X0° Y0.0#'E" will output "41° 22.12'N 78° 36.45'W"
 		* DMS Degrees Minutes Seconds
 			* "A" = Latitude Degrees
 			* "B" = Latitude Minutes
@@ -102,7 +102,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 			* "-" = add "-" prefix if number is negative
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
-			* Example : "A#° B#' C#.#\"N X#° Y#' Z#.#E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
+			* Example : "A0° B0' C0.0\"N X0° Y0' Z0.0E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
 				* Note : escape " like \" to get double quotes in the output
 		* GARS
 			* "X" = Longitude Band
@@ -115,7 +115,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 			* "S" = Grid Segment
 			* "X" = Easting
 			* "Y" = Northing
-			* Example : "Z S X# Y#" will output "19T DE 14639 28236"
+			* Example : "Z S X00000 Y00000" will output "19T DE 14639 28236"
 		* UTM
 			* "Z" = Zone
 			* "H" = Hemisphere

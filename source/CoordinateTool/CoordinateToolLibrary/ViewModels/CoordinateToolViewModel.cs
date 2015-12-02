@@ -111,8 +111,8 @@ namespace CoordinateToolLibrary.ViewModels
                                 }
                                 else
                                 {
-                                    props.Add("Lat", cdms.ToString("A#°B#'C#.0\"N", new CoordinateDMSFormatter()));
-                                    props.Add("Lon", cdms.ToString("X#°Y#'Z#\"E", new CoordinateDMSFormatter()));
+                                    props.Add("Lat", cdms.ToString("A0°B0'C0.0\"N", new CoordinateDMSFormatter()));
+                                    props.Add("Lon", cdms.ToString("X0°Y0'Z0.0\"E", new CoordinateDMSFormatter()));
                                 }
                             }
                             output.Props = props;
@@ -140,8 +140,8 @@ namespace CoordinateToolLibrary.ViewModels
                                 }
                                 else
                                 {
-                                    props.Add("Lat", ddm.ToString("A#°B#.######'N", new CoordinateDDMFormatter()));
-                                    props.Add("Lon", ddm.ToString("X#°Y#.######'E", new CoordinateDDMFormatter()));
+                                    props.Add("Lat", ddm.ToString("A0°B0.0#####'N", new CoordinateDDMFormatter()));
+                                    props.Add("Lon", ddm.ToString("X0°Y0.0#####'E", new CoordinateDDMFormatter()));
                                 }
                             }
                             output.Props = props;
