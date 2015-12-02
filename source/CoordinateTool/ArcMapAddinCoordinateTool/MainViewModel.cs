@@ -13,6 +13,8 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
+using System.Runtime.CompilerServices;
 
 namespace ArcMapAddinCoordinateTool.ViewModels
 {
@@ -26,6 +28,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+            ExpandCommand = new RelayCommand(OnExpandCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
@@ -37,6 +40,38 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
+        internal void UpdateSpecificInput()
+        {
+            if (SelectedInputItemVisibility != Visibility.Visible)
+                return;
+
+            switch(SelectedInputItem)
+            {
+                case "GARS":
+                    InputCoordinate = InputGARS.ToString("", new CoordinateGARSFormatter());
+                    break;
+                case "MGRS":
+                    InputCoordinate = InputMGRS.ToString("", new CoordinateMGRSFormatter());
+                    break;
+                case "USNG":
+                    InputCoordinate = InputUSNG.ToString("", new CoordinateMGRSFormatter());
+                    break;
+                case "UTM":
+                    InputCoordinate = InputUTM.ToString("", new CoordinateUTMFormatter());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnExpandCommand(object obj)
+        {
+            if (SelectedInputItemVisibility == Visibility.Visible)
+                SelectedInputItemVisibility = Visibility.Collapsed;
+            else
+                SelectedInputItemVisibility = Visibility.Visible;
+        }
+        public RelayCommand ExpandCommand { get; set; }
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void OnCopyAllCommand(object obj)
@@ -154,6 +189,84 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
+        private Visibility _selectedInputItemVisibility = Visibility.Collapsed;
+        public Visibility SelectedInputItemVisibility
+        {
+            get { return _selectedInputItemVisibility; }
+            set
+            {
+                _selectedInputItemVisibility = value;
+                RaisePropertyChanged(() => SelectedInputItemVisibility);
+            }
+        }
+        private string _selectedInputItem = "";
+        public string SelectedInputItem
+        {
+            get { return _selectedInputItem; }
+            set
+            {
+                _selectedInputItem = value;
+                RaisePropertyChanged(() => SelectedInputItem);
+            }
+        }
+
+        private CoordinateGARS _inputGARS = new CoordinateGARS();
+        public CoordinateGARS InputGARS
+        {
+            get { return _inputGARS; }
+            set
+            {
+                _inputGARS = value;
+                RaisePropertyChanged(() => InputGARS);
+            }
+        }
+        private CoordinateMGRS _inputMGRS = new CoordinateMGRS();
+        public CoordinateMGRS InputMGRS
+        {
+            get { return _inputMGRS; }
+            set
+            {
+                _inputMGRS = value;
+                RaisePropertyChanged(() => InputMGRS);
+            }
+        }
+        private CoordinateUSNG _inputUSNG = new CoordinateUSNG();
+        public CoordinateUSNG InputUSNG
+        {
+            get { return _inputUSNG; }
+            set
+            {
+                _inputUSNG = value;
+                RaisePropertyChanged(() => InputUSNG);
+            }
+        }
+        private CoordinateUTM _inputUTM = new CoordinateUTM();
+        public CoordinateUTM InputUTM
+        {
+            get { return _inputUTM; }
+            set
+            {
+                _inputUTM = value;
+                RaisePropertyChanged(() => InputUTM);
+            }
+        }
+
+        private string _inputUTMZoneWithHemi = string.Empty;
+        public string InputUTMZoneWithHemi
+        {
+            get { return string.Format("{0}{1}", InputUTM.Zone, InputUTM.Hemi); }
+            set
+            {
+                // TODO better validation, regex, etc
+                if(value.Length > 1 && (value[value.Length-1] == 'N' || value[value.Length-1] == 'S'))
+                {
+                    InputUTM.Hemi = string.Format("{0}", value[value.Length - 1]);
+                    var temp = value.Replace(InputUTM.Hemi,"");
+                    InputUTM.Zone = Convert.ToInt32(temp);
+                }
+            }
+        }
+
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
@@ -219,9 +332,47 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
                 UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
+                UpdateInputs();
             }
 
             return result;
+        }
+        [MethodImplAttribute(MethodImplOptions.NoInlining)]
+        private void UpdateInputs()
+        {
+            bool skip = false;
+
+            if (new System.Diagnostics.StackFrame(4).GetMethod().Name == "TextBox_TextChanged")
+                skip = true;
+
+            string coord = string.Empty;
+
+            if(!(SelectedInputItem == "GARS" && skip) && amCoordGetter.CanGetGARS(out coord))
+            {
+                if (CoordinateGARS.TryParse(coord, out _inputGARS))
+                    RaisePropertyChanged(() => InputGARS);
+            }
+
+            if (!(SelectedInputItem == "MGRS" && skip) && amCoordGetter.CanGetMGRS(out coord))
+            {
+                if (CoordinateMGRS.TryParse(coord, out _inputMGRS))
+                    RaisePropertyChanged(() => InputMGRS);
+            }
+
+            if (!(SelectedInputItem == "USNG" && skip) && amCoordGetter.CanGetUSNG(out coord))
+            {
+                if (CoordinateUSNG.TryParse(coord, out _inputUSNG))
+                    RaisePropertyChanged(() => InputUSNG);
+            }
+
+            if (!(SelectedInputItem == "UTM" && skip) && amCoordGetter.CanGetUTM(out coord))
+            {
+                if (CoordinateUTM.TryParse(coord, out _inputUTM))
+                {
+                    RaisePropertyChanged(() => InputUTM);
+                    RaisePropertyChanged(() => InputUTMZoneWithHemi);
+                }
+            }
         }
 
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
@@ -424,7 +575,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             catch { }
             try
             {
-                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle));
+                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic));
             }
             catch { }
             try
@@ -532,5 +683,28 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             display.FinishDrawing();
         }
+
+    }
+
+    public class BoolToOppositeBoolConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            if (targetType != typeof(bool))
+                throw new InvalidOperationException("The target must be a boolean");
+
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion
     }
 }

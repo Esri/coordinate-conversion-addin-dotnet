@@ -70,6 +70,11 @@ namespace ArcMapAddinCoordinateTool
             return false;
         }
 
+        public bool CanGetGARS(out string coord)
+        {
+            return CanGetGARS(4326, out coord);
+        }
+
         public override bool CanGetGARS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
@@ -87,6 +92,11 @@ namespace ArcMapAddinCoordinateTool
             return false;
         }
 
+        public bool CanGetMGRS(out string coord)
+        {
+            return CanGetMGRS(4326, out coord);
+        }
+
         public override bool CanGetMGRS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
@@ -97,12 +107,17 @@ namespace ArcMapAddinCoordinateTool
                     Project(srFactoryCode);
                     // 5 numeric units in MGRS is 1m resolution
                     var cn = Point as IConversionNotation;
-                    coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle);
+                    coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
                 catch { }
             }
             return false;
+        }
+
+        public bool CanGetUSNG(out string coord)
+        {
+            return CanGetUSNG(4326, out coord);
         }
 
         public override bool CanGetUSNG(int srFactoryCode, out string coord)
@@ -120,6 +135,11 @@ namespace ArcMapAddinCoordinateTool
                 catch { }
             }
             return false;
+        }
+
+        public bool CanGetUTM(out string coord)
+        {
+            return CanGetUTM(4326, out coord);
         }
 
         public override bool CanGetUTM(int srFactoryCode, out string coord)

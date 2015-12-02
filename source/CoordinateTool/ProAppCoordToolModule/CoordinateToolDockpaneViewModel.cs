@@ -15,6 +15,8 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.CIM;
 using System.Collections.ObjectModel;
+using ArcGIS.Desktop.Mapping.Events;
+using ArcGIS.Core.Data;
 
 namespace ProAppCoordToolModule
 {
@@ -32,12 +34,18 @@ namespace ProAppCoordToolModule
             CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+            MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
 
             var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
             if (ctvm != null)
             {
                 ctvm.SetCoordinateGetter(proCoordGetter);
             }
+        }
+
+        ~CoordinateToolDockpaneViewModel()
+        {
+            MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
@@ -282,6 +290,69 @@ namespace ProAppCoordToolModule
                 return;
 
             pane.Activate();
+        }
+
+        private object _lock = new object();
+        private async void OnSelectionChanged(MapSelectionChangedEventArgs obj)
+        {
+            if (MapView.Active.Map != null && obj.Selection.Count == 1)
+            {
+                var fl = obj.Selection.FirstOrDefault().Key as FeatureLayer;
+                if (fl == null || fl.SelectionCount != 1 || fl.ShapeType != esriGeometryType.esriGeometryPoint)
+                    return;
+
+                var pointd = await QueuedTask.Run(() =>
+                {
+                    try
+                    {
+                        var SelectedOID = fl.GetSelection().GetObjectIDs().FirstOrDefault();
+                        if (SelectedOID < 0)
+                            return string.Empty;
+
+                        var SelectedLayer = fl as BasicFeatureLayer;
+
+                        var oidField = SelectedLayer.GetTable().GetDefinition().GetObjectIDField();
+                        var qf = new ArcGIS.Core.Data.QueryFilter() { WhereClause = string.Format("{0} = {1}", oidField, SelectedOID) };
+                        var cursor = SelectedLayer.Search(qf);
+                        Row row = null;
+
+                        if (cursor.MoveNext())
+                            row = cursor.Current;
+
+                        if (row == null)
+                            return string.Empty;
+
+                        var fields = row.GetFields();
+                        lock (_lock)
+                        {
+                            foreach (ArcGIS.Core.Data.Field field in fields)
+                            {
+                                if (field.FieldType == FieldType.Geometry)
+                                {
+                                    // have mappoint here
+                                    var val = row[field.Name];
+                                    if (val is MapPoint)
+                                    {
+                                        var temp = val as MapPoint;
+                                        return string.Format("{0:0.0####} {1:0.0####}", temp.Y, temp.X);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    return string.Empty;
+                });
+
+                if (!string.IsNullOrWhiteSpace(pointd))
+                {
+                    InputCoordinate = pointd;
+                }
+            }
         }
 
     }
