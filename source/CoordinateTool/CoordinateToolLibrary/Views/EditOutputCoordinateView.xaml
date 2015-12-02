@@ -29,6 +29,19 @@
                     <TextBlock Text="Name" Margin="3,3,3,3" />
                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="3,3,3,3" />
                 </Grid>
+                <GroupBox Header="Spatial Reference">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
+                            <Image Source="/CoordinateToolLibrary;component/Images/gears.png" Width="16" Height="16" />
+                        </Button>
+                        <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
+                        <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>
+                    </Grid>
+                </GroupBox>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Formats" Margin="3,3,3,3" />

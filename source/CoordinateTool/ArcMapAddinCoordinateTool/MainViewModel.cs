@@ -31,6 +31,13 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             ExpandCommand = new RelayCommand(OnExpandCommand);
             Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+
+            // update tool view model
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                ctvm.SetCoordinateGetter(amCoordGetter);
+            }
         }
 
         internal void UpdateSpecificInput()
@@ -166,7 +173,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             // Get name from user
             string name = "Temp";
-            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y#.##N X#.##E" });
+            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();

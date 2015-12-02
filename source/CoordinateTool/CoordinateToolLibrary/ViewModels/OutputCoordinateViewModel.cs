@@ -70,7 +70,7 @@ namespace CoordinateToolLibrary.ViewModels
             if (outputCoordItem == null)
                 return;
 
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name });
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name= outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Add New Output Coordinate";
@@ -86,6 +86,8 @@ namespace CoordinateToolLibrary.ViewModels
                 }
 
                 outputCoordItem.Name = vm.OutputCoordItem.Name;
+                outputCoordItem.SRFactoryCode = vm.OutputCoordItem.SRFactoryCode;
+                outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 OutputCoordinateList.Add(outputCoordItem);
                 Mediator.NotifyColleagues("UpdateOutputRequired", null);
@@ -170,9 +172,12 @@ namespace CoordinateToolLibrary.ViewModels
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
-            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, InUseNames, new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name });
-
-            //dlg.Owner = System.Windows.Window.GetWindow(this.Data);
+            var dlg = new EditOutputCoordinateView(this.DefaultFormatList, InUseNames, 
+                new OutputCoordinateModel() { CType = outputCoordItem.CType, 
+                    Format = outputCoordItem.Format, 
+                    Name = outputCoordItem.Name,
+                    SRName = outputCoordItem.SRName,
+                    SRFactoryCode = outputCoordItem.SRFactoryCode});
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = "Edit Output Coordinate";
@@ -181,6 +186,8 @@ namespace CoordinateToolLibrary.ViewModels
             {
                 outputCoordItem.Name = vm.OutputCoordItem.Name;
                 outputCoordItem.Format = vm.Format;
+                outputCoordItem.SRFactoryCode = vm.OutputCoordItem.SRFactoryCode;
+                outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 CoordinateType type;
                 if (Enum.TryParse<CoordinateType>(vm.CategorySelection, out type))
@@ -245,12 +252,12 @@ namespace CoordinateToolLibrary.ViewModels
 
         private void LoadSomeDefaults()
         {
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.49N 40.32W", "Y#.##N X#.##E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.12'N 40° 18.32'W", "A#° B#.##'N X#° Y#.##'E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.2\"N 40° 18' 45.4\"W", "A#° B#' C#.#\"N X#° Y#' Z#.#\"E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.49N 40.32W", "Y0.0#N X0.0#E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.12'N 40° 18.32'W", "A0° B0.0#'N X0° Y0.0#'E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.2\"N 40° 18' 45.4\"W", "A0° B0' C0.0\"N X0° Y0' Z0.0\"E" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.GARS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "221LW37", "X#YQK" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX#Y#" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX#Y#" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19N 414639m 4428236m", "Z#H X#m Y#m" } } });
         }
 

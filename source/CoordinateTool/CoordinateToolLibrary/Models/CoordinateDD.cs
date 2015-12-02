@@ -118,8 +118,8 @@ namespace CoordinateToolLibrary.Models
             {
                 case "":
                 case "DD":
-                    sb.AppendFormat(fi, "x = {0:#.0000}", this.Lon);
-                    sb.AppendFormat(fi, " y = {0:#.0000}", this.Lat);
+                    sb.AppendFormat(fi, "x = {0:0.0000}", this.Lon);
+                    sb.AppendFormat(fi, " y = {0:0.0000}", this.Lat);
                     break;
                 default:
                     throw new Exception("CoordinateDD.ToString(): Invalid formatting string.");
