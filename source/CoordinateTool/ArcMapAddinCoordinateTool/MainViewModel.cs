@@ -40,6 +40,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
+
+        public CoordinateType InputCoordinateType { get; set; }
         internal void UpdateSpecificInput()
         {
             if (SelectedInputItemVisibility != Visibility.Visible)
@@ -101,8 +103,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             if(amCoordGetter != null && amCoordGetter.Point != null)
             {
-
-                IPoint address = amCoordGetter.Point;//new PointClass();
+                IGeometry address = amCoordGetter.Point;
 
                 // Map und View
                 IMxDocument mxdoc = ArcMap.Application.Document as IMxDocument;
@@ -110,13 +111,14 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 IMap map = mxdoc.FocusMap;
                 IEnvelope envelope = activeView.Extent;
 
+                ClearGraphicsContainer(map);
+
                 IScreenDisplay screenDisplay = activeView.ScreenDisplay;
                 short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
 
                 ISpatialReference outgoingCoordSystem = map.SpatialReference;
                 address.Project(outgoingCoordSystem);
 
-                
                 IRgbColor color = new RgbColorClass();
                 color.Green = 80;
                 color.Red = 22;
@@ -134,25 +136,190 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 markerElement.Symbol = simpleMarkerSymbol;
                 element = markerElement as IElement;
 
-                if (element != null)
+                IPolygon poly = null;
+                if (InputCoordinateType == CoordinateType.MGRS || InputCoordinateType == CoordinateType.USNG)
                 {
-                    element.Geometry = address;
+                    poly = GetMGRSPolygon(address as IPoint);
                 }
 
-                
-                ESRI.ArcGIS.Carto.IGraphicsLayer graphicsLayer = new CompositeGraphicsLayerClass();
-                ((ILayer)graphicsLayer).Name = "Flashy Coordinates Layer";
-                ((ILayer)graphicsLayer).SpatialReference = GetSR();
-                (graphicsLayer as IGraphicsContainer).AddElement(element, 0);
+                if (poly != null)
+                {
+                    address = poly;
+                }
 
                 FlashGeometry(address, color, mxdoc.ActiveView.ScreenDisplay, 500);
-                
-                envelope.CenterAt(address);
+
+                AddElement(map, address);
+
+                if (poly != null && !poly.IsEmpty && (poly as IArea) != null)
+                    envelope.CenterAt((poly as IArea).Centroid);
+                else
+                    envelope.CenterAt(amCoordGetter.Point);
+
                 activeView.Extent = envelope;
                 activeView.Refresh();
             }
         }
 
+        private IPolygon GetMGRSPolygon(IPoint point)
+        {
+            CoordinateMGRS mgrs;
+
+            IPointCollection pc = new RingClass();
+
+            // bottom left
+            CoordinateMGRS.TryParse(InputCoordinate, out mgrs);
+
+            if (mgrs.Easting.ToString().Length > 4 && mgrs.Northing.ToString().Length > 4)
+                return null;
+
+            var tempPoint = new PointClass() as IConversionNotation;
+            (tempPoint as IPoint).SpatialReference = GetSR();
+            var anotherMGRSstring = mgrs.ToString("", new CoordinateMGRSFormatter());
+            tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
+            pc.AddPoint(tempPoint as IPoint);
+            
+            // top left
+            var tempMGRS = new CoordinateMGRS(mgrs.GZD, mgrs.GS, mgrs.Easting, mgrs.Northing);
+            var tempEasting = mgrs.Easting.ToString().PadRight(5,'0');
+            tempMGRS.Easting = Convert.ToInt32(tempEasting);
+            var tempNorthing = mgrs.Northing.ToString().PadRight(5,'9');
+            tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0','9'));
+
+            tempPoint = new PointClass() as IConversionNotation;
+            (tempPoint as IPoint).SpatialReference = GetSR();
+            anotherMGRSstring = tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
+            tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
+            pc.AddPoint(tempPoint as IPoint);
+
+            // top right
+            tempEasting = mgrs.Easting.ToString().PadRight(5,'9');
+            tempMGRS.Easting = Convert.ToInt32(tempEasting.Replace('0', '9'));
+            tempNorthing = mgrs.Northing.ToString().PadRight(5,'9');
+            tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0', '9'));
+
+            tempPoint = new PointClass() as IConversionNotation;
+            (tempPoint as IPoint).SpatialReference = GetSR();
+            tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
+            pc.AddPoint(tempPoint as IPoint);
+
+            // bottom right
+            tempEasting = mgrs.Easting.ToString().PadRight(5,'9');
+            tempMGRS.Easting = Convert.ToInt32(tempEasting.Replace('0', '9'));
+            tempNorthing = mgrs.Northing.ToString().PadRight(5,'0');
+            tempMGRS.Northing = Convert.ToInt32(tempNorthing);
+
+            tempPoint = new PointClass() as IConversionNotation;
+            (tempPoint as IPoint).SpatialReference = GetSR();
+            tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
+            pc.AddPoint(tempPoint as IPoint);
+
+            // create polygon
+            var poly = new PolygonClass();
+            poly.SpatialReference = GetSR();
+            poly.AddPointCollection(pc);
+            poly.Close();
+
+            return poly;
+        }
+        private void AddElement(IMap map, IGeometry geom)
+        {
+            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+            IRgbColor color = new RgbColorClass();
+            color.Green = 80;
+            color.Red = 22;
+            color.Blue = 68;
+
+            IElement element = null;
+
+            if (geom is IPoint)
+            {
+                ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+                simpleMarkerSymbol.Color = color;
+                simpleMarkerSymbol.Size = 15;
+                simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+
+                IMarkerElement markerElement = new MarkerElementClass();
+
+                markerElement.Symbol = simpleMarkerSymbol;
+                element = markerElement as IElement;
+
+                if (element != null)
+                {
+                    element.Geometry = geom;
+                }
+            }
+            else if(geom is IPolygon)
+            {
+                var temp = new SimpleLineSymbol();
+                temp.Color = color;
+                temp.Style = esriSimpleLineStyle.esriSLSSolid;
+                temp.Width = 2;
+                var s = new SimpleFillSymbol();
+                s.Color = color;
+                s.Outline = temp;
+                s.Style = esriSimpleFillStyle.esriSFSBackwardDiagonal;
+
+                var pe = new PolygonElementClass();
+                element = pe as IElement;
+                var fill = pe as IFillShapeElement;
+                fill.Symbol = s;
+                element.Geometry = geom;
+            }
+            graphicsContainer.AddElement(element, 0);
+            IActiveView activeView = map as IActiveView;
+            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        }
+        private void ClearGraphicsContainer(IMap map)
+        {
+            var graphicsContainer = map as IGraphicsContainer;
+            if (graphicsContainer != null)
+                graphicsContainer.DeleteAllElements();
+        }
+        private void AddElement(IMap map, IPoint point)
+        {
+            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+            IRgbColor color = new RgbColorClass();
+            color.Green = 80;
+            color.Red = 22;
+            color.Blue = 68;
+
+            ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+            simpleMarkerSymbol.Color = color;
+            simpleMarkerSymbol.Size = 15;
+            simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+
+            IElement element = null;
+
+            IMarkerElement markerElement = new MarkerElementClass();
+
+            markerElement.Symbol = simpleMarkerSymbol;
+            element = markerElement as IElement;
+
+            if (element != null)
+            {
+                element.Geometry = point;
+            }
+            graphicsContainer.AddElement(element, 0);
+
+            //Flag the new text to invalidate.
+            IActiveView activeView = map as IActiveView;
+            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        }
+        private void AddTextElement(IMap map, IPoint point, string text)
+        {
+            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+            IElement element = new TextElementClass();
+            ITextElement textElement = element as ITextElement;
+
+            element.Geometry = point;
+            textElement.Text = text;
+            graphicsContainer.AddElement(element, 0);
+
+            //Flag the new text to invalidate.
+            IActiveView activeView = map as IActiveView;
+            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        }
         private void OnActivatePointToolCommand(object obj)
         {
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateTool_PointTool");
@@ -323,9 +490,9 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             if (string.IsNullOrWhiteSpace(input))
                 return result;
 
-            var coordType = GetCoordinateType(input, out point);
+            InputCoordinateType = GetCoordinateType(input, out point);
 
-            if (coordType == CoordinateType.Unknown)
+            if (InputCoordinateType == CoordinateType.Unknown)
                 HasInputError = true;
             else
             {
