@@ -170,6 +170,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             // bottom left
             CoordinateMGRS.TryParse(InputCoordinate, out mgrs);
 
+            // don't create a polygon for 1m resolution
             if (mgrs.Easting.ToString().Length > 4 && mgrs.Northing.ToString().Length > 4)
                 return null;
 
@@ -742,12 +743,12 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             catch { }
             try
             {
-                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic));
+                dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic));
             }
             catch { }
             try
             {
-                dict.Add(CoordinateType.USNG, cn.GetUSNGFromCoords(5, false,false));
+                dict.Add(CoordinateType.USNG, cn.GetUSNGFromCoords(5, true, false));
             }
             catch { }
             try
