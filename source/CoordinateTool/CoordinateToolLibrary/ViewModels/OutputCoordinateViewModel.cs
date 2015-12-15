@@ -51,7 +51,12 @@ namespace CoordinateToolLibrary.ViewModels
         {
             var sb = new StringBuilder();
 
-            foreach(var output in OutputCoordinateList)
+            string inputCoordinate = obj as string;
+
+            if (!string.IsNullOrWhiteSpace(inputCoordinate))
+                sb.AppendLine(inputCoordinate);
+
+            foreach (var output in OutputCoordinateList)
             {
                 sb.AppendLine(output.OutputCoordinate);
             }

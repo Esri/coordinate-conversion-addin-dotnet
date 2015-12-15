@@ -200,7 +200,7 @@ namespace ProAppCoordToolModule
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", InputCoordinate);
         }
 
         private void OnBCNeeded(object obj)

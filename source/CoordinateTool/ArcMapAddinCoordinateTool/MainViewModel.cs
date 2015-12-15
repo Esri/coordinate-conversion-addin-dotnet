@@ -76,7 +76,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", null);
+            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", InputCoordinate);
         }
         private ISpatialReference GetSR()
         {
