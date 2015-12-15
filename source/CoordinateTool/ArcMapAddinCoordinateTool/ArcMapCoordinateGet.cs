@@ -107,7 +107,7 @@ namespace ArcMapAddinCoordinateTool
                     Project(srFactoryCode);
                     // 5 numeric units in MGRS is 1m resolution
                     var cn = Point as IConversionNotation;
-                    coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_Automatic);
+                    coord = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
                 catch { }
@@ -129,7 +129,7 @@ namespace ArcMapAddinCoordinateTool
                 {
                     Project(srFactoryCode);
                     var cn = Point as IConversionNotation;
-                    coord = cn.GetUSNGFromCoords(5, false, false);
+                    coord = cn.GetUSNGFromCoords(5, true, false);
                     return true;
                 }
                 catch { }

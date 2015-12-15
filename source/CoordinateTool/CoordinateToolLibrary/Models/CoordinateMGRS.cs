@@ -49,7 +49,7 @@ namespace CoordinateToolLibrary.Models
 
             if(matchMGRS.Success && matchMGRS.Length == input.Length)
             {
-                if (ValidateNumericCoordinateMatch(matchMGRS, new string[] { "numlocation" }))
+                //if (ValidateNumericCoordinateMatch(matchMGRS, new string[] { "numlocation", "numlocation2" }))
                 {
                     // need to validate the gzd and gs
                     try
@@ -63,6 +63,11 @@ namespace CoordinateToolLibrary.Models
                             int numSize = tempEN.Length / 2;
                             mgrs.Easting = Int32.Parse(tempEN.Substring(0, numSize));
                             mgrs.Northing = Int32.Parse(tempEN.Substring(numSize, numSize));
+                        }
+                        else
+                        {
+                            mgrs.Easting = 0;
+                            mgrs.Northing = 0;
                         }
                     }
                     catch
@@ -116,6 +121,8 @@ namespace CoordinateToolLibrary.Models
                     sb.Append(GS);
                     sb.AppendFormat(fi, "{0:#}", this.Easting);
                     sb.AppendFormat(fi, "{0:#}", this.Northing);
+                    //sb.Append(this.Easting.ToString().PadRight(5, '0'));
+                    //sb.Append(this.Northing.ToString().PadRight(5, '0'));
                     break;
                 default:
                     throw new Exception("CoordinateMGRS.ToString(): Invalid formatting string.");
@@ -135,7 +142,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSX00000Y00000", arg, this);
+                    return this.Format("ZSX0Y0", arg, this);
                 }
                 else
                 {
