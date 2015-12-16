@@ -42,7 +42,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* ```sh 
+		* ``` 
         	cd coordinate-tool-addin-dotnet\source\CoordinateTool
             msbuild CoordinateTool.sln /property:Configuration=Release
             ```
