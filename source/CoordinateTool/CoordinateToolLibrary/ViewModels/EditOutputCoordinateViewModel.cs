@@ -27,12 +27,12 @@ namespace CoordinateToolLibrary.ViewModels
 
             FormatExpanded = false;
 
-            Mediator.Register("BROADCAST_COORDINATE_VALUES", OnHandleBCCValues);
-            Mediator.NotifyColleagues("BROADCAST_COORDINATE_NEEDED", null);
+            Mediator.Register(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, OnHandleBCCValues);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, null);
 
             ConfigCommand = new RelayCommand(OnConfigCommand);
 
-            Mediator.Register("SRSELECTED", OnSpatialReferenceSelected);
+            Mediator.Register(CoordinateToolLibrary.Constants.SpatialReferenceSelected, OnSpatialReferenceSelected);
         }
 
         public RelayCommand ConfigCommand { get; set; }
@@ -356,7 +356,7 @@ namespace CoordinateToolLibrary.ViewModels
         private void OnConfigCommand(object obj)
         {
             // need to get consumer to ask for spatial reference
-            Mediator.NotifyColleagues("SELECTSR", null);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SelectSpatialReference, null);
         }
 
         private void OnSpatialReferenceSelected(object obj)

@@ -172,7 +172,7 @@ namespace ProAppCoordToolModule
             if (_dlg.SpatialReference != null)
             {
                 System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
-                Mediator.NotifyColleagues("SRSELECTED", string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
             }
             _dlg = null;
             _isOpen = false;

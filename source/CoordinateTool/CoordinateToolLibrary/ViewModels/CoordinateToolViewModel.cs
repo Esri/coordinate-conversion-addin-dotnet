@@ -18,8 +18,8 @@ namespace CoordinateToolLibrary.ViewModels
             // set default CoordinateGetter
             coordinateGetter = new CoordinateGetBase();
 
-            Mediator.Register("UpdateOutputRequired", OnUpdateOutputs);
-            Mediator.Register("SELECTSR", OnSelectSpatialReference);
+            Mediator.Register(CoordinateToolLibrary.Constants.RequestOutputUpdate, OnUpdateOutputs);
+            Mediator.Register(CoordinateToolLibrary.Constants.SelectSpatialReference, OnSelectSpatialReference);
         }
 
         public OutputCoordinateView OCView { get; set; }

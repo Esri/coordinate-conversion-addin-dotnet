@@ -32,7 +32,7 @@ namespace ProAppCoordToolModule
             ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
-            Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
 
@@ -74,7 +74,7 @@ namespace ProAppCoordToolModule
             }
             catch { }
 
-            Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, dict);
 
         }
         private static System.IDisposable _overlayObject = null;
@@ -155,7 +155,7 @@ namespace ProAppCoordToolModule
         {
             // Get name from user
             string name = "Temp";
-            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private void OnMapToolCommand(object obj)
@@ -200,7 +200,7 @@ namespace ProAppCoordToolModule
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
         private void OnBCNeeded(object obj)

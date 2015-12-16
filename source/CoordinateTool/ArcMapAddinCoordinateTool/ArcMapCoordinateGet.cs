@@ -169,7 +169,7 @@ namespace ArcMapAddinCoordinateTool
 
             if (spatialReference != null)
             {
-                Mediator.NotifyColleagues("SRSELECTED", string.Format("{0}::{1}", spatialReference.FactoryCode, spatialReference.Name));
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", spatialReference.FactoryCode, spatialReference.Name));
                 return true;
             }
 

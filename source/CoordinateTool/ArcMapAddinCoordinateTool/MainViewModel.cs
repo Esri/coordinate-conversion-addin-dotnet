@@ -29,7 +29,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             ExpandCommand = new RelayCommand(OnExpandCommand);
-            Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
             // update tool view model
@@ -78,7 +78,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
         private ISpatialReference GetSR()
         {
@@ -341,7 +341,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             // Get name from user
             string name = "Temp";
-            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
@@ -757,7 +757,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             catch { }
 
-            Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, dict);
         }
 
         ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>

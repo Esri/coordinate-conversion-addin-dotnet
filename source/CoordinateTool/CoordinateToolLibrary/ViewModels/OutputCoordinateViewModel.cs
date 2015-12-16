@@ -22,8 +22,8 @@ namespace CoordinateToolLibrary.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteCommand);
             CopyCommand = new RelayCommand(OnCopyCommand);
 
-            Mediator.Register("AddNewOutputCoordinate", OnAddNewOutputCoordinate);
-            Mediator.Register("COPY_ALL_COORDINATE_OUTPUTS", OnCopyAllCoordinateOutputs);
+            Mediator.Register(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
+            Mediator.Register(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
 
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
@@ -95,7 +95,7 @@ namespace CoordinateToolLibrary.ViewModels
                 outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 OutputCoordinateList.Add(outputCoordItem);
-                Mediator.NotifyColleagues("UpdateOutputRequired", null);
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
                 SaveOutputConfiguration();
             }
         }
@@ -200,7 +200,7 @@ namespace CoordinateToolLibrary.ViewModels
                     outputCoordItem.CType = type;
                 }
 
-                Mediator.NotifyColleagues("UpdateOutputRequired", null);
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
             }
 
             SaveOutputConfiguration();
