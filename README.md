@@ -42,8 +42,10 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* cd coordinate-tool-addin-dotnet\source\CoordinateTool
-		* msbuild CoordinateTool.sln /property:Configuration=Release
+		* ```sh 
+        	cd coordinate-tool-addin-dotnet\source\CoordinateTool
+			msbuild CoordinateTool.sln /property:Configuration=Release
+            ```
 
 * Running
 	* Run or debug from Visual Studio
@@ -159,4 +161,4 @@ limitations under the License.
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
 [](Esri Tags: Military Defense ArcGIS ArcObjects .NET Planning WPF ArcGISSolutions)
-[](Esri Language: C#) 
+[](Esri Language: C#)
