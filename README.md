@@ -79,7 +79,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 			* "-" = add "-" prefix if number is negative
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
-			* Example : "+-Y0.0 +-X0.0" will output "+41.1 -78.2"
+			* Example : "Y+-0.0 X+-0.0" will output "+41.1 -78.2"
 		* DDM Decimal Degrees Minutes
 			* "A" = Latitude Degrees
 			* "B" = Latitude Minutes
