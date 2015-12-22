@@ -1,4 +1,20 @@
-﻿using System;
+﻿/******************************************************************************* 
+  * Copyright 2015 Esri 
+  *  
+  *  Licensed under the Apache License, Version 2.0 (the "License"); 
+  *  you may not use this file except in compliance with the License. 
+  *  You may obtain a copy of the License at 
+  *  
+  *  http://www.apache.org/licenses/LICENSE-2.0 
+  *   
+  *   Unless required by applicable law or agreed to in writing, software 
+  *   distributed under the License is distributed on an "AS IS" BASIS, 
+  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  *   See the License for the specific language governing permissions and 
+  *   limitations under the License. 
+  ******************************************************************************/ 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +45,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             ExpandCommand = new RelayCommand(OnExpandCommand);
-            Mediator.Register("BROADCAST_COORDINATE_NEEDED", OnBCNeeded);
+            Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
             // update tool view model
@@ -78,15 +94,10 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues("COPY_ALL_COORDINATE_OUTPUTS", InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
         private ISpatialReference GetSR()
         {
-            // create wgs84 spatial reference
-            //var spatialFactory = new ESRI.ArcGIS.Geometry.SpatialReferenceEnvironmentClass();
-            //var temp = spatialFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
-            //return temp as ISpatialReference;
-
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
             System.Object obj = Activator.CreateInstance(t);
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
@@ -757,7 +768,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             catch { }
 
-            Mediator.NotifyColleagues("BROADCAST_COORDINATE_VALUES", dict);
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, dict);
         }
 
         ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>
