@@ -20,21 +20,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateToolLibrary
 {
-    public class CoordinateFormatterBase : IFormatProvider, ICustomFormatter
+    public class Constants
     {
-        public CoordinateFormatterBase() { }
+        public const int MAX_HISTORY_COUNT = 5;
 
-        public object GetFormat(Type formatType)
-        {
-            return (formatType == typeof(ICustomFormatter)) ? this : null;
-        }
-
-        public virtual string Format(string format, object arg, IFormatProvider formatProvider)
-        {
-            // override this
-            throw new Exception("Must override CoordinateFormatterBase.Format!");
-        }
+        public const string CopyAllCoordinateOutputs = "COPY_ALL_COORDINATE_OUTPUTS";
+        public const string SelectSpatialReference = "SELECTSR";
+        public const string SpatialReferenceSelected = "SRSELECTED";
+        public const string RequestCoordinateBroadcast = "BROADCAST_COORDINATE_NEEDED";
+        public const string AddNewOutputCoordinate = "ADD_NEW_OUTPUT_COORDINATE";
+        public const string BroadcastCoordinateValues = "BROADCAST_COORDINATE_VALUES";
+        public const string RequestOutputUpdate = "REQUEST_OUTPUT_UPDATE";
     }
 }
