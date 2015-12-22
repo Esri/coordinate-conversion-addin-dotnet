@@ -32,7 +32,7 @@ namespace CoordinateToolLibrary.Helpers
   {
       public static void UpdateHistory(string input, ObservableCollection<string> list)
       {
-            // lets do last 5 coordinates
+            // lets save the last 5 coordinates
             if(!list.Any())
             {
                 list.Add(input);
@@ -62,9 +62,9 @@ namespace CoordinateToolLibrary.Helpers
                     {
                         list.Insert(0, input);
 
-                        while (list.Count > 5)
+                        while (list.Count > Constants.MAX_HISTORY_COUNT)
                         {
-                            list.RemoveAt(5);
+                            list.RemoveAt(Constants.MAX_HISTORY_COUNT);
                         }
                     }
                 }

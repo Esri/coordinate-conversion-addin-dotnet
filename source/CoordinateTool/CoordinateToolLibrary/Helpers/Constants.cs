@@ -24,6 +24,8 @@ namespace CoordinateToolLibrary
 {
     public class Constants
     {
+        public const int MAX_HISTORY_COUNT = 5;
+
         public const string CopyAllCoordinateOutputs = "COPY_ALL_COORDINATE_OUTPUTS";
         public const string SelectSpatialReference = "SELECTSR";
         public const string SpatialReferenceSelected = "SRSELECTED";

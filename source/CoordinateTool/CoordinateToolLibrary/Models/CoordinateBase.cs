@@ -37,7 +37,6 @@ namespace CoordinateToolLibrary.Models
 
     public class CoordinateBase
     {
-        // TODO add required and optional group names?
         // only works with numeric values
         protected static bool ValidateNumericCoordinateMatch(Match m, string[] requiredGroupNames)
         {

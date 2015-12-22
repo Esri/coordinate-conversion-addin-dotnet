@@ -237,6 +237,7 @@ namespace CoordinateToolLibrary.ViewModels
             }
             catch(Exception ex)
             {
+                // do nothing
             }
         }
 
@@ -267,7 +268,7 @@ namespace CoordinateToolLibrary.ViewModels
             }
             catch(Exception ex)
             {
-
+                // do nothing
             }
         }
 

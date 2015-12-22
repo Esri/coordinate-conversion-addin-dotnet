@@ -98,11 +98,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         }
         private ISpatialReference GetSR()
         {
-            // create wgs84 spatial reference
-            //var spatialFactory = new ESRI.ArcGIS.Geometry.SpatialReferenceEnvironmentClass();
-            //var temp = spatialFactory.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
-            //return temp as ISpatialReference;
-
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
             System.Object obj = Activator.CreateInstance(t);
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
