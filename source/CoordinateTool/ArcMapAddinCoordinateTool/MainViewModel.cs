@@ -340,7 +340,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
-            string name = "Temp";
+            string name = CoordinateType.DD.ToString();
             Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
