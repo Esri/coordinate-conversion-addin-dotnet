@@ -1,6 +1,6 @@
 # coordinate-tool-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be used for converting coordinates.
 
 ![Image of Coordinate Tool Addin](ScreenShot.PNG) 
 
@@ -8,10 +8,10 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
-* Addin for ArcMAP 10.3
-* Addin for ArcGIS Pro 1.1
+* Addin for ArcMap 10.3.1
 * Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
-	* Note : support for GARS, MGRS, USNG and UTM for ArcGIS Pro will come with a future release
+* Addin for ArcGIS Pro 1.1
+	* Works with DD, DDM and DMS
 
 ## Sections
 
@@ -25,8 +25,8 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 ## Requirements
 
 * Visual Studio 2013
-* ArcGIS Desktop SDK for .NET 10.3
-	* [ArcGIS Runtime for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
+* ArcGIS Desktop SDK for .NET 10.3.1
+	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
 * ArcGIS Pro 1.1 SDK
 
 ## Instructions
@@ -37,6 +37,8 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 
 ### Getting Started with the Coordinate Tool Addin (.NET)
 
+## Devs
+
 * Building
 	* To Build Using Visual Studio
 		* Open and build solution file
@@ -44,12 +46,13 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
 		* ``` cd coordinate-tool-addin-dotnet\source\CoordinateTool ```
 		* ``` msbuild CoordinateTool.sln /property:Configuration=Release ```
+
+## Users
 * Running
-	* Run or debug from Visual Studio
 	* To run from a stand-alone deployment
-		* ArcMAP
+		* ArcMap
 			* Install the add-in from the application folder by double clicking it
-			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
+			* Optional : if you want more sample output formats, copy the "CoordinateToolLibrary.dll.config" file to the following directory
 				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
 			* Add the add-in command to a toolbar via menu option 
 				* "Customize -> Customize mode"
@@ -57,8 +60,8 @@ This is an Esri ArcGIS Prototype Addin for ArcMAP 10.3 and Pro 1.1 that can be u
 				* Select "Add-In Controls"
 				* Drag/Drop "CoordinateTool" command onto a toolbar
 				* Close customize mode
-				* open tool by clicking the "Coordinate Tool" command you just added
-				* dockable coordinate tool appears
+				* Open tool by clicking the "Coordinate Tool" command you just added
+				* Dockable coordinate tool appears
 		* Pro
 			* Install the add-in from the application folder by double clicking it
 			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
@@ -157,5 +160,5 @@ limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
-[](Esri Tags: Military Defense ArcGIS ArcObjects .NET Planning WPF ArcGISSolutions)
-[](Esri Language: C#)
+[](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In)
+[](Esri Language: C#) 
