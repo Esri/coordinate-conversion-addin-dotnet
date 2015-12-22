@@ -139,7 +139,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H X# Y#", arg, this);
+                    return this.Format("Z#H X0 Y0", arg, this);
                 }
                 else
                 {

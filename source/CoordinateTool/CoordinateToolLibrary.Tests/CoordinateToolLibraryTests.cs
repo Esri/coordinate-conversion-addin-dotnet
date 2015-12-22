@@ -269,13 +269,13 @@ namespace CoordinateToolLibrary.Tests
             var temp = coord.ToString("", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 4460286");
 
-            temp = coord.ToString("Z+-# X#m Y#m", new CoordinateUTMFormatter());
+            temp = coord.ToString("Z+-# X0m Y0m", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "+17 683016m 4460286m");
 
-            temp = coord.ToString("Z#H X#m E Y#m N", new CoordinateUTMFormatter());
+            temp = coord.ToString("Z#H X0m E Y0m N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016m E 4460286m N");
             
-            temp = coord.ToString("Z#H X# E Y# N", new CoordinateUTMFormatter());
+            temp = coord.ToString("Z#H X0 E Y0 N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
         }
 

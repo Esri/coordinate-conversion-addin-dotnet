@@ -126,6 +126,9 @@ namespace CoordinateToolLibrary.ViewModels
             }
 
             RaisePropertyChanged(() => FormatList);
+
+            OutputCoordItem.CType = GetCoordinateType();
+            OutputCoordItem.Name = OutputCoordItem.CType.ToString();
         }
         private string _formatSelection;
         public string FormatSelection 
