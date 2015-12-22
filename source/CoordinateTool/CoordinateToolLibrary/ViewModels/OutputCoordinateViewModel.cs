@@ -1,4 +1,20 @@
-﻿using System;
+﻿/******************************************************************************* 
+  * Copyright 2015 Esri 
+  *  
+  *  Licensed under the Apache License, Version 2.0 (the "License"); 
+  *  you may not use this file except in compliance with the License. 
+  *  You may obtain a copy of the License at 
+  *  
+  *  http://www.apache.org/licenses/LICENSE-2.0 
+  *   
+  *   Unless required by applicable law or agreed to in writing, software 
+  *   distributed under the License is distributed on an "AS IS" BASIS, 
+  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  *   See the License for the specific language governing permissions and 
+  *   limitations under the License. 
+  ******************************************************************************/ 
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,13 +38,13 @@ namespace CoordinateToolLibrary.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteCommand);
             CopyCommand = new RelayCommand(OnCopyCommand);
 
-            Mediator.Register("AddNewOutputCoordinate", OnAddNewOutputCoordinate);
-            Mediator.Register("COPY_ALL_COORDINATE_OUTPUTS", OnCopyAllCoordinateOutputs);
+            Mediator.Register(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
+            Mediator.Register(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
 
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
 
-            //init a few sample items
+            //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
             ////var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
@@ -95,7 +111,7 @@ namespace CoordinateToolLibrary.ViewModels
                 outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 OutputCoordinateList.Add(outputCoordItem);
-                Mediator.NotifyColleagues("UpdateOutputRequired", null);
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
                 SaveOutputConfiguration();
             }
         }
@@ -200,7 +216,7 @@ namespace CoordinateToolLibrary.ViewModels
                     outputCoordItem.CType = type;
                 }
 
-                Mediator.NotifyColleagues("UpdateOutputRequired", null);
+                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
             }
 
             SaveOutputConfiguration();
@@ -221,6 +237,7 @@ namespace CoordinateToolLibrary.ViewModels
             }
             catch(Exception ex)
             {
+                // do nothing
             }
         }
 
@@ -251,7 +268,7 @@ namespace CoordinateToolLibrary.ViewModels
             }
             catch(Exception ex)
             {
-
+                // do nothing
             }
         }
 
