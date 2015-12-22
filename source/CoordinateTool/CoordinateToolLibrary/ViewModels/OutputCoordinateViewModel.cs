@@ -1,4 +1,20 @@
-﻿using System;
+﻿/******************************************************************************* 
+  * Copyright 2015 Esri 
+  *  
+  *  Licensed under the Apache License, Version 2.0 (the "License"); 
+  *  you may not use this file except in compliance with the License. 
+  *  You may obtain a copy of the License at 
+  *  
+  *  http://www.apache.org/licenses/LICENSE-2.0 
+  *   
+  *   Unless required by applicable law or agreed to in writing, software 
+  *   distributed under the License is distributed on an "AS IS" BASIS, 
+  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  *   See the License for the specific language governing permissions and 
+  *   limitations under the License. 
+  ******************************************************************************/ 
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -28,7 +44,7 @@ namespace CoordinateToolLibrary.ViewModels
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
 
-            //init a few sample items
+            //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
             ////var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
@@ -38,11 +54,11 @@ namespace CoordinateToolLibrary.ViewModels
             //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", CType = CoordinateType.UTM, OutputCoordinate = @"", Format = "Z#H X# Y#" });
             //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "GARS", CType = CoordinateType.GARS, OutputCoordinate = @"", Format = "X#YQK" });
             //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "USNG", CType = CoordinateType.USNG, OutputCoordinate = @"", Format = "Z S X# Y#" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DDM", CType = CoordinateType.DDM, OutputCoordinate = @"", Format = "A# B#.#### N X# Y#.#### E" });
+            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DDM", CType = CoordinateType.DDM, OutputCoordinate = @"", Format = "A0 B0.0### N X0 Y0.0### E" });
 
             //DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
 
-            //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y#.##N X#.##E" }, { "70.49N,40.32W", "Y#.##N,X#.##E" } } });
+            //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y0.0#N X0.0#E" }, { "70.49N,40.32W", "Y#.##N,X#.##E" } } });
 
             //LoadOutputConfiguration();
         }
