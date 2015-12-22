@@ -35,7 +35,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 
 * [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
-### Getting Started with the Coordinate Tool Addin (.NET) [Devs](##Devs) and [Users](##Users)
+### Getting Started with the Coordinate Tool Addin (.NET)
 
 ## Devs
 

@@ -67,7 +67,7 @@ namespace ArcMapAddinCoordinateTool
             try
             {
                 //Get the active view from the ArcMap static class.
-                IActiveView activeView = ArcMap.Document.ActiveView;
+                IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
 
                 var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(arg.X, arg.Y) as IPoint;
 
