@@ -169,11 +169,16 @@ namespace CoordinateToolLibrary.ViewModels
             if (OutputCoordItem == null)
                 return;
 
+            // save the current name and restore after category selection
+            var name = OutputCoordItem.Name;
+
             SelectCategory(OutputCoordItem.CType);
 
             SelectFormat(OutputCoordItem.Format);
 
             Format = OutputCoordItem.Format;
+
+            OutputCoordItem.Name = name;
         }
 
         private void OnFormatSelectionChanged()
