@@ -65,7 +65,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 		* Pro
 			* Install the add-in from the application folder by double clicking it
 			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
-				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c}
+				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
 			* The ADD-IN appears under the "ADD-IN" tab in Pro	
 				* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
 				
