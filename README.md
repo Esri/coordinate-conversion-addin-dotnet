@@ -53,7 +53,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 		* ArcMap
 			* Install the add-in from the application folder by double clicking it
 			* Optional : if you want more sample output formats, copy the "CoordinateToolLibrary.dll.config" file to the following directory
-				* C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631}
+				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
 			* Add the add-in command to a toolbar via menu option 
 				* "Customize -> Customize mode"
 				* Select "Commands" Tab
