@@ -352,7 +352,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             // Get name from user
             string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues("AddNewOutputCoordinate", new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
