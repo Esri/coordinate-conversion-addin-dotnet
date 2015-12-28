@@ -157,18 +157,22 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 {
                     address = poly;
                 }
-
-                FlashGeometry(address, color, mxdoc.ActiveView.ScreenDisplay, 500);
+                var av = mxdoc.FocusMap as IActiveView;
+                FlashGeometry(address, color, av.ScreenDisplay, 500);
 
                 AddElement(map, address);
 
-                if (poly != null && !poly.IsEmpty && (poly as IArea) != null)
-                    envelope.CenterAt((poly as IArea).Centroid);
-                else
-                    envelope.CenterAt(amCoordGetter.Point);
+                // do not center if in layout view
+                if (mxdoc.ActiveView is IMap)
+                {
+                    if (poly != null && !poly.IsEmpty && (poly as IArea) != null)
+                        envelope.CenterAt((poly as IArea).Centroid);
+                    else
+                        envelope.CenterAt(amCoordGetter.Point);
 
-                activeView.Extent = envelope;
-                activeView.Refresh();
+                    activeView.Extent = envelope;
+                    activeView.Refresh();
+                }
             }
         }
 

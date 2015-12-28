@@ -9,7 +9,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMap 10.3.1
-* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
+	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
 * Addin for ArcGIS Pro 1.1
 	* Works with DD, DDM and DMS
 
