@@ -154,6 +154,19 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 
 Anyone and everyone is welcome to contribute. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
+### Repository Points of Contact
+
+#### Repository Owner: [Joe](https://github.com/jmccausland)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+#### Secondary: TBD
+
+* Backup when the Owner is away
+
 ## Licensing
 
 Copyright 2015 Esri
