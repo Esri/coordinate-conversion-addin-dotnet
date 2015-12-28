@@ -24,10 +24,17 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 
 ## Requirements
 
+### Devs
+
 * Visual Studio 2013
 * ArcGIS Desktop SDK for .NET 10.3.1
 	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
 * ArcGIS Pro 1.1 SDK
+
+### Users
+
+* ArcGIS Desktop 10.3.1
+* ArcGIS Pro 1.1
 
 ## Instructions
 
