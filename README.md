@@ -53,14 +53,13 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
 		* ``` cd coordinate-tool-addin-dotnet\source\CoordinateTool ```
 		* ``` msbuild CoordinateTool.sln /property:Configuration=Release ```
+	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 
 ## Users
 * Running
 	* To run from a stand-alone deployment
 		* ArcMap
 			* Install the add-in from the application folder by double clicking it
-			* Optional : if you want more sample output formats, copy the "CoordinateToolLibrary.dll.config" file to the following directory
-				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
 			* Add the add-in command to a toolbar via menu option 
 				* "Customize -> Customize mode"
 				* Select "Commands" Tab
@@ -69,12 +68,18 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 				* Close customize mode
 				* Open tool by clicking the "Coordinate Tool" command you just added
 				* Dockable coordinate tool appears
+			* Optional : if you want share output formats, copy the "CoordinateToolLibrary.dll.config" file to/from the following directory
+				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
+					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
+				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 		* Pro
 			* Install the add-in from the application folder by double clicking it
-			* Optional : copy the "CoordinateToolLibrary.dll.config" file to the following directory
-				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
 			* The ADD-IN appears under the "ADD-IN" tab in Pro	
-				* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
+			* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
+			* Optional : if you want to share output formats, copy the "CoordinateToolLibrary.dll.config" file to/from the following directory
+				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
+					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
+				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 				
 * Custom Formatters
 	* Each coordinate type has its own custom formatter.  The following guide will help build a custom format string for each particular coordinate type.  If a character is not part of the formatting code it is simply transferred to the output string.
