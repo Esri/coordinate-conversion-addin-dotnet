@@ -31,7 +31,7 @@ namespace CoordinateToolLibrary.ViewModels
         {
             if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
             {
-                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS" };
+                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM" };
             }
             else
             {

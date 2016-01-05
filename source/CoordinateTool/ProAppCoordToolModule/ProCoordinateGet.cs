@@ -87,73 +87,71 @@ namespace ProAppCoordToolModule
             return false;
         }
 
-        #region Future methods when more coordinate types are supported
-        //public override bool CanGetGARS(out string coord)
-        //{
-        //    coord = string.Empty;
-        //    if (Point != null)
-        //    {
-        //        try
-        //        {
-        //            var cn = Point as IConversionNotation;
-        //            coord = cn.GetGARSFromCoords();
-        //            return true;
-        //        }
-        //        catch { }
-        //    }
-        //    return false;
-        //}
+        public override bool CanGetGARS(int srFacotryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
 
-        //public override bool CanGetMGRS(out string coord)
-        //{
-        //    coord = string.Empty;
-        //    if (Point != null)
-        //    {
-        //        try
-        //        {
-        //            // 5 numeric units in MGRS is 1m resolution
-        //            var cn = Point as IConversionNotation;
-        //            coord = cn.CreateMGRS(5, false, esriMGRSModeEnum.esriMGRSMode_NewStyle);
-        //            return true;
-        //        }
-        //        catch { }
-        //    }
-        //    return false;
-        //}
+        public override bool CanGetMGRS(int srFactoryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    // 5 numeric units in MGRS is 1m resolution
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
 
-        //public override bool CanGetUSNG(out string coord)
-        //{
-        //    coord = string.Empty;
-        //    if (Point != null)
-        //    {
-        //        try
-        //        {
-        //            var cn = Point as IConversionNotation;
-        //            coord = cn.GetUSNGFromCoords(5, false, false);
-        //            return true;
-        //        }
-        //        catch { }
-        //    }
-        //    return false;
-        //}
+        public override bool CanGetUSNG(int srFactoryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
 
-        //public override bool CanGetUTM(out string coord)
-        //{
-        //    coord = string.Empty;
-        //    if (Point != null)
-        //    {
-        //        try
-        //        {
-        //            var cn = Point as IConversionNotation;
-        //            coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces|esriUTMConversionOptionsEnum.esriUTMUseNS);
-        //            return true;
-        //        }
-        //        catch { }
-        //    }
-        //    return false;
-        //}
-
-        #endregion
+        public override bool CanGetUTM(int srFactoryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
+                    tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
 
         private CoordSysDialog _dlg = null;
         private static bool _isOpen = false;
