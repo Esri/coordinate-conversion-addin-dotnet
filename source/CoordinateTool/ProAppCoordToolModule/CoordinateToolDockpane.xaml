@@ -48,7 +48,7 @@
                         <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
                     </Button>
                     <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
+                        <Image Source="/CoordinateToolLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
                     </Button>
                 </Grid>
                 <UserControl Content="{Binding CTView}" />
