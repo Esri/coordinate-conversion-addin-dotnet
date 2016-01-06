@@ -301,7 +301,7 @@ namespace ProAppCoordToolModule
                     point = QueuedTask.Run(() =>
                     {
                         ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(input, sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
                         return tmp;
                     }).Result;
                     
@@ -318,7 +318,7 @@ namespace ProAppCoordToolModule
                     point = QueuedTask.Run(() =>
                     {
                         ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(input, sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
                         return tmp;
                     }).Result;
 
@@ -335,7 +335,7 @@ namespace ProAppCoordToolModule
                     point = QueuedTask.Run(() =>
                     {
                         ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(input, sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
                         return tmp;
                     }).Result;
 
@@ -352,7 +352,7 @@ namespace ProAppCoordToolModule
                     point = QueuedTask.Run(() =>
                     {
                         ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(input, sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
                         return tmp;
                     }).Result;
 
