@@ -293,6 +293,75 @@ namespace ProAppCoordToolModule
                 return CoordinateType.DMS;
             }
 
+            CoordinateGARS gars;
+            if (CoordinateGARS.TryParse(input, out gars))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    }).Result;
+                    
+                    return CoordinateType.GARS;
+                }
+                catch { }
+            }
+
+            CoordinateMGRS mgrs;
+            if(CoordinateMGRS.TryParse(input, out mgrs))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.MGRS;
+                }
+                catch { }
+            }
+
+            CoordinateUSNG usng;
+            if (CoordinateUSNG.TryParse(input, out usng))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.USNG;
+                }
+                catch { }
+            }
+
+            CoordinateUTM utm;
+            if (CoordinateUTM.TryParse(input, out utm))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.UTM;
+                }
+                catch { }
+            }
+
+
             return CoordinateType.Unknown;
         }
 

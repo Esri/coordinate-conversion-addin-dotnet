@@ -41,12 +41,18 @@ namespace ProAppCoordToolModule
 
                 if (MapView.Active != null)
                 {
-                    
                     temp = MapView.Active.ClientToMap(e.ClientPoint);
+                    try
+                    {
+                        // for now we will always project to WGS84
+                        var result = GeometryEngine.Project(temp, SpatialReferences.WGS84);
+                        return result;
+                    }
+                    catch { }
                 }
 
                 return temp;
-            }).Result;
+            }).Result as MapPoint;
 
             if (mp != null)
             {

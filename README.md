@@ -1,6 +1,6 @@
 # coordinate-tool-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be used for converting coordinates.
 
 ![Image of Coordinate Tool Addin](ScreenShot.PNG) 
 
@@ -10,8 +10,8 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 * Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMap 10.3.1
 	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
-* Addin for ArcGIS Pro 1.1
-	* Works with DD, DDM and DMS
+* Addin for ArcGIS Pro 1.2
+	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
 
 ## Sections
 
@@ -29,12 +29,12 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.1 that can be
 * Visual Studio 2013
 * ArcGIS Desktop SDK for .NET 10.3.1
 	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
-* ArcGIS Pro 1.1 SDK
+* ArcGIS Pro 1.2 SDK
 
 ### Users
 
 * ArcGIS Desktop 10.3.1
-* ArcGIS Pro 1.1
+* ArcGIS Pro 1.2
 
 ## Instructions
 

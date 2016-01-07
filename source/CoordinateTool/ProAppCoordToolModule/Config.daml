@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArcGIS defaultAssembly="ProAppCoordToolModule.dll" defaultNamespace="ProAppCoordToolModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0" desktopVersion="1.1.3308">
+  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0" desktopVersion="1.2.4905">
     <Name>ProAppCoordToolModule</Name>
     <Description>ProAppCoordToolModule description</Description>
     <Image>Images\AddinDesktop32.png</Image>
@@ -22,7 +22,7 @@
       <groups>
         <!-- comment this out if you have no controls on the Addin tab to avoid
               an empty group-->
-        <group id="ProAppCoordToolModule_Group1" caption="Group 1" appearsOnAddInTab="true">
+        <group id="ProAppCoordToolModule_Group1" caption="Coordinate Tool" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="ProAppCoordToolModule_CoordinateToolDockpane_ShowButton" size="large" />
           <tool refID="ProAppCoordToolModule_CoordinateMapTool" size="large" />
@@ -30,15 +30,15 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProAppCoordToolModule_CoordinateToolDockpane_ShowButton" caption="Show CoordinateToolDockpane " className="CoordinateToolDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
-          <tooltip heading="Show Dockpane">Show Dockpane<disabledText /></tooltip>
+        <button id="ProAppCoordToolModule_CoordinateToolDockpane_ShowButton" caption="Show" className="CoordinateToolDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+          <tooltip heading="Coordinate Tool">Show Dockpane<disabledText /></tooltip>
         </button>
-        <tool id="ProAppCoordToolModule_CoordinateMapTool" caption="CoordinateMapTool " className="CoordinateMapTool" loadOnClick="true" smallImage="Images\GenericButtonRed16.png" largeImage="Images\GenericButtonRed32.png" condition="esri_mapping_mapPane">
-          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        <tool id="ProAppCoordToolModule_CoordinateMapTool" caption="Map Tool " className="CoordinateMapTool" loadOnClick="true" smallImage="Images\GenericButtonRed16.png" largeImage="Images\GenericButtonRed32.png" condition="esri_mapping_mapPane">
+          <tooltip heading="Coordinate Tool">Map Point Tool<disabledText /></tooltip>
         </tool>
       </controls>
       <dockPanes>
-        <dockPane id="ProAppCoordToolModule_CoordinateToolDockpane" caption="CoordinateToolDockpane " className="CoordinateToolDockpaneViewModel" keytip="DockPane" initiallyVisible="true" dock="group" dockWith="esri_core_contentsDockPane">
+        <dockPane id="ProAppCoordToolModule_CoordinateToolDockpane" caption="Coordinate Tool" className="CoordinateToolDockpaneViewModel" keytip="DockPane" initiallyVisible="true" dock="group" dockWith="esri_core_contentsDockPane">
           <content className="CoordinateToolDockpaneView" />
         </dockPane>
       </dockPanes>
