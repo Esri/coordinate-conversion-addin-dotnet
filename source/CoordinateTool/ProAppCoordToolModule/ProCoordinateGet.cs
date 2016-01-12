@@ -128,6 +128,7 @@ namespace ProAppCoordToolModule
                 try
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
+                    tgparam.NumDigits = 5;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
