@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ValueConverters.cs" />
+    <Compile Include="ContextMenuCommands.cs" />
     <Compile Include="CoordinateMapTool.cs" />
     <Compile Include="CoordinateToolDockpane.xaml.cs">
       <DependentUpon>CoordinateToolDockpane.xaml</DependentUpon>

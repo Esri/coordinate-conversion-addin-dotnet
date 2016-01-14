@@ -138,7 +138,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A-0°B0.0#####' X-0°Y0.0#####'", arg, this);
+                    return this.Format("A-0°B0.0000' X-0°Y0.0000'", arg, this);
                 }
                 else
                 {

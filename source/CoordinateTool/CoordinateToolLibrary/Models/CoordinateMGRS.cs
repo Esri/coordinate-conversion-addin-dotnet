@@ -158,7 +158,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("ZSX0Y0", arg, this);
+                    return this.Format("ZSX00000Y00000", arg, this);
                 }
                 else
                 {

@@ -155,7 +155,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Y-0.0000 X-0.0000", arg, this);
+                    return this.Format("Y-0.000000 X-0.000000", arg, this);
                 }
                 else
                 {

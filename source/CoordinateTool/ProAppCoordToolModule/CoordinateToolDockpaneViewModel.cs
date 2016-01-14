@@ -229,6 +229,96 @@ namespace ProAppCoordToolModule
 
         #endregion command handlers
 
+        internal string GetFormattedCoordinate(string coord, CoordinateType cType)
+        {
+            string format = "";
+
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolLibrary.ViewModels.CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                var ocvm = ctvm.OCView.DataContext as CoordinateToolLibrary.ViewModels.OutputCoordinateViewModel;
+
+                if (ocvm != null)
+                {
+                    var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+                    if (tt != null)
+                    {
+                        format = tt.Format;
+                        Console.WriteLine(tt.Format);
+                    }
+                }
+            }
+
+            var cf = GetFormattedCoord(cType, coord, format);
+
+            if (!String.IsNullOrWhiteSpace(cf))
+                return cf;
+
+            return string.Empty;
+        }
+
+        private string GetFormattedCoord(CoordinateType cType, string coord, string format)
+        {
+            if (cType == CoordinateType.DD)
+            {
+                CoordinateDD dd;
+                if(CoordinateDD.TryParse(coord, out dd))
+                {
+                    return dd.ToString(format, new CoordinateDDFormatter());
+                }
+            }
+            if (cType == CoordinateType.DDM)
+            {
+                CoordinateDDM ddm;
+                if (CoordinateDDM.TryParse(coord, out ddm))
+                {
+                    return ddm.ToString(format, new CoordinateDDMFormatter());
+                }
+            }
+            if (cType == CoordinateType.DMS)
+            {
+                CoordinateDMS dms;
+                if (CoordinateDMS.TryParse(coord, out dms))
+                {
+                    return dms.ToString(format, new CoordinateDMSFormatter());
+                }
+            }
+            if (cType == CoordinateType.GARS)
+            {
+                CoordinateGARS gars;
+                if (CoordinateGARS.TryParse(coord, out gars))
+                {
+                    return gars.ToString(format, new CoordinateGARSFormatter());
+                }
+            }
+            if (cType == CoordinateType.MGRS)
+            {
+                CoordinateMGRS mgrs;
+                if (CoordinateMGRS.TryParse(coord, out mgrs))
+                {
+                    return mgrs.ToString(format, new CoordinateMGRSFormatter());
+                }
+            }
+            if (cType == CoordinateType.USNG)
+            {
+                CoordinateUSNG usng;
+                if (CoordinateUSNG.TryParse(coord, out usng))
+                {
+                    return usng.ToString(format, new CoordinateMGRSFormatter());
+                }
+            }
+            if (cType == CoordinateType.UTM)
+            {
+                CoordinateUTM utm;
+                if (CoordinateUTM.TryParse(coord, out utm))
+                {
+                    return utm.ToString(format, new CoordinateUTMFormatter());
+                }
+            }
+
+            return null;
+        }
+
         private string ProcessInput(string input)
         {
             string result = string.Empty;
