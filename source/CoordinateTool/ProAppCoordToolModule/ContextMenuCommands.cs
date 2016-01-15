@@ -105,23 +105,7 @@ namespace ProAppCoordToolModule
                 if (vm != null)
                 {
                     coord = vm.GetFormattedCoordinate(coord, cType);
-                    //vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);
-                    //var ctvm = vm.CTView.Resources["CTViewModel"] as CoordinateToolLibrary.ViewModels.CoordinateToolViewModel;
-                    //if(ctvm != null)
-                    //{
-                    //    var ocvm = ctvm.OCView.DataContext as CoordinateToolLibrary.ViewModels.OutputCoordinateViewModel;
-
-                    //    if(ocvm != null)
-                    //    {
-                    //        var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == CoordinateToolLibrary.Models.CoordinateType.MGRS);
-                    //        if(temp!=null)
-                    //        {
-                    //            Console.WriteLine(tt.Format);
-                    //        }
-                    //    }
-                    //}
                 }
-
 
                 System.Windows.Clipboard.SetText(coord);
             }

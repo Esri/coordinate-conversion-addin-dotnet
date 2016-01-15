@@ -149,6 +149,15 @@ namespace ArcMapAddinCoordinateTool
             {
             }
 
+            public MainViewModel GetMainVM()
+            {
+                var tool = this.m_windowUI.Child as DockableWindowCoordinateTool;
+
+                if (tool == null)
+                    return null;
+
+                return tool.DataContext as MainViewModel;
+            }
             public void SetInput(double x, double y)
             {
                 var tool = this.m_windowUI.Child as DockableWindowCoordinateTool;

@@ -24,6 +24,7 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 using CoordinateToolLibrary.Models;
+using ArcMapAddinCoordinateTool.ViewModels;
 
 namespace ArcMapAddinCoordinateTool
 {
@@ -73,6 +74,18 @@ namespace ArcMapAddinCoordinateTool
                         break;
                     default:
                         break;
+                }
+
+                var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
+
+                if (doc != null)
+                {
+                    var vm = doc.GetMainVM();
+
+                    if(vm != null)
+                    {
+                        coord = vm.GetFormattedCoordinate(coord, ctype);
+                    }
                 }
                 
                 System.Windows.Clipboard.SetText(coord);
