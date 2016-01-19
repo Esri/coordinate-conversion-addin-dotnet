@@ -175,7 +175,7 @@ namespace CoordinateToolLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("A0°B0'C0.0\"N X0°Y0'Z0.0\"E", arg, this);
+                    return this.Format("A0°B0'C0.00\"N X0°Y0'Z0.00\"E", arg, this);
                 }
                 else
                 {

@@ -30,11 +30,15 @@ namespace ProAppCoordToolModule
     {
         protected override Task OnToolActivateAsync(bool active)
         {
+            ContextMenuID = "esri_mapping_popupToolContextMenu";
             return base.OnToolActivateAsync(active);
         }
 
         protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
         {
+            if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
+                return;
+
             var mp = QueuedTask.Run(() =>
             {
                 MapPoint temp = null;

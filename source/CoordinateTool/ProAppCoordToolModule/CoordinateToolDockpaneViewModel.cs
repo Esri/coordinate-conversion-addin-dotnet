@@ -229,6 +229,34 @@ namespace ProAppCoordToolModule
 
         #endregion command handlers
 
+        internal string GetFormattedCoordinate(string coord, CoordinateType cType)
+        {
+            string format = "";
+
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolLibrary.ViewModels.CoordinateToolViewModel;
+            if (ctvm != null)
+            {
+                var ocvm = ctvm.OCView.DataContext as CoordinateToolLibrary.ViewModels.OutputCoordinateViewModel;
+
+                if (ocvm != null)
+                {
+                    var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+                    if (tt != null)
+                    {
+                        format = tt.Format;
+                        Console.WriteLine(tt.Format);
+                    }
+                }
+            }
+
+            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
+
+            if (!String.IsNullOrWhiteSpace(cf))
+                return cf;
+
+            return string.Empty;
+        }
+
         private string ProcessInput(string input)
         {
             string result = string.Empty;

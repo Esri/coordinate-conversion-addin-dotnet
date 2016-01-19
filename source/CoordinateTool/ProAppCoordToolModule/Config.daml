@@ -33,6 +33,27 @@
         <button id="ProAppCoordToolModule_CoordinateToolDockpane_ShowButton" caption="Show" className="CoordinateToolDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
           <tooltip heading="Coordinate Tool">Show Dockpane<disabledText /></tooltip>
         </button>
+        <button id="ProAppCoordToolModule_ContextCopyDDButton" caption="Copy DD Coordinate" className="ContextCopyDD" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy DD Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyDDMButton" caption="Copy DDM Coordinate" className="ContextCopyDDM" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy DDM Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyDMSButton" caption="Copy DMS Coordinate" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy DMS Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyGARSButton" caption="Copy GARS Coordinate" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy GARS Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyMGRSButton" caption="Copy MGRS Coordinate" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy MGRS Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyUSNGButton" caption="Copy USNG Coordinate" className="ContextCopyUSNG" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy USNG Coordinate"></tooltip>
+        </button>
+        <button id="ProAppCoordToolModule_ContextCopyUTMButton" caption="Copy UTM Coordinate" className="ContextCopyUTM" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png" >
+          <tooltip heading="Copy UTM Coordinate"></tooltip>
+        </button>
         <tool id="ProAppCoordToolModule_CoordinateMapTool" caption="Map Tool " className="CoordinateMapTool" loadOnClick="true" smallImage="Images\GenericButtonRed16.png" largeImage="Images\GenericButtonRed32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Coordinate Tool">Map Point Tool<disabledText /></tooltip>
         </tool>
@@ -43,5 +64,52 @@
         </dockPane>
       </dockPanes>
     </insertModule>
+    <!-- Update the mapping module. Insert our custom button into the layers existing context menu. -->
+    <updateModule refID="esri_mapping">
+      <menus>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDDButton" separator="true" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDDButton" separator="true" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDDMButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDDMButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDMSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyDMSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyGARSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyGARSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyMGRSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyMGRSButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyUSNGButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyUSNGButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyUTMButton" separator="false" />
+        </updateMenu>
+        <updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertButton refID="ProAppCoordToolModule_ContextCopyUTMButton" separator="false" />
+        </updateMenu>
+      </menus>
+    </updateModule>
   </modules>
 </ArcGIS>
