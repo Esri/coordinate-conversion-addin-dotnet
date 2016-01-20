@@ -160,7 +160,7 @@ namespace CoordinateToolLibrary.Tests
 
             // test the default
             temp = coord.ToString("", new CoordinateDDFormatter());
-            Assert.AreEqual(temp, "40.2730 -78.8474");
+            Assert.AreEqual(temp, "40.273048 -78.847427");
         }
 
         [TestMethod]
@@ -195,7 +195,7 @@ namespace CoordinateToolLibrary.Tests
         {
             var coord = new CoordinateDDM(40, 16.38288, -78, 50.84562);
             var temp = coord.ToString("", new CoordinateDDMFormatter());
-            Assert.AreEqual(temp, "40°16.38288' -78°50.84562'");
+            Assert.AreEqual(temp, "40°16.3829' -78°50.8456'");
 
             temp = coord.ToString("A0°B0.0#####'N X0°Y0.0#####'E", new CoordinateDDMFormatter());
             Assert.AreEqual(temp, "40°16.38288'N 78°50.84562'W");
@@ -218,7 +218,7 @@ namespace CoordinateToolLibrary.Tests
         {
             var coord = new CoordinateDMS(40, 16, 22.9728, -78, 50, 50.7372);
             var temp = coord.ToString("", new CoordinateDMSFormatter());
-            Assert.AreEqual(temp, "40°16'23.0\"N 78°50'50.7\"W");
+            Assert.AreEqual(temp, "40°16'22.97\"N 78°50'50.74\"W");
 
             temp = coord.ToString("A0°B0'C0.0##\"N X0°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40°16'22.973\"N 78°50'50.737\"W");
