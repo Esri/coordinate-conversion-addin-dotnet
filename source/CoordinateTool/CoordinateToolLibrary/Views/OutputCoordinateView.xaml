@@ -36,7 +36,7 @@
             CanUserSortColumns="False">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
-                    <Image Source="/CoordinateToolLibrary;component/Images/RowHandle.png" Width="16" Height="16" />
+                    <Image Source="/CoordinateToolLibrary;component/Images/RowHandle.png" Width="10" Height="10" />
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
             <DataGrid.RowStyle>
@@ -47,13 +47,19 @@
             </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn
-                SortDirection="Ascending"
-                IsReadOnly="True"
-                Header="Name"
-                Width="1*"
-                FontWeight="Bold"
-                MinWidth="50"
-                Binding="{Binding Path=Name}" />
+                    SortDirection="Ascending"
+                    IsReadOnly="True"
+                    Header="Name"
+                    Width="1*"
+                    FontWeight="Bold"
+                    MinWidth="40"
+                    Binding="{Binding Path=Name}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
                 <DataGridTemplateColumn Header="Coordinate" Width="3*">
                     <DataGridTemplateColumn.CellTemplate>
