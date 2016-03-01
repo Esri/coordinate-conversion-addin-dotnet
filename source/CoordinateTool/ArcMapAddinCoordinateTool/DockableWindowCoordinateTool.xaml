@@ -21,7 +21,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -51,13 +50,10 @@
                         <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
                             <Image Source="/CoordinateToolLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
                         </Button>
-                        <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
-                            <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
-                        </Button>
-                        <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
+                        <Button Grid.Column="3" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
                             <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
                         </Button>
-                        <Button Grid.Column="5" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
+                        <Button Grid.Column="4" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Style.Triggers>
