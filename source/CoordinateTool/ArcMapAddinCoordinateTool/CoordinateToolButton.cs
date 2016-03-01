@@ -57,7 +57,6 @@ namespace ArcMapAddinCoordinateTool
         protected override void OnUpdate()
         {
             Enabled = ArcMap.Application != null;
-
         }
 
         protected override void OnMouseDown(ESRI.ArcGIS.Desktop.AddIns.Tool.MouseEventArgs arg)
@@ -66,27 +65,52 @@ namespace ArcMapAddinCoordinateTool
                 return;
             try
             {
-                //Get the active view from the ArcMap static class.
-                IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
-
-                var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(arg.X, arg.Y) as IPoint;
-
-                // always use WGS84
-                var sr = GetSR();
-
-                if (sr != null)
-                {
-                    point.Project(sr);
-                }
+                var point = GetMapPoint(arg.X, arg.Y);
 
                 var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
 
-                if (doc != null)
+                if (doc != null && point != null)
+                {
+                    doc.SetInput(point.X, point.Y);
+                }
+
+                ArcMap.Application.CurrentTool = null;
+            }
+            catch { }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs arg)
+        {
+            try
+            {
+                IPoint point = GetMapPoint(arg.X, arg.Y);
+
+                var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
+
+                if (doc != null && point != null)
                 {
                     doc.SetInput(point.X, point.Y);
                 }
             }
             catch { }
+        }
+
+        private IPoint GetMapPoint(int X, int Y)
+        {
+            //Get the active view from the ArcMap static class.
+            IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
+
+            var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
+
+            // always use WGS84
+            var sr = GetSR();
+
+            if (sr != null)
+            {
+                point.Project(sr);
+            }
+
+            return point;
         }
 
         private ISpatialReference GetSR()
