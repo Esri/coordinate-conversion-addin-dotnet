@@ -37,6 +37,9 @@
                                 </Style.Triggers>
                             </Style>
                         </ComboBox.Style>
+                        <ComboBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
+                        </ComboBox.InputBindings>
                     </ComboBox>
                     <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3" >
                         <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />

@@ -13,6 +13,12 @@
         <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
         <Image x:Key="expandImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateToolLibrary;component/Images/ModelBuilderExpand32_d.png" />
         <Image x:Key="collapseImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateToolLibrary;component/Images/ModelBuilderCollapse32_d.png" />
+        <ContextMenu x:Key="RowMenu" DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+            <MenuItem Header="Configure" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}, Path=DataContext.ConfigCommand}" 
+                              CommandParameter="{Binding Path=DataContext.Name}" />
+            <MenuItem Header="Delete" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}, Path=DataContext.DeleteCommand}" 
+                              CommandParameter="{Binding Path=DataContext.Name}" />
+        </ContextMenu>
     </UserControl.Resources>
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="outputCoordViewModel"/>
@@ -36,6 +42,7 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="DetailsVisibility" Value="{Binding DVisibility}" />
+                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
@@ -131,6 +138,13 @@
                     </StackPanel>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
+            <!--<DataGrid.ContextMenu>
+                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+                    <MenuItem Header="Configure" Command="{Binding DataContext.ConfigCommand}" CommandParameter="{Binding }" />
+                    <MenuItem Header="Configure2" Command="{Binding DataContext.ConfigCommand}" 
+                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.CurrentItem.Name}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>-->
         </DataGrid>
         <!-- Drag and Drop Popup -->
         <Popup x:Name="popup1" IsHitTestVisible="False" Placement="RelativePoint" PlacementTarget="{Binding ElementName=ocView}" AllowsTransparency="True">

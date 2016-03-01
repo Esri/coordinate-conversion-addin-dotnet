@@ -190,6 +190,9 @@ namespace CoordinateToolLibrary.ViewModels
 
         private void OnConfigCommand(object obj)
         {
+            if (obj == null || string.IsNullOrWhiteSpace(obj as string))
+                return;
+
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
