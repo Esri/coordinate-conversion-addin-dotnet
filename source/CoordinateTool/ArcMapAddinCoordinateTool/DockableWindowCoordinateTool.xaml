@@ -10,235 +10,236 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <Grid Margin="3,3,3,3">
-        <ScrollViewer>
-            <StackPanel Orientation="Vertical">
-                <GroupBox Header="Input">
-                    <Grid>
+    <Grid Margin="3,0,3,0">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+        <GroupBox Header="Input">
+            <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
+                                HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
+                        <ComboBox.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                        <Setter Property="TextBox.Background" Value="LightPink"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                        <Setter Property="TextBox.Background" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                        <ComboBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+                    <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="3" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="4" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Collapsed">
+                                        <Setter Property="Content" Value="▼" />
+                                        <Setter Property="ToolTip" Value="Expand" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Visible">
+                                        <Setter Property="Content" Value="▲" />
+                                        <Setter Property="ToolTip" Value="Collapse" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Grid Grid.Row="1" Visibility="{Binding SelectedInputItemVisibility}">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
-                                  HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
-                            <ComboBox.Style>
-                                <Style>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                            <Setter Property="TextBox.Background" Value="LightPink"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                            <Setter Property="TextBox.Background" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ComboBox.Style>
+                        <Grid.Resources>
+                            <DataTemplate x:Key="GARSTemplate" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Lon Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding InputGARS.LonBand, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=lonBCB, Path=IsChecked, Converter={StaticResource negateBool}}" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Column="2"  x:Name="lonBCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Text="Lat Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputGARS.LatBand, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=latBCB, Path=IsChecked, Converter={StaticResource negateBool}}"
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="latBCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Text="Quadrant" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputGARS.Quadrant, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
+                                                TextChanged="TextBox_TextChanged" />
+                                    <TextBlock Grid.Row="3" Text="Key" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputGARS.Key, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
+                                                TextChanged="TextBox_TextChanged" />
+                                </Grid>
+                            </DataTemplate>
+                            <DataTemplate x:Key="MGRSTemplate" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding InputMGRS.GZD, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}"
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Column="2"  x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputMGRS.GS, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputMGRS.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
+                                                TextChanged="TextBox_TextChanged" />
+                                    <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputMGRS.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
+                                                TextChanged="TextBox_TextChanged" />
+                                </Grid>
+                            </DataTemplate>
+                            <DataTemplate x:Key="USNGTemplate" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding InputUSNG.GZD, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Column="2" x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUSNG.GS, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUSNG.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputUSNG.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
+                                                TextChanged="TextBox_TextChanged" />
+                                </Grid>
+                            </DataTemplate>
+                            <DataTemplate x:Key="UTMTemplate" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding InputUTMZoneWithHemi, UpdateSourceTrigger=PropertyChanged}" 
+                                                Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB, Path=IsChecked, Converter={StaticResource negateBool}}" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <CheckBox Grid.Column="2" Content="Lock" VerticalAlignment="Center" x:Name="zoneCB" />
+                                    <!--<TextBlock Grid.Row="1" Text="Hemi" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Hemi, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />-->
+                                    <TextBlock Grid.Row="1" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
+                                                TextChanged="TextBox_TextChanged" />
+                                    <TextBlock Grid.Row="2" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUTM.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
+                                                TextChanged="TextBox_TextChanged" />
+                                </Grid>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+                                <ContentControl Content="{Binding }">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedInputItem}" Value="GARS">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SelectedInputItem}" Value="MGRS">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource MGRSTemplate}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SelectedInputItem}" Value="USNG">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource USNGTemplate}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SelectedInputItem}" Value="UTM">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource UTMTemplate}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </DataTemplate>
+                        </Grid.Resources>
+                        <ComboBox Margin="3,3,3,3" Text="{Binding SelectedInputItem}">
+                                <ComboBoxItem Content="GARS" IsSelected="True"/>
+                                <ComboBoxItem Content="MGRS"/>
+                                <ComboBoxItem Content="USNG"/>
+                                <ComboBoxItem Content="UTM"/>
                         </ComboBox>
-                        <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3">
-                            <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
-                        </Button>
-                        <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
-                            <Image Source="/CoordinateToolLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
-                        </Button>
-                        <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
-                            <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
-                        </Button>
-                        <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
-                            <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
-                        </Button>
-                        <Button Grid.Column="5" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Collapsed">
-                                            <Setter Property="Content" Value="▼" />
-                                            <Setter Property="ToolTip" Value="Expand" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedInputItemVisibility}" Value="Visible">
-                                            <Setter Property="Content" Value="▲" />
-                                            <Setter Property="ToolTip" Value="Collapse" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Grid Grid.Row="1" Visibility="{Binding SelectedInputItemVisibility}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.Resources>
-                                <DataTemplate x:Key="GARSTemplate" >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" MinWidth="55" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="Lon Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding InputGARS.LonBand, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=lonBCB, Path=IsChecked, Converter={StaticResource negateBool}}" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Column="2"  x:Name="lonBCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="1" Text="Lat Band" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputGARS.LatBand, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=latBCB, Path=IsChecked, Converter={StaticResource negateBool}}"
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="latBCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="2" Text="Quadrant" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputGARS.Quadrant, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <TextBlock Grid.Row="3" Text="Key" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputGARS.Key, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
-                                                 TextChanged="TextBox_TextChanged" />
-                                    </Grid>
-                                </DataTemplate>
-                                <DataTemplate x:Key="MGRSTemplate" >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" MinWidth="55" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding InputMGRS.GZD, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}"
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Column="2"  x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputMGRS.GS, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Row="1" Grid.Column="2"  x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputMGRS.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputMGRS.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
-                                                 TextChanged="TextBox_TextChanged" />
-                                    </Grid>
-                                </DataTemplate>
-                                <DataTemplate x:Key="USNGTemplate" >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" MinWidth="55" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding InputUSNG.GZD, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Column="2" x:Name="zoneCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="1" Text="Square" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUSNG.GS, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=squareCB,Path=IsChecked,Converter={StaticResource negateBool}}" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Row="1" Grid.Column="2" x:Name="squareCB" Content="Lock" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Row="2" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUSNG.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <TextBlock Grid.Row="3" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputUSNG.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                    </Grid>
-                                </DataTemplate>
-                                <DataTemplate x:Key="UTMTemplate" >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" MinWidth="55" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="Zone" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding InputUTMZoneWithHemi, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="3,1,3,1" IsEnabled="{Binding ElementName=zoneCB, Path=IsChecked, Converter={StaticResource negateBool}}" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <CheckBox Grid.Column="2" Content="Lock" VerticalAlignment="Center" x:Name="zoneCB" />
-                                        <!--<TextBlock Grid.Row="1" Text="Hemi" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Hemi, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" />-->
-                                        <TextBlock Grid.Row="1" Text="Easting" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputUTM.Easting, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1" 
-                                                 TextChanged="TextBox_TextChanged" />
-                                        <TextBlock Grid.Row="2" Text="Northing" Margin="3,0,3,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputUTM.Northing, UpdateSourceTrigger=PropertyChanged}" Margin="3,1,3,1"
-                                                 TextChanged="TextBox_TextChanged" />
-                                    </Grid>
-                                </DataTemplate>
-                                <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
-                                    <ContentControl Content="{Binding }">
-                                        <ContentControl.Style>
-                                            <Style TargetType="{x:Type ContentControl}">
-                                                <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="GARS">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource GARSTemplate}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="MGRS">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource MGRSTemplate}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="USNG">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource USNGTemplate}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedInputItem}" Value="UTM">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource UTMTemplate}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentControl.Style>
-                                    </ContentControl>
-                                </DataTemplate>
-                            </Grid.Resources>
-                            <ComboBox Margin="3,3,3,3" Text="{Binding SelectedInputItem}">
-                                    <ComboBoxItem Content="GARS" IsSelected="True"/>
-                                    <ComboBoxItem Content="MGRS"/>
-                                    <ComboBoxItem Content="USNG"/>
-                                    <ComboBoxItem Content="UTM"/>
-                            </ComboBox>
-                            <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding}">
-                            </ContentControl>
-                        </Grid>                        
-                </Grid>
-                </GroupBox>
-                <GroupBox Header="Output">
-                    <UserControl Content="{Binding CTView}" />
-                </GroupBox>
-            </StackPanel>
-        </ScrollViewer>
+                        <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding}">
+                        </ContentControl>
+                    </Grid>                        
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Output">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <UserControl Content="{Binding CTView}" />
+            </ScrollViewer>
+        </GroupBox>
     </Grid>
 </UserControl>
