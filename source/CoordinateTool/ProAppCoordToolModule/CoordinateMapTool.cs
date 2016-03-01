@@ -39,13 +39,29 @@ namespace ProAppCoordToolModule
             if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
                 return;
 
+            UpdateInputWithMapPoint(e.ClientPoint);
+
+            FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
+        }
+
+        protected override void OnToolMouseMove(MapViewMouseEventArgs e)
+        {
+           UpdateInputWithMapPoint(e.ClientPoint);
+        }
+
+        /// <summary>
+        /// Method to update the input coordinate text box
+        /// </summary>
+        /// <param name="e"></param>
+        private void UpdateInputWithMapPoint(System.Windows.Point e)
+        {
             var mp = QueuedTask.Run(() =>
             {
                 MapPoint temp = null;
 
                 if (MapView.Active != null)
                 {
-                    temp = MapView.Active.ClientToMap(e.ClientPoint);
+                    temp = MapView.Active.ClientToMap(e);
                     try
                     {
                         // for now we will always project to WGS84
