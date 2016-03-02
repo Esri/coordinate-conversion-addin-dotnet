@@ -50,7 +50,7 @@
                     SortDirection="Ascending"
                     IsReadOnly="True"
                     Header="Name"
-                    Width="1*"
+                    Width="Auto"
                     FontWeight="Bold"
                     MinWidth="40"
                     Binding="{Binding Path=Name}">
@@ -61,7 +61,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTemplateColumn Header="Coordinate" Width="3*">
+                <DataGridTemplateColumn Header="Coordinate" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding OutputCoordinate}" IsReadOnly="True"/>
