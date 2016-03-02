@@ -184,8 +184,8 @@ namespace CoordinateToolLibrary.ViewModels
                             output.OutputCoordinate = mgrs.ToString(output.Format, new CoordinateMGRSFormatter());
                             props.Add("GZD", mgrs.GZD);
                             props.Add("Grid Sq", mgrs.GS);
-                            props.Add("Easting", mgrs.Easting.ToString());
-                            props.Add("Northing", mgrs.Northing.ToString());
+                            props.Add("Easting", mgrs.Easting.ToString("00000"));
+                            props.Add("Northing", mgrs.Northing.ToString("00000"));
                             output.Props = props;
                         }
                         break;
@@ -197,8 +197,8 @@ namespace CoordinateToolLibrary.ViewModels
                             output.OutputCoordinate = usng.ToString(output.Format, new CoordinateMGRSFormatter());
                             props.Add("GZD", usng.GZD);
                             props.Add("Grid Sq", usng.GS);
-                            props.Add("Easting", usng.Easting.ToString());
-                            props.Add("Northing", usng.Northing.ToString());
+                            props.Add("Easting", usng.Easting.ToString("00000"));
+                            props.Add("Northing", usng.Northing.ToString("00000"));
                             output.Props = props;
                         }
                         break;
@@ -209,8 +209,8 @@ namespace CoordinateToolLibrary.ViewModels
                         {
                             output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
                             props.Add("Zone", utm.Zone.ToString() + utm.Hemi);
-                            props.Add("Easting", utm.Easting.ToString());
-                            props.Add("Northing", utm.Northing.ToString());
+                            props.Add("Easting", utm.Easting.ToString("000000"));
+                            props.Add("Northing", utm.Northing.ToString("0000000"));
                             output.Props = props;
                         }
                         break;

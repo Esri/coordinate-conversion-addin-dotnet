@@ -135,8 +135,8 @@ namespace CoordinateToolLibrary.Models
                 case "MGRS":
                     sb.Append(GZD);
                     sb.Append(GS);
-                    sb.AppendFormat(fi, "{0:#}", this.Easting);
-                    sb.AppendFormat(fi, "{0:#}", this.Northing);
+                    sb.AppendFormat(fi, "{0:00000}", this.Easting);
+                    sb.AppendFormat(fi, "{0:00000}", this.Northing);
                     //sb.Append(this.Easting.ToString().PadRight(5, '0'));
                     //sb.Append(this.Northing.ToString().PadRight(5, '0'));
                     break;
