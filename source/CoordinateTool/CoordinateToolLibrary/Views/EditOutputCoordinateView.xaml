@@ -29,7 +29,7 @@
                     <TextBlock Text="Name" Margin="3,3,3,3" />
                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="3,3,3,3" />
                 </Grid>
-                <GroupBox Header="Spatial Reference">
+                <GroupBox Header="Spatial Reference" Visibility="Collapsed">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
