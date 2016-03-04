@@ -2,7 +2,7 @@
 
 This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be used for converting coordinates.
 
-![Image of Coordinate Tool Addin](CoordinateTool_Screencapture.PNG) ![Image of Pro Coordinate Tool Addin](ProCC_Screencapture.PNG) 
+![Image of Coordinate Tool Addin](CoordinateTool_ScreencaptureDTandPro.PNG)
 
 ## Features
 
@@ -80,7 +80,14 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
-				
+			
+* Map Point tool
+	* Click on the Map Point button in the Input section of the Coordinate Tool.
+	* As you move cursor over the map, coordinates will update in Input and Output boxes.
+	* Click directly on the map using the cursor, the continuous updating of coordinates will stop.
+	* The cursor’s coordinate location will automatically be populated in the Input text box.
+	* The Input coordinate will automatically be converted in the desired Output coordinate formats.
+
 * Custom Formatters
 	* Each coordinate type has its own custom formatter.  The following guide will help build a custom format string for each particular coordinate type.  If a character is not part of the formatting code it is simply transferred to the output string.
 	* Formatting numbers
