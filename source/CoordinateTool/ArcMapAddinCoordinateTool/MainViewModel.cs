@@ -338,7 +338,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         }
         private void OnActivatePointToolCommand(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateTool_PointTool");
+            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_PointTool");
         }
 
         public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
