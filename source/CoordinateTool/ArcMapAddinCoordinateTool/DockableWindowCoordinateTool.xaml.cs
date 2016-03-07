@@ -185,15 +185,15 @@ namespace ArcMapAddinCoordinateTool
 
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var vm = this.DataContext as MainViewModel;
+        //private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    var vm = this.DataContext as MainViewModel;
 
-            if (vm == null)
-                return;
+        //    if (vm == null)
+        //        return;
 
-            vm.UpdateSpecificInput();
-        }
+        //    vm.UpdateSpecificInput();
+        //}
 
     }
 }
