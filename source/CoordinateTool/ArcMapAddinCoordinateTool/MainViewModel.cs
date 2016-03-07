@@ -557,48 +557,48 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
                 UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
-                UpdateInputs();
+                //UpdateInputs();
             }
 
             return result;
         }
-        [MethodImplAttribute(MethodImplOptions.NoInlining)]
-        private void UpdateInputs()
-        {
-            bool skip = false;
+        //[MethodImplAttribute(MethodImplOptions.NoInlining)]
+        //private void UpdateInputs()
+        //{
+        //    bool skip = false;
 
-            if (new System.Diagnostics.StackFrame(4).GetMethod().Name == "TextBox_TextChanged")
-                skip = true;
+        //    if (new System.Diagnostics.StackFrame(4).GetMethod().Name == "TextBox_TextChanged")
+        //        skip = true;
 
-            string coord = string.Empty;
+        //    string coord = string.Empty;
 
-            if(!(SelectedInputItem == "GARS" && skip) && amCoordGetter.CanGetGARS(out coord))
-            {
-                if (CoordinateGARS.TryParse(coord, out _inputGARS))
-                    RaisePropertyChanged(() => InputGARS);
-            }
+        //    if(!(SelectedInputItem == "GARS" && skip) && amCoordGetter.CanGetGARS(out coord))
+        //    {
+        //        if (CoordinateGARS.TryParse(coord, out _inputGARS))
+        //            RaisePropertyChanged(() => InputGARS);
+        //    }
 
-            if (!(SelectedInputItem == "MGRS" && skip) && amCoordGetter.CanGetMGRS(out coord))
-            {
-                if (CoordinateMGRS.TryParse(coord, out _inputMGRS))
-                    RaisePropertyChanged(() => InputMGRS);
-            }
+        //    if (!(SelectedInputItem == "MGRS" && skip) && amCoordGetter.CanGetMGRS(out coord))
+        //    {
+        //        if (CoordinateMGRS.TryParse(coord, out _inputMGRS))
+        //            RaisePropertyChanged(() => InputMGRS);
+        //    }
 
-            if (!(SelectedInputItem == "USNG" && skip) && amCoordGetter.CanGetUSNG(out coord))
-            {
-                if (CoordinateUSNG.TryParse(coord, out _inputUSNG))
-                    RaisePropertyChanged(() => InputUSNG);
-            }
+        //    if (!(SelectedInputItem == "USNG" && skip) && amCoordGetter.CanGetUSNG(out coord))
+        //    {
+        //        if (CoordinateUSNG.TryParse(coord, out _inputUSNG))
+        //            RaisePropertyChanged(() => InputUSNG);
+        //    }
 
-            if (!(SelectedInputItem == "UTM" && skip) && amCoordGetter.CanGetUTM(out coord))
-            {
-                if (CoordinateUTM.TryParse(coord, out _inputUTM))
-                {
-                    RaisePropertyChanged(() => InputUTM);
-                    RaisePropertyChanged(() => InputUTMZoneWithHemi);
-                }
-            }
-        }
+        //    if (!(SelectedInputItem == "UTM" && skip) && amCoordGetter.CanGetUTM(out coord))
+        //    {
+        //        if (CoordinateUTM.TryParse(coord, out _inputUTM))
+        //        {
+        //            RaisePropertyChanged(() => InputUTM);
+        //            RaisePropertyChanged(() => InputUTMZoneWithHemi);
+        //        }
+        //    }
+        //}
 
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         {
