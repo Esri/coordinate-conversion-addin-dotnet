@@ -43,10 +43,9 @@ namespace ProAppCoordToolModule
             if (vm != null)
             {
                 vm.IsHistoryUpdate = true;
+                vm.IsToolActive = false;
             }
             UpdateInputWithMapPoint(e.ClientPoint);
-
-            FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
         }
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
