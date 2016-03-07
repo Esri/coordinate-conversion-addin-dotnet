@@ -75,7 +75,7 @@ namespace ArcMapAddinCoordinateTool
                     doc.SetInput(point.X, point.Y);
                 }
 
-                ArcMap.Application.CurrentTool = null;
+                doc.GetMainVM().IsToolActive = false;
             }
             catch { }
         }

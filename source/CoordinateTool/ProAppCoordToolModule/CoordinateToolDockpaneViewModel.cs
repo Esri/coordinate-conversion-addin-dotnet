@@ -65,6 +65,26 @@ namespace ProAppCoordToolModule
             MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
 
+        public bool IsToolActive
+        {
+            get
+            {
+                if (FrameworkApplication.CurrentTool != null)
+                    return FrameworkApplication.CurrentTool == "ProAppCoordToolModule_CoordinateMapTool";
+
+                return false;
+            }
+            set
+            {
+                if (value)
+                    OnMapToolCommand(null);
+                else
+                    FrameworkApplication.SetCurrentToolAsync(string.Empty);
+
+                NotifyPropertyChanged(new PropertyChangedEventArgs("IsToolActive"));
+            }
+        }
+
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void BroadcastCoordinateValues(MapPoint mapPoint)

@@ -45,7 +45,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
-            ExpandCommand = new RelayCommand(OnExpandCommand);
             Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
@@ -57,40 +56,28 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
-
-        public CoordinateType InputCoordinateType { get; set; }
-        internal void UpdateSpecificInput()
+        public bool IsToolActive
         {
-            if (SelectedInputItemVisibility != Visibility.Visible)
-                return;
-
-            switch(SelectedInputItem)
+            get
             {
-                case "GARS":
-                    InputCoordinate = InputGARS.ToString("", new CoordinateGARSFormatter());
-                    break;
-                case "MGRS":
-                    InputCoordinate = InputMGRS.ToString("", new CoordinateMGRSFormatter());
-                    break;
-                case "USNG":
-                    InputCoordinate = InputUSNG.ToString("", new CoordinateMGRSFormatter());
-                    break;
-                case "UTM":
-                    InputCoordinate = InputUTM.ToString("", new CoordinateUTMFormatter());
-                    break;
-                default:
-                    break;
+                if(ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_PointTool";
+
+                return false;
+            }
+            set
+            {
+                if (value)
+                    OnActivatePointToolCommand(null);
+                else
+                    if (ArcMap.Application.CurrentTool != null)
+                        ArcMap.Application.CurrentTool = null;
+
+                RaisePropertyChanged(() => IsToolActive);
             }
         }
 
-        private void OnExpandCommand(object obj)
-        {
-            if (SelectedInputItemVisibility == Visibility.Visible)
-                SelectedInputItemVisibility = Visibility.Collapsed;
-            else
-                SelectedInputItemVisibility = Visibility.Visible;
-        }
-        public RelayCommand ExpandCommand { get; set; }
+        public CoordinateType InputCoordinateType { get; set; }
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
         private void OnCopyAllCommand(object obj)
@@ -373,84 +360,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
-        private Visibility _selectedInputItemVisibility = Visibility.Collapsed;
-        public Visibility SelectedInputItemVisibility
-        {
-            get { return _selectedInputItemVisibility; }
-            set
-            {
-                _selectedInputItemVisibility = value;
-                RaisePropertyChanged(() => SelectedInputItemVisibility);
-            }
-        }
-        private string _selectedInputItem = "";
-        public string SelectedInputItem
-        {
-            get { return _selectedInputItem; }
-            set
-            {
-                _selectedInputItem = value;
-                RaisePropertyChanged(() => SelectedInputItem);
-            }
-        }
-
-        private CoordinateGARS _inputGARS = new CoordinateGARS();
-        public CoordinateGARS InputGARS
-        {
-            get { return _inputGARS; }
-            set
-            {
-                _inputGARS = value;
-                RaisePropertyChanged(() => InputGARS);
-            }
-        }
-        private CoordinateMGRS _inputMGRS = new CoordinateMGRS();
-        public CoordinateMGRS InputMGRS
-        {
-            get { return _inputMGRS; }
-            set
-            {
-                _inputMGRS = value;
-                RaisePropertyChanged(() => InputMGRS);
-            }
-        }
-        private CoordinateUSNG _inputUSNG = new CoordinateUSNG();
-        public CoordinateUSNG InputUSNG
-        {
-            get { return _inputUSNG; }
-            set
-            {
-                _inputUSNG = value;
-                RaisePropertyChanged(() => InputUSNG);
-            }
-        }
-        private CoordinateUTM _inputUTM = new CoordinateUTM();
-        public CoordinateUTM InputUTM
-        {
-            get { return _inputUTM; }
-            set
-            {
-                _inputUTM = value;
-                RaisePropertyChanged(() => InputUTM);
-            }
-        }
-
-        private string _inputUTMZoneWithHemi = string.Empty;
-        public string InputUTMZoneWithHemi
-        {
-            get { return string.Format("{0}{1}", InputUTM.Zone, InputUTM.Hemi); }
-            set
-            {
-                // TODO better validation, regex, etc
-                if(value.Length > 1 && (value[value.Length-1] == 'N' || value[value.Length-1] == 'S'))
-                {
-                    InputUTM.Hemi = string.Format("{0}", value[value.Length - 1]);
-                    var temp = value.Replace(InputUTM.Hemi,"");
-                    InputUTM.Zone = Convert.ToInt32(temp);
-                }
-            }
-        }
-
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
@@ -550,47 +459,9 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                     UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
                     IsHistoryUpdate = false;
                 }
-                UpdateInputs();
             }
 
             return result;
-        }
-        [MethodImplAttribute(MethodImplOptions.NoInlining)]
-        private void UpdateInputs()
-        {
-            bool skip = false;
-
-            if (new System.Diagnostics.StackFrame(4).GetMethod().Name == "TextBox_TextChanged")
-                skip = true;
-
-            string coord = string.Empty;
-
-            if(!(SelectedInputItem == "GARS" && skip) && amCoordGetter.CanGetGARS(out coord))
-            {
-                if (CoordinateGARS.TryParse(coord, out _inputGARS))
-                    RaisePropertyChanged(() => InputGARS);
-            }
-
-            if (!(SelectedInputItem == "MGRS" && skip) && amCoordGetter.CanGetMGRS(out coord))
-            {
-                if (CoordinateMGRS.TryParse(coord, out _inputMGRS))
-                    RaisePropertyChanged(() => InputMGRS);
-            }
-
-            if (!(SelectedInputItem == "USNG" && skip) && amCoordGetter.CanGetUSNG(out coord))
-            {
-                if (CoordinateUSNG.TryParse(coord, out _inputUSNG))
-                    RaisePropertyChanged(() => InputUSNG);
-            }
-
-            if (!(SelectedInputItem == "UTM" && skip) && amCoordGetter.CanGetUTM(out coord))
-            {
-                if (CoordinateUTM.TryParse(coord, out _inputUTM))
-                {
-                    RaisePropertyChanged(() => InputUTM);
-                    RaisePropertyChanged(() => InputUTMZoneWithHemi);
-                }
-            }
         }
 
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
