@@ -184,16 +184,5 @@ namespace ArcMapAddinCoordinateTool
             }
 
         }
-
-        //private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    var vm = this.DataContext as MainViewModel;
-
-        //    if (vm == null)
-        //        return;
-
-        //    vm.UpdateSpecificInput();
-        //}
-
     }
 }

@@ -395,10 +395,6 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
-        public void UpdateButtonState()
-        {
-            RaisePropertyChanged(() => IsToolActive);
-        }
         private CoordinateToolView _coordinateToolView;
         public CoordinateToolView CTView
         {
