@@ -40,6 +40,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
+            IsHistoryUpdate = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
@@ -455,6 +456,8 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         public RelayCommand FlashPointCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
 
+        public bool IsHistoryUpdate { get; set; }
+
         private string _inputCoordinate;
         public string InputCoordinate
         {
@@ -542,7 +545,11 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             {
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
-                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
+                if (IsHistoryUpdate)
+                {
+                    UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
+                    IsHistoryUpdate = false;
+                }
                 UpdateInputs();
             }
 

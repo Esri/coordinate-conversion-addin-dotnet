@@ -44,6 +44,7 @@ namespace ProAppCoordToolModule
         {
             _coordinateToolView = new CoordinateToolView();
             HasInputError = false;
+            IsHistoryUpdate = false;
             AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
@@ -121,6 +122,8 @@ namespace ProAppCoordToolModule
         public CoordinateToolLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateToolLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateToolLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
+
+        public bool IsHistoryUpdate { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -274,7 +277,11 @@ namespace ProAppCoordToolModule
             {
                 proCoordGetter.Point = point;
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
-                UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
+                if (IsHistoryUpdate)
+                {
+                    UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
+                    IsHistoryUpdate = false;
+                }
             }
 
             return result;

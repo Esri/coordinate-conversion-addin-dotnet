@@ -39,6 +39,11 @@ namespace ProAppCoordToolModule
             if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
                 return;
 
+            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordToolModule_CoordinateToolDockpane") as CoordinateToolDockpaneViewModel;
+            if (vm != null)
+            {
+                vm.IsHistoryUpdate = true;
+            }
             UpdateInputWithMapPoint(e.ClientPoint);
 
             FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
