@@ -49,13 +49,22 @@
                     <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3">
                         <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
                     </Button>
-                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
+                    <ToggleButton Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsToolActive}" Value="False">
+                                    <Setter Property="IsChecked" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
                         <Image Source="/CoordinateToolLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
-                    </Button>
+                    </ToggleButton>
                     <Button Grid.Column="3" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
                         <Image Source="/CoordinateToolLibrary;component/Images/copyall.png" Width="18" Height="18" />
                     </Button>
-                    <Button Grid.Column="4" Command="{Binding ExpandCommand}" Margin="3,0,3,3">
+                    <Button Grid.Column="4" Command="{Binding ExpandCommand}" Margin="3,0,3,3" Visibility="Collapsed">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Style.Triggers>
@@ -71,7 +80,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Grid Grid.Row="1" Visibility="{Binding SelectedInputItemVisibility}">
+                    <Grid Grid.Row="1" Visibility="{Binding SelectedInputItemVisibility}" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />

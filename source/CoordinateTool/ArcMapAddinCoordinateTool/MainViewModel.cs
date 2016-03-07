@@ -56,6 +56,16 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
+        public bool IsToolActive
+        {
+            get
+            {
+                if(ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_PointTool";
+
+                return false;
+            }
+        }
 
         public CoordinateType InputCoordinateType { get; set; }
         internal void UpdateSpecificInput()
@@ -483,6 +493,10 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
+        public void UpdateButtonState()
+        {
+            RaisePropertyChanged(() => IsToolActive);
+        }
         private CoordinateToolView _coordinateToolView;
         public CoordinateToolView CTView
         {
