@@ -1,8 +1,8 @@
-# coordinate-tool-addin-dotnet
+# coordinate-conversion-addin-dotnet
 
 This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be used for converting coordinates.
 
-![Image of Coordinate Tool Addin](CoordinateTool_ScreencaptureDTandPro.PNG)
+![Image of Coordinate Conversion Addin](CoordinateTool_ScreencaptureDTandPro.PNG)
 
 ## Features
 
@@ -51,7 +51,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* ``` cd coordinate-tool-addin-dotnet\source\CoordinateTool ```
+		* ``` cd coordinate-conversion-addin-dotnet\source\CoordinateTool ```
 		* ``` msbuild CoordinateTool.sln /property:Configuration=Release ```
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 
