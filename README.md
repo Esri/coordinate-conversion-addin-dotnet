@@ -64,9 +64,9 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 				* "Customize -> Customize mode"
 				* Select "Commands" Tab
 				* Select "Add-In Controls"
-				* Drag/Drop "CoordinateTool" command onto a toolbar
+				* Drag/Drop "Show Coordinate Conversion" command onto a toolbar
 				* Close customize mode
-				* Open tool by clicking the "Coordinate Tool" command you just added
+				* Open tool by clicking the "Show Coordinate Conversion" command you just added
 				* Dockable coordinate tool appears
 			* Optional : if you want share output formats, copy the "CoordinateToolLibrary.dll.config" file to/from the following directory
 				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
@@ -75,21 +75,23 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 		* Pro
 			* Install the add-in from the application folder by double clicking it
 			* The ADD-IN appears under the "ADD-IN" tab in Pro	
-			* Click the "Show Coordinate Tool Dock Pane" button and the tool will appear
+			* Click the "Show Coordinate Conversion Tool Dock Pane" button and the tool will appear
 			* Optional : if you want to share output formats, copy the "CoordinateToolLibrary.dll.config" file to/from the following directory
 				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 			
 * Map Point tool
-	* Click on the Map Point button in the Input section of the Coordinate Tool.
+	* Click on the Map Point button in the Input section of the Coordinate Conversion Tool.
 	* As you move cursor over the map, coordinates will update in Input and Output boxes.
 	* Click directly on the map using the cursor, the continuous updating of coordinates will stop.
 	* The cursor’s coordinate location will automatically be populated in the Input text box.
+	* Click in the Input box, hit <enter> on keyboard to flash the location point, and briefly show cross hairs at the coordinate location on map.
 	* The Input coordinate will automatically be converted in the desired Output coordinate formats.
 
 * Custom Formatters
 	* Each coordinate type has its own custom formatter.  The following guide will help build a custom format string for each particular coordinate type.  If a character is not part of the formatting code it is simply transferred to the output string.
+	* Configuration properties can be accessed by right clicking in the Output section on the row of the coordinate format to be customized.
 	* Formatting numbers
 		* Numbers found in DD, DDM and DMS can be formatted using the first three ("0" Zero placeholder, "#" digit placeholder and "." decimal point) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
 		* Numbers found in GARS, MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
