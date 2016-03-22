@@ -49,18 +49,6 @@ namespace ProAppCoordToolModule.UI
                 SetProperty(ref _flash, value, () => Flash);
             }
         }
-        /// <summary>
-        /// Property used to display the coordinates of the click location
-        /// </summary>
-        private string _clickText = "Click in view to show coordinates";
-        public string ClickText
-        {
-            get { return _clickText; }
-            set
-            {
-                SetProperty(ref _clickText, value, () => ClickText);
-            }
-        }
         private System.Windows.Point _clientPoint = new System.Windows.Point(0, 0);
         public System.Windows.Point ClientPoint
         {
