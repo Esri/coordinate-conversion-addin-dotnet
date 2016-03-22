@@ -116,6 +116,10 @@
     <Compile Include="UI\CoordSysPickerViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\FlashEmbeddedControl.xaml.cs">
+      <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateToolDockpane.xaml">
@@ -129,6 +133,10 @@
     <Page Include="UI\CoordSysPickerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FlashEmbeddedControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
