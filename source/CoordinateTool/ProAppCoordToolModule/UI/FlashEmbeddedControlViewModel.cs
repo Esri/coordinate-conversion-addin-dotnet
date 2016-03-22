@@ -102,8 +102,49 @@ namespace ProAppCoordToolModule.UI
             var ps = parameter.ToString();
             if (ps == "X")
                 return point.X;
-            else
+            else if (ps == "Y")
                 return point.Y;
+            else if (ps == "NEGHALFWIDTH")
+                return -1 * (c.ActualWidth / 2.0);
+            else if (ps == "NEGHALFHEIGHT")
+                return -1 * (c.ActualHeight / 2.0);
+
+            return 0;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    internal class ScreenToClientPointMarginConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var screenPoint = (System.Windows.Point)values[0];
+            var c = values[1] as System.Windows.Controls.Canvas;
+            if (c == null)
+                return -999;
+
+            var source = PresentationSource.FromVisual(c);
+
+            if (source == null)
+                return 0;
+
+            var point = c.PointFromScreen(screenPoint);
+            var halfWidth = c.ActualWidth / 2.0;
+            var halfHeight = c.ActualHeight / 2.0;
+
+            double x = point.X *2;
+            double y = point.Y *2;
+
+            if (point.Y > halfHeight)
+                y -= (point.Y - halfHeight) + 6;
+
+            if (point.X > halfWidth)
+                x -= (point.X - halfWidth) + 6;
+
+            return new Thickness(x, y, 0, 0);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

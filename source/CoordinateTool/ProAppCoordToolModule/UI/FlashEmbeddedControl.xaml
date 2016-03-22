@@ -35,7 +35,8 @@
             <GradientStop Color="Black" Offset="1.0"/>
         </LinearGradientBrush>
         <ui:ScreenToClientPointConverter x:Key="screenToClientConverter" />
-        <Storyboard x:Key="sb_crossHair" Duration="0:0:0.6" SlipBehavior="Slip">
+        <ui:ScreenToClientPointMarginConverter x:Key="screenToClientMarginConverter" />
+        <Storyboard x:Key="sb_crossHair" Duration="0:0:0.75">
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="lineLeft"
                 Storyboard.TargetProperty="X2" >
@@ -128,6 +129,14 @@
                 <LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
                 </LinearDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames
+                Storyboard.TargetName="centerPoint"
+                Storyboard.TargetProperty="Opacity" >
+                <LinearDoubleKeyFrame KeyTime="0" Value="0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:0.2" Value="1.0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:0.5" Value="1.0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
     <Grid IsEnabled="{Binding Flash, NotifyOnTargetUpdated=True}">
@@ -203,5 +212,29 @@
                 </MultiBinding>
             </Line.X2>
         </Line>
+        <Ellipse x:Name="centerPoint" Fill="Green" Opacity="0.0" Height="12" Width="12" Stroke="Black" StrokeThickness="1">
+            <Ellipse.RenderTransform>
+                <TranslateTransform>
+                    <TranslateTransform.X>
+                        <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFWIDTH">
+                            <Binding Path="ScreenPoint" />
+                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                        </MultiBinding>
+                    </TranslateTransform.X>
+                    <TranslateTransform.Y>
+                        <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFHEIGHT">
+                            <Binding Path="ScreenPoint" />
+                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                        </MultiBinding>
+                    </TranslateTransform.Y>
+                </TranslateTransform>
+            </Ellipse.RenderTransform>
+            <Ellipse.Margin>
+                <MultiBinding Converter="{StaticResource screenToClientMarginConverter}">
+                    <Binding Path="ScreenPoint" />
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                </MultiBinding>
+            </Ellipse.Margin>
+        </Ellipse>
     </Grid>
 </UserControl>
