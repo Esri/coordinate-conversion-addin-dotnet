@@ -11,6 +11,15 @@
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
+
+  <categories>
+    <updateCategory refID="esri_embeddableControls">
+      <insertComponent id="ProAppCoordToolModule_EmbeddableControl" className="UI.FlashEmbeddedControlViewModel">
+        <content className="UI.FlashEmbeddedControl" />
+      </insertComponent>
+    </updateCategory>
+  </categories>
+
   <modules>
     <insertModule id="ProAppCoordToolModule_Module" className="Module1" autoLoad="false" caption="Module1">
       <!-- uncomment to have the control hosted on a separate tab-->

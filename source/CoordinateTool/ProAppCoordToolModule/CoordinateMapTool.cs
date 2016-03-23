@@ -23,11 +23,20 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
+using ProAppCoordToolModule.UI;
+using CoordinateToolLibrary.Helpers;
 
 namespace ProAppCoordToolModule
 {
     internal class CoordinateMapTool : MapTool
     {
+        public CoordinateMapTool()
+        {
+            //Set the tools OverlayControlID to the DAML id of the embeddable control
+            OverlayControlID = "ProAppCoordToolModule_EmbeddableControl";
+            Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
+        }
+
         protected override Task OnToolActivateAsync(bool active)
         {
             ContextMenuID = "esri_mapping_popupToolContextMenu";
@@ -51,6 +60,44 @@ namespace ProAppCoordToolModule
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
         {
            UpdateInputWithMapPoint(e.ClientPoint);
+        }
+
+        private void OnUpdateFlash(object obj)
+        {
+            var mp = obj as MapPoint;
+
+            if (mp != null)
+                UpdateFlash(mp);
+        }
+
+        private void UpdateFlash(MapPoint mp)
+        {
+            System.Windows.Point? temp = new System.Windows.Point();
+
+            var cp = QueuedTask.Run(() =>
+            {
+                if (MapView.Active != null)
+                {
+                    temp = MapView.Active.MapToClient(mp);
+                }
+                return temp;
+            }).Result as System.Windows.Point?;
+
+            UpdateFlash(cp);
+        }
+
+        private void UpdateFlash(System.Windows.Point? point)
+        {
+            var flashVM = OverlayEmbeddableControl as FlashEmbeddedControlViewModel;
+            if (flashVM != null)
+                flashVM.ClientPoint = point.Value;
+
+            var temp = QueuedTask.Run(() =>
+                {
+                    if (flashVM != null && MapView.Active != null)
+                        flashVM.ScreenPoint = MapView.Active.ClientToScreen(point.Value);
+                    return true;
+                }).Result;
         }
 
         /// <summary>

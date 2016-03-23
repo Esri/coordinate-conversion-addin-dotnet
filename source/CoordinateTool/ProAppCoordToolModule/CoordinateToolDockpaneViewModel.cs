@@ -204,6 +204,12 @@ namespace ProAppCoordToolModule
 
         private async void OnFlashPointCommand(object obj)
         {
+            var previous = IsToolActive;
+            if (!IsToolActive)
+            {
+                IsToolActive = true;
+            }
+
             CoordinateDD dd;
             var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
             if (ctvm != null)
@@ -220,21 +226,43 @@ namespace ProAppCoordToolModule
                 return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
             });
 
-            await QueuedTask.Run(() =>
-            {
-                // Construct point symbol
-                symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
-            });
+            //await QueuedTask.Run(() =>
+            //{
+            //    // Construct point symbol
+            //    symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
+            //});
 
-            //Get symbol reference from the symbol 
-            CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
+            ////Get symbol reference from the symbol 
+            //CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
 
-            await QueuedTask.Run(() =>
-            {
-                ClearOverlay();
-                _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-                MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            });
+            //QueuedTask.Run(() =>
+            //{
+            //    ClearOverlay();
+            //    _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            //});
+
+
+            QueuedTask.Run(() =>
+                {
+                    Mediator.NotifyColleagues("UPDATE_FLASH", point);
+                });
+
+            //await QueuedTask.Run(() =>
+            //{
+            //    Task.Delay(500);
+            //    ClearOverlay();
+            //    //_overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            //});
+            //if (previous != IsToolActive)
+            //    IsToolActive = previous;
+            //await QueuedTask.Run(() =>
+            //{
+            //    Task.Delay(500);
+            //    ClearOverlay();
+            //    MapView.Active.LookAt(MapView.Active.Extent.Center);
+            //});
         }
 
         private void OnCopyAllCommand(object obj)
