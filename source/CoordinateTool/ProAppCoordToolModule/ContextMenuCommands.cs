@@ -24,9 +24,9 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Models;
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
     internal class ContextCopyBase : Button
     {
@@ -101,7 +101,7 @@ namespace ProAppCoordToolModule
                         break;
                 }
 
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordToolModule_CoordinateToolDockpane") as CoordinateToolDockpaneViewModel;
+                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
                 if (vm != null)
                 {
                     coord = vm.GetFormattedCoordinate(coord, cType);

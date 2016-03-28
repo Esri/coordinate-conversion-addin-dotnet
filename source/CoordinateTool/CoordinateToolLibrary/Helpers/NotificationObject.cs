@@ -15,7 +15,7 @@ using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace CoordinateToolLibrary.Helpers
+namespace CoordinateConversionLibrary.Helpers
 {
     public class NotificationObject : INotifyPropertyChanged
     {

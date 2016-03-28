@@ -8,8 +8,8 @@
     <ProjectGuid>{C37767BB-18E6-4743-A5EC-1D7F2B38F487}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ArcMapAddinCoordinateTool</RootNamespace>
-    <AssemblyName>ArcMapAddinCoordinateTool</AssemblyName>
+    <RootNamespace>ArcMapAddinCoordinateConversion</RootNamespace>
+    <AssemblyName>ArcMapAddinCoordinateConversion</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -102,14 +102,15 @@
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">
       <Generator>ArcGISAddInHostGenerator</Generator>
+      <LastGenOutput>Config.Designer.cs</LastGenOutput>
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Images\ArcMapAddinCoordinateTool.png" />
+    <AddInContent Include="Images\ArcMapAddinCoordinateConversion.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoordinateToolButton.cs" />
-    <AddInContent Include="Images\CoordinateToolButton.png" />
+    <AddInContent Include="Images\CoordinateConversionButton.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -130,7 +131,7 @@
       <DependentUpon>DockableWindowCoordinateTool.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <AddInContent Include="Images\DockableWindowCoordinateTool.png" />
+    <AddInContent Include="Images\DockableWindowCoordinateConversion.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.ArcMapUI">
@@ -155,9 +156,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateToolLibrary.csproj">
+    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
-      <Name>CoordinateToolLibrary</Name>
+      <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

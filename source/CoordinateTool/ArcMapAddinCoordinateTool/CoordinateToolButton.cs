@@ -24,11 +24,11 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 
-namespace ArcMapAddinCoordinateTool
+namespace ArcMapAddinCoordinateConversion
 {
-    public class CoordinateToolButton : ESRI.ArcGIS.Desktop.AddIns.Button
+    public class CoordinateConversionButton : ESRI.ArcGIS.Desktop.AddIns.Button
     {
-        public CoordinateToolButton()
+        public CoordinateConversionButton()
         {
         }
 
@@ -37,7 +37,7 @@ namespace ArcMapAddinCoordinateTool
             ArcMap.Application.CurrentTool = null;
 
             UID dockWinID = new UIDClass();
-            dockWinID.Value = ThisAddIn.IDs.DockableWindowCoordinateTool;
+            dockWinID.Value = ThisAddIn.IDs.DockableWindowCoordinateConversion;
 
             IDockableWindow dockWindow = ArcMap.DockableWindowManager.GetDockableWindow(dockWinID);
             dockWindow.Show(true);
@@ -67,7 +67,7 @@ namespace ArcMapAddinCoordinateTool
             {
                 var point = GetMapPoint(arg.X, arg.Y);
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
+                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
                 if (doc != null && point != null)
                 {
@@ -86,7 +86,7 @@ namespace ArcMapAddinCoordinateTool
             {
                 IPoint point = GetMapPoint(arg.X, arg.Y);
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
+                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
                 if (doc != null && point != null)
                 {

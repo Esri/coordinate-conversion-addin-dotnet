@@ -23,17 +23,17 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
-using ProAppCoordToolModule.UI;
-using CoordinateToolLibrary.Helpers;
+using ProAppCoordConversionModule.UI;
+using CoordinateConversionLibrary.Helpers;
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
     internal class CoordinateMapTool : MapTool
     {
         public CoordinateMapTool()
         {
             //Set the tools OverlayControlID to the DAML id of the embeddable control
-            OverlayControlID = "ProAppCoordToolModule_EmbeddableControl";
+            OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
         }
 
@@ -48,7 +48,7 @@ namespace ProAppCoordToolModule
             if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
                 return;
 
-            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordToolModule_CoordinateToolDockpane") as CoordinateToolDockpaneViewModel;
+            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
             if (vm != null)
             {
                 vm.IsHistoryUpdate = true;
@@ -127,7 +127,7 @@ namespace ProAppCoordToolModule
 
             if (mp != null)
             {
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordToolModule_CoordinateToolDockpane") as CoordinateToolDockpaneViewModel;
+                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
                 if (vm != null)
                 {
                     vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);

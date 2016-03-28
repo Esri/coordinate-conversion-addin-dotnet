@@ -21,10 +21,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Helpers;
 using System.Xml.Serialization;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateConversionLibrary.Models
 {
     public class OutputCoordinateModel : NotificationObject
     {

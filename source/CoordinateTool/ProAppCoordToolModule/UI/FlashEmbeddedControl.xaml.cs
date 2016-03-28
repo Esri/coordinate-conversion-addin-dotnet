@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProAppCoordToolModule.UI
+namespace ProAppCoordConversionModule.UI
 {
     /// <summary>
     /// Interaction logic for FlashEmbeddedControl.xaml

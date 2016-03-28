@@ -20,14 +20,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.Helpers;
-using CoordinateToolLibrary.Views;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Views;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 
-namespace CoordinateToolLibrary.ViewModels
+namespace CoordinateConversionLibrary.ViewModels
 {
     public class OutputCoordinateViewModel : BaseViewModel
     {
@@ -38,8 +38,8 @@ namespace CoordinateToolLibrary.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteCommand);
             CopyCommand = new RelayCommand(OnCopyCommand);
 
-            Mediator.Register(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
-            Mediator.Register(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
+            Mediator.Register(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
+            Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
 
             OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
@@ -111,7 +111,7 @@ namespace CoordinateToolLibrary.ViewModels
                 outputCoordItem.SRName = vm.OutputCoordItem.SRName;
 
                 OutputCoordinateList.Add(outputCoordItem);
-                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
                 SaveOutputConfiguration();
             }
         }
@@ -219,7 +219,7 @@ namespace CoordinateToolLibrary.ViewModels
                     outputCoordItem.CType = type;
                 }
 
-                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestOutputUpdate, null);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
 
             SaveOutputConfiguration();

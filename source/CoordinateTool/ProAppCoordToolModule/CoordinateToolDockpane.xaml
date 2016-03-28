@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ProAppCoordToolModule.CoordinateToolDockpaneView"
+﻿<UserControl x:Class="ProAppCoordConversionModule.CoordinateConversionDockpaneView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -43,13 +43,13 @@
                     </ComboBox.InputBindings>
                 </ComboBox>
                 <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3" >
-                    <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/hand.png" Width="18" Height="18" />
                 </Button>
                 <ToggleButton Grid.Column="2" ToolTip="Map Point Tool" IsChecked="{Binding IsToolActive}" Margin="3,0,0,3">
-                    <Image Source="/CoordinateToolLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
                 </ToggleButton>
                 <Button Grid.Column="3" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
-                    <Image Source="/CoordinateToolLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
                 </Button>
             </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">

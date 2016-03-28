@@ -14,7 +14,7 @@
 using System;
 using System.Windows.Input;
 
-namespace CoordinateToolLibrary.Helpers
+namespace CoordinateConversionLibrary.Helpers
 {
     public class RelayCommand : ICommand
     {

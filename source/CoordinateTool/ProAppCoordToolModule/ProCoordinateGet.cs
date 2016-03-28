@@ -18,17 +18,17 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using CoordinateSystemAddin.UI;
-using CoordinateToolLibrary.Helpers;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
-    public class ProCoordinateGet : CoordinateToolLibrary.Models.CoordinateGetBase
+    public class ProCoordinateGet : CoordinateConversionLibrary.Models.CoordinateGetBase
     {
         public ProCoordinateGet()
         { }
@@ -175,7 +175,7 @@ namespace ProAppCoordToolModule
             if (_dlg.SpatialReference != null)
             {
                 System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
-                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
             }
             _dlg = null;
             _isOpen = false;

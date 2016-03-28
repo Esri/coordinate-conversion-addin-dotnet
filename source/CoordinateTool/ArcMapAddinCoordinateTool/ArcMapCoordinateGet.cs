@@ -22,11 +22,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ESRI.ArcGIS.Geometry;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Helpers;
 
-namespace ArcMapAddinCoordinateTool
+namespace ArcMapAddinCoordinateConversion
 {
-    public class ArcMapCoordinateGet : CoordinateToolLibrary.Models.CoordinateGetBase
+    public class ArcMapCoordinateGet : CoordinateConversionLibrary.Models.CoordinateGetBase
     {
         public ArcMapCoordinateGet()
         { }
@@ -185,7 +185,7 @@ namespace ArcMapAddinCoordinateTool
 
             if (spatialReference != null)
             {
-                Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", spatialReference.FactoryCode, spatialReference.Name));
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", spatialReference.FactoryCode, spatialReference.Name));
                 return true;
             }
 

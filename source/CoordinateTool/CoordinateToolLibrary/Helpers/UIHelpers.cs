@@ -23,7 +23,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace CoordinateToolLibrary.Helpers
+namespace CoordinateConversionLibrary.Helpers
 {
   /// <summary>
   /// Common UI related helper methods.

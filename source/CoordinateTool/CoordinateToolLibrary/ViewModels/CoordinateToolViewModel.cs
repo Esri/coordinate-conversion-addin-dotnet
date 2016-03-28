@@ -19,23 +19,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.Views;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.Helpers;
 
-namespace CoordinateToolLibrary.ViewModels
+namespace CoordinateConversionLibrary.ViewModels
 {
-    public class CoordinateToolViewModel : BaseViewModel
+    public class CoordinateConversionViewModel : BaseViewModel
     {
-        public CoordinateToolViewModel()
+        public CoordinateConversionViewModel()
         {
             OCView = new OutputCoordinateView();
 
             // set default CoordinateGetter
             coordinateGetter = new CoordinateGetBase();
 
-            Mediator.Register(CoordinateToolLibrary.Constants.RequestOutputUpdate, OnUpdateOutputs);
-            Mediator.Register(CoordinateToolLibrary.Constants.SelectSpatialReference, OnSelectSpatialReference);
+            Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnUpdateOutputs);
+            Mediator.Register(CoordinateConversionLibrary.Constants.SelectSpatialReference, OnSelectSpatialReference);
         }
 
         public OutputCoordinateView OCView { get; set; }

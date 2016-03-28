@@ -21,7 +21,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateConversionLibrary.Models
 {
     public enum CoordinateType
     {

@@ -29,11 +29,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.ViewModels;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary.Helpers;
 
-namespace CoordinateToolLibrary.Views
+namespace CoordinateConversionLibrary.Views
 {
     /// <summary>
     /// Interaction logic for OutputCoordinateView.xaml

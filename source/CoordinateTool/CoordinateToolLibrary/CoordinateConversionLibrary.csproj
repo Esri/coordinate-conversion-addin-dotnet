@@ -7,8 +7,8 @@
     <ProjectGuid>{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoordinateToolLibrary</RootNamespace>
-    <AssemblyName>CoordinateToolLibrary</AssemblyName>
+    <RootNamespace>CoordinateConversionLibrary</RootNamespace>
+    <AssemblyName>CoordinateConversionLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

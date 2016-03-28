@@ -30,14 +30,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
     /// <summary>
-    /// Interaction logic for CoordinateToolDockpaneView.xaml
+    /// Interaction logic for CoordinateConversionDockpaneView.xaml
     /// </summary>
-    public partial class CoordinateToolDockpaneView : UserControl
+    public partial class CoordinateConversionDockpaneView : UserControl
     {
-        public CoordinateToolDockpaneView()
+        public CoordinateConversionDockpaneView()
         {
             InitializeComponent();
         }

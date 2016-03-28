@@ -21,7 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CoordinateToolLibrary.Helpers
+namespace CoordinateConversionLibrary.Helpers
 {
     [XmlRoot("dictionary")]
     public class SerializableDictionary<TKey, TValue>

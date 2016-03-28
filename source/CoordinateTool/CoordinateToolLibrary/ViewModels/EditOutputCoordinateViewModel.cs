@@ -14,8 +14,8 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using CoordinateToolLibrary.Helpers;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoordinateToolLibrary.ViewModels
+namespace CoordinateConversionLibrary.ViewModels
 {
     public class EditOutputCoordinateViewModel : BaseViewModel
     {
@@ -43,12 +43,12 @@ namespace CoordinateToolLibrary.ViewModels
 
             FormatExpanded = false;
 
-            Mediator.Register(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, OnHandleBCCValues);
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, null);
+            Mediator.Register(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, OnHandleBCCValues);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, null);
 
             ConfigCommand = new RelayCommand(OnConfigCommand);
 
-            Mediator.Register(CoordinateToolLibrary.Constants.SpatialReferenceSelected, OnSpatialReferenceSelected);
+            Mediator.Register(CoordinateConversionLibrary.Constants.SpatialReferenceSelected, OnSpatialReferenceSelected);
         }
 
         public RelayCommand ConfigCommand { get; set; }
@@ -380,7 +380,7 @@ namespace CoordinateToolLibrary.ViewModels
         private void OnConfigCommand(object obj)
         {
             // need to get consumer to ask for spatial reference
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.SelectSpatialReference, null);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SelectSpatialReference, null);
         }
 
         private void OnSpatialReferenceSelected(object obj)

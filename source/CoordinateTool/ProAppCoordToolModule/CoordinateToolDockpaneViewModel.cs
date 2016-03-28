@@ -21,11 +21,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
-using CoordinateToolLibrary.Views;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
 using ArcGIS.Core.Geometry;
-using CoordinateToolLibrary.ViewModels;
+using CoordinateConversionLibrary.ViewModels;
 using System.ComponentModel;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
@@ -34,33 +34,33 @@ using System.Collections.ObjectModel;
 using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
-    internal class CoordinateToolDockpaneViewModel : DockPane
+    internal class CoordinateConversionDockpaneViewModel : DockPane
     {
-        private const string _dockPaneID = "ProAppCoordToolModule_CoordinateToolDockpane";
+        private const string _dockPaneID = "ProAppCoordConversionModule_CoordinateConversionDockpane";
 
-        protected CoordinateToolDockpaneViewModel() 
+        protected CoordinateConversionDockpaneViewModel() 
         {
-            _coordinateToolView = new CoordinateToolView();
+            _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
             IsHistoryUpdate = false;
-            AddNewOCCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
-            ActivatePointToolCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnFlashPointCommand);
-            CopyAllCommand = new CoordinateToolLibrary.Helpers.RelayCommand(OnCopyAllCommand);
-            Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
+            AddNewOCCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
+            ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
+            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
+            CopyAllCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnCopyAllCommand);
+            Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
             if (ctvm != null)
             {
                 ctvm.SetCoordinateGetter(proCoordGetter);
             }
         }
 
-        ~CoordinateToolDockpaneViewModel()
+        ~CoordinateConversionDockpaneViewModel()
         {
             MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
@@ -70,7 +70,7 @@ namespace ProAppCoordToolModule
             get
             {
                 if (FrameworkApplication.CurrentTool != null)
-                    return FrameworkApplication.CurrentTool == "ProAppCoordToolModule_CoordinateMapTool";
+                    return FrameworkApplication.CurrentTool == "ProAppCoordConversionModule_CoordinateMapTool";
 
                 return false;
             }
@@ -111,7 +111,7 @@ namespace ProAppCoordToolModule
             }
             catch { }
 
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, dict);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
 
         }
         private static System.IDisposable _overlayObject = null;
@@ -138,10 +138,10 @@ namespace ProAppCoordToolModule
             }
         }
 
-        public CoordinateToolLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
-        public CoordinateToolLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
-        public CoordinateToolLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
-        public CoordinateToolLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
 
@@ -164,7 +164,7 @@ namespace ProAppCoordToolModule
                 var tempDD = ProcessInput(_inputCoordinate);
 
                 // update tool view model
-                var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+                var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
                 if (ctvm != null)
                 {
                     ctvm.SetCoordinateGetter(proCoordGetter);
@@ -175,16 +175,16 @@ namespace ProAppCoordToolModule
             }
         }
 
-        private CoordinateToolView _coordinateToolView;
-        public CoordinateToolView CTView
+        private CoordinateConversionView _coordinateConversionView;
+        public CoordinateConversionView CTView
         {
             get
             {
-                return _coordinateToolView;
+                return _coordinateConversionView;
             }
             set
             {
-                _coordinateToolView = value;
+                _coordinateConversionView = value;
             }
         }
 
@@ -194,12 +194,12 @@ namespace ProAppCoordToolModule
         {
             // Get name from user
             string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private void OnMapToolCommand(object obj)
         {
-            FrameworkApplication.SetCurrentToolAsync("ProAppCoordToolModule_CoordinateMapTool");
+            FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
         }
 
         private async void OnFlashPointCommand(object obj)
@@ -211,7 +211,7 @@ namespace ProAppCoordToolModule
             }
 
             CoordinateDD dd;
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
             if (ctvm != null)
             {
                 if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
@@ -267,7 +267,7 @@ namespace ProAppCoordToolModule
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
         private void OnBCNeeded(object obj)
@@ -284,10 +284,10 @@ namespace ProAppCoordToolModule
         {
             string format = "";
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolLibrary.ViewModels.CoordinateToolViewModel;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionLibrary.ViewModels.CoordinateConversionViewModel;
             if (ctvm != null)
             {
-                var ocvm = ctvm.OCView.DataContext as CoordinateToolLibrary.ViewModels.OutputCoordinateViewModel;
+                var ocvm = ctvm.OCView.DataContext as CoordinateConversionLibrary.ViewModels.OutputCoordinateViewModel;
 
                 if (ocvm != null)
                 {
@@ -531,11 +531,11 @@ namespace ProAppCoordToolModule
     /// <summary>
     /// Button implementation to show the DockPane.
     /// </summary>
-    internal class CoordinateToolDockpane_ShowButton : Button
+    internal class CoordinateConversionDockpane_ShowButton : Button
     {
         protected override void OnClick()
         {
-            CoordinateToolDockpaneViewModel.Show();
+            CoordinateConversionDockpaneViewModel.Show();
         }
     }
 }

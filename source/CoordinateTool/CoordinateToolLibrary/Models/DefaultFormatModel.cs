@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Helpers;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateConversionLibrary.Models
 {
     public class DefaultFormatModel
     {

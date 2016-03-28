@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Views;
+using CoordinateConversionLibrary.Views;
 
-namespace CoordinateToolLibrary.ViewModels
+namespace CoordinateConversionLibrary.ViewModels
 {
     public class CTMainViewModel
     {

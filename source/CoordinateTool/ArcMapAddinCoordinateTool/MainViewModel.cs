@@ -19,12 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoordinateToolLibrary.Views;
-using CoordinateToolLibrary.ViewModels;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.ViewModels;
 using ESRI.ArcGIS.Geometry;
 using System.Windows;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
@@ -32,24 +32,24 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Runtime.CompilerServices;
 
-namespace ArcMapAddinCoordinateTool.ViewModels
+namespace ArcMapAddinCoordinateConversion.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         public MainViewModel()
         {
-            _coordinateToolView = new CoordinateToolView();
+            _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
             IsHistoryUpdate = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
-            Mediator.Register(CoordinateToolLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
+            Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
             // update tool view model
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
             if (ctvm != null)
             {
                 ctvm.SetCoordinateGetter(amCoordGetter);
@@ -82,7 +82,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
 
         private void OnCopyAllCommand(object obj)
         {
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
         private ISpatialReference GetSR()
         {
@@ -344,7 +344,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             // Get name from user
             string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
@@ -384,7 +384,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
                 var tempDD = ProcessInput(_inputCoordinate);
 
                 // update tool view model
-                var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolViewModel;
+                var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
                 if (ctvm != null)
                 {
                     ctvm.SetCoordinateGetter(amCoordGetter);
@@ -395,16 +395,16 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
         }
 
-        private CoordinateToolView _coordinateToolView;
-        public CoordinateToolView CTView
+        private CoordinateConversionView _coordinateConversionView;
+        public CoordinateConversionView CTView
         {
             get
             {
-                return _coordinateToolView;
+                return _coordinateConversionView;
             }
             set
             {
-                _coordinateToolView = value;
+                _coordinateConversionView = value;
             }
         }
 
@@ -412,10 +412,10 @@ namespace ArcMapAddinCoordinateTool.ViewModels
         {
             string format = "";
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateToolLibrary.ViewModels.CoordinateToolViewModel;
+            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionLibrary.ViewModels.CoordinateConversionViewModel;
             if (ctvm != null)
             {
-                var ocvm = ctvm.OCView.DataContext as CoordinateToolLibrary.ViewModels.OutputCoordinateViewModel;
+                var ocvm = ctvm.OCView.DataContext as CoordinateConversionLibrary.ViewModels.OutputCoordinateViewModel;
 
                 if (ocvm != null)
                 {
@@ -678,7 +678,7 @@ namespace ArcMapAddinCoordinateTool.ViewModels
             }
             catch { }
 
-            Mediator.NotifyColleagues(CoordinateToolLibrary.Constants.BroadcastCoordinateValues, dict);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
         }
 
         ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>

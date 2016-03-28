@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateMGRS : CoordinateBase
     {

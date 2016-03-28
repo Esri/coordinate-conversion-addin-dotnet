@@ -25,7 +25,7 @@ using System.Xml.Linq;
 using System.Windows.Data;
 using System.Windows;
 
-namespace ProAppCoordToolModule.UI
+namespace ProAppCoordConversionModule.UI
 {
     /// <summary>
     /// ViewModel for the embeddable control.

@@ -8,8 +8,8 @@
     <ProjectGuid>{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProAppCoordToolModule</RootNamespace>
-    <AssemblyName>ProAppCoordToolModule</AssemblyName>
+    <RootNamespace>ProAppCoordConversionModule</RootNamespace>
+    <AssemblyName>ProAppCoordConversionModule</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -146,9 +146,9 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateToolLibrary.csproj">
+    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
-      <Name>CoordinateToolLibrary</Name>
+      <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

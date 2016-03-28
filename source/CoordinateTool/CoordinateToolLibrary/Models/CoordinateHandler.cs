@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoordinateToolLibrary.Models
+namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateHandler
     {

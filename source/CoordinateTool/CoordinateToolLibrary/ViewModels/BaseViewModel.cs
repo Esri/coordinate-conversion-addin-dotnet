@@ -14,9 +14,9 @@
   *   limitations under the License. 
   ******************************************************************************/ 
 
-using CoordinateToolLibrary.Helpers;
+using CoordinateConversionLibrary.Helpers;
 
-namespace CoordinateToolLibrary.ViewModels
+namespace CoordinateConversionLibrary.ViewModels
 {
     public class BaseViewModel : NotificationObject
     {

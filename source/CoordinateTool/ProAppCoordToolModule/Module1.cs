@@ -23,7 +23,7 @@ using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using System.Threading.Tasks;
 
-namespace ProAppCoordToolModule
+namespace ProAppCoordConversionModule
 {
     internal class Module1 : Module
     {
@@ -36,7 +36,7 @@ namespace ProAppCoordToolModule
         {
             get
             {
-                return _this ?? (_this = (Module1)FrameworkApplication.FindModule("ProAppCoordToolModule_Module"));
+                return _this ?? (_this = (Module1)FrameworkApplication.FindModule("ProAppCoordConversionModule_Module"));
             }
         }
 

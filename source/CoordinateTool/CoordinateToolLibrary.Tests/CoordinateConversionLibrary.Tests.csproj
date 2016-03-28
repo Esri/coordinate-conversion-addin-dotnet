@@ -6,8 +6,8 @@
     <ProjectGuid>{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoordinateToolLibrary.Tests</RootNamespace>
-    <AssemblyName>CoordinateToolLibrary.Tests</AssemblyName>
+    <RootNamespace>CoordinateConversionLibrary.Tests</RootNamespace>
+    <AssemblyName>CoordinateConversionLibrary.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -58,9 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateToolLibrary.csproj">
+    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
-      <Name>CoordinateToolLibrary</Name>
+      <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

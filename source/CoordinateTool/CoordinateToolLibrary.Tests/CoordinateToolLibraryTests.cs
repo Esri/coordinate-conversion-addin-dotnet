@@ -16,13 +16,13 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CoordinateToolLibrary.Models;
-using CoordinateToolLibrary.ViewModels;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.ViewModels;
 
-namespace CoordinateToolLibrary.Tests
+namespace CoordinateConversionLibrary.Tests
 {
     [TestClass]
-    public class CoordinateToolLibraryTests
+    public class CoordinateConversionLibraryTests
     {
         [TestMethod]
         public void ParseDD()
@@ -282,7 +282,7 @@ namespace CoordinateToolLibrary.Tests
         [TestMethod]
         public void CTViewModel()
         {
-            var ctvm = new CoordinateToolViewModel();
+            var ctvm = new CoordinateConversionViewModel();
 
             Assert.IsNotNull(ctvm.OCView);
         }

@@ -29,14 +29,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CoordinateToolLibrary.Views
+namespace CoordinateConversionLibrary.Views
 {
     /// <summary>
-    /// Interaction logic for CoordinateToolView.xaml
+    /// Interaction logic for CoordinateConversionView.xaml
     /// </summary>
-    public partial class CoordinateToolView : UserControl
+    public partial class CoordinateConversionView : UserControl
     {
-        public CoordinateToolView()
+        public CoordinateConversionView()
         {
             InitializeComponent();
         }

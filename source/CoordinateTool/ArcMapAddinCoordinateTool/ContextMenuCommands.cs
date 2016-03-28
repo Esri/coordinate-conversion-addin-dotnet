@@ -23,10 +23,10 @@ using ESRI.ArcGIS.Framework;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
-using CoordinateToolLibrary.Models;
-using ArcMapAddinCoordinateTool.ViewModels;
+using CoordinateConversionLibrary.Models;
+using ArcMapAddinCoordinateConversion.ViewModels;
 
-namespace ArcMapAddinCoordinateTool
+namespace ArcMapAddinCoordinateConversion
 {
     public class ContextCopyBase : ESRI.ArcGIS.Desktop.AddIns.Button
     {
@@ -38,7 +38,7 @@ namespace ArcMapAddinCoordinateTool
 
         protected override void OnClick()
         {
-            if (ArcMap.Document == null || ArcMap.Document.CurrentLocation == null || ctype == CoordinateToolLibrary.Models.CoordinateType.Unknown)
+            if (ArcMap.Document == null || ArcMap.Document.CurrentLocation == null || ctype == CoordinateConversionLibrary.Models.CoordinateType.Unknown)
                 return;
 
             var point = ArcMap.Document.CurrentLocation;
@@ -76,7 +76,7 @@ namespace ArcMapAddinCoordinateTool
                         break;
                 }
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateTool.DockableWindowCoordinateTool.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateTool);
+                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
                 if (doc != null)
                 {

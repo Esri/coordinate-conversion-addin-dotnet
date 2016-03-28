@@ -31,17 +31,17 @@ using System.Windows.Shapes;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
-using ArcMapAddinCoordinateTool.ViewModels;
+using ArcMapAddinCoordinateConversion.ViewModels;
 
-namespace ArcMapAddinCoordinateTool
+namespace ArcMapAddinCoordinateConversion
 {
     /// <summary>
     /// Designer class of the dockable window add-in. It contains WPF user interfaces that
     /// make up the dockable window.
     /// </summary>
-    public partial class DockableWindowCoordinateTool : UserControl
+    public partial class DockableWindowCoordinateConversion : UserControl
     {
-        public DockableWindowCoordinateTool()
+        public DockableWindowCoordinateConversion()
         {
             InitializeComponent();
 
@@ -151,7 +151,7 @@ namespace ArcMapAddinCoordinateTool
 
             public MainViewModel GetMainVM()
             {
-                var tool = this.m_windowUI.Child as DockableWindowCoordinateTool;
+                var tool = this.m_windowUI.Child as DockableWindowCoordinateConversion;
 
                 if (tool == null)
                     return null;
@@ -160,7 +160,7 @@ namespace ArcMapAddinCoordinateTool
             }
             public void SetInput(double x, double y)
             {
-                var tool = this.m_windowUI.Child as DockableWindowCoordinateTool;
+                var tool = this.m_windowUI.Child as DockableWindowCoordinateConversion;
 
                 if(tool == null)
                     return;
@@ -171,7 +171,7 @@ namespace ArcMapAddinCoordinateTool
             protected override IntPtr OnCreateChild()
             {
                 m_windowUI = new System.Windows.Forms.Integration.ElementHost();
-                m_windowUI.Child = new DockableWindowCoordinateTool();
+                m_windowUI.Child = new DockableWindowCoordinateConversion();
                 return m_windowUI.Handle;
             }
 

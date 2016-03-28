@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CoordinateToolLibrary.Helpers
+namespace CoordinateConversionLibrary.Helpers
 {
     static public class Mediator
     {
