@@ -109,7 +109,7 @@
     <AddInContent Include="Images\ArcMapAddinCoordinateConversion.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoordinateToolButton.cs" />
+    <Compile Include="CoordinateConversionButton.cs" />
     <AddInContent Include="Images\CoordinateConversionButton.png" />
   </ItemGroup>
   <ItemGroup>
@@ -121,14 +121,14 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="DockableWindowCoordinateTool.xaml">
+    <Page Include="DockableWindowCoordinateConversion.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="DockableWindowCoordinateTool.xaml.cs">
-      <DependentUpon>DockableWindowCoordinateTool.xaml</DependentUpon>
+    <Compile Include="DockableWindowCoordinateConversion.xaml.cs">
+      <DependentUpon>DockableWindowCoordinateConversion.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <AddInContent Include="Images\DockableWindowCoordinateConversion.png" />
@@ -156,7 +156,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
+    <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
       <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>

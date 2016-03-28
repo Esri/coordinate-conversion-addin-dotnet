@@ -95,10 +95,10 @@
     <Compile Include="Common\ValueConverters.cs" />
     <Compile Include="ContextMenuCommands.cs" />
     <Compile Include="CoordinateMapTool.cs" />
-    <Compile Include="CoordinateToolDockpane.xaml.cs">
-      <DependentUpon>CoordinateToolDockpane.xaml</DependentUpon>
+    <Compile Include="CoordinateConversionDockpane.xaml.cs">
+      <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CoordinateToolDockpaneViewModel.cs" />
+    <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CoordinateToolDockpane.xaml">
+    <Page Include="CoordinateConversionDockpane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,7 +146,7 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
+    <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
       <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>

@@ -54,11 +54,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CoordinateToolLibraryTests.cs" />
+    <Compile Include="CoordinateConversionLibraryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateToolLibrary\CoordinateConversionLibrary.csproj">
+    <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
       <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>

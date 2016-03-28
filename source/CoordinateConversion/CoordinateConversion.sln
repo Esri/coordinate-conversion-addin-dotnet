@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcMapAddinCoordinateTool", "ArcMapAddinCoordinateTool\ArcMapAddinCoordinateTool.csproj", "{C37767BB-18E6-4743-A5EC-1D7F2B38F487}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcMapAddinCoordinateConversion", "ArcMapAddinCoordinateConversion\ArcMapAddinCoordinateConversion.csproj", "{C37767BB-18E6-4743-A5EC-1D7F2B38F487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary", "CoordinateToolLibrary\CoordinateConversionLibrary.csproj", "{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary", "CoordinateConversionLibrary\CoordinateConversionLibrary.csproj", "{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary.Tests", "CoordinateToolLibrary.Tests\CoordinateConversionLibrary.Tests.csproj", "{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary.Tests", "CoordinateConversionLibrary.Tests\CoordinateConversionLibrary.Tests.csproj", "{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAppCoordToolModule", "ProAppCoordToolModule\ProAppCoordToolModule.csproj", "{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAppCoordConversionModule", "ProAppCoordConversionModule\ProAppCoordConversionModule.csproj", "{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
