@@ -201,7 +201,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         private string GetFormatFromDefaults()
         {
-            var item = DefaultFormats.First(i => i.CType == GetCoordinateType());
+            var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
 
             if (item == null)
                 return "No Format Found";
