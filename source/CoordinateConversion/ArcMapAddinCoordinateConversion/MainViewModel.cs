@@ -394,6 +394,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
+                    _inputCoordinate = amCoordGetter.GetInputDisplayString();
                 }
 
                 RaisePropertyChanged(() => InputCoordinate);
