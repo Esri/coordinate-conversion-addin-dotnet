@@ -42,9 +42,6 @@ namespace CoordinateConversionLibrary.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
             Mediator.Register(CoordinateConversionLibrary.Constants.ConfigLoaded, OnOutputCoordinateListChanged);
 
-            //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
-            //DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
-
             //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
             ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
@@ -61,7 +58,6 @@ namespace CoordinateConversionLibrary.ViewModels
 
             //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y0.0#N X0.0#E" }, { "70.49N,40.32W", "Y0.0#N,X0.0#E" } } });
 
-            //LoadOutputConfiguration();
         }
 
         private void OnOutputCoordinateListChanged(object obj)
@@ -136,7 +132,6 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             get { return CoordinateConversionViewModel.AddInConfig.OutputCoordinateList; }
         }
-        //public ObservableCollection<DefaultFormatModel> DefaultFormatList { get; set; }
 
         #region relay commands
         [XmlIgnore]
@@ -238,53 +233,6 @@ namespace CoordinateConversionLibrary.ViewModels
 
         #endregion
 
-        //public void SaveOutputConfiguration()
-        //{
-        //    try
-        //    {
-        //        var filename = GetConfigFilename();
-
-        //        XmlSerializer x = new XmlSerializer(GetType());
-        //        XmlWriter writer = new XmlTextWriter(filename, Encoding.UTF8);
-
-        //        x.Serialize(writer, this);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        // do nothing
-        //    }
-        //}
-
-        //public void LoadOutputConfiguration()
-        //{
-        //    try
-        //    {
-        //        var filename = GetConfigFilename();
-
-        //        if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
-        //        {
-        //            LoadSomeDefaults();
-        //            return;
-        //        }
-
-        //        XmlSerializer x = new XmlSerializer(GetType());
-        //        TextReader tr = new StreamReader(filename);
-        //        var temp = x.Deserialize(tr) as OutputCoordinateViewModel;
-
-        //        if (temp == null)
-        //            return;
-
-        //        CoordinateConversionViewModel.AddInConfig.DefaultFormatList = temp.DefaultFormatList;
-        //        CoordinateConversionViewModel.AddInConfig.OutputCoordinateList = temp.OutputCoordinateList;
-
-        //        RaisePropertyChanged(() => DefaultFormatList);
-        //        RaisePropertyChanged(() => OutputCoordinateList);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        // do nothing
-        //    }
-        //}
 
         //private void LoadSomeDefaults()
         //{
@@ -297,10 +245,6 @@ namespace CoordinateConversionLibrary.ViewModels
         //    DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19N 414639 4428236", "Z#H X0 Y0" } } });
         //}
 
-        //private string GetConfigFilename()
-        //{
-        //    return this.GetType().Assembly.Location + ".config";
-        //}
 
         private OutputCoordinateModel GetOCMByName(string name)
         {
