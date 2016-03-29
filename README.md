@@ -4,6 +4,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
 
+
 ## Features
 
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
@@ -51,8 +52,8 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* ``` cd coordinate-conversion-addin-dotnet\source\CoordinateTool ```
-		* ``` msbuild CoordinateTool.sln /property:Configuration=Release ```
+		* ``` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion ```
+		* ``` msbuild CoordinateConversion.sln /property:Configuration=Release ```
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 
 ## Users
@@ -68,7 +69,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 				* Close customize mode
 				* Open tool by clicking the "Show Coordinate Conversion" command you just added
 				* Dockable coordinate tool appears
-			* Optional : if you want share output formats, copy the "CoordinateToolLibrary.dll.config" file to/from the following directory
+			* Optional : if you want share output formats, copy the "CoordinateConversionLibrary.dll.config" file to/from the following directory
 				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
