@@ -97,7 +97,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 		* Numbers found in DD, DDM and DMS can be formatted using the first three ("0" Zero placeholder, "#" digit placeholder and "." decimal point) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
 		* Numbers found in GARS, MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
 	* Formatting string output for each coordinate type
-		* DD Decimal Degrees
+		* **DD** Decimal Degrees
 			* "X" = Longitude
 			* "Y" = Latitude
 			* "+" = add "+" prefix if number is positive
@@ -105,7 +105,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "Y+-0.0 X+-0.0" will output "+41.1 -78.2"
-		* DDM Decimal Degrees Minutes
+		* **DDM** Decimal Degrees Minutes
 			* "A" = Latitude Degrees
 			* "B" = Latitude Minutes
 			* "X" = Longitude Degrees
@@ -115,7 +115,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* "N" or "S" = add "N" or "S" direction based on latitude
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "A0° B0.0#'N X0° Y0.0#'E" will output "41° 22.12'N 78° 36.45'W"
-		* DMS Degrees Minutes Seconds
+		* **DMS** Degrees Minutes Seconds
 			* "A" = Latitude Degrees
 			* "B" = Latitude Minutes
 			* "C" = Latitude Seconds
@@ -128,19 +128,19 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "A0° B0' C0.0\"N X0° Y0' Z0.0E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
 				* Note : escape " like \" to get double quotes in the output
-		* GARS
+		* **GARS**
 			* "X" = Longitude Band
 			* "Y" = Latitude Band
 			* "Q" = Quadrant
 			* "K" = Key
 			* Example : "X#YQK" will output "221LW37"
-		* MGRS/USNG
+		* **MGRS/USNG**
 			* "Z" = Grid Zone
 			* "S" = Grid Segment
 			* "X" = Easting
 			* "Y" = Northing
 			* Example : "Z S X00000 Y00000" will output "19T DE 14639 28236"
-		* UTM
+		* **UTM**
 			* "Z" = Zone
 			* "H" = Hemisphere
 			* "X" = Easting
