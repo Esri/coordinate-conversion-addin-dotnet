@@ -88,8 +88,6 @@ namespace CoordinateConversionLibrary.Models
 
                 RaisePropertyChanged(() => OutputCoordinateList);
                 RaisePropertyChanged(() => DefaultFormatList);
-
-                Mediator.NotifyColleagues(Constants.ConfigLoaded, null);
             }
             catch (Exception ex)
             {

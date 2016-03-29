@@ -40,7 +40,6 @@ namespace CoordinateConversionLibrary.ViewModels
 
             Mediator.Register(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
             Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
-            Mediator.Register(CoordinateConversionLibrary.Constants.ConfigLoaded, OnOutputCoordinateListChanged);
 
             //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
@@ -58,12 +57,11 @@ namespace CoordinateConversionLibrary.ViewModels
 
             //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y0.0#N X0.0#E" }, { "70.49N,40.32W", "Y0.0#N,X0.0#E" } } });
 
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            .RegisterHandler(n => n.OutputCoordinateList, n=> RaisePropertyChanged(()=> OutputCoordinateList));
         }
 
-        private void OnOutputCoordinateListChanged(object obj)
-        {
-            RaisePropertyChanged(() => OutputCoordinateList);
-        }
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         private void OnCopyAllCoordinateOutputs(object obj)
         {
