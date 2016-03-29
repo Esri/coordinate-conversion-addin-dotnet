@@ -153,4 +153,7 @@
   <data name="TitleEditProperties" xml:space="preserve">
     <value>Edit Properties</value>
   </data>
+  <data name="TooltipEditProperties" xml:space="preserve">
+    <value>Edit Properties</value>
+  </data>
 </root>

@@ -183,7 +183,7 @@ namespace CoordinateSystemAddin.UI {
                     regions.Add("Geographic Coordinate Systems", new Dictionary<string, CoordSystemRegion>());//Geographic
                     regions.Add("Projected Coordinate Systems", new Dictionary<string, CoordSystemRegion>());//Projected
 
-                    string content = Resource1.sr_out;//Stored coordinate system information
+                    string content = ProAppCoordConversionModule.Properties.FileResources.sr_out;// Resources.sr_out;//Stored coordinate system information
 
                     int startIndex = 0;
                     string coordSystemType = "]]Geographic Coordinate Systems";

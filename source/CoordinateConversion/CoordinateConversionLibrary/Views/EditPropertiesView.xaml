@@ -19,6 +19,7 @@
             <!--<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>-->
+            <local:EnumToFriendlyNameConverter x:Key="enumItemsConverter" />
             <viewModels:EditPropertiesViewModel x:Key="editPropertiesVM" />
             <ObjectDataProvider x:Key="coordinateTypes"
                             MethodName="GetValues"
@@ -27,6 +28,19 @@
                     <x:TypeExtension TypeName="local:CoordinateTypes" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            <Style TargetType="ComboBox">
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <TextBlock  Text="{Binding Path=., Mode=OneWay, Converter={StaticResource enumItemsConverter}}"
+                                Height="Auto"
+                                Margin="0" 
+                                VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Window.Resources>
     <Window.DataContext>
