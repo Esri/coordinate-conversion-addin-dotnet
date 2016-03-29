@@ -43,9 +43,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\LocalizableDescriptionAttribute.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
+    <Compile Include="Helpers\Wpf.cs" />
     <Compile Include="Models\CoordinateMGRS.cs" />
     <Compile Include="Helpers\NotificationObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
@@ -63,9 +66,15 @@
     <Compile Include="Models\DefaultFormatModel.cs" />
     <Compile Include="Models\OutputCoordinateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CoordinateConversionViewModel.cs" />
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
+    <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
     <Compile Include="Views\CoordinateConversionView.xaml.cs">
@@ -73,6 +82,9 @@
     </Compile>
     <Compile Include="Views\EditOutputCoordinateView.xaml.cs">
       <DependentUpon>EditOutputCoordinateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditPropertiesView.xaml.cs">
+      <DependentUpon>EditPropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OutputCoordinateView.xaml.cs">
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
@@ -89,6 +101,10 @@
     <Page Include="Views\EditOutputCoordinateView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditPropertiesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OutputCoordinateView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +137,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Add_Point32_d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
