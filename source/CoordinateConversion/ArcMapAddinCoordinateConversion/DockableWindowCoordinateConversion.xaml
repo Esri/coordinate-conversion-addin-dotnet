@@ -23,7 +23,7 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <Grid Margin="3,0,3,0">
+    <Grid Margin="3,3,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -42,7 +42,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <ComboBox x:Name="input"
-                          Margin="0,0,0,3"
+                          Margin="0,3,0,0"
                           HorizontalAlignment="Stretch"
                           IsEditable="True"
                           ItemsSource="{Binding InputCoordinateHistoryList}"
@@ -65,10 +65,10 @@
                     </ComboBox.InputBindings>
                 </ComboBox>
                 <Button Grid.Column="1"
-                        Margin="3,0,0,3"
+                        Margin="3,3,0,0"
                         Style="{StaticResource buttonProperties}" />
                 <Button Grid.Column="2"
-                        Margin="3,0,0,3"
+                        Margin="3,3,0,0"
                         Command="{Binding AddNewOCCommand}"
                         ToolTip="Add">
                     <Image Width="18"
@@ -76,7 +76,7 @@
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
                 </Button>
                 <ToggleButton Grid.Column="3"
-                              Margin="3,0,0,3"
+                              Margin="3,3,0,0"
                               IsChecked="{Binding IsToolActive}"
                               ToolTip="Map Point Tool">
                     <Image Width="18"
@@ -84,7 +84,7 @@
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" />
                 </ToggleButton>
                 <Button Grid.Column="4"
-                        Margin="3,0,0,3"
+                        Margin="3,3,0,0"
                         Command="{Binding CopyAllCommand}"
                         ToolTip="Copy All">
                     <Image Width="18"
