@@ -28,6 +28,5 @@ namespace CoordinateConversionLibrary
         public const string AddNewOutputCoordinate = "ADD_NEW_OUTPUT_COORDINATE";
         public const string BroadcastCoordinateValues = "BROADCAST_COORDINATE_VALUES";
         public const string RequestOutputUpdate = "REQUEST_OUTPUT_UPDATE";
-        public const string DISPLAY_COORDINATE_TYPE_CHANGED = "DISPLAY_COORDINATE_TYPE_CHANGED";
     }
 }

@@ -57,12 +57,21 @@ namespace ProAppCoordConversionModule
             {
                 ctvm.SetCoordinateGetter(proCoordGetter);
             }
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            .RegisterHandler(n => n.DisplayCoordinateType, n => {
+                if(proCoordGetter != null && proCoordGetter.Point != null)
+                {
+                    InputCoordinate = proCoordGetter.GetInputDisplayString();
+                }
+            });
         }
 
         ~CoordinateConversionDockpaneViewModel()
         {
             MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
+
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         public bool IsToolActive
         {

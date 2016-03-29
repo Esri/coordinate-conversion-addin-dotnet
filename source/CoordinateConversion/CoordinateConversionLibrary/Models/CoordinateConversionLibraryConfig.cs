@@ -40,7 +40,6 @@ namespace CoordinateConversionLibrary.Models
             {
                 displayCoordinateType = value;
                 RaisePropertyChanged(() => DisplayCoordinateType);
-                Mediator.NotifyColleagues(Constants.DISPLAY_COORDINATE_TYPE_CHANGED, null);
             }
         }
 

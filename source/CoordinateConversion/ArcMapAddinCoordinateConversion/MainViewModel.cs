@@ -51,7 +51,19 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 ctvm.SetCoordinateGetter(amCoordGetter);
             }
+
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            .RegisterHandler(n => n.DisplayCoordinateType, n => 
+            {
+                if (amCoordGetter != null && amCoordGetter.Point != null)
+                {
+                    InputCoordinate = amCoordGetter.GetInputDisplayString();
+                }
+            });
+
         }
+
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         public bool IsToolActive
         {
