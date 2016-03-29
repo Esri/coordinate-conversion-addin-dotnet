@@ -339,7 +339,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         
         private void OnEditPropertiesDialogCommand(object obj)
         {
+            var dlg = new EditPropertiesView();
 
+            dlg.ShowDialog();
         }
 
         private void OnAddNewOCCommand(object obj)

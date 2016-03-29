@@ -117,13 +117,8 @@ namespace CoordinateConversionLibrary.Views
 
                 //select the dropped item
                 ocGrid.SelectedItem = DraggedItem;
-                
-                var vm = DataContext as OutputCoordinateViewModel;
-                if (vm != null)
-                {
-                    // save the config file
-                    vm.SaveOutputConfiguration();
-                }
+
+                CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
             }
 
             //reset
@@ -184,7 +179,6 @@ namespace CoordinateConversionLibrary.Views
                 return;
 
             // load the config file
-            //vm.LoadOutputConfiguration();
             CoordinateConversionViewModel.AddInConfig.LoadConfiguration();
         }
 
@@ -195,7 +189,7 @@ namespace CoordinateConversionLibrary.Views
                 return;
 
             // save the config file
-            vm.SaveOutputConfiguration();
+            CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
         }
 
     }

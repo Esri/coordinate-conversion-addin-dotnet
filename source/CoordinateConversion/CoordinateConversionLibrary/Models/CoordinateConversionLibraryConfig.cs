@@ -67,6 +67,13 @@ namespace CoordinateConversionLibrary.Models
                     return;
 
                 DisplayCoordinateType = temp.DisplayCoordinateType;
+                OutputCoordinateList = temp.OutputCoordinateList;
+                DefaultFormatList = temp.DefaultFormatList;
+
+                RaisePropertyChanged(() => OutputCoordinateList);
+                RaisePropertyChanged(() => DefaultFormatList);
+
+                Mediator.NotifyColleagues(Constants.ConfigLoaded, null);
             }
             catch (Exception ex)
             {

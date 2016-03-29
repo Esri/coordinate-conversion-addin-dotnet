@@ -20,7 +20,7 @@ namespace CoordinateConversionLibrary.ViewModels
     {
         public EditPropertiesViewModel()
         {
-            //SelectedCoordinateType = TabBaseViewModel.AddInConfig.DisplayCoordinateType;
+            SelectedCoordinateType = CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
         }
 
@@ -45,9 +45,9 @@ namespace CoordinateConversionLibrary.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
-            //TabBaseViewModel.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
+            CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
 
-            //TabBaseViewModel.AddInConfig.SaveConfiguration();
+            CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
 
             // close dialog
             DialogResult = true;
