@@ -41,6 +41,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+            EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
@@ -335,6 +336,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (commandItem != null)
                 application.CurrentTool = commandItem;
         }
+        
+        private void OnEditPropertiesDialogCommand(object obj)
+        {
+
+        }
 
         private void OnAddNewOCCommand(object obj)
         {
@@ -360,6 +366,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
+        public RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
 
