@@ -64,12 +64,12 @@
     <Compile Include="Models\OutputCoordinateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\CoordinateToolViewModel.cs" />
+    <Compile Include="ViewModels\CoordinateConversionViewModel.cs" />
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
-    <Compile Include="Views\CoordinateToolView.xaml.cs">
-      <DependentUpon>CoordinateToolView.xaml</DependentUpon>
+    <Compile Include="Views\CoordinateConversionView.xaml.cs">
+      <DependentUpon>CoordinateConversionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditOutputCoordinateView.xaml.cs">
       <DependentUpon>EditOutputCoordinateView.xaml</DependentUpon>
@@ -82,7 +82,7 @@
     <Resource Include="Images\pointtool.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\CoordinateToolView.xaml">
+    <Page Include="Views\CoordinateConversionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
