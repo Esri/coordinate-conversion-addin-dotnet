@@ -68,7 +68,7 @@
                     <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
                 </Button>
             </Grid>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,3,0,0">
                 <UserControl Content="{Binding CTView}" />
             </ScrollViewer>
     </Grid>

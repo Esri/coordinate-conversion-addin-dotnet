@@ -47,6 +47,7 @@ namespace ProAppCoordConversionModule
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnCopyAllCommand);
+            EditPropertiesDialogCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnEditPropertiesDialogCommand);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
@@ -140,6 +141,7 @@ namespace ProAppCoordConversionModule
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
 
@@ -167,6 +169,7 @@ namespace ProAppCoordConversionModule
                 {
                     ctvm.SetCoordinateGetter(proCoordGetter);
                     ctvm.InputCoordinate = tempDD;
+                    _inputCoordinate = proCoordGetter.GetInputDisplayString();
                 }
 
                 NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
@@ -266,6 +269,13 @@ namespace ProAppCoordConversionModule
         private void OnCopyAllCommand(object obj)
         {
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
+        }
+
+        private void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new EditPropertiesView();
+
+            dlg.ShowDialog();
         }
 
         private void OnBCNeeded(object obj)

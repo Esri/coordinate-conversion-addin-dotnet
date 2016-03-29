@@ -19,6 +19,9 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using CoordinateSystemAddin.UI;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary;
+using System;
 
 namespace ProAppCoordConversionModule
 {
@@ -187,5 +190,66 @@ namespace ProAppCoordConversionModule
             }).Result;
         }
         #endregion
+
+        public string GetInputDisplayString()
+        {
+            if (Point == null)
+                return "NA";
+
+            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
+
+            if (Point.SpatialReference == null)
+                return result;
+
+            ToGeoCoordinateParameter tgparam = null;
+
+            try
+            {
+                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                {
+                    case CoordinateTypes.DD:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);
+                        tgparam.NumDigits = 6;
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.DDM:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DDM);
+                        tgparam.NumDigits = 4;
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.DMS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DMS);
+                        tgparam.NumDigits = 2;
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.GARS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.MGRS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.USNG:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
+                        tgparam.NumDigits = 5;
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    case CoordinateTypes.UTM:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
+                        tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                // do nothing
+            }
+            return result;
+        }
+
     }
 }
