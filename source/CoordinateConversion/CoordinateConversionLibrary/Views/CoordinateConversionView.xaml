@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="CoordinateConversionLibrary.Views.CoordinateConversionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels"
+             d:DesignHeight="160" d:DesignWidth="300">
+    <UserControl.Resources>
+        <viewModels:CoordinateConversionViewModel x:Key="CTViewModel" />
+    </UserControl.Resources>
+    <Grid DataContext="{StaticResource CTViewModel}">
+        <StackPanel Orientation="Vertical">
+            <UserControl Content="{Binding OCView}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
