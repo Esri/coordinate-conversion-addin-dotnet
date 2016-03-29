@@ -35,6 +35,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -65,13 +66,16 @@
                 </ComboBox>
                 <Button Grid.Column="1"
                         Margin="3,0,0,3"
+                        Style="{StaticResource buttonProperties}" />
+                <Button Grid.Column="2"
+                        Margin="3,0,0,3"
                         Command="{Binding AddNewOCCommand}"
                         ToolTip="Add">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
                 </Button>
-                <ToggleButton Grid.Column="2"
+                <ToggleButton Grid.Column="3"
                               Margin="3,0,0,3"
                               IsChecked="{Binding IsToolActive}"
                               ToolTip="Map Point Tool">
@@ -79,7 +83,7 @@
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" />
                 </ToggleButton>
-                <Button Grid.Column="3"
+                <Button Grid.Column="4"
                         Margin="3,0,0,3"
                         Command="{Binding CopyAllCommand}"
                         ToolTip="Copy All">
