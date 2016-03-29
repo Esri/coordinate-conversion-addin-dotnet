@@ -16,15 +16,9 @@
 
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
 using CoordinateSystemAddin.UI;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProAppCoordConversionModule
 {

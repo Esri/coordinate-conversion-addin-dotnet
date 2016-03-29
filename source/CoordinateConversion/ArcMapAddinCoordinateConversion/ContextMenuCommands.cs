@@ -14,17 +14,9 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using ESRI.ArcGIS.esriSystem;
-using ESRI.ArcGIS.Framework;
-using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 using CoordinateConversionLibrary.Models;
-using ArcMapAddinCoordinateConversion.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
 {

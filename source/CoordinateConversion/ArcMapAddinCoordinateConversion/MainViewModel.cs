@@ -17,20 +17,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoordinateConversionLibrary.Views;
-using CoordinateConversionLibrary.ViewModels;
+using System.Collections.ObjectModel;
+using System.Windows.Data;
 using ESRI.ArcGIS.Geometry;
-using System.Windows;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.Helpers;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
-using System.Collections.ObjectModel;
-using System.Windows.Data;
-using System.Runtime.CompilerServices;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {

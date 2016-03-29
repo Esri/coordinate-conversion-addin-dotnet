@@ -19,13 +19,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Views;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
+using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Views;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
