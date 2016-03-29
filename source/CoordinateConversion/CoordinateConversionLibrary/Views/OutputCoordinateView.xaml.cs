@@ -104,7 +104,7 @@ namespace CoordinateConversionLibrary.Views
 
             if (targetItem == null || !ReferenceEquals(DraggedItem, targetItem))
             {
-                var list = (DataContext as OutputCoordinateViewModel).OutputCoordinateList;
+                var list = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList;
                 
                 //remove the source from the list
                 list.Remove(DraggedItem);
@@ -184,7 +184,8 @@ namespace CoordinateConversionLibrary.Views
                 return;
 
             // load the config file
-            vm.LoadOutputConfiguration();
+            //vm.LoadOutputConfiguration();
+            CoordinateConversionViewModel.AddInConfig.LoadConfiguration();
         }
 
         private void ocView_Unloaded(object sender, RoutedEventArgs e)

@@ -282,20 +282,11 @@ namespace ProAppCoordConversionModule
         {
             string format = "";
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionLibrary.ViewModels.CoordinateConversionViewModel;
-            if (ctvm != null)
+            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (tt != null)
             {
-                var ocvm = ctvm.OCView.DataContext as CoordinateConversionLibrary.ViewModels.OutputCoordinateViewModel;
-
-                if (ocvm != null)
-                {
-                    var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-                    if (tt != null)
-                    {
-                        format = tt.Format;
-                        Console.WriteLine(tt.Format);
-                    }
-                }
+                format = tt.Format;
+                Console.WriteLine(tt.Format);
             }
 
             var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
