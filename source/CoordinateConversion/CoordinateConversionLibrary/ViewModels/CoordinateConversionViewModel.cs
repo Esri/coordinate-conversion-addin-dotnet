@@ -37,10 +37,12 @@ namespace CoordinateConversionLibrary.ViewModels
         }
 
         public OutputCoordinateView OCView { get; set; }
-        private string inputCoordinate = "70.49N40.32W";
         private CoordinateGetBase coordinateGetter;
 
+        public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
+
         // InputCoordinate
+        private string inputCoordinate = "70.49N40.32W";
         public string InputCoordinate
         {
             get
@@ -67,7 +69,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         private void UpdateOutputs()
         {
-            foreach( var output in (OCView.DataContext as OutputCoordinateViewModel).OutputCoordinateList)
+            foreach( var output in AddInConfig.OutputCoordinateList)
             {
                 var props = new Dictionary<string, string>();
                 string coord = string.Empty;

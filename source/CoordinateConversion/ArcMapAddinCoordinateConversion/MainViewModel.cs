@@ -41,6 +41,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+            EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
@@ -50,7 +51,19 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 ctvm.SetCoordinateGetter(amCoordGetter);
             }
+
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            .RegisterHandler(n => n.DisplayCoordinateType, n => 
+            {
+                if (amCoordGetter != null && amCoordGetter.Point != null)
+                {
+                    InputCoordinate = amCoordGetter.GetInputDisplayString();
+                }
+            });
+
         }
+
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         public bool IsToolActive
         {
@@ -335,6 +348,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (commandItem != null)
                 application.CurrentTool = commandItem;
         }
+        
+        private void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new EditPropertiesView();
+
+            dlg.ShowDialog();
+        }
 
         private void OnAddNewOCCommand(object obj)
         {
@@ -360,6 +380,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
+        public RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
 
@@ -385,6 +406,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
+                    _inputCoordinate = amCoordGetter.GetInputDisplayString();
                 }
 
                 RaisePropertyChanged(() => InputCoordinate);
@@ -408,20 +430,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             string format = "";
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionLibrary.ViewModels.CoordinateConversionViewModel;
-            if (ctvm != null)
+            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (tt != null)
             {
-                var ocvm = ctvm.OCView.DataContext as CoordinateConversionLibrary.ViewModels.OutputCoordinateViewModel;
-
-                if (ocvm != null)
-                {
-                    var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-                    if (tt != null)
-                    {
-                        format = tt.Format;
-                        Console.WriteLine(tt.Format);
-                    }
-                }
+                format = tt.Format;
+                Console.WriteLine(tt.Format);
             }
 
             var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);

@@ -47,6 +47,7 @@ namespace ProAppCoordConversionModule
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnCopyAllCommand);
+            EditPropertiesDialogCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnEditPropertiesDialogCommand);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
@@ -56,12 +57,21 @@ namespace ProAppCoordConversionModule
             {
                 ctvm.SetCoordinateGetter(proCoordGetter);
             }
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            .RegisterHandler(n => n.DisplayCoordinateType, n => {
+                if(proCoordGetter != null && proCoordGetter.Point != null)
+                {
+                    InputCoordinate = proCoordGetter.GetInputDisplayString();
+                }
+            });
         }
 
         ~CoordinateConversionDockpaneViewModel()
         {
             MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
+
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         public bool IsToolActive
         {
@@ -140,6 +150,7 @@ namespace ProAppCoordConversionModule
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
 
@@ -167,6 +178,7 @@ namespace ProAppCoordConversionModule
                 {
                     ctvm.SetCoordinateGetter(proCoordGetter);
                     ctvm.InputCoordinate = tempDD;
+                    _inputCoordinate = proCoordGetter.GetInputDisplayString();
                 }
 
                 NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
@@ -268,6 +280,13 @@ namespace ProAppCoordConversionModule
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
+        private void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new EditPropertiesView();
+
+            dlg.ShowDialog();
+        }
+
         private void OnBCNeeded(object obj)
         {
             if (proCoordGetter == null || proCoordGetter.Point == null)
@@ -282,20 +301,11 @@ namespace ProAppCoordConversionModule
         {
             string format = "";
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionLibrary.ViewModels.CoordinateConversionViewModel;
-            if (ctvm != null)
+            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (tt != null)
             {
-                var ocvm = ctvm.OCView.DataContext as CoordinateConversionLibrary.ViewModels.OutputCoordinateViewModel;
-
-                if (ocvm != null)
-                {
-                    var tt = ocvm.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-                    if (tt != null)
-                    {
-                        format = tt.Format;
-                        Console.WriteLine(tt.Format);
-                    }
-                }
+                format = tt.Format;
+                Console.WriteLine(tt.Format);
             }
 
             var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);

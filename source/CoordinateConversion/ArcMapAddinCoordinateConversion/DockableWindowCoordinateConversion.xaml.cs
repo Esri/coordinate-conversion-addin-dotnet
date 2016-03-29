@@ -106,7 +106,6 @@ namespace ArcMapAddinCoordinateConversion
             point.Project(sr);
 
             vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
-
         }
 
         // always use WGS1984

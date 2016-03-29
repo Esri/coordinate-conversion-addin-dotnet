@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProAppCoordConversionModule {
+namespace ProAppCoordConversionModule.Properties {
     using System;
     
     
@@ -22,24 +22,24 @@ namespace ProAppCoordConversionModule {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource1 {
+    public class FileResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource1() {
+        internal FileResources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProAppCoordConversionModule.Resource1", typeof(Resource1).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProAppCoordConversionModule.Properties.FileResources", typeof(FileResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace ProAppCoordConversionModule {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace ProAppCoordConversionModule {
         /// <summary>
         ///   Looks up a localized string similar to Geographic Coordinate Systems/Africa/Abidjan 1987|GCS_Abidjan_1987|4143|GEOGCS[&apos;GCS_Abidjan_1987&apos;,DATUM[&apos;D_Abidjan_1987&apos;,SPHEROID[&apos;Clarke_1880_RGS&apos;,6378249.145,293.465]],PRIMEM[&apos;Greenwich&apos;,0.0],UNIT[&apos;Degree&apos;,0.0174532925199433]]Geographic Coordinate Systems/Africa/Accra|GCS_Accra|4168|GEOGCS[&apos;GCS_Accra&apos;,DATUM[&apos;D_Accra&apos;,SPHEROID[&apos;War_Office&apos;,6378300.0,296.0]],PRIMEM[&apos;Greenwich&apos;,0.0],UNIT[&apos;Degree&apos;,0.0174532925199433]]Geographic Coordinate Systems/Africa/Adindan|GCS_Adindan|4201|GEOGCS[&apos;GCS_Adindan&apos;,DATUM[&apos;D_A [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string sr_out {
+        public static string sr_out {
             get {
                 return ResourceManager.GetString("sr_out", resourceCulture);
             }
