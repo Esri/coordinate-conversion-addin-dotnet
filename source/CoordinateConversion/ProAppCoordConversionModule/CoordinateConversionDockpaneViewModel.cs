@@ -42,7 +42,7 @@ namespace ProAppCoordConversionModule
         {
             _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
-            IsHistoryUpdate = false;
+            IsHistoryUpdate = true;
             AddNewOCCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
@@ -336,8 +336,8 @@ namespace ProAppCoordConversionModule
                 if (IsHistoryUpdate)
                 {
                     UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
-                    IsHistoryUpdate = false;
                 }
+                IsHistoryUpdate = true;
             }
 
             return result;

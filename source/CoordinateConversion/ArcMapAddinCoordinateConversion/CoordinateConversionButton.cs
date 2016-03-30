@@ -68,7 +68,6 @@ namespace ArcMapAddinCoordinateConversion
 
                 if (doc != null && point != null)
                 {
-                    doc.GetMainVM().IsHistoryUpdate = true;
                     doc.SetInput(point.X, point.Y);
                 }
 
@@ -87,6 +86,7 @@ namespace ArcMapAddinCoordinateConversion
 
                 if (doc != null && point != null)
                 {
+                    doc.GetMainVM().IsHistoryUpdate = false;
                     doc.SetInput(point.X, point.Y);
                 }
             }

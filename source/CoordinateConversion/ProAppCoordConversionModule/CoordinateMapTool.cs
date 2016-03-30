@@ -47,7 +47,6 @@ namespace ProAppCoordConversionModule
             var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
             if (vm != null)
             {
-                vm.IsHistoryUpdate = true;
                 vm.IsToolActive = false;
             }
             UpdateInputWithMapPoint(e.ClientPoint);
@@ -55,7 +54,12 @@ namespace ProAppCoordConversionModule
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
         {
-           UpdateInputWithMapPoint(e.ClientPoint);
+            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
+            if (vm != null)
+            {
+                vm.IsHistoryUpdate = false;
+            }
+            UpdateInputWithMapPoint(e.ClientPoint);
         }
 
         private void OnUpdateFlash(object obj)

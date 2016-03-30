@@ -36,7 +36,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
-            IsHistoryUpdate = false;
+            IsHistoryUpdate = true;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
@@ -466,8 +466,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (IsHistoryUpdate)
                 {
                     UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
-                    IsHistoryUpdate = false;
                 }
+                IsHistoryUpdate = true;
             }
 
             return result;
