@@ -43,6 +43,7 @@ namespace ProAppCoordConversionModule
             _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
             IsHistoryUpdate = true;
+            IsToolGenerated = false;
             AddNewOCCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
@@ -153,6 +154,7 @@ namespace ProAppCoordConversionModule
         public CoordinateConversionLibrary.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
+        public bool IsToolGenerated { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -178,7 +180,20 @@ namespace ProAppCoordConversionModule
                 {
                     ctvm.SetCoordinateGetter(proCoordGetter);
                     ctvm.InputCoordinate = tempDD;
-                    _inputCoordinate = proCoordGetter.GetInputDisplayString();
+                    var formattedInputCoordinate = proCoordGetter.GetInputDisplayString();
+                    // update history
+                    if (IsHistoryUpdate)
+                    {
+                        if (IsToolGenerated)
+                            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+                        else
+                            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
+                    }
+                    // reset flags
+                    IsHistoryUpdate = true;
+                    IsToolGenerated = false;
+
+                    _inputCoordinate = formattedInputCoordinate;
                 }
 
                 NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
@@ -333,11 +348,6 @@ namespace ProAppCoordConversionModule
             {
                 proCoordGetter.Point = point;
                 result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
-                if (IsHistoryUpdate)
-                {
-                    UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
-                }
-                IsHistoryUpdate = true;
             }
 
             return result;

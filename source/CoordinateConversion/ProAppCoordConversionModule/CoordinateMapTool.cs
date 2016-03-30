@@ -47,6 +47,7 @@ namespace ProAppCoordConversionModule
             var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
             if (vm != null)
             {
+                vm.IsToolGenerated = true;
                 vm.IsToolActive = false;
             }
             UpdateInputWithMapPoint(e.ClientPoint);

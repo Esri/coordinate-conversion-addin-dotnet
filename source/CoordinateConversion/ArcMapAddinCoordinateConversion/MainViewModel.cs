@@ -37,6 +37,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             _coordinateConversionView = new CoordinateConversionView();
             HasInputError = false;
             IsHistoryUpdate = true;
+            IsToolGenerated = false;
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
@@ -383,6 +384,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand EditPropertiesDialogCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
+        public bool IsToolGenerated { get; set; }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -406,7 +408,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     ctvm.SetCoordinateGetter(amCoordGetter);
                     ctvm.InputCoordinate = tempDD;
-                    _inputCoordinate = amCoordGetter.GetInputDisplayString();
+                    var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
+                    // update history
+                    if (IsHistoryUpdate)
+                    {
+                        if (IsToolGenerated)
+                            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+                        else
+                            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
+                    }
+                    // reset flags
+                    IsHistoryUpdate = true;
+                    IsToolGenerated = false;
+
+                    _inputCoordinate = formattedInputCoordinate;
                 }
 
                 RaisePropertyChanged(() => InputCoordinate);
@@ -463,11 +478,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 amCoordGetter.Point = point;
                 result = (point as IConversionNotation).GetDDFromCoords(6);
-                if (IsHistoryUpdate)
-                {
-                    UIHelpers.UpdateHistory(input, InputCoordinateHistoryList);
-                }
-                IsHistoryUpdate = true;
             }
 
             return result;
