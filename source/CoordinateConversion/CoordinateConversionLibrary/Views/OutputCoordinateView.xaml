@@ -11,8 +11,8 @@
              d:DesignHeight="150" d:DesignWidth="425">
     <UserControl.Resources>
         <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
-        <Image x:Key="expandImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderExpand32_d.png" />
-        <Image x:Key="collapseImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderCollapse32_d.png" />
+        <Image x:Key="expandImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderExpandedGroup32_d.png" />
+        <Image x:Key="collapseImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderCollapsedGroup32_d.png" />
         <ContextMenu x:Key="RowMenu" DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
             <MenuItem Header="Configure" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}, Path=DataContext.ConfigCommand}" 
                               CommandParameter="{Binding Path=DataContext.Name}" />
