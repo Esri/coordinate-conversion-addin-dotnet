@@ -65,7 +65,7 @@
           <tooltip heading="Coordinate Conversion">Map Point Tool<disabledText /></tooltip>
         </tool>
         <button id="ProAppCoordConversionModule_PropertiesButton" caption="Properties" className="PropertiesButton" loadOnClick="true" smallImage="Images\GenericButtonBlue16.png" largeImage="Images\GenericButtonBlue32.png">
-          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+          <tooltip heading="Coordiante Conversion Properties">Edit Properties<disabledText /></tooltip>
         </button>
       </controls>
       <dockPanes>
