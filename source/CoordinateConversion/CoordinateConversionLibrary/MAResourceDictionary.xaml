@@ -96,6 +96,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="BorderlessButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BorderedButtonStyle}">
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
     <Style x:Key="buttonProperties" TargetType="Button" BasedOn="{StaticResource BorderedButtonStyle}">
         <Setter Property="Content">
             <Setter.Value>
