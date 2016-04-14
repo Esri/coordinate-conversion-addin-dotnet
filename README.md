@@ -173,7 +173,7 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 * Manages Milestones
 * Manages and Assigns Issues
 
-#### Secondary: TBD
+#### Secondary: [Lyle](https://github.com/topowright)
 
 * Backup when the Owner is away
 
