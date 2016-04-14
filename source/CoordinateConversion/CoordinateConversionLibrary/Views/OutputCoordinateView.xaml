@@ -41,7 +41,7 @@
             CanUserSortColumns="False">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
-                    <Image Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" Width="10" Height="10" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" Width="10" Height="10" Cursor="Hand" />
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
             <DataGrid.RowStyle>
