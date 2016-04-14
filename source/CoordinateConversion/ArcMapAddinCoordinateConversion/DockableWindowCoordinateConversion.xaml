@@ -6,19 +6,13 @@
              Width="300"
              Height="300">
     <UserControl.Resources>
-        <viewModels:MainViewModel x:Key="viewModelMain" />
-        <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />
-        <Style x:Key="buttonProperties" TargetType="Button">
-            <Setter Property="Content">
-                <Setter.Value>
-                    <Image Width="18"
-                           Height="18"
-                           Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings32_d.png" />
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Command" Value="{Binding EditPropertiesDialogCommand}" />
-            <Setter Property="ToolTip" Value="{x:Static prop:Resources.TooltipEditProperties}" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <viewModels:MainViewModel x:Key="viewModelMain" />
+            <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
@@ -70,7 +64,8 @@
                 <Button Grid.Column="2"
                         Margin="3,3,0,0"
                         Command="{Binding AddNewOCCommand}"
-                        ToolTip="Add">
+                        ToolTip="Add"
+                        Style="{StaticResource BorderedButtonStyle}">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
@@ -78,7 +73,8 @@
                 <ToggleButton Grid.Column="3"
                               Margin="3,3,0,0"
                               IsChecked="{Binding IsToolActive}"
-                              ToolTip="Map Point Tool">
+                              ToolTip="Map Point Tool"
+                              Style="{StaticResource BorderedTButtonStyle}">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" />
@@ -86,7 +82,8 @@
                 <Button Grid.Column="4"
                         Margin="3,3,0,0"
                         Command="{Binding CopyAllCommand}"
-                        ToolTip="Copy All">
+                        ToolTip="Copy All"
+                        Style="{StaticResource BorderedButtonStyle}">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/copyall.png" />

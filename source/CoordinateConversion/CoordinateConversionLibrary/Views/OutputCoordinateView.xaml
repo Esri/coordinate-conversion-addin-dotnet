@@ -10,7 +10,11 @@
              Unloaded="ocView_Unloaded"
              d:DesignHeight="150" d:DesignWidth="425">
     <UserControl.Resources>
-        <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
         <Image x:Key="expandImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderExpandedGroup32_d.png" />
         <Image x:Key="collapseImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/ModelBuilderCollapsedGroup32_d.png" />
         <ContextMenu x:Key="RowMenu" DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
@@ -63,7 +67,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="outputCoordViewModel"/>
@@ -161,7 +165,8 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Key, Mode=OneWay}" Margin="3,0,3,0" VerticalAlignment="Center"/>
                                         <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" Margin="3,1,3,1" />
-                                        <Button Grid.Column="2" Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Value}" ToolTip="Copy">
+                                        <Button Grid.Column="2" Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Value}" ToolTip="Copy"
+                                                Style="{StaticResource BorderedButtonStyle}">
                                             <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="16" Height="16" />
                                         </Button>
                                     </Grid>
