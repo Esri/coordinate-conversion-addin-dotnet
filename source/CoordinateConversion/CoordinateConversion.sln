@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcMapAddinCoordinateConversion", "ArcMapAddinCoordinateConversion\ArcMapAddinCoordinateConversion.csproj", "{C37767BB-18E6-4743-A5EC-1D7F2B38F487}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary", "CoordinateConversionLibrary\CoordinateConversionLibrary.csproj", "{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary.Tests", "CoordinateConversionLibrary.Tests\CoordinateConversionLibrary.Tests.csproj", "{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAppCoordConversionModule", "ProAppCoordConversionModule\ProAppCoordConversionModule.csproj", "{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C37767BB-18E6-4743-A5EC-1D7F2B38F487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C37767BB-18E6-4743-A5EC-1D7F2B38F487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C37767BB-18E6-4743-A5EC-1D7F2B38F487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C37767BB-18E6-4743-A5EC-1D7F2B38F487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C3BFDE-D76D-425A-8CE9-A9C174D21DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
