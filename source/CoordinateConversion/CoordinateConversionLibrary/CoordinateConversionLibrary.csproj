@@ -149,8 +149,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ModelBuilderCollapsedGroup32_d.png" />
-    <Resource Include="Images\ModelBuilderExpandedGroup32_d.png" />
+    <Resource Include="Images\TableMinusCollaps16_d.png" />
+    <Resource Include="Images\TablePlusExpand16_d.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
