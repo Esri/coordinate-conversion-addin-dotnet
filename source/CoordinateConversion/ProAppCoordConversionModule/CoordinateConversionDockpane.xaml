@@ -10,18 +10,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="buttonProperties" TargetType="Button">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Image Width="18"
-                           Height="18"
-                           Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings32_d.png" />
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Command" Value="{Binding EditPropertiesDialogCommand}" />
-                <Setter Property="ToolTip" Value="{x:Static prop:Resources.TooltipEditProperties}" />
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="3,0,3,0">
@@ -58,13 +48,13 @@
             <Button Grid.Column="1"
                         Margin="3,3,0,0"
                         Style="{StaticResource buttonProperties}" />
-            <Button Grid.Column="2" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,3,0,0" >
+            <Button Grid.Column="2" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,3,0,0" Style="{StaticResource BorderedButtonStyle}">
                     <Image Source="/CoordinateConversionLibrary;component/Images/hand.png" Width="18" Height="18" />
                 </Button>
-            <ToggleButton Grid.Column="3" ToolTip="Map Point Tool" IsChecked="{Binding IsToolActive}" Margin="3,3,0,0">
+            <ToggleButton Grid.Column="3" ToolTip="Map Point Tool" IsChecked="{Binding IsToolActive}" Margin="3,3,0,0" Style="{StaticResource BorderedTButtonStyle}">
                     <Image Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
                 </ToggleButton>
-            <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,3,0,0">
+            <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,3,0,0" Style="{StaticResource BorderedButtonStyle}">
                     <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
                 </Button>
             </Grid>
