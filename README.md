@@ -5,6 +5,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
 
 
+
 ## Features
 
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
