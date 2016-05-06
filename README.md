@@ -10,9 +10,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
-* Addin for ArcMap 10.3.1
-	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
-* Addin for ArcGIS Pro 1.2
+* Addin for ArcMap 10.3.1 and ArcGIS Pro 1.2
 	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
 
 ## Sections
@@ -61,7 +59,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 * Running
 	* To run from a stand-alone deployment
 		* ArcMap
-			* Install the add-in from the latest Release on Github (https://github.com/Esri/coordinate-conversion-addin-dotnet/releases)
+			* Install the add-in from the latest Release (http://esriurl.com/coordconv)
 			* Add the add-in command to a toolbar via menu option 
 				* "Customize -> Customize mode"
 				* Select "Commands" Tab
@@ -75,7 +73,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 		* Pro
-			* Install the add-in from the latest Release on Github (https://github.com/Esri/coordinate-conversion-addin-dotnet/releases)
+			* Install the add-in from the latest Release (http://esriurl.com/coordconv)
 			* The ADD-IN appears under the "ADD-IN" tab in Pro	
 			* Click the "Show Coordinate Conversion Tool Dockpane" button and the tool will appear
 			* Optional : if you want to share output formats, copy the "CoordinateConversionLibrary.dll.config" file to/from the following directory
