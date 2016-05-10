@@ -31,13 +31,13 @@
         <group id="ProAppCoordConversionModule_Group1" caption="Coordinate Conversion" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" size="large" />
-          <tool refID="ProAppCoordConversionModule_CoordinateMapTool" size="large" />
-          <button refID="ProAppCoordConversionModule_PropertiesButton" size="large" />
+          <!--<tool refID="ProAppCoordConversionModule_CoordinateMapTool" size="large" />
+          <button refID="ProAppCoordConversionModule_PropertiesButton" size="large" />-->
         </group>
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Show" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Convert" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\CoordinateConversionIcon.png">
           <tooltip heading="Coordinate Conversion">Show Coordinate Conversion Dockpane<disabledText /></tooltip>
         </button>
         <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="Copy DD Coordinate" className="ContextCopyDD" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
