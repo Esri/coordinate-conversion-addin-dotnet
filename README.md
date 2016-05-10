@@ -51,8 +51,12 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
-		* ``` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion ```
-		* ``` msbuild CoordinateConversion.sln /property:Configuration=Release ```
+		* ` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion `
+		* ` msbuild CoordinateConversion.sln /property:Configuration=Release `
+	* To run Unit test from command prompt
+		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
+		* ` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary.Tests\bin\Release `
+		* ` MSTest /testcontainer:CoordinateConversionLibrary.Tests.dll `
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 
 ## Desktop Users
