@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ArcMapAddinCoordinateConversion</RootNamespace>
-    <AssemblyName>ArcMapAddinCoordinateConversion</AssemblyName>
+    <AssemblyName>CoordinateConversion</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
