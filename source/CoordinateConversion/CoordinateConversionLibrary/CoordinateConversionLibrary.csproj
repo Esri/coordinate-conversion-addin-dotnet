@@ -131,16 +131,7 @@
     <Resource Include="Images\copyall.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\EditCopy32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\GeoprocessingEnvironmentSettings32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\GenericDeleteRed32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Add_Point32_d.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -151,6 +142,11 @@
   <ItemGroup>
     <Resource Include="Images\TableMinusCollaps16_d.png" />
     <Resource Include="Images\TablePlusExpand16_d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Add_Point.png" />
+    <Resource Include="Images\EditCopy16.png" />
+    <Resource Include="Images\GeoprocessingEnvironmentSettings16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

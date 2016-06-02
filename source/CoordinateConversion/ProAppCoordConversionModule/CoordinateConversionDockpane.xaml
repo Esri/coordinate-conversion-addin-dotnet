@@ -52,10 +52,10 @@
                     <Image Source="/CoordinateConversionLibrary;component/Images/hand.png" Width="18" Height="18" />
                 </Button>
             <ToggleButton Grid.Column="3" ToolTip="Map Point Tool" IsChecked="{Binding IsToolActive}" Margin="3,3,0,0" Style="{StaticResource BorderedTButtonStyle}">
-                    <Image Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" Width="18" Height="18" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" Width="18" Height="18" />
                 </ToggleButton>
             <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,3,0,0" Style="{StaticResource BorderedButtonStyle}">
-                    <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
+                    <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="18" Height="18" />
                 </Button>
             </Grid>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,3,0,0">
