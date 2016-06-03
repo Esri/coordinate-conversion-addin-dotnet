@@ -104,7 +104,7 @@
             <Setter.Value>
                 <Image Width="18"
                            Height="18"
-                           Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings32_d.png" />
+                           Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" />
             </Setter.Value>
         </Setter>
         <Setter Property="Command" Value="{Binding EditPropertiesDialogCommand}" />
