@@ -101,7 +101,7 @@
                         <DataTemplate>
                             <Button Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding OutputCoordinate}" ToolTip="Copy"
                                     Style="{StaticResource BorderlessButtonStyle}">
-                                <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="16" Height="16" />
+                                <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="16" Height="16" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -123,7 +123,7 @@
                                         <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" Margin="3,3,0,0" />
                                         <Button Grid.Column="2" Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Value}" ToolTip="Copy" Margin="3,3,0,0"
                                                 Style="{StaticResource BorderedButtonStyle}">
-                                            <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy32_d.png" Width="16" Height="16" />
+                                            <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="16" Height="16" />
                                         </Button>
                                     </Grid>
                                 </DataTemplate>

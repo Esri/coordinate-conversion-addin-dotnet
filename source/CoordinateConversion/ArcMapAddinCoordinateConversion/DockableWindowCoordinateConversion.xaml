@@ -77,7 +77,7 @@
                               Style="{StaticResource BorderedTButtonStyle}">
                     <Image Width="18"
                            Height="18"
-                           Source="/CoordinateConversionLibrary;component/Images/Add_Point32_d.png" />
+                           Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
                 </ToggleButton>
                 <Button Grid.Column="4"
                         Margin="3,3,0,0"

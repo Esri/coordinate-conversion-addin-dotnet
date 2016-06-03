@@ -36,7 +36,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
-                            <Image Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings32_d.png" Width="16" Height="16" />
+                            <Image Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
                         </Button>
                         <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
                         <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>
