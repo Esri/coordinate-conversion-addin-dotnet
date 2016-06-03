@@ -128,6 +128,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 ISpatialReference outgoingCoordSystem = map.SpatialReference;
                 address.Project(outgoingCoordSystem);
 
+                // is point within current extent
+                // if so, pan to point
+                var relationOp = envelope as IRelationalOperator;
+                if (relationOp != null && activeView is IMap)
+                {
+                    if (!relationOp.Contains(address))
+                    {
+                        // pan to
+                        envelope.CenterAt(address as IPoint);
+                        activeView.Extent = envelope;
+                        activeView.Refresh();
+                    }
+                }
+
                 IRgbColor color = new RgbColorClass();
                 color.Green = 80;
                 color.Red = 22;
