@@ -268,8 +268,14 @@ namespace ProAppCoordConversionModule
             //});
 
 
-            QueuedTask.Run(() =>
+            await QueuedTask.Run(() =>
                 {
+                    // is point within current map extent
+                    var projectedPoint = GeometryEngine.Project(point, MapView.Active.Extent.SpatialReference);
+                    if(!GeometryEngine.Contains(MapView.Active.Extent, projectedPoint))
+                    {
+                        MapView.Active.PanTo(point);
+                    }
                     Mediator.NotifyColleagues("UPDATE_FLASH", point);
                 });
 

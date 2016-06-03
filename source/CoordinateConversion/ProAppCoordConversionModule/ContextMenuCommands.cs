@@ -32,7 +32,7 @@ namespace ProAppCoordConversionModule
 
         internal CoordinateType cType = CoordinateType.Unknown;
 
-        protected async override void OnClick()
+        protected override void OnClick()
         {
             if (MapView.Active == null || MapView.Active.Map == null)
                 return;
