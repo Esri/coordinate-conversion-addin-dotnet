@@ -46,6 +46,8 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -54,6 +56,8 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -62,13 +66,16 @@
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="lineRight"
                 Storyboard.TargetProperty="X2" >
-                <LinearDoubleKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}">
-                </LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="0" Value="{Binding MapWidth, Mode=OneWay}" />
+                <!--<LinearDoubleKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}">
+                </LinearDoubleKeyFrame>-->
                 <LinearDoubleKeyFrame KeyTime="0:0:0.25">
                     <LinearDoubleKeyFrame.Value>
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -77,11 +84,14 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
-                <LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}">
-                </LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding MapWidth, Mode=OneWay}" />
+                <!--<LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}">
+                </LinearDoubleKeyFrame>-->
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="lineTop"
@@ -92,6 +102,8 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -100,6 +112,8 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -108,13 +122,16 @@
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="lineBottom"
                 Storyboard.TargetProperty="Y2" >
-                <LinearDoubleKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
-                </LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="0" Value="{Binding MapHeight, Mode=OneWay}" />
+                <!--<LinearDoubleKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
+                </LinearDoubleKeyFrame>-->
                 <LinearDoubleKeyFrame KeyTime="0:0:0.25">
                     <LinearDoubleKeyFrame.Value>
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
@@ -123,11 +140,14 @@
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </LinearDoubleKeyFrame.Value>
                 </LinearDoubleKeyFrame>
-                <LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
-                </LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding MapHeight, Mode=OneWay}" />
+                <!--<LinearDoubleKeyFrame KeyTime="0:0:0.50" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
+                </LinearDoubleKeyFrame>-->
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="centerPoint"
@@ -140,9 +160,9 @@
         </Storyboard>
     </UserControl.Resources>
     <Grid IsEnabled="{Binding Flash, NotifyOnTargetUpdated=True}">
-        <Grid.RenderTransform>
+        <!--<Grid.RenderTransform>
             <TranslateTransform X="-10" Y="-10"/>
-        </Grid.RenderTransform>
+        </Grid.RenderTransform>-->
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Binding.TargetUpdated">
                 <EventTrigger.Actions>
@@ -156,28 +176,40 @@
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.Y1>
             <Line.Y2>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.Y2>
         </Line>
         <Line x:Name="lineRight" Style="{StaticResource lineStyle}" Stroke="{StaticResource horizontalBrush}"
                   X1="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}"
-                  X2="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}">
+                  X2="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualWidth}" >
+            <!--X1="{Binding MapWidth, Mode=OneWay}"
+              X2="{Binding MapWidth, Mode=OneWay}"
+              >-->
+                    
             <Line.Y1>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.Y1>
             <Line.Y2>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="Y">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.Y2>
         </Line>
@@ -187,44 +219,60 @@
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.X1>
             <Line.X2>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.X2>
         </Line>
         <Line x:Name="lineBottom" Style="{StaticResource lineStyle}" Stroke="{StaticResource verticalBrush}"
               Y1="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}"
               Y2="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}, Path=ActualHeight}">
+            <!--Y1="{Binding MapHeight, Mode=OneWay}"
+              Y2="{Binding MapHeight, Mode=OneWay}"
+              >-->
+
             <Line.X1>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.X1>
             <Line.X2>
                 <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="X">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Line.X2>
         </Line>
-        <Ellipse x:Name="centerPoint" Fill="Green" Opacity="0.0" Height="12" Width="12" Stroke="Black" StrokeThickness="1">
+        <Ellipse x:Name="centerPoint" Fill="Green" Opacity="0" Height="12" Width="12" Stroke="Black" StrokeThickness="1">
             <Ellipse.RenderTransform>
                 <TranslateTransform>
                     <TranslateTransform.X>
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFWIDTH">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </TranslateTransform.X>
                     <TranslateTransform.Y>
                         <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFHEIGHT">
                             <Binding Path="ScreenPoint" />
                             <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
                         </MultiBinding>
                     </TranslateTransform.Y>
                 </TranslateTransform>
@@ -233,8 +281,40 @@
                 <MultiBinding Converter="{StaticResource screenToClientMarginConverter}">
                     <Binding Path="ScreenPoint" />
                     <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
                 </MultiBinding>
             </Ellipse.Margin>
         </Ellipse>
+        <!--<Ellipse x:Name="centerPoint2" Fill="Blue" Opacity="100" Height="12" Width="12" Stroke="Black" StrokeThickness="1">
+            <Ellipse.RenderTransform>
+                <TranslateTransform>
+                    <TranslateTransform.X>
+                        <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFWIDTH">
+                            <Binding Path="ScreenPoint" />
+                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
+                        </MultiBinding>
+                    </TranslateTransform.X>
+                    <TranslateTransform.Y>
+                        <MultiBinding Converter="{StaticResource screenToClientConverter}" ConverterParameter="NEGHALFHEIGHT">
+                            <Binding Path="ScreenPoint" />
+                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                            <Binding Path="MapWidth" />
+                            <Binding Path="MapHeight" />
+                        </MultiBinding>
+                    </TranslateTransform.Y>
+                </TranslateTransform>
+            </Ellipse.RenderTransform>
+            <Ellipse.Margin>
+                <MultiBinding Converter="{StaticResource screenToClientMarginConverter}">
+                    <Binding Path="ScreenPoint" />
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type Canvas}}"/>
+                    <Binding Path="MapWidth" />
+                    <Binding Path="MapHeight" />
+                </MultiBinding>
+            </Ellipse.Margin>
+        </Ellipse>-->
     </Grid>
 </UserControl>

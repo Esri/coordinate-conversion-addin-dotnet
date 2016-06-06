@@ -96,7 +96,15 @@ namespace ProAppCoordConversionModule
             var temp = QueuedTask.Run(() =>
                 {
                     if (flashVM != null && MapView.Active != null)
+                    {
                         flashVM.ScreenPoint = MapView.Active.ClientToScreen(point.Value);
+                        var p1 = MapView.Active.MapToScreen(MapPointBuilder.CreateMapPoint(MapView.Active.Extent.XMin, MapView.Active.Extent.YMin));
+                        var p3 = MapView.Active.MapToScreen(MapPointBuilder.CreateMapPoint(MapView.Active.Extent.XMax, MapView.Active.Extent.YMax));
+                        var width = (p3.X - p1.X) + 1;
+                        var height = (p1.Y - p3.Y) + 1;
+                        flashVM.MapWidth = width;
+                        flashVM.MapHeight = height;
+                    }
                     return true;
                 }).Result;
         }

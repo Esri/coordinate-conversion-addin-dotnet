@@ -31,6 +31,33 @@ namespace ProAppCoordConversionModule.UI
         {
         }
 
+        private double _mapWidth = 1920.0;
+        public double MapWidth
+        {
+            get
+            {
+                return _mapWidth;
+            }
+
+            set
+            {
+                SetProperty(ref _mapWidth, value, () => MapWidth);
+            }
+        }
+        private double _mapHeight = 1080.0;
+        public double MapHeight
+        {
+            get
+            {
+                return _mapHeight;
+            }
+
+            set
+            {
+                SetProperty(ref _mapHeight, value, () => MapHeight);
+            }
+        }
+        
         private bool _flash = true;
         public bool Flash
         {
@@ -80,6 +107,9 @@ namespace ProAppCoordConversionModule.UI
             if (source == null)
                 return 0;
 
+            c.Width = (double)values[2] * 2.0;
+            c.Height = (double)values[3] * 2.0;
+
             var point = c.PointFromScreen(screenPoint);
             var ps = parameter.ToString();
             if (ps == "X")
@@ -113,12 +143,15 @@ namespace ProAppCoordConversionModule.UI
             if (source == null)
                 return 0;
 
+            c.Width = (double)values[2] * 2.0;
+            c.Height = (double)values[3] * 2.0;
+
             var point = c.PointFromScreen(screenPoint);
             var halfWidth = c.ActualWidth / 2.0;
             var halfHeight = c.ActualHeight / 2.0;
 
-            double x = point.X *2;
-            double y = point.Y *2;
+            double x = point.X * 2.0;
+            double y = point.Y * 2.0;
 
             if (point.Y > halfHeight)
                 y -= (point.Y - halfHeight) + 6;
