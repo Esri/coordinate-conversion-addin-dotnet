@@ -24,7 +24,7 @@
         <Tool id="Esri_ArcMapAddinCoordinateConversion_PointTool" class="PointTool" message="Add-in command for Map Point Tool" caption="Map Point" tip="Map Point Tool" category="Add-In Controls" image="Images\Tool1.png" />
       </Commands>
       <DockableWindows>
-        <DockableWindow id="ESRI_ArcMapAddinCoordinateConversion_DockableWindowCoordinateConversion" class="DockableWindowCoordinateConversion+AddinImpl" caption="Coordinate Conversion" image="Images\DockableWindowCoordinateConversion.png">
+        <DockableWindow id="ESRI_ArcMapAddinCoordinateConversion_DockableWindowCoordinateConversion" class="DockableWindowCoordinateConversion+AddinImpl" caption="Coordinate Conversion" image="Images\coordinate-conversion-16.png">
           <InitialPlacement height="300" width="300" state="pinned" position="left" />
         </DockableWindow>
       </DockableWindows>
