@@ -176,6 +176,10 @@
   <ItemGroup>
     <AddInContent Include="Images\CoordinateConversionIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\coordinate-conversion-16.png" />
+    <AddInContent Include="Images\coordinate-conversion-32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.CleanAddIn" />
