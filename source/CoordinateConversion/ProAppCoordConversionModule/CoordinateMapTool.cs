@@ -28,6 +28,10 @@ namespace ProAppCoordConversionModule
     {
         public CoordinateMapTool()
         {
+            IsSketchTool = true;
+            SketchType = SketchGeometryType.Point;
+            UseSnapping = true;
+
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
@@ -39,10 +43,9 @@ namespace ProAppCoordConversionModule
             return base.OnToolActivateAsync(active);
         }
 
-        protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
+        protected override Task<bool> OnSketchCompleteAsync(Geometry geometry)
         {
-            if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
-                return;
+            var mp = geometry as MapPoint;
 
             var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
             if (vm != null)
@@ -50,7 +53,9 @@ namespace ProAppCoordConversionModule
                 vm.IsToolGenerated = true;
                 vm.IsToolActive = false;
             }
-            UpdateInputWithMapPoint(e.ClientPoint);
+            UpdateInputWithMapPoint(mp);
+
+            return base.OnSketchCompleteAsync(geometry);
         }
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
@@ -107,6 +112,23 @@ namespace ProAppCoordConversionModule
                     }
                     return true;
                 }).Result;
+        }
+
+        /// <summary>
+        /// Method to update the input coordinate text box
+        /// </summary>
+        /// <param name="mp">MapPoint</param>
+        private void UpdateInputWithMapPoint(MapPoint mp)
+        {
+            if (mp != null)
+            {
+                mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
+                if (vm != null)
+                {
+                    vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);
+                }
+            }
         }
 
         /// <summary>
