@@ -31,8 +31,6 @@ namespace ProAppCoordConversionModule
             IsSketchTool = true;
             SketchType = SketchGeometryType.Point;
             UseSnapping = true;
-            SketchOutputMode = ArcGIS.Desktop.Mapping.SketchOutputMode.Map;
-            
 
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
@@ -59,20 +57,6 @@ namespace ProAppCoordConversionModule
 
             return base.OnSketchCompleteAsync(geometry);
         }
-
-        //protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
-        //{
-        //    if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
-        //        return;
-
-        //    var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-        //    if (vm != null)
-        //    {
-        //        vm.IsToolGenerated = true;
-        //        vm.IsToolActive = false;
-        //    }
-        //    UpdateInputWithMapPoint(e.ClientPoint);
-        //}
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
         {
