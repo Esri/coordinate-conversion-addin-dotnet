@@ -31,6 +31,7 @@ using ArcGIS.Core.CIM;
 using System.Collections.ObjectModel;
 using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
+using System.Text.RegularExpressions;
 
 namespace ProAppCoordConversionModule
 {
@@ -468,6 +469,27 @@ namespace ProAppCoordConversionModule
                 catch { }
             }
 
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+            var matchMercator = regexMercator.Match(input);
+
+            if (matchMercator.Success && matchMercator.Length == input.Length)
+            {
+                try
+                {
+                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    point = QueuedTask.Run(() =>
+                    {
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, MapView.Active.Map.SpatialReference);
+                    }).Result;
+                    return CoordinateType.DD;
+                }
+                catch (Exception ex)
+                {
+                    return CoordinateType.Unknown;
+                }
+            }
 
             return CoordinateType.Unknown;
         }

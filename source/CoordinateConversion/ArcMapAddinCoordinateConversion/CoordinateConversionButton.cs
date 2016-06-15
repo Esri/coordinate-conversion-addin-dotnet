@@ -20,6 +20,7 @@ using ESRI.ArcGIS.Framework;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -101,12 +102,20 @@ namespace ArcMapAddinCoordinateConversion
 
             var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
 
-            // always use WGS84
-            var sr = GetSR();
-
-            if (sr != null)
+            if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
             {
-                point.Project(sr);
+                //IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
+                point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
+            }
+            else
+            {
+                // always use WGS84
+                var sr = GetSR();
+
+                if (sr != null)
+                {
+                    point.Project(sr);
+                }
             }
 
             return point;
