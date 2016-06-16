@@ -20,6 +20,7 @@ using ESRI.ArcGIS.Framework;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
+using ESRI.ArcGIS.Controls;
 using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
@@ -48,6 +49,10 @@ namespace ArcMapAddinCoordinateConversion
 
     public class PointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
     {
+        ISnappingEnvironment m_SnappingEnv;
+        IPointSnapper m_Snapper;
+        ISnappingFeedback m_SnappingFeedback;
+
         public PointTool()
         {
         }
@@ -57,6 +62,18 @@ namespace ArcMapAddinCoordinateConversion
             Enabled = ArcMap.Application != null;
         }
 
+        protected override void OnActivate()
+        {
+            //Get the snap environment and initialize the feedback
+            UID snapUID = new UID();
+
+            snapUID.Value = "{E07B4C52-C894-4558-B8D4-D4050018D1DA}";
+            m_SnappingEnv = ArcMap.Application.FindExtensionByCLSID(snapUID) as ISnappingEnvironment;
+            m_Snapper = m_SnappingEnv.PointSnapper;
+            m_SnappingFeedback = new SnappingFeedbackClass();
+            m_SnappingFeedback.Initialize(ArcMap.Application, m_SnappingEnv, true);
+        }
+
         protected override void OnMouseDown(ESRI.ArcGIS.Desktop.AddIns.Tool.MouseEventArgs arg)
         {
             if (arg.Button != System.Windows.Forms.MouseButtons.Left)
@@ -64,6 +81,12 @@ namespace ArcMapAddinCoordinateConversion
             try
             {
                 var point = GetMapPoint(arg.X, arg.Y);
+                ISnappingResult snapResult = null;
+                //Try to snap the current position
+                snapResult = m_Snapper.Snap(point);
+                m_SnappingFeedback.Update(null, 0);
+                if (snapResult != null && snapResult.Location != null)
+                    point = snapResult.Location;
 
                 var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
@@ -83,6 +106,12 @@ namespace ArcMapAddinCoordinateConversion
             try
             {
                 IPoint point = GetMapPoint(arg.X, arg.Y);
+                ISnappingResult snapResult = null;
+                //Try to snap the current position
+                snapResult = m_Snapper.Snap(point);
+                m_SnappingFeedback.Update(snapResult, 0);
+                if (snapResult != null && snapResult.Location != null)
+                    point = snapResult.Location;
 
                 var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
