@@ -27,6 +27,7 @@ using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -491,7 +492,19 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             else
             {
                 amCoordGetter.Point = point;
-                result = (point as IConversionNotation).GetDDFromCoords(6);
+                try
+                {
+                    if(CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
+                    {
+                        result = string.Format("{0:0.0} {1:0.0}", point.Y, point.X);
+                    }
+                    else
+                        result = (point as IConversionNotation).GetDDFromCoords(6);
+                }
+                catch(Exception ex)
+                {
+                    // do nothing
+                }
             }
 
             return result;
@@ -650,6 +663,27 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     return CoordinateType.UTM;
                 }
                 catch { }
+            }
+
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+            var matchMercator = regexMercator.Match(input);
+
+            if (matchMercator.Success && matchMercator.Length == input.Length)
+            {
+                try
+                {
+                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    point.X = Lon;
+                    point.Y = Lat;
+                    point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
+                    return CoordinateType.DD;
+                }
+                catch (Exception ex)
+                {
+                    // do nothing
+                }
             }
 
             return CoordinateType.Unknown;

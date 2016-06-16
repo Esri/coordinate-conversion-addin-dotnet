@@ -190,6 +190,9 @@ namespace ArcMapAddinCoordinateConversion
 
         public override void Project(int srfactoryCode)
         {
+            if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateTypes.None)
+                return;
+
             ISpatialReference sr = null;
 
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");

@@ -87,6 +87,11 @@ namespace CoordinateConversionLibrary.Models
                         coord.Lat = Double.Parse(matchDD.Groups["latitude"].Value);
                         coord.Lon = Double.Parse(matchDD.Groups["longitude"].Value);
 
+                        if (coord.Lat > 90.0 || coord.Lat < -90.0)
+                            return false;
+                        if (coord.Lon > 180.0 || coord.Lon < -180.0)
+                            return false;
+
                         var temp = matchDD.Groups["latitudeSuffix"];
                         if (temp.Success && temp.Value.ToUpper().Equals("S"))
                         {

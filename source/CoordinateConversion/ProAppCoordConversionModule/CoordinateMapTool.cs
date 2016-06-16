@@ -21,6 +21,7 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
 using ProAppCoordConversionModule.UI;
 using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ProAppCoordConversionModule
 {
@@ -122,7 +123,9 @@ namespace ProAppCoordConversionModule
         {
             if (mp != null)
             {
-                mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+                if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                    mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+
                 var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
                 if (vm != null)
                 {
@@ -147,8 +150,10 @@ namespace ProAppCoordConversionModule
                     try
                     {
                         // for now we will always project to WGS84
-                        var result = GeometryEngine.Project(temp, SpatialReferences.WGS84);
-                        return result;
+                        if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                            temp = GeometryEngine.Project(temp, SpatialReferences.WGS84) as MapPoint;
+                        
+                        return temp;
                     }
                     catch { }
                 }
