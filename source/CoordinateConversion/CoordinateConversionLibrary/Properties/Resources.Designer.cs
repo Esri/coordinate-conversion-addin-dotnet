@@ -81,6 +81,69 @@ namespace CoordinateConversionLibrary.Properties {
         /// <summary>
         ///   Looks up a localized string similar to DD.
         /// </summary>
+        public static string CategoryListDD {
+            get {
+                return ResourceManager.GetString("CategoryListDD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DDM.
+        /// </summary>
+        public static string CategoryListDDM {
+            get {
+                return ResourceManager.GetString("CategoryListDDM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DMS.
+        /// </summary>
+        public static string CategoryListDMS {
+            get {
+                return ResourceManager.GetString("CategoryListDMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GARS.
+        /// </summary>
+        public static string CategoryListGARS {
+            get {
+                return ResourceManager.GetString("CategoryListGARS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MGRS.
+        /// </summary>
+        public static string CategoryListMGRS {
+            get {
+                return ResourceManager.GetString("CategoryListMGRS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USNG.
+        /// </summary>
+        public static string CategoryListUSNG {
+            get {
+                return ResourceManager.GetString("CategoryListUSNG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTM.
+        /// </summary>
+        public static string CategoryListUTM {
+            get {
+                return ResourceManager.GetString("CategoryListUTM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DD.
+        /// </summary>
         public static string EnumCTDD {
             get {
                 return ResourceManager.GetString("EnumCTDD", resourceCulture);
@@ -151,11 +214,308 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        public static string FormatListCustom {
+            get {
+                return ResourceManager.GetString("FormatListCustom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Five.
+        /// </summary>
+        public static string FormatListFive {
+            get {
+                return ResourceManager.GetString("FormatListFive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Four.
+        /// </summary>
+        public static string FormatListFour {
+            get {
+                return ResourceManager.GetString("FormatListFour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One.
+        /// </summary>
+        public static string FormatListOne {
+            get {
+                return ResourceManager.GetString("FormatListOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seven.
+        /// </summary>
+        public static string FormatListSeven {
+            get {
+                return ResourceManager.GetString("FormatListSeven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Six.
+        /// </summary>
+        public static string FormatListSix {
+            get {
+                return ResourceManager.GetString("FormatListSix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Three.
+        /// </summary>
+        public static string FormatListThree {
+            get {
+                return ResourceManager.GetString("FormatListThree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two.
+        /// </summary>
+        public static string FormatListTwo {
+            get {
+                return ResourceManager.GetString("FormatListTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0}?.
+        /// </summary>
+        public static string FormattedRemove {
+            get {
+                return ResourceManager.GetString("FormattedRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        public static string HeaderAdvanced {
+            get {
+                return ResourceManager.GetString("HeaderAdvanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinate.
+        /// </summary>
+        public static string HeaderCoordinate {
+            get {
+                return ResourceManager.GetString("HeaderCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string HeaderName {
+            get {
+                return ResourceManager.GetString("HeaderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string LabelCategory {
+            get {
+                return ResourceManager.GetString("LabelCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Removal?.
+        /// </summary>
+        public static string LabelConfirmRemoval {
+            get {
+                return ResourceManager.GetString("LabelConfirmRemoval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Coordinate.
         /// </summary>
         public static string LabelDisplayCoordinate {
             get {
                 return ResourceManager.GetString("LabelDisplayCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-+0.####,X-+0.####.
+        /// </summary>
+        public static string LabelFormat {
+            get {
+                return ResourceManager.GetString("LabelFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formats.
+        /// </summary>
+        public static string LabelFormats {
+            get {
+                return ResourceManager.GetString("LabelFormats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sample.
+        /// </summary>
+        public static string LabelSample {
+            get {
+                return ResourceManager.GetString("LabelSample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Easting.
+        /// </summary>
+        public static string StringEasting {
+            get {
+                return ResourceManager.GetString("StringEasting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid Sq.
+        /// </summary>
+        public static string StringGridSq {
+            get {
+                return ResourceManager.GetString("StringGridSq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GZD.
+        /// </summary>
+        public static string StringGZD {
+            get {
+                return ResourceManager.GetString("StringGZD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 70.49N40.32W.
+        /// </summary>
+        public static string StringInputCoord {
+            get {
+                return ResourceManager.GetString("StringInputCoord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key.
+        /// </summary>
+        public static string StringKey {
+            get {
+                return ResourceManager.GetString("StringKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lat.
+        /// </summary>
+        public static string StringLat {
+            get {
+                return ResourceManager.GetString("StringLat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lon.
+        /// </summary>
+        public static string StringLon {
+            get {
+                return ResourceManager.GetString("StringLon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Format Found.
+        /// </summary>
+        public static string StringNoFormatFound {
+            get {
+                return ResourceManager.GetString("StringNoFormatFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Northing.
+        /// </summary>
+        public static string StringNorthing {
+            get {
+                return ResourceManager.GetString("StringNorthing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quadrant.
+        /// </summary>
+        public static string StringQuadrant {
+            get {
+                return ResourceManager.GetString("StringQuadrant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string StringX {
+            get {
+                return ResourceManager.GetString("StringX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string StringY {
+            get {
+                return ResourceManager.GetString("StringY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 00000.
+        /// </summary>
+        public static string StringZeros {
+            get {
+                return ResourceManager.GetString("StringZeros", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zone.
+        /// </summary>
+        public static string StringZone {
+            get {
+                return ResourceManager.GetString("StringZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Output Coordinate.
+        /// </summary>
+        public static string TitleAddNewOutputCoordinate {
+            get {
+                return ResourceManager.GetString("TitleAddNewOutputCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Output Coordinate.
+        /// </summary>
+        public static string TitleEditOutputCoordinate {
+            get {
+                return ResourceManager.GetString("TitleEditOutputCoordinate", resourceCulture);
             }
         }
         
@@ -169,11 +529,47 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string TooltipAdd {
+            get {
+                return ResourceManager.GetString("TooltipAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string TooltipCopy {
+            get {
+                return ResourceManager.GetString("TooltipCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy All.
+        /// </summary>
+        public static string TooltipCopyAll {
+            get {
+                return ResourceManager.GetString("TooltipCopyAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Properties.
         /// </summary>
         public static string TooltipEditProperties {
             get {
                 return ResourceManager.GetString("TooltipEditProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Point Tool.
+        /// </summary>
+        public static string TooltipMapPointTool {
+            get {
+                return ResourceManager.GetString("TooltipMapPointTool", resourceCulture);
             }
         }
     }

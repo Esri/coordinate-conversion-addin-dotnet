@@ -29,15 +29,34 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
             {
-                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM" };
+                CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
+                                                                    Properties.Resources.CategoryListDDM,
+                                                                    Properties.Resources.CategoryListDMS,
+                                                                    Properties.Resources.CategoryListGARS,
+                                                                    Properties.Resources.CategoryListMGRS,
+                                                                    Properties.Resources.CategoryListUSNG,
+                                                                    Properties.Resources.CategoryListUTM };
             }
             else
             {
-                CategoryList = new ObservableCollection<string>() { "DD", "DDM", "DMS", "GARS", "MGRS", "USNG", "UTM" };
+                CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
+                                                                    Properties.Resources.CategoryListDDM,
+                                                                    Properties.Resources.CategoryListDMS,
+                                                                    Properties.Resources.CategoryListGARS,
+                                                                    Properties.Resources.CategoryListMGRS,
+                                                                    Properties.Resources.CategoryListUSNG,
+                                                                    Properties.Resources.CategoryListUTM };
             }
-            FormatList = new ObservableCollection<string>() { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Custom" };
-            Sample = "Sample";
-            Format = "Y-+0.####,X-+0.####";
+            FormatList = new ObservableCollection<string>() { Properties.Resources.FormatListOne,
+                                                              Properties.Resources.FormatListTwo,
+                                                              Properties.Resources.FormatListThree,
+                                                              Properties.Resources.FormatListFour,
+                                                              Properties.Resources.FormatListFive,
+                                                              Properties.Resources.FormatListSix,
+                                                              Properties.Resources.FormatListSeven,
+                                                              Properties.Resources.FormatListCustom };
+            Sample = Properties.Resources.LabelSample;
+            Format = Properties.Resources.LabelFormat;
 
             FormatExpanded = false;
 
@@ -77,7 +96,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     {
                         if (!temp.DefaultNameFormatDictionary.Values.Contains(Format))
                         {
-                            FormatSelection = "Custom";
+                            FormatSelection = Properties.Resources.FormatListCustom;
                             FormatExpanded = true;
                         }
                     }
@@ -113,11 +132,11 @@ namespace CoordinateConversionLibrary.ViewModels
             if (list == null)
                 return;
 
-            list.Add("Custom");
+            list.Add(Properties.Resources.FormatListCustom);
 
             FormatList = list;
 
-            if(!FormatList.Contains(FormatSelection) || FormatSelection == "Custom")
+            if(!FormatList.Contains(FormatSelection) || FormatSelection == Properties.Resources.FormatListCustom)
             {
                 // update format selection
                 FormatSelection = FormatList.FirstOrDefault();
@@ -184,7 +203,7 @@ namespace CoordinateConversionLibrary.ViewModels
             // if not custom, change format
             // and update sample
 
-            if(FormatSelection != "Custom")
+            if(FormatSelection != Properties.Resources.FormatListCustom)
             {
                 // get format from defaults
 
@@ -204,7 +223,7 @@ namespace CoordinateConversionLibrary.ViewModels
             var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
 
             if (item == null)
-                return "No Format Found";
+                return Properties.Resources.StringNoFormatFound;
 
             return item.DefaultNameFormatDictionary[FormatSelection];
         }
@@ -360,7 +379,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 }
             }
 
-            return "Custom";
+            return Properties.Resources.FormatListCustom;
         }
 
         private void SelectCategory(CoordinateType coordinateType)

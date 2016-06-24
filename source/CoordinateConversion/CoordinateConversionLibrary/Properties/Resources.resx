@@ -123,6 +123,27 @@
   <data name="ButtonOK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="CategoryListDD" xml:space="preserve">
+    <value>DD</value>
+  </data>
+  <data name="CategoryListDDM" xml:space="preserve">
+    <value>DDM</value>
+  </data>
+  <data name="CategoryListDMS" xml:space="preserve">
+    <value>DMS</value>
+  </data>
+  <data name="CategoryListGARS" xml:space="preserve">
+    <value>GARS</value>
+  </data>
+  <data name="CategoryListMGRS" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
+  <data name="CategoryListUSNG" xml:space="preserve">
+    <value>USNG</value>
+  </data>
+  <data name="CategoryListUTM" xml:space="preserve">
+    <value>UTM</value>
+  </data>
   <data name="EnumCTDD" xml:space="preserve">
     <value>DD</value>
   </data>
@@ -147,13 +168,124 @@
   <data name="EnumCTUTM" xml:space="preserve">
     <value>UTM</value>
   </data>
+  <data name="FormatListCustom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="FormatListFive" xml:space="preserve">
+    <value>Five</value>
+  </data>
+  <data name="FormatListFour" xml:space="preserve">
+    <value>Four</value>
+  </data>
+  <data name="FormatListOne" xml:space="preserve">
+    <value>One</value>
+  </data>
+  <data name="FormatListSeven" xml:space="preserve">
+    <value>Seven</value>
+  </data>
+  <data name="FormatListSix" xml:space="preserve">
+    <value>Six</value>
+  </data>
+  <data name="FormatListThree" xml:space="preserve">
+    <value>Three</value>
+  </data>
+  <data name="FormatListTwo" xml:space="preserve">
+    <value>Two</value>
+  </data>
+  <data name="FormattedRemove" xml:space="preserve">
+    <value>Remove {0}?</value>
+  </data>
+  <data name="HeaderAdvanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="HeaderCoordinate" xml:space="preserve">
+    <value>Coordinate</value>
+  </data>
+  <data name="HeaderName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LabelCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="LabelConfirmRemoval" xml:space="preserve">
+    <value>Confirm Removal?</value>
+  </data>
   <data name="LabelDisplayCoordinate" xml:space="preserve">
     <value>Display Coordinate</value>
+  </data>
+  <data name="LabelFormat" xml:space="preserve">
+    <value>Y-+0.####,X-+0.####</value>
+  </data>
+  <data name="LabelFormats" xml:space="preserve">
+    <value>Formats</value>
+  </data>
+  <data name="LabelSample" xml:space="preserve">
+    <value>Sample</value>
+  </data>
+  <data name="StringEasting" xml:space="preserve">
+    <value>Easting</value>
+  </data>
+  <data name="StringGridSq" xml:space="preserve">
+    <value>Grid Sq</value>
+  </data>
+  <data name="StringGZD" xml:space="preserve">
+    <value>GZD</value>
+  </data>
+  <data name="StringInputCoord" xml:space="preserve">
+    <value>70.49N40.32W</value>
+  </data>
+  <data name="StringKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="StringLat" xml:space="preserve">
+    <value>Lat</value>
+  </data>
+  <data name="StringLon" xml:space="preserve">
+    <value>Lon</value>
+  </data>
+  <data name="StringNoFormatFound" xml:space="preserve">
+    <value>No Format Found</value>
+  </data>
+  <data name="StringNorthing" xml:space="preserve">
+    <value>Northing</value>
+  </data>
+  <data name="StringQuadrant" xml:space="preserve">
+    <value>Quadrant</value>
+  </data>
+  <data name="StringX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="StringY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="StringZeros" xml:space="preserve">
+    <value>00000</value>
+  </data>
+  <data name="StringZone" xml:space="preserve">
+    <value>Zone</value>
+  </data>
+  <data name="TitleAddNewOutputCoordinate" xml:space="preserve">
+    <value>Add New Output Coordinate</value>
+  </data>
+  <data name="TitleEditOutputCoordinate" xml:space="preserve">
+    <value>Edit Output Coordinate</value>
   </data>
   <data name="TitleEditProperties" xml:space="preserve">
     <value>Edit Properties</value>
   </data>
+  <data name="TooltipAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="TooltipCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="TooltipCopyAll" xml:space="preserve">
+    <value>Copy All</value>
+  </data>
   <data name="TooltipEditProperties" xml:space="preserve">
     <value>Edit Properties</value>
+  </data>
+  <data name="TooltipMapPointTool" xml:space="preserve">
+    <value>Map Point Tool</value>
   </data>
 </root>

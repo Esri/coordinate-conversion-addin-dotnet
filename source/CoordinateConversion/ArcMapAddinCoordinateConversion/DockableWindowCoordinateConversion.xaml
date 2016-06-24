@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prop="clr-namespace:ArcMapAddinCoordinateConversion.Properties"
              xmlns:viewModels="clr-namespace:ArcMapAddinCoordinateConversion.ViewModels"
+             xmlns:libprop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
              Width="300"
              Height="300">
     <UserControl.Resources>
@@ -22,10 +23,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Input">
+        <GroupBox Header="{x:Static prop:Resources.HeaderInput}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="32*"/>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -41,7 +43,7 @@
                           IsEditable="True"
                           ItemsSource="{Binding InputCoordinateHistoryList}"
                           Text="{Binding InputCoordinate,
-                                         UpdateSourceTrigger=PropertyChanged}">
+                                         UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2">
                     <ComboBox.Style>
                         <Style>
                             <Style.Triggers>
@@ -58,31 +60,32 @@
                         <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
                     </ComboBox.InputBindings>
                 </ComboBox>
-                <Button Grid.Column="1"
-                        Margin="3,3,0,0"
-                        Style="{StaticResource buttonProperties}" />
                 <Button Grid.Column="2"
                         Margin="3,3,0,0"
+                        ToolTip="{x:Static libprop:Resources.TooltipEditProperties}"
+                        Style="{StaticResource buttonProperties}" />
+                <Button Grid.Column="3"
+                        Margin="3,3,0,0"
                         Command="{Binding AddNewOCCommand}"
-                        ToolTip="Add"
+                        ToolTip="{x:Static libprop:Resources.TooltipAdd}"
                         Style="{StaticResource BorderedButtonStyle}">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
                 </Button>
-                <ToggleButton Grid.Column="3"
+                <ToggleButton Grid.Column="4"
                               Margin="3,3,0,0"
                               IsChecked="{Binding IsToolActive}"
-                              ToolTip="Map Point Tool"
+                              ToolTip="{x:Static libprop:Resources.TooltipMapPointTool}"
                               Style="{StaticResource BorderedTButtonStyle}">
                     <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
                 </ToggleButton>
-                <Button Grid.Column="4"
+                <Button Grid.Column="5"
                         Margin="3,3,0,0"
                         Command="{Binding CopyAllCommand}"
-                        ToolTip="Copy All"
+                        ToolTip="{x:Static libprop:Resources.TooltipCopyAll}"
                         Style="{StaticResource BorderedButtonStyle}">
                     <Image Width="18"
                            Height="18"
@@ -90,7 +93,7 @@
                 </Button>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Output">
+        <GroupBox Grid.Row="1" Header="{x:Static prop:Resources.HeaderOutput}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <UserControl Content="{Binding CTView}" />
             </ScrollViewer>

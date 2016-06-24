@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
              xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
@@ -18,7 +19,7 @@
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="Category" Margin="3,3,3,3" />
+                <TextBlock Text="{x:Static prop:Resources.LabelCategory}" Margin="3,3,3,3" />
                 <ListBox ItemsSource="{Binding CategoryList}" SelectedItem="{Binding CategorySelection, Mode=TwoWay}"
                          MinWidth="150" Margin="3,3,3,3" />
                 <Grid>
@@ -26,7 +27,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Name" Margin="3,3,3,3" />
+                    <TextBlock Text="{x:Static prop:Resources.HeaderName}" Margin="3,3,3,3" />
                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="3,3,3,3" />
                 </Grid>
                 <GroupBox Header="Spatial Reference" Visibility="Collapsed">
@@ -44,21 +45,21 @@
                 </GroupBox>
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="Formats" Margin="3,3,3,3" />
+                <TextBlock Text="{x:Static prop:Resources.LabelFormats}" Margin="3,3,3,3" />
                 <ListBox ItemsSource="{Binding FormatList}" SelectedItem="{Binding FormatSelection, Mode=TwoWay}" 
                          MinWidth="150" Margin="3,3,3,3" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Sample" Margin="3,3,3,3" />
+                    <TextBlock Text="{x:Static prop:Resources.LabelSample}" Margin="3,3,3,3" />
                     <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
                 </StackPanel>
-                <Expander Header="Advanced" IsExpanded="{Binding FormatExpanded}">
+                <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}">
                     <TextBox Text="{Binding Format, UpdateSourceTrigger=PropertyChanged}" MinWidth="150" Margin="3,3,3,3" />
                 </Expander>
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="OK" Click="Button_Click" Width="75" Margin="3,8,3,5" />
-            <Button Content="Cancel" IsCancel="True" Width=" 75" Margin="3,8,3,5" />
+            <Button Content="{x:Static prop:Resources.ButtonOK}" Click="Button_Click" Width="75" Margin="3,8,3,5" />
+            <Button Content="{x:Static prop:Resources.ButtonCancel}" IsCancel="True" Width=" 75" Margin="3,8,3,5" />
         </StackPanel>
     </StackPanel>
 </Window>
