@@ -209,8 +209,8 @@ namespace CoordinateConversionLibrary.ViewModels
                         {
                             output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
                             props.Add(Properties.Resources.StringZone, utm.Zone.ToString() + utm.Hemi);
-                            props.Add(Properties.Resources.StringEasting, utm.Easting.ToString("00000"));
-                            props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString("00000"));
+                            props.Add(Properties.Resources.StringEasting, utm.Easting.ToString("000000"));
+                            props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString("0000000"));
                             output.Props = props;
                         }
                         break;

@@ -201,9 +201,6 @@
   <data name="StringGZD" xml:space="preserve">
     <value>GZD</value>
   </data>
-  <data name="StringInputCoord" xml:space="preserve">
-    <value>70.49N40.32W</value>
-  </data>
   <data name="StringKey" xml:space="preserve">
     <value>Key</value>
   </data>
@@ -248,5 +245,8 @@
   </data>
   <data name="TooltipMapPointTool" xml:space="preserve">
     <value>Map Point Tool</value>
+  </data>
+  <data name="CustomString" xml:space="preserve">
+    <value>Custom</value>
   </data>
 </root>

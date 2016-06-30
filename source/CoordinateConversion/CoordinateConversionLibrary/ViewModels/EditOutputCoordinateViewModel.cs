@@ -25,7 +25,6 @@ namespace CoordinateConversionLibrary.ViewModels
 {
     public class EditOutputCoordinateViewModel : BaseViewModel
     {
-        private const string CustomString = "Custom";
         public EditOutputCoordinateViewModel() 
         {
             if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
@@ -55,7 +54,7 @@ namespace CoordinateConversionLibrary.ViewModels
                                                               "Five",
                                                               "Six",
                                                               "Seven",
-                                                              CustomString };
+                                                              "Custom" };
             Sample = "Sample";
             Format = "Y-+0.####,X-+0.####";
 
@@ -97,7 +96,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     {
                         if (!temp.DefaultNameFormatDictionary.Values.Contains(Format))
                         {
-                            FormatSelection = CustomString;
+                            FormatSelection = Properties.Resources.CustomString;
                             FormatExpanded = true;
                         }
                     }
@@ -133,11 +132,11 @@ namespace CoordinateConversionLibrary.ViewModels
             if (list == null)
                 return;
 
-            list.Add(CustomString);
+            list.Add(Properties.Resources.CustomString);
 
             FormatList = list;
 
-            if (!FormatList.Contains(FormatSelection) || FormatSelection == CustomString)
+            if (!FormatList.Contains(FormatSelection) || FormatSelection == Properties.Resources.CustomString)
             {
                 // update format selection
                 FormatSelection = FormatList.FirstOrDefault();
@@ -204,7 +203,7 @@ namespace CoordinateConversionLibrary.ViewModels
             // if not custom, change format
             // and update sample
 
-            if (FormatSelection != CustomString)
+            if (FormatSelection != Properties.Resources.CustomString)
             {
                 // get format from defaults
 
@@ -380,7 +379,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 }
             }
 
-            return CustomString;
+            return Properties.Resources.CustomString;
         }
 
         private void SelectCategory(CoordinateType coordinateType)

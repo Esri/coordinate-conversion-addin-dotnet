@@ -142,6 +142,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        public static string CustomString {
+            get {
+                return ResourceManager.GetString("CustomString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DD.
         /// </summary>
         public static string EnumCTDD {
@@ -309,15 +318,6 @@ namespace CoordinateConversionLibrary.Properties {
         public static string StringGZD {
             get {
                 return ResourceManager.GetString("StringGZD", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 70.49N40.32W.
-        /// </summary>
-        public static string StringInputCoord {
-            get {
-                return ResourceManager.GetString("StringInputCoord", resourceCulture);
             }
         }
         
