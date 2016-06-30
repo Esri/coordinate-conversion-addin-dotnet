@@ -2,6 +2,7 @@
              x:Name="ocView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels"
@@ -78,7 +79,7 @@
                 <DataGridTextColumn
                     SortDirection="Ascending"
                     IsReadOnly="True"
-                    Header="Name"
+                    Header="{x:Static prop:Resources.HeaderName}"
                     Width="Auto"
                     FontWeight="Bold"
                     MinWidth="40"
@@ -89,7 +90,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="Coordinate" Width="*">
+                <DataGridTemplateColumn Header="{x:Static prop:Resources.HeaderCoordinate}" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding OutputCoordinate}" IsReadOnly="True" BorderThickness="0" />
@@ -99,7 +100,7 @@
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding OutputCoordinate}" ToolTip="Copy"
+                            <Button Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding OutputCoordinate}" ToolTip="{x:Static prop:Resources.TooltipCopy}"
                                     Style="{StaticResource BorderlessButtonStyle}">
                                 <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="16" Height="16" />
                             </Button>

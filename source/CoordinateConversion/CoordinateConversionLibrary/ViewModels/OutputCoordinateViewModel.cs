@@ -94,7 +94,7 @@ namespace CoordinateConversionLibrary.ViewModels
             var dlg = new EditOutputCoordinateView(CoordinateConversionViewModel.AddInConfig.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
-            vm.WindowTitle = "Add New Output Coordinate";
+            vm.WindowTitle = Properties.Resources.TitleAddNewOutputCoordinate;
             
             if (dlg.ShowDialog() == true)
             {
@@ -158,7 +158,7 @@ namespace CoordinateConversionLibrary.ViewModels
             if (!string.IsNullOrEmpty(name))
             {
                 // lets make sure
-                if (System.Windows.MessageBoxResult.Yes != System.Windows.MessageBox.Show(string.Format("Remove {0}?", name), "Confirm removal?", System.Windows.MessageBoxButton.YesNo))
+                if (System.Windows.MessageBoxResult.Yes != System.Windows.MessageBox.Show(string.Format(Properties.Resources.FormattedRemove, name), Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
                     return;
 
                 foreach (var item in CoordinateConversionViewModel.AddInConfig.OutputCoordinateList)
@@ -206,7 +206,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     SRFactoryCode = outputCoordItem.SRFactoryCode});
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
-            vm.WindowTitle = "Edit Output Coordinate";
+            vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
 
             if (dlg.ShowDialog() == true)
             {

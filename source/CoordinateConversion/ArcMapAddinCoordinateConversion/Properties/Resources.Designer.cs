@@ -61,11 +61,20 @@ namespace ArcMapAddinCoordinateConversion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Properties.
+        ///   Looks up a localized string similar to Input.
         /// </summary>
-        public static string TooltipEditProperties {
+        public static string HeaderInput {
             get {
-                return ResourceManager.GetString("TooltipEditProperties", resourceCulture);
+                return ResourceManager.GetString("HeaderInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string HeaderOutput {
+            get {
+                return ResourceManager.GetString("HeaderOutput", resourceCulture);
             }
         }
     }
