@@ -26,7 +26,6 @@
         <GroupBox Header="{x:Static prop:Resources.HeaderInput}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -60,11 +59,11 @@
                         <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
                     </ComboBox.InputBindings>
                 </ComboBox>
-                <Button Grid.Column="2"
+                <Button Grid.Column="1"
                         Margin="3,3,0,0"
                         ToolTip="{x:Static libprop:Resources.TooltipEditProperties}"
                         Style="{StaticResource buttonProperties}" />
-                <Button Grid.Column="3"
+                <Button Grid.Column="2"
                         Margin="3,3,0,0"
                         Command="{Binding AddNewOCCommand}"
                         ToolTip="{x:Static libprop:Resources.TooltipAdd}"
@@ -73,7 +72,7 @@
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
                 </Button>
-                <ToggleButton Grid.Column="4"
+                <ToggleButton Grid.Column="3"
                               Margin="3,3,0,0"
                               IsChecked="{Binding IsToolActive}"
                               ToolTip="{x:Static libprop:Resources.TooltipMapPointTool}"
@@ -82,7 +81,7 @@
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
                 </ToggleButton>
-                <Button Grid.Column="5"
+                <Button Grid.Column="4"
                         Margin="3,3,0,0"
                         Command="{Binding CopyAllCommand}"
                         ToolTip="{x:Static libprop:Resources.TooltipCopyAll}"
