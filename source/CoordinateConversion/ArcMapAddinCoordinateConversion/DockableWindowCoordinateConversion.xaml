@@ -42,7 +42,7 @@
                           IsEditable="True"
                           ItemsSource="{Binding InputCoordinateHistoryList}"
                           Text="{Binding InputCoordinate,
-                                         UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2">
+                                         UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.Style>
                         <Style>
                             <Style.Triggers>
