@@ -86,7 +86,7 @@ namespace CoordinateConversionLibrary.ViewModels
                             if (splits.Count() == 2)
                             {
                                 props.Add(Properties.Resources.StringLat, cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
-                                props.Add(Properties.Resources.StringLon, cdd.ToString(Properties.Resources.StringX + splits[1].Trim(), new CoordinateDDFormatter()));
+                                props.Add(Properties.Resources.StringLon, cdd.ToString("X" + splits[1].Trim(), new CoordinateDDFormatter()));
                             }
                             else
                             {
@@ -94,7 +94,7 @@ namespace CoordinateConversionLibrary.ViewModels
                                 if (splits.Count() == 2)
                                 {
                                     props.Add(Properties.Resources.StringLon, cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
-                                    props.Add(Properties.Resources.StringLat, cdd.ToString(Properties.Resources.StringY + splits[1].Trim(), new CoordinateDDFormatter()));
+                                    props.Add(Properties.Resources.StringLat, cdd.ToString("Y" + splits[1].Trim(), new CoordinateDDFormatter()));
                                 }
                                 else
                                 {
@@ -115,7 +115,7 @@ namespace CoordinateConversionLibrary.ViewModels
                             if (splits.Count() == 2)
                             {
                                 props.Add(Properties.Resources.StringLat, cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
-                                props.Add(Properties.Resources.StringLon, cdms.ToString(Properties.Resources.StringX + splits[1].Trim(), new CoordinateDMSFormatter()));
+                                props.Add(Properties.Resources.StringLon, cdms.ToString("X" + splits[1].Trim(), new CoordinateDMSFormatter()));
                             }
                             else
                             {
@@ -123,7 +123,7 @@ namespace CoordinateConversionLibrary.ViewModels
                                 if (splits.Count() == 2)
                                 {
                                     props.Add(Properties.Resources.StringLon, cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
-                                    props.Add(Properties.Resources.StringLat, cdms.ToString(Properties.Resources.StringY + splits[1].Trim(), new CoordinateDMSFormatter()));
+                                    props.Add(Properties.Resources.StringLat, cdms.ToString("Y" + splits[1].Trim(), new CoordinateDMSFormatter()));
                                 }
                                 else
                                 {
@@ -144,7 +144,7 @@ namespace CoordinateConversionLibrary.ViewModels
                             if (splits.Count() == 2)
                             {
                                 props.Add(Properties.Resources.StringLat, ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
-                                props.Add(Properties.Resources.StringLon, ddm.ToString(Properties.Resources.StringX + splits[1].Trim(), new CoordinateDDMFormatter()));
+                                props.Add(Properties.Resources.StringLon, ddm.ToString("X" + splits[1].Trim(), new CoordinateDDMFormatter()));
                             }
                             else
                             {
@@ -152,7 +152,7 @@ namespace CoordinateConversionLibrary.ViewModels
                                 if (splits.Count() == 2)
                                 {
                                     props.Add(Properties.Resources.StringLon, ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
-                                    props.Add(Properties.Resources.StringLat, ddm.ToString(Properties.Resources.StringY + splits[1].Trim(), new CoordinateDDMFormatter()));
+                                    props.Add(Properties.Resources.StringLat, ddm.ToString("Y" + splits[1].Trim(), new CoordinateDDMFormatter()));
                                 }
                                 else
                                 {
@@ -184,8 +184,8 @@ namespace CoordinateConversionLibrary.ViewModels
                             output.OutputCoordinate = mgrs.ToString(output.Format, new CoordinateMGRSFormatter());
                             props.Add(Properties.Resources.StringGZD, mgrs.GZD);
                             props.Add(Properties.Resources.StringGridSq, mgrs.GS);
-                            props.Add(Properties.Resources.StringEasting, mgrs.Easting.ToString(Properties.Resources.StringZeros));
-                            props.Add(Properties.Resources.StringNorthing, mgrs.Northing.ToString(Properties.Resources.StringZeros));
+                            props.Add(Properties.Resources.StringEasting, mgrs.Easting.ToString("00000"));
+                            props.Add(Properties.Resources.StringNorthing, mgrs.Northing.ToString("00000"));
                             output.Props = props;
                         }
                         break;
@@ -197,8 +197,8 @@ namespace CoordinateConversionLibrary.ViewModels
                             output.OutputCoordinate = usng.ToString(output.Format, new CoordinateMGRSFormatter());
                             props.Add(Properties.Resources.StringGZD, usng.GZD);
                             props.Add(Properties.Resources.StringGridSq, usng.GS);
-                            props.Add(Properties.Resources.StringEasting, usng.Easting.ToString(Properties.Resources.StringZeros));
-                            props.Add(Properties.Resources.StringNorthing, usng.Northing.ToString(Properties.Resources.StringZeros));
+                            props.Add(Properties.Resources.StringEasting, usng.Easting.ToString("00000"));
+                            props.Add(Properties.Resources.StringNorthing, usng.Northing.ToString("00000"));
                             output.Props = props;
                         }
                         break;
@@ -209,8 +209,8 @@ namespace CoordinateConversionLibrary.ViewModels
                         {
                             output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
                             props.Add(Properties.Resources.StringZone, utm.Zone.ToString() + utm.Hemi);
-                            props.Add(Properties.Resources.StringEasting, utm.Easting.ToString(Properties.Resources.StringZeros));
-                            props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString(Properties.Resources.StringZeros));
+                            props.Add(Properties.Resources.StringEasting, utm.Easting.ToString("00000"));
+                            props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString("00000"));
                             output.Props = props;
                         }
                         break;
