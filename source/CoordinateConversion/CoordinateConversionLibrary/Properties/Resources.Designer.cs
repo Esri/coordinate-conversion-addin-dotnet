@@ -214,78 +214,6 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Custom.
-        /// </summary>
-        public static string FormatListCustom {
-            get {
-                return ResourceManager.GetString("FormatListCustom", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Five.
-        /// </summary>
-        public static string FormatListFive {
-            get {
-                return ResourceManager.GetString("FormatListFive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Four.
-        /// </summary>
-        public static string FormatListFour {
-            get {
-                return ResourceManager.GetString("FormatListFour", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to One.
-        /// </summary>
-        public static string FormatListOne {
-            get {
-                return ResourceManager.GetString("FormatListOne", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Seven.
-        /// </summary>
-        public static string FormatListSeven {
-            get {
-                return ResourceManager.GetString("FormatListSeven", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Six.
-        /// </summary>
-        public static string FormatListSix {
-            get {
-                return ResourceManager.GetString("FormatListSix", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Three.
-        /// </summary>
-        public static string FormatListThree {
-            get {
-                return ResourceManager.GetString("FormatListThree", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Two.
-        /// </summary>
-        public static string FormatListTwo {
-            get {
-                return ResourceManager.GetString("FormatListTwo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Remove {0}?.
         /// </summary>
         public static string FormattedRemove {
@@ -349,29 +277,11 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y-+0.####,X-+0.####.
-        /// </summary>
-        public static string LabelFormat {
-            get {
-                return ResourceManager.GetString("LabelFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Formats.
         /// </summary>
         public static string LabelFormats {
             get {
                 return ResourceManager.GetString("LabelFormats", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sample.
-        /// </summary>
-        public static string LabelSample {
-            get {
-                return ResourceManager.GetString("LabelSample", resourceCulture);
             }
         }
         
@@ -462,33 +372,6 @@ namespace CoordinateConversionLibrary.Properties {
         public static string StringQuadrant {
             get {
                 return ResourceManager.GetString("StringQuadrant", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to X.
-        /// </summary>
-        public static string StringX {
-            get {
-                return ResourceManager.GetString("StringX", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Y.
-        /// </summary>
-        public static string StringY {
-            get {
-                return ResourceManager.GetString("StringY", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 00000.
-        /// </summary>
-        public static string StringZeros {
-            get {
-                return ResourceManager.GetString("StringZeros", resourceCulture);
             }
         }
         

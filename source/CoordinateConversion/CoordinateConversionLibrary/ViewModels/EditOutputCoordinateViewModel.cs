@@ -25,6 +25,7 @@ namespace CoordinateConversionLibrary.ViewModels
 {
     public class EditOutputCoordinateViewModel : BaseViewModel
     {
+        private const string CustomString = "Custom";
         public EditOutputCoordinateViewModel() 
         {
             if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow.Title.Contains("ArcGIS Pro"))
@@ -47,16 +48,16 @@ namespace CoordinateConversionLibrary.ViewModels
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
             }
-            FormatList = new ObservableCollection<string>() { Properties.Resources.FormatListOne,
-                                                              Properties.Resources.FormatListTwo,
-                                                              Properties.Resources.FormatListThree,
-                                                              Properties.Resources.FormatListFour,
-                                                              Properties.Resources.FormatListFive,
-                                                              Properties.Resources.FormatListSix,
-                                                              Properties.Resources.FormatListSeven,
-                                                              Properties.Resources.FormatListCustom };
-            Sample = Properties.Resources.LabelSample;
-            Format = Properties.Resources.LabelFormat;
+            FormatList = new ObservableCollection<string>() { "One",
+                                                              "Two",
+                                                              "Three",
+                                                              "Four",
+                                                              "Five",
+                                                              "Six",
+                                                              "Seven",
+                                                              CustomString };
+            Sample = "Sample";
+            Format = "Y-+0.####,X-+0.####";
 
             FormatExpanded = false;
 
@@ -96,7 +97,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     {
                         if (!temp.DefaultNameFormatDictionary.Values.Contains(Format))
                         {
-                            FormatSelection = Properties.Resources.FormatListCustom;
+                            FormatSelection = CustomString;
                             FormatExpanded = true;
                         }
                     }
@@ -132,11 +133,11 @@ namespace CoordinateConversionLibrary.ViewModels
             if (list == null)
                 return;
 
-            list.Add(Properties.Resources.FormatListCustom);
+            list.Add(CustomString);
 
             FormatList = list;
 
-            if(!FormatList.Contains(FormatSelection) || FormatSelection == Properties.Resources.FormatListCustom)
+            if (!FormatList.Contains(FormatSelection) || FormatSelection == CustomString)
             {
                 // update format selection
                 FormatSelection = FormatList.FirstOrDefault();
@@ -203,7 +204,7 @@ namespace CoordinateConversionLibrary.ViewModels
             // if not custom, change format
             // and update sample
 
-            if(FormatSelection != Properties.Resources.FormatListCustom)
+            if (FormatSelection != CustomString)
             {
                 // get format from defaults
 
@@ -379,7 +380,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 }
             }
 
-            return Properties.Resources.FormatListCustom;
+            return CustomString;
         }
 
         private void SelectCategory(CoordinateType coordinateType)

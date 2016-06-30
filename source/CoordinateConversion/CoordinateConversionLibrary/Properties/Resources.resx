@@ -168,30 +168,6 @@
   <data name="EnumCTUTM" xml:space="preserve">
     <value>UTM</value>
   </data>
-  <data name="FormatListCustom" xml:space="preserve">
-    <value>Custom</value>
-  </data>
-  <data name="FormatListFive" xml:space="preserve">
-    <value>Five</value>
-  </data>
-  <data name="FormatListFour" xml:space="preserve">
-    <value>Four</value>
-  </data>
-  <data name="FormatListOne" xml:space="preserve">
-    <value>One</value>
-  </data>
-  <data name="FormatListSeven" xml:space="preserve">
-    <value>Seven</value>
-  </data>
-  <data name="FormatListSix" xml:space="preserve">
-    <value>Six</value>
-  </data>
-  <data name="FormatListThree" xml:space="preserve">
-    <value>Three</value>
-  </data>
-  <data name="FormatListTwo" xml:space="preserve">
-    <value>Two</value>
-  </data>
   <data name="FormattedRemove" xml:space="preserve">
     <value>Remove {0}?</value>
   </data>
@@ -213,14 +189,8 @@
   <data name="LabelDisplayCoordinate" xml:space="preserve">
     <value>Display Coordinate</value>
   </data>
-  <data name="LabelFormat" xml:space="preserve">
-    <value>Y-+0.####,X-+0.####</value>
-  </data>
   <data name="LabelFormats" xml:space="preserve">
     <value>Formats</value>
-  </data>
-  <data name="LabelSample" xml:space="preserve">
-    <value>Sample</value>
   </data>
   <data name="StringEasting" xml:space="preserve">
     <value>Easting</value>
@@ -251,15 +221,6 @@
   </data>
   <data name="StringQuadrant" xml:space="preserve">
     <value>Quadrant</value>
-  </data>
-  <data name="StringX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="StringY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="StringZeros" xml:space="preserve">
-    <value>00000</value>
   </data>
   <data name="StringZone" xml:space="preserve">
     <value>Zone</value>
