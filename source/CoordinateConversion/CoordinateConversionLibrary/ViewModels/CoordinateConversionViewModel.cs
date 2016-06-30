@@ -42,7 +42,7 @@ namespace CoordinateConversionLibrary.ViewModels
         public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
 
         // InputCoordinate
-        private string inputCoordinate = Properties.Resources.StringInputCoord;
+        private string inputCoordinate = "70.49N40.32W";
         public string InputCoordinate
         {
             get
