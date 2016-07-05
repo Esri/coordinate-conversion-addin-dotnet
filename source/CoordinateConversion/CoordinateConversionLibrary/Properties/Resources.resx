@@ -249,4 +249,7 @@
   <data name="CustomString" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="LabelSample" xml:space="preserve">
+    <value>Sample</value>
+  </data>
 </root>
