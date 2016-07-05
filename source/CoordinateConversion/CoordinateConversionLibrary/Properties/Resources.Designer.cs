@@ -295,6 +295,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sample.
+        /// </summary>
+        public static string LabelSample {
+            get {
+                return ResourceManager.GetString("LabelSample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Easting.
         /// </summary>
         public static string StringEasting {
