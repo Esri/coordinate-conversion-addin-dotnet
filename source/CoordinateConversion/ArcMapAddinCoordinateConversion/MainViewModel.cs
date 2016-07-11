@@ -95,6 +95,38 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
+        private ISpatialReference GetSR(int type)
+        {
+            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            System.Object obj = Activator.CreateInstance(t);
+            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+
+            // Use the enumeration to create an instance of the predefined object.
+            try
+            {
+                IGeographicCoordinateSystem geographicCS = srFact.CreateGeographicCoordinateSystem(type);
+
+                return geographicCS as ISpatialReference;
+            }
+            catch ( Exception ex)
+            {
+                // do nothing
+            }
+
+
+            try
+            {
+                IProjectedCoordinateSystem projectCS = srFact.CreateProjectedCoordinateSystem(type);
+
+                return projectCS as ISpatialReference;
+            }
+            catch(Exception ex)
+            {
+                // do nothing
+            }
+
+            return null;
+        }
         private ISpatialReference GetSR()
         {
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
@@ -677,7 +709,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     point.X = Lon;
                     point.Y = Lat;
-                    point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
+                    point.SpatialReference = GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
                     return CoordinateType.DD;
                 }
                 catch (Exception ex)
