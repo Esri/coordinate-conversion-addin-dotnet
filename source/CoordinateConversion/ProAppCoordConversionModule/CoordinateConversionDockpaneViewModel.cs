@@ -230,6 +230,7 @@ namespace ProAppCoordConversionModule
 
         private async void OnFlashPointCommand(object obj)
         {
+            MapPoint point = null;
             var previous = IsToolActive;
             if (!IsToolActive)
             {
@@ -241,16 +242,45 @@ namespace ProAppCoordConversionModule
             if (ctvm != null)
             {
                 if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
-                    return;
+                {
+                    Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+                    var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
+
+                    if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
+                    {
+                        try
+                        {
+                            var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                            var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                            point = QueuedTask.Run(() =>
+                            {
+                                return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+                            }).Result;
+                        }
+                        catch (Exception ex)
+                        {
+                            // do nothing
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
             }
             else { return; }
 
             ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
-            var point = await QueuedTask.Run(() =>
+
+            if (point == null)
             {
-                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-            });
+                point = await QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                });
+            }
 
             //await QueuedTask.Run(() =>
             //{
