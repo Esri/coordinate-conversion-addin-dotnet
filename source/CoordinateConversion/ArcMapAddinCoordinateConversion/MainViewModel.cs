@@ -28,6 +28,10 @@ using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
 using System.Text.RegularExpressions;
+using ArcMapAddinCoordinateConversion.Models;
+using System.Collections;
+using System.Windows.Controls;
+using CoordinateConversionLibrary;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -39,19 +43,29 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
+
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
+            DeletePointCommand = new RelayCommand(OnDeletePointCommand);
+            DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
+            CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
+
+            ToolMode = MapPointToolMode.Unknown;
+
+            BatchView = new BatchCoordinateView();
+            //BatchView.DataContext = new BatchCoordinateViewModel();
 
             // update tool view model
             var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
             if (ctvm != null)
             {
                 ctvm.SetCoordinateGetter(amCoordGetter);
+                BatchView.DataContext = this;
             }
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
@@ -90,6 +104,31 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public CoordinateType InputCoordinateType { get; set; }
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
+        public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+
+        object selectedTab = null;
+        public object SelectedTab
+        {
+            get { return selectedTab; }
+            set
+            {
+                if (selectedTab == value)
+                    return;
+
+                selectedTab = value;
+                var tabItem = selectedTab as TabItem;
+                //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                if (tabItem.Header == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
+                    ToolMode = MapPointToolMode.Collect;
+                else
+                    ToolMode = MapPointToolMode.Convert;
+            }
+        }
+
+        public MapPointToolMode ToolMode { get; set; }
+
+        // lists to store GUIDs of graphics, temp feedback and map graphics
+        private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
 
         private void OnCopyAllCommand(object obj)
         {
@@ -411,6 +450,23 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
 
+        private void OnDeletePointCommand(object obj)
+        {
+            var items = obj as IList;
+            var objects = items.Cast<AddInPoint>().ToList();
+
+            if (objects == null)
+                return;
+
+            DeletePoints(objects);
+        }
+
+        private void OnDeleteAllPointsCommand(object obj)
+        {
+            DeletePoints(CoordinateAddInPoints.ToList());
+        }
+
+
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
         private bool _hasInputError = false;
@@ -429,6 +485,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand FlashPointCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
         public RelayCommand EditPropertiesDialogCommand { get; set; }
+        public RelayCommand DeletePointCommand { get; set; }
+        public RelayCommand DeleteAllPointsCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
         public bool IsToolGenerated { get; set; }
@@ -460,9 +518,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     if (IsHistoryUpdate)
                     {
                         if (IsToolGenerated)
+                        {
                             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+                        }
                         else
+                        {
                             UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
+                        }
                     }
                     // reset flags
                     IsHistoryUpdate = true;
@@ -487,6 +549,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 _coordinateConversionView = value;
             }
         }
+        public BatchCoordinateView BatchView { get; set; }
 
         internal string GetFormattedCoordinate(string coord, CoordinateType cType)
         {
@@ -945,6 +1008,174 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 System.Windows.Forms.Application.DoEvents();
                 display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
             }
+        }
+
+        internal void AddCollectionPoint(IPoint point)
+        {
+            var color = new RgbColorClass() { Red = 255 } as IColor;
+            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle);
+            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+            CoordinateAddInPoints.Add(addInPoint);
+        }
+
+        /// <summary>
+        /// Adds a graphic element to the map graphics container
+        /// </summary>
+        /// <param name="geom">IGeometry</param>
+        private string AddGraphicToMap(IGeometry geom, IColor color, bool IsTempGraphic = false, esriSimpleMarkerStyle markerStyle = esriSimpleMarkerStyle.esriSMSCircle, int size = 5)
+        {
+            if (geom == null || ArcMap.Document == null || ArcMap.Document.FocusMap == null)
+                return string.Empty;
+
+            IElement element = null;
+            double width = 2.0;
+
+            geom.Project(ArcMap.Document.FocusMap.SpatialReference);
+
+            if (geom.GeometryType == esriGeometryType.esriGeometryPoint)
+            {
+                // Marker symbols
+                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
+                simpleMarkerSymbol.Color = color;
+                simpleMarkerSymbol.Outline = true;
+                simpleMarkerSymbol.OutlineColor = color;
+                simpleMarkerSymbol.Size = size;
+                simpleMarkerSymbol.Style = markerStyle;
+
+                var markerElement = new MarkerElement() as IMarkerElement;
+                markerElement.Symbol = simpleMarkerSymbol;
+                element = markerElement as IElement;
+            }
+            else if (geom.GeometryType == esriGeometryType.esriGeometryPolyline)
+            {
+                // create graphic then add to map
+                var le = new LineElementClass() as ILineElement;
+                element = le as IElement;
+
+                var lineSymbol = new SimpleLineSymbolClass();
+                lineSymbol.Color = color;
+                lineSymbol.Width = width;
+
+                le.Symbol = lineSymbol;
+            }
+            else if (geom.GeometryType == esriGeometryType.esriGeometryPolygon)
+            {
+                // create graphic then add to map
+                IPolygonElement pe = new PolygonElementClass() as IPolygonElement;
+                element = pe as IElement;
+                IFillShapeElement fe = pe as IFillShapeElement;
+
+                var fillSymbol = new SimpleFillSymbolClass();
+                RgbColor selectedColor = new RgbColorClass();
+                selectedColor.Red = 0;
+                selectedColor.Green = 0;
+                selectedColor.Blue = 0;
+
+                selectedColor.Transparency = (byte)0;
+                fillSymbol.Color = selectedColor;
+
+                fe.Symbol = fillSymbol;
+            }
+
+            if (element == null)
+                return string.Empty;
+
+            element.Geometry = geom;
+
+            var mxdoc = ArcMap.Application.Document as IMxDocument;
+            var av = mxdoc.FocusMap as IActiveView;
+            var gc = av as IGraphicsContainer;
+
+            // store guid
+            var eprop = element as IElementProperties;
+            eprop.Name = Guid.NewGuid().ToString();
+
+            GraphicsList.Add(new AMGraphic(eprop.Name, geom, IsTempGraphic));
+
+            gc.AddElement(element, 0);
+
+            av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+
+            //TODO check to see if this is still needed
+            //RaisePropertyChanged(() => HasMapGraphics);
+
+            return eprop.Name;
+        }
+
+        private void DeletePoints(List<AddInPoint> aiPoints)
+        {
+            if (aiPoints == null || !aiPoints.Any())
+                return;
+
+            // remove graphics from map
+            var guidList = aiPoints.Select(x => x.GUID).ToList();
+            RemoveGraphics(guidList);
+
+            foreach (var point in aiPoints)
+            {
+                CoordinateAddInPoints.Remove(point);
+            }
+        }
+
+        private void RemoveGraphics(List<string> guidList)
+        {
+            if (!guidList.Any())
+                return;
+
+            var mxdoc = ArcMap.Application.Document as IMxDocument;
+            if (mxdoc == null)
+                return;
+            var av = mxdoc.FocusMap as IActiveView;
+            if (av == null)
+                return;
+            var gc = av as IGraphicsContainer;
+            if (gc == null)
+                return;
+
+            var graphics = GraphicsList.Where(g => guidList.Contains(g.UniqueId)).ToList();
+            RemoveGraphics(gc, graphics);
+
+            av.Refresh();
+        }
+
+        /// <summary>
+        /// Method used to remove graphics from the graphics container
+        /// Elements are tagged with a GUID on the IElementProperties.Name property
+        /// </summary>
+        /// <param name="gc">map graphics container</param>
+        /// <param name="list">list of GUIDs to remove</param>
+        internal void RemoveGraphics(IGraphicsContainer gc, List<AMGraphic> list)
+        {
+            if (gc == null || !list.Any())
+                return;
+
+            var elementList = new List<IElement>();
+            gc.Reset();
+            var element = gc.Next();
+            while (element != null)
+            {
+                var eleProps = element as IElementProperties;
+                if (list.Any(g => g.UniqueId == eleProps.Name))
+                {
+                    elementList.Add(element);
+                }
+                element = gc.Next();
+            }
+
+            foreach (var ele in elementList)
+            {
+                gc.DeleteElement(ele);
+            }
+
+            // remove from master graphics list
+            foreach (var graphic in list)
+            {
+                if (GraphicsList.Contains(graphic))
+                    GraphicsList.Remove(graphic);
+            }
+            elementList.Clear();
+            //TODO check to see if we still need this
+            //RaisePropertyChanged(() => HasMapGraphics);
         }
 
     }

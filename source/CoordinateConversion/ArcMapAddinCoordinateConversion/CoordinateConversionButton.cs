@@ -94,9 +94,13 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     doc.GetMainVM().IsToolGenerated = true;
                     doc.SetInput(point.X, point.Y);
+                    //TODO Tool mode
+                    // update collection
+                    doc.GetMainVM().AddCollectionPoint(point);
                 }
 
-                doc.GetMainVM().IsToolActive = false;
+                if(doc.GetMainVM().ToolMode == CoordinateConversionLibrary.MapPointToolMode.Convert)
+                    doc.GetMainVM().IsToolActive = false;
             }
             catch { }
         }

@@ -241,6 +241,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collect.
+        /// </summary>
+        public static string HeaderCollect {
+            get {
+                return ResourceManager.GetString("HeaderCollect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert.
+        /// </summary>
+        public static string HeaderConvert {
+            get {
+                return ResourceManager.GetString("HeaderConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coordinate.
         /// </summary>
         public static string HeaderCoordinate {
@@ -264,6 +282,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string LabelCategory {
             get {
                 return ResourceManager.GetString("LabelCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Graphics.
+        /// </summary>
+        public static string LabelClearGraphics {
+            get {
+                return ResourceManager.GetString("LabelClearGraphics", resourceCulture);
             }
         }
         
@@ -295,11 +322,47 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string LabelImport {
+            get {
+                return ResourceManager.GetString("LabelImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sample.
         /// </summary>
         public static string LabelSample {
             get {
                 return ResourceManager.GetString("LabelSample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save As.
+        /// </summary>
+        public static string LabelSaveAs {
+            get {
+                return ResourceManager.GetString("LabelSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string MenuLabelDelete {
+            get {
+                return ResourceManager.GetString("MenuLabelDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete All.
+        /// </summary>
+        public static string MenuLabelDeleteAll {
+            get {
+                return ResourceManager.GetString("MenuLabelDeleteAll", resourceCulture);
             }
         }
         

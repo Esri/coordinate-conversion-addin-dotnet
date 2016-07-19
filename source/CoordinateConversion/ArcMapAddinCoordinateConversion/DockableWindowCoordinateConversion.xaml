@@ -18,84 +18,93 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <Grid Margin="3,3,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <GroupBox Header="{x:Static prop:Resources.HeaderInput}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+    <Grid>
+        <TabControl SelectedItem="{Binding SelectedTab, Mode=OneWayToSource}">
+            <TabItem Header="Convert">
+                <Grid Margin="3,3,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ComboBox x:Name="input"
+                <GroupBox Header="{x:Static prop:Resources.HeaderInput}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="input"
                           Margin="0,3,0,0"
                           HorizontalAlignment="Stretch"
                           IsEditable="True"
                           ItemsSource="{Binding InputCoordinateHistoryList}"
                           Text="{Binding InputCoordinate,
                                          UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBox.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                    <Setter Property="TextBox.Background" Value="LightPink" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                    <Setter Property="TextBox.Background" Value="White" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.Style>
-                    <ComboBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
-                    </ComboBox.InputBindings>
-                </ComboBox>
-                <Button Grid.Column="1"
+                            <ComboBox.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                            <Setter Property="TextBox.Background" Value="LightPink" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                            <Setter Property="TextBox.Background" Value="White" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Style>
+                            <ComboBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
+                            </ComboBox.InputBindings>
+                        </ComboBox>
+                        <Button Grid.Column="1"
                         Margin="3,3,0,0"
                         ToolTip="{x:Static libprop:Resources.TooltipEditProperties}"
                         Style="{StaticResource buttonProperties}" />
-                <Button Grid.Column="2"
+                        <Button Grid.Column="2"
                         Margin="3,3,0,0"
                         Command="{Binding AddNewOCCommand}"
                         ToolTip="{x:Static libprop:Resources.TooltipAdd}"
                         Style="{StaticResource BorderedButtonStyle}">
-                    <Image Width="18"
+                            <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/hand.png" />
-                </Button>
-                <ToggleButton Grid.Column="3"
+                        </Button>
+                        <ToggleButton Grid.Column="3"
                               Margin="3,3,0,0"
                               IsChecked="{Binding IsToolActive}"
                               ToolTip="{x:Static libprop:Resources.TooltipMapPointTool}"
                               Style="{StaticResource BorderedTButtonStyle}">
-                    <Image Width="18"
+                            <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
-                </ToggleButton>
-                <Button Grid.Column="4"
+                        </ToggleButton>
+                        <Button Grid.Column="4"
                         Margin="3,3,0,0"
                         Command="{Binding CopyAllCommand}"
                         ToolTip="{x:Static libprop:Resources.TooltipCopyAll}"
                         Style="{StaticResource BorderedButtonStyle}">
-                    <Image Width="18"
+                            <Image Width="18"
                            Height="18"
                            Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
-                </Button>
+                        </Button>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="{x:Static prop:Resources.HeaderOutput}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <UserControl Content="{Binding CTView}" />
+                    </ScrollViewer>
+                </GroupBox>
             </Grid>
-        </GroupBox>
-        <GroupBox Grid.Row="1" Header="{x:Static prop:Resources.HeaderOutput}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <UserControl Content="{Binding CTView}" />
-            </ScrollViewer>
-        </GroupBox>
+            </TabItem>
+            <TabItem Header="Collect">
+                <UserControl Content="{Binding BatchView}" />
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

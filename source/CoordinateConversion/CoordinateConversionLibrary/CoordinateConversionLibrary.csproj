@@ -79,6 +79,9 @@
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
+    <Compile Include="Views\BatchCoordinateView.xaml.cs">
+      <DependentUpon>BatchCoordinateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CoordinateConversionView.xaml.cs">
       <DependentUpon>CoordinateConversionView.xaml</DependentUpon>
     </Compile>
@@ -99,6 +102,10 @@
     <Page Include="MAResourceDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BatchCoordinateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CoordinateConversionView.xaml">
       <SubType>Designer</SubType>

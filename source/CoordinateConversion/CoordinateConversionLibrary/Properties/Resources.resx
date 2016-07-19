@@ -252,4 +252,25 @@
   <data name="LabelSample" xml:space="preserve">
     <value>Sample</value>
   </data>
+  <data name="HeaderCollect" xml:space="preserve">
+    <value>Collect</value>
+  </data>
+  <data name="HeaderConvert" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="LabelClearGraphics" xml:space="preserve">
+    <value>Clear Graphics</value>
+  </data>
+  <data name="LabelImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="LabelSaveAs" xml:space="preserve">
+    <value>Save As</value>
+  </data>
+  <data name="MenuLabelDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MenuLabelDeleteAll" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
 </root>
