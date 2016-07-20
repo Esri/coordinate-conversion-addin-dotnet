@@ -572,6 +572,98 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
         public BatchCoordinateView BatchView { get; set; }
 
+        private object _ListBoxSelectedItem = null;
+        public object ListBoxSelectedItem
+        {
+            get { return _ListBoxSelectedItem; }
+            set
+            {
+                // we are using this to know when the selection changes
+                // setting null will allow this setter to be called in multiple selection mode
+                _ListBoxSelectedItem = null;
+                RaisePropertyChanged(() => ListBoxSelectedItem);
+
+                // update selections
+                UpdateHighlightedGraphics();
+            }
+        }
+
+        private int _ListBoxSelectedIndex = -1;
+        public int ListBoxSelectedIndex
+        {
+            get { return _ListBoxSelectedIndex; }
+            set
+            {
+                // this works with the ListBoxSelectedItem 
+                // without this the un-selecting of 1 will not trigger an update
+                _ListBoxSelectedIndex = value;
+                RaisePropertyChanged(() => ListBoxSelectedIndex);
+                UpdateHighlightedGraphics();
+            }
+        }
+
+        private void UpdateHighlightedGraphics()
+        {
+            var mxdoc = ArcMap.Application.Document as IMxDocument;
+            var av = mxdoc.FocusMap as IActiveView;
+            var gc = av as IGraphicsContainer;
+
+            gc.Reset();
+            var element = gc.Next();
+
+            while(element != null)
+            {
+                var eProp = element as IElementProperties;
+
+                if(eProp != null)
+                {
+                    var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == eProp.Name);
+
+                    if(aiPoint != null)
+                    {
+                            // highlight
+                        var markerElement = element as IMarkerElement;
+                        if(markerElement != null)
+                        {
+                            var sms = markerElement.Symbol as ISimpleMarkerSymbol;
+                            if(sms != null)
+                            {
+                                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
+
+                                simpleMarkerSymbol.Color = sms.Color;
+                                simpleMarkerSymbol.Size = sms.Size;
+                                simpleMarkerSymbol.Style = sms.Style;
+                                simpleMarkerSymbol.OutlineSize = 1;
+
+                                if (aiPoint.IsSelected)
+                                {
+                                    var color = new RgbColorClass() { Green = 255 } as IColor;
+                                    // Marker symbols
+                                    simpleMarkerSymbol.Outline = true;
+                                    simpleMarkerSymbol.OutlineColor = color;
+                                }
+                                else
+                                {
+                                    simpleMarkerSymbol.Outline = false;
+                                    //simpleMarkerSymbol.OutlineColor = sms.Color;
+                                }
+
+                                markerElement.Symbol = simpleMarkerSymbol;
+                                
+                                gc.UpdateElement(element);
+                            }
+                        }
+                    }
+                }
+
+
+                element = gc.Next();
+            }
+
+            av.Refresh();
+        }
+
+
         internal string GetFormattedCoordinate(string coord, CoordinateType cType)
         {
             string format = "";
@@ -1034,7 +1126,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         internal void AddCollectionPoint(IPoint point)
         {
             var color = new RgbColorClass() { Red = 255 } as IColor;
-            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle);
+            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
             var addInPoint = new AddInPoint() { Point = point, GUID = guid };
             CoordinateAddInPoints.Add(addInPoint);
         }
@@ -1058,7 +1150,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 // Marker symbols
                 var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
                 simpleMarkerSymbol.Color = color;
-                simpleMarkerSymbol.Outline = true;
+                simpleMarkerSymbol.Outline = false;
                 simpleMarkerSymbol.OutlineColor = color;
                 simpleMarkerSymbol.Size = size;
                 simpleMarkerSymbol.Style = markerStyle;

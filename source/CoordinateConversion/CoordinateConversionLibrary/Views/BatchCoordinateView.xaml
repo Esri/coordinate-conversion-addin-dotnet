@@ -14,6 +14,9 @@
             </ResourceDictionary.MergedDictionaries>
             <!--<viewModels:MainViewModel x:Key="viewModelMain" />
             <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />-->
+            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -72,7 +75,9 @@
                          ItemsSource="{Binding CoordinateAddInPoints}"
                          PreviewMouseRightButtonDown="ListBox_PreviewMouseRightButtonDown"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
-                         SelectionMode="Multiple">
+                         SelectionMode="Multiple"
+                         SelectedItem="{Binding ListBoxSelectedItem}"
+                         SelectedIndex="{Binding ListBoxSelectedIndex}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

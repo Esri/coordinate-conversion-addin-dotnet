@@ -46,7 +46,9 @@ namespace ArcMapAddinCoordinateConversion.Models
                 RaisePropertyChanged(() => GUID);
             }
         }
-
-
+        /// <summary>
+        /// Property used to determine if it is selected in the listbox
+        /// </summary>
+        public bool IsSelected { get; set; }
     }
 }
