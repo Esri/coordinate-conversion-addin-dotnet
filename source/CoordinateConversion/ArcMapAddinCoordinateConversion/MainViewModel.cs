@@ -51,6 +51,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
             DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
+            ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
+
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
@@ -118,7 +120,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 selectedTab = value;
                 var tabItem = selectedTab as TabItem;
                 //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
-                if (tabItem.Header == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
+                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
                     ToolMode = MapPointToolMode.Collect;
                 else
                     ToolMode = MapPointToolMode.Convert;
@@ -466,6 +468,24 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             DeletePoints(CoordinateAddInPoints.ToList());
         }
 
+        private void OnClearGraphicsCommand(object obj)
+        {
+            var mxdoc = ArcMap.Application.Document as IMxDocument;
+            if (mxdoc == null)
+                return;
+            var av = mxdoc.FocusMap as IActiveView;
+            if (av == null)
+                return;
+            var gc = av as IGraphicsContainer;
+            if (gc == null)
+                return;
+            //TODO need to clarify what clear graphics button does
+            // seems to be different than the other Military Tools when doing batch collection
+            RemoveGraphics(gc, GraphicsList.Where(g => g.IsTemp == false).ToList());
+
+            //av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            av.Refresh(); // sometimes a partial refresh is not working
+        }
 
         private ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
@@ -487,6 +507,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand EditPropertiesDialogCommand { get; set; }
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
+        public RelayCommand ClearGraphicsCommand { get; set; }
 
         public bool IsHistoryUpdate { get; set; }
         public bool IsToolGenerated { get; set; }
