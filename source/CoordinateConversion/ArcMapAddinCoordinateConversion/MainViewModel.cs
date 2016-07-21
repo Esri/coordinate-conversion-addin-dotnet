@@ -43,6 +43,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
+            ListBoxItemAddInPoint = null;
 
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
@@ -54,6 +55,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
+            Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             InputCoordinateHistoryList = new ObservableCollection<string>();
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
@@ -79,6 +81,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
             });
 
+        }
+
+        public AddInPoint ListBoxItemAddInPoint { get; set; }
+
+        private void OnSetListBoxItemAddInPoint(object obj)
+        {
+            ListBoxItemAddInPoint = obj as AddInPoint;
         }
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
@@ -184,17 +193,26 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
         private void OnFlashPointCommand(object obj)
         {
-            if(amCoordGetter != null && amCoordGetter.Point != null)
-            {
-                IGeometry address = amCoordGetter.Point;
+            IGeometry address = null;
 
+            if(amCoordGetter != null && amCoordGetter.Point != null)
+                address = amCoordGetter.Point;
+
+            if (ListBoxItemAddInPoint != null)
+            {
+                address = ListBoxItemAddInPoint.Point;
+                ListBoxItemAddInPoint = null;
+            }
+
+            if(address != null)
+            {
                 // Map und View
                 IMxDocument mxdoc = ArcMap.Application.Document as IMxDocument;
                 IActiveView activeView = mxdoc.ActivatedView;
                 IMap map = mxdoc.FocusMap;
                 IEnvelope envelope = activeView.Extent;
 
-                ClearGraphicsContainer(map);
+                //ClearGraphicsContainer(map);
 
                 IScreenDisplay screenDisplay = activeView.ScreenDisplay;
                 short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
@@ -376,7 +394,18 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             var graphicsContainer = map as IGraphicsContainer;
             if (graphicsContainer != null)
-                graphicsContainer.DeleteAllElements();
+            {
+                //graphicsContainer.DeleteAllElements();
+                // now we have a collection feature and need to not clear those related graphics
+                graphicsContainer.Reset();
+                var g = graphicsContainer.Next();
+                while(g != null)
+                {
+                    if(!CoordinateAddInPoints.Any(aiPoint => aiPoint.GUID == ((IElementProperties)g).Name))
+                        graphicsContainer.DeleteElement(g);
+                    g = graphicsContainer.Next();
+                }
+            }
         }
         private void AddElement(IMap map, IPoint point)
         {

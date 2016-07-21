@@ -273,4 +273,7 @@
   <data name="MenuLabelDeleteAll" xml:space="preserve">
     <value>Delete All</value>
   </data>
+  <data name="HeaderFlash" xml:space="preserve">
+    <value>Flash</value>
+  </data>
 </root>

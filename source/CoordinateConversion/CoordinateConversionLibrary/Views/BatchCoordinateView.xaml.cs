@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoordinateConversionLibrary.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,15 @@ namespace CoordinateConversionLibrary.Views
         {
             // right mouse click selects item in list box
             // avoid this by setting e.Handled to true
+            //e.Handled = true;
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, null);
+        }
+
+        private void listBoxItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListBoxItem;
+            object obj = item.Content;
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, obj);
             e.Handled = true;
         }
     }

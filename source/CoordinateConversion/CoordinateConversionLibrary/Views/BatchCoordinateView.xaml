@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
             <!--<viewModels:MainViewModel x:Key="viewModelMain" />
             <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />-->
-            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
                 <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
             </Style>
         </ResourceDictionary>
@@ -75,9 +75,9 @@
                          ItemsSource="{Binding CoordinateAddInPoints}"
                          PreviewMouseRightButtonDown="ListBox_PreviewMouseRightButtonDown"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
-                         SelectionMode="Multiple"
+                         SelectedIndex="{Binding ListBoxSelectedIndex}"
                          SelectedItem="{Binding ListBoxSelectedItem}"
-                         SelectedIndex="{Binding ListBoxSelectedIndex}">
+                         SelectionMode="Multiple">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -91,6 +91,9 @@
                                       CommandParameter="{Binding Path=SelectedItems}"
                                       Header="{x:Static prop:Resources.MenuLabelDelete}" />
                             <MenuItem Command="{Binding DataContext.DeleteAllPointsCommand}" Header="{x:Static prop:Resources.MenuLabelDeleteAll}" />
+                            <MenuItem Command="{Binding DataContext.FlashPointCommand}"
+                                      CommandParameter="{Binding}"
+                                      Header="{x:Static prop:Resources.HeaderFlash}" />
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.InputBindings>
@@ -109,6 +112,11 @@
                             </Style.Triggers>
                         </Style>
                     </ListBox.Style>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
                 <StackPanel Grid.Row="2"
                             MinHeight="20"

@@ -268,6 +268,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Flash.
+        /// </summary>
+        public static string HeaderFlash {
+            get {
+                return ResourceManager.GetString("HeaderFlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string HeaderName {
