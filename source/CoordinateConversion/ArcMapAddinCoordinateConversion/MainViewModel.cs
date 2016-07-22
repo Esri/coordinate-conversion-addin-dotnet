@@ -15,23 +15,17 @@
   ******************************************************************************/ 
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Windows.Controls;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Display;
+using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
-using System.Text.RegularExpressions;
-using ArcMapAddinCoordinateConversion.Models;
-using System.Collections;
-using System.Windows.Controls;
-using CoordinateConversionLibrary;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -51,11 +45,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             //IsToolGenerated = false;
             //ListBoxItemAddInPoint = null;
 
-            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
-            ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
+            //AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+            //ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
+            //EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             //FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             //CopyAllCommand = new RelayCommand(OnCopyAllCommand);
-            EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             //DeletePointCommand = new RelayCommand(OnDeletePointCommand);
             //DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
             //ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
@@ -65,7 +59,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             //InputCoordinateHistoryList = new ObservableCollection<string>();
             //CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
-            ToolMode = MapPointToolMode.Unknown;
+            //ToolMode = MapPointToolMode.Unknown;
 
             // update tool view model
             //TODO this need to be a Mediator call
@@ -95,26 +89,26 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         //PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
-        public bool IsToolActive
-        {
-            get
-            {
-                if(ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_PointTool";
+        //public bool IsToolActive
+        //{
+        //    get
+        //    {
+        //        if(ArcMap.Application.CurrentTool != null)
+        //            return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_PointTool";
 
-                return false;
-            }
-            set
-            {
-                if (value)
-                    OnActivatePointToolCommand(null);
-                else
-                    if (ArcMap.Application.CurrentTool != null)
-                        ArcMap.Application.CurrentTool = null;
+        //        return false;
+        //    }
+        //    set
+        //    {
+        //        if (value)
+        //            OnActivatePointToolCommand(null);
+        //        else
+        //            if (ArcMap.Application.CurrentTool != null)
+        //                ArcMap.Application.CurrentTool = null;
 
-                RaisePropertyChanged(() => IsToolActive);
-            }
-        }
+        //        RaisePropertyChanged(() => IsToolActive);
+        //    }
+        //}
 
         //public CoordinateType InputCoordinateType { get; set; }
         //public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
@@ -133,13 +127,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 var tabItem = selectedTab as TabItem;
                 //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
                 if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
-                    ToolMode = MapPointToolMode.Collect;
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
                 else
-                    ToolMode = MapPointToolMode.Convert;
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
             }
         }
 
-        public MapPointToolMode ToolMode { get; set; }
+        //public MapPointToolMode ToolMode { get; set; }
 
         //// lists to store GUIDs of graphics, temp feedback and map graphics
         //private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -345,54 +339,54 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         //    return poly;
         //}
-        private void AddElement(IMap map, IGeometry geom)
-        {
-            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
-            IRgbColor color = new RgbColorClass();
-            color.Green = 80;
-            color.Red = 22;
-            color.Blue = 68;
+        //private void AddElement(IMap map, IGeometry geom)
+        //{
+        //    IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+        //    IRgbColor color = new RgbColorClass();
+        //    color.Green = 80;
+        //    color.Red = 22;
+        //    color.Blue = 68;
 
-            IElement element = null;
+        //    IElement element = null;
 
-            if (geom is IPoint)
-            {
-                ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
-                simpleMarkerSymbol.Color = color;
-                simpleMarkerSymbol.Size = 15;
-                simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+        //    if (geom is IPoint)
+        //    {
+        //        ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+        //        simpleMarkerSymbol.Color = color;
+        //        simpleMarkerSymbol.Size = 15;
+        //        simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
 
-                IMarkerElement markerElement = new MarkerElementClass();
+        //        IMarkerElement markerElement = new MarkerElementClass();
 
-                markerElement.Symbol = simpleMarkerSymbol;
-                element = markerElement as IElement;
+        //        markerElement.Symbol = simpleMarkerSymbol;
+        //        element = markerElement as IElement;
 
-                if (element != null)
-                {
-                    element.Geometry = geom;
-                }
-            }
-            else if(geom is IPolygon)
-            {
-                var temp = new SimpleLineSymbol();
-                temp.Color = color;
-                temp.Style = esriSimpleLineStyle.esriSLSSolid;
-                temp.Width = 2;
-                var s = new SimpleFillSymbol();
-                s.Color = color;
-                s.Outline = temp;
-                s.Style = esriSimpleFillStyle.esriSFSBackwardDiagonal;
+        //        if (element != null)
+        //        {
+        //            element.Geometry = geom;
+        //        }
+        //    }
+        //    else if(geom is IPolygon)
+        //    {
+        //        var temp = new SimpleLineSymbol();
+        //        temp.Color = color;
+        //        temp.Style = esriSimpleLineStyle.esriSLSSolid;
+        //        temp.Width = 2;
+        //        var s = new SimpleFillSymbol();
+        //        s.Color = color;
+        //        s.Outline = temp;
+        //        s.Style = esriSimpleFillStyle.esriSFSBackwardDiagonal;
 
-                var pe = new PolygonElementClass();
-                element = pe as IElement;
-                var fill = pe as IFillShapeElement;
-                fill.Symbol = s;
-                element.Geometry = geom;
-            }
-            graphicsContainer.AddElement(element, 0);
-            IActiveView activeView = map as IActiveView;
-            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-        }
+        //        var pe = new PolygonElementClass();
+        //        element = pe as IElement;
+        //        var fill = pe as IFillShapeElement;
+        //        fill.Symbol = s;
+        //        element.Geometry = geom;
+        //    }
+        //    graphicsContainer.AddElement(element, 0);
+        //    IActiveView activeView = map as IActiveView;
+        //    activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        //}
         //private void ClearGraphicsContainer(IMap map)
         //{
         //    var graphicsContainer = map as IGraphicsContainer;
@@ -410,79 +404,79 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //        }
         //    }
         //}
-        private void AddElement(IMap map, IPoint point)
-        {
-            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
-            IRgbColor color = new RgbColorClass();
-            color.Green = 80;
-            color.Red = 22;
-            color.Blue = 68;
+        //private void AddElement(IMap map, IPoint point)
+        //{
+        //    IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+        //    IRgbColor color = new RgbColorClass();
+        //    color.Green = 80;
+        //    color.Red = 22;
+        //    color.Blue = 68;
 
-            ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
-            simpleMarkerSymbol.Color = color;
-            simpleMarkerSymbol.Size = 15;
-            simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+        //    ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+        //    simpleMarkerSymbol.Color = color;
+        //    simpleMarkerSymbol.Size = 15;
+        //    simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
 
-            IElement element = null;
+        //    IElement element = null;
 
-            IMarkerElement markerElement = new MarkerElementClass();
+        //    IMarkerElement markerElement = new MarkerElementClass();
 
-            markerElement.Symbol = simpleMarkerSymbol;
-            element = markerElement as IElement;
+        //    markerElement.Symbol = simpleMarkerSymbol;
+        //    element = markerElement as IElement;
 
-            if (element != null)
-            {
-                element.Geometry = point;
-            }
-            graphicsContainer.AddElement(element, 0);
+        //    if (element != null)
+        //    {
+        //        element.Geometry = point;
+        //    }
+        //    graphicsContainer.AddElement(element, 0);
 
-            //Flag the new text to invalidate.
-            IActiveView activeView = map as IActiveView;
-            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-        }
-        private void AddTextElement(IMap map, IPoint point, string text)
-        {
-            IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
-            IElement element = new TextElementClass();
-            ITextElement textElement = element as ITextElement;
+        //    //Flag the new text to invalidate.
+        //    IActiveView activeView = map as IActiveView;
+        //    activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        //}
+        //private void AddTextElement(IMap map, IPoint point, string text)
+        //{
+        //    IGraphicsContainer graphicsContainer = map as IGraphicsContainer;
+        //    IElement element = new TextElementClass();
+        //    ITextElement textElement = element as ITextElement;
 
-            element.Geometry = point;
-            textElement.Text = text;
-            graphicsContainer.AddElement(element, 0);
+        //    element.Geometry = point;
+        //    textElement.Text = text;
+        //    graphicsContainer.AddElement(element, 0);
 
-            //Flag the new text to invalidate.
-            IActiveView activeView = map as IActiveView;
-            activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-        }
-        private void OnActivatePointToolCommand(object obj)
-        {
-            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_PointTool");
-        }
+        //    //Flag the new text to invalidate.
+        //    IActiveView activeView = map as IActiveView;
+        //    activeView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        //}
+        //private void OnActivatePointToolCommand(object obj)
+        //{
+        //    SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_PointTool");
+        //}
 
-        public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
-        {
-            ESRI.ArcGIS.Framework.ICommandBars commandBars = application.Document.CommandBars;
-            ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
-            commandID.Value = toolName; // example: "esriArcMapUI.ZoomInTool";
-            ESRI.ArcGIS.Framework.ICommandItem commandItem = commandBars.Find(commandID, false, false);
+        //public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
+        //{
+        //    ESRI.ArcGIS.Framework.ICommandBars commandBars = application.Document.CommandBars;
+        //    ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
+        //    commandID.Value = toolName; // example: "esriArcMapUI.ZoomInTool";
+        //    ESRI.ArcGIS.Framework.ICommandItem commandItem = commandBars.Find(commandID, false, false);
 
-            if (commandItem != null)
-                application.CurrentTool = commandItem;
-        }
+        //    if (commandItem != null)
+        //        application.CurrentTool = commandItem;
+        //}
         
-        private void OnEditPropertiesDialogCommand(object obj)
-        {
-            var dlg = new EditPropertiesView();
+        //private void OnEditPropertiesDialogCommand(object obj)
+        //{
+        //    var dlg = new EditPropertiesView();
 
-            dlg.ShowDialog();
-        }
+        //    dlg.ShowDialog();
+        //}
 
-        private void OnAddNewOCCommand(object obj)
-        {
-            // Get name from user
-            string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
-        }
+        //private void OnAddNewOCCommand(object obj)
+        //{
+        //    // Get name from user
+        //    string name = CoordinateType.DD.ToString();
+        //    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
+        //}
 
         //private void OnDeletePointCommand(object obj)
         //{
@@ -532,11 +526,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //    }
         //}
 
-        public RelayCommand AddNewOCCommand { get; set; }
-        public RelayCommand ActivatePointToolCommand { get; set; }
+        //public RelayCommand AddNewOCCommand { get; set; }
+        //public RelayCommand ActivatePointToolCommand { get; set; }
+        //public RelayCommand EditPropertiesDialogCommand { get; set; }
         //public RelayCommand FlashPointCommand { get; set; }
         //public RelayCommand CopyAllCommand { get; set; }
-        public RelayCommand EditPropertiesDialogCommand { get; set; }
         //public RelayCommand DeletePointCommand { get; set; }
         //public RelayCommand DeleteAllPointsCommand { get; set; }
         //public RelayCommand ClearGraphicsCommand { get; set; }
@@ -696,24 +690,24 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //}
 
 
-        internal string GetFormattedCoordinate(string coord, CoordinateType cType)
-        {
-            string format = "";
+        //internal string GetFormattedCoordinate(string coord, CoordinateType cType)
+        //{
+        //    string format = "";
 
-            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-            if (tt != null)
-            {
-                format = tt.Format;
-                Console.WriteLine(tt.Format);
-            }
+        //    var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+        //    if (tt != null)
+        //    {
+        //        format = tt.Format;
+        //        Console.WriteLine(tt.Format);
+        //    }
 
-            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
+        //    var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
 
-            if (!String.IsNullOrWhiteSpace(cf))
-                return cf;
+        //    if (!String.IsNullOrWhiteSpace(cf))
+        //        return cf;
 
-            return string.Empty;
-        }
+        //    return string.Empty;
+        //}
 
         //private string ProcessInput(string input)
         //{

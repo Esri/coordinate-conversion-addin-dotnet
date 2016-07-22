@@ -14,18 +14,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoordinateConversionLibrary.ViewModels;
+using System.Text.RegularExpressions;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Display;
+using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.ViewModels;
 using ArcMapAddinCoordinateConversion.Helpers;
-using System.Text.RegularExpressions;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -36,12 +35,23 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
+            ToolMode = MapPointToolMode.Unknown;
 
+            // commands
+            ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
+            EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
+            Mediator.Register(CoordinateConversionLibrary.Constants.SetToolMode, (mode) => 
+            {
+                MapPointToolMode eMode = MapPointToolMode.Unknown;
+                Enum.TryParse<MapPointToolMode>(mode.ToString(), out eMode);
+                ToolMode = eMode;
+            });
+
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, n =>
@@ -51,28 +61,37 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         InputCoordinate = amCoordGetter.GetInputDisplayString();
                     }
                 });
-
         }
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
-        private void OnNewMapPointSelection(object obj)
-        {
-            var point = obj as IPoint;
-
-            if (point == null)
-                return;
-
-            var sr = ArcMapHelpers.GetGCS_WGS_1984_SR();
-
-            point.Project(sr);
-
-            InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
-        }
-
+        public RelayCommand ActivatePointToolCommand { get; set; }
+        public RelayCommand EditPropertiesDialogCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
 
+        public MapPointToolMode ToolMode { get; set; }
+
         public CoordinateType InputCoordinateType { get; set; }
+        public bool IsToolActive
+        {
+            get
+            {
+                if (ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_PointTool";
+
+                return false;
+            }
+            set
+            {
+                if (value)
+                    OnActivatePointToolCommand(null);
+                else
+                    if (ArcMap.Application.CurrentTool != null)
+                        ArcMap.Application.CurrentTool = null;
+
+                RaisePropertyChanged(() => IsToolActive);
+            }
+        }
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -134,6 +153,19 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         //TODO check if this is a good home for this
         public ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
+        
+        internal void OnActivatePointToolCommand(object obj)
+        {
+            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_PointTool");
+        }
+
+        internal void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new EditPropertiesView();
+
+            dlg.ShowDialog();
+        }
+
 
         internal virtual void OnFlashPointCommand(object obj)
         {
@@ -226,6 +258,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+        private void OnNewMapPointSelection(object obj)
+        {
+            var point = obj as IPoint;
+
+            if (point == null)
+                return;
+
+            var sr = ArcMapHelpers.GetGCS_WGS_1984_SR();
+
+            point.Project(sr);
+
+            InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
+        }
+
         private string ProcessInput(string input)
         {
             string result = string.Empty;
@@ -259,6 +305,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
 
             return result;
+        }
+
+        private void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
+        {
+            ESRI.ArcGIS.Framework.ICommandBars commandBars = application.Document.CommandBars;
+            ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
+            commandID.Value = toolName; // example: "esriArcMapUI.ZoomInTool";
+            ESRI.ArcGIS.Framework.ICommandItem commandItem = commandBars.Find(commandID, false, false);
+
+            if (commandItem != null)
+                application.CurrentTool = commandItem;
         }
 
         private void OnBCNeeded(object obj)

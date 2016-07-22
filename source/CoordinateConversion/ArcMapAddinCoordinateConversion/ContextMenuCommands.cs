@@ -14,9 +14,12 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using System;
+using System.Linq;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -76,7 +79,7 @@ namespace ArcMapAddinCoordinateConversion
 
                     if(vm != null)
                     {
-                        coord = vm.GetFormattedCoordinate(coord, ctype);
+                        coord = GetFormattedCoordinate(coord, ctype);
                     }
                 }
                 
@@ -89,6 +92,26 @@ namespace ArcMapAddinCoordinateConversion
         {
             Enabled = ArcMap.Document != null;
         }
+
+        private static string GetFormattedCoordinate(string coord, CoordinateType cType)
+        {
+            string format = "";
+
+            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (tt != null)
+            {
+                format = tt.Format;
+                Console.WriteLine(tt.Format);
+            }
+
+            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
+
+            if (!String.IsNullOrWhiteSpace(cf))
+                return cf;
+
+            return string.Empty;
+        }
+
     }
 
     public class ContextCopyDD : ContextCopyBase
