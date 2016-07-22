@@ -21,6 +21,7 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ArcMapAddinCoordinateConversion.ViewModels;
+using CoordinateConversionLibrary.Helpers;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -83,7 +84,8 @@ namespace ArcMapAddinCoordinateConversion
                                         var tempX = point.X;
                                         var tempY = point.Y;
 
-                                        UpdateInputCoordinate(point);
+                                        //UpdateInputCoordinate(point);
+                                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, point);
                                     }
                                 }
                             }
@@ -94,19 +96,19 @@ namespace ArcMapAddinCoordinateConversion
             }
         }
 
-        private void UpdateInputCoordinate(IPoint point)
-        {
-            var vm = this.DataContext as MainViewModel;
+        //private void UpdateInputCoordinate(IPoint point)
+        //{
+        //    var vm = this.DataContext as MainViewModel;
 
-            if (vm == null)
-                return;
+        //    if (vm == null)
+        //        return;
 
-            var sr = GetSR();
+        //    var sr = GetSR();
 
-            point.Project(sr);
+        //    point.Project(sr);
 
-            vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
-        }
+        //    vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
+        //}
 
         // always use WGS1984
         private ISpatialReference GetSR()

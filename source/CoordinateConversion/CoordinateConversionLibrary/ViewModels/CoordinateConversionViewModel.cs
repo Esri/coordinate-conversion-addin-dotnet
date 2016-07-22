@@ -34,7 +34,9 @@ namespace CoordinateConversionLibrary.ViewModels
 
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnUpdateOutputs);
             Mediator.Register(CoordinateConversionLibrary.Constants.SelectSpatialReference, OnSelectSpatialReference);
+            Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
         }
+
 
         public OutputCoordinateView OCView { get; set; }
         private CoordinateGetBase coordinateGetter;
@@ -57,9 +59,9 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        public void SetCoordinateGetter(CoordinateGetBase coordGetter)
+        private void OnSetCoordinateGetter(object obj)
         {
-            coordinateGetter = coordGetter;
+            coordinateGetter = obj as CoordinateGetBase;
         }
 
         private void OnUpdateOutputs(object obj)

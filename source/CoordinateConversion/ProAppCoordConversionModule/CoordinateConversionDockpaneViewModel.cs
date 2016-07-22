@@ -41,7 +41,7 @@ namespace ProAppCoordConversionModule
 
         protected CoordinateConversionDockpaneViewModel() 
         {
-            _coordinateConversionView = new CoordinateConversionView();
+            _coordinateConversionView = new CCConvertTabView();
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
@@ -54,11 +54,13 @@ namespace ProAppCoordConversionModule
             InputCoordinateHistoryList = new ObservableCollection<string>();
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-            if (ctvm != null)
-            {
-                ctvm.SetCoordinateGetter(proCoordGetter);
-            }
+            //var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
+            //if (ctvm != null)
+            //{
+            //    ctvm.SetCoordinateGetter(proCoordGetter);
+            //}
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
+
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
             .RegisterHandler(n => n.DisplayCoordinateType, n => {
                 if(proCoordGetter != null && proCoordGetter.Point != null)
@@ -176,33 +178,34 @@ namespace ProAppCoordConversionModule
                 var tempDD = ProcessInput(_inputCoordinate);
 
                 // update tool view model
-                var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-                if (ctvm != null)
-                {
-                    ctvm.SetCoordinateGetter(proCoordGetter);
-                    ctvm.InputCoordinate = tempDD;
-                    var formattedInputCoordinate = proCoordGetter.GetInputDisplayString();
-                    // update history
-                    if (IsHistoryUpdate)
-                    {
-                        if (IsToolGenerated)
-                            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
-                        else
-                            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
-                    }
-                    // reset flags
-                    IsHistoryUpdate = true;
-                    IsToolGenerated = false;
+                //TODO update for refactor, use Mediator, etc
+                //var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
+                //if (ctvm != null)
+                //{
+                //    ctvm.SetCoordinateGetter(proCoordGetter);
+                //    ctvm.InputCoordinate = tempDD;
+                //    var formattedInputCoordinate = proCoordGetter.GetInputDisplayString();
+                //    // update history
+                //    if (IsHistoryUpdate)
+                //    {
+                //        if (IsToolGenerated)
+                //            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+                //        else
+                //            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
+                //    }
+                //    // reset flags
+                //    IsHistoryUpdate = true;
+                //    IsToolGenerated = false;
 
-                    _inputCoordinate = formattedInputCoordinate;
-                }
+                //    _inputCoordinate = formattedInputCoordinate;
+                //}
 
                 NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
             }
         }
 
-        private CoordinateConversionView _coordinateConversionView;
-        public CoordinateConversionView CTView
+        private CCConvertTabView _coordinateConversionView;
+        public CCConvertTabView CTView
         {
             get
             {

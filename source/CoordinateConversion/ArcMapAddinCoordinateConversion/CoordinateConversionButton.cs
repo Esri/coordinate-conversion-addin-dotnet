@@ -88,19 +88,20 @@ namespace ArcMapAddinCoordinateConversion
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
+                //TODO replace with Mediator calls, new map point
+                //var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
-                if (doc != null && point != null)
-                {
-                    doc.GetMainVM().IsToolGenerated = true;
-                    doc.SetInput(point.X, point.Y);
-                    //TODO Tool mode
-                    // update collection
-                    doc.GetMainVM().AddCollectionPoint(point);
-                }
+                //if (doc != null && point != null)
+                //{
+                //    doc.GetMainVM().IsToolGenerated = true;
+                //    doc.SetInput(point.X, point.Y);
+                //    //TODO Tool mode
+                //    // update collection
+                //    doc.GetMainVM().AddCollectionPoint(point);
+                //}
 
-                if(doc.GetMainVM().ToolMode == CoordinateConversionLibrary.MapPointToolMode.Convert)
-                    doc.GetMainVM().IsToolActive = false;
+                //if(doc.GetMainVM().ToolMode == CoordinateConversionLibrary.MapPointToolMode.Convert)
+                //    doc.GetMainVM().IsToolActive = false;
             }
             catch { }
         }
@@ -117,13 +118,14 @@ namespace ArcMapAddinCoordinateConversion
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
+                //TODO replace with Mediator call, MOUSE_MOVE_POINT
+                //var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
 
-                if (doc != null && point != null)
-                {
-                    doc.GetMainVM().IsHistoryUpdate = false;
-                    doc.SetInput(point.X, point.Y);
-                }
+                //if (doc != null && point != null)
+                //{
+                //    doc.GetMainVM().IsHistoryUpdate = false;
+                //    doc.SetInput(point.X, point.Y);
+                //}
             }
             catch { }
         }

@@ -19,9 +19,9 @@ namespace CoordinateConversionLibrary.Views
     /// <summary>
     /// Interaction logic for BatchCoordinateView.xaml
     /// </summary>
-    public partial class BatchCoordinateView : UserControl
+    public partial class CCCollectTabView : UserControl
     {
-        public BatchCoordinateView()
+        public CCCollectTabView()
         {
             InitializeComponent();
         }

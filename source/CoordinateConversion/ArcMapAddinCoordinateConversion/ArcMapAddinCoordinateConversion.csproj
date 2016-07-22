@@ -100,6 +100,7 @@
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
     <Compile Include="ContextMenuCommands.cs" />
+    <Compile Include="Helpers\ArcMapHelpers.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Models\AddInPoint.cs" />
     <Compile Include="Models\AMGraphic.cs" />
@@ -110,6 +111,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters\IPointToStringConverter.cs" />
+    <Compile Include="ViewModels\CollectTabViewModel.cs" />
+    <Compile Include="ViewModels\ConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\TabBaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">
