@@ -14,6 +14,8 @@
 
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
+using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,12 +29,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
     {
         public ConvertTabViewModel()
         {
+            InputCCView = new InputCoordinateConversionView();
+            InputCCView.DataContext = new CoordinateConversionViewModel();
+
+            OutputCCView = new OutputCoordinateView();
+            OutputCCView.DataContext = new OutputCoordinateViewModel();
+
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
             // commands
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
         }
+
+        public InputCoordinateConversionView InputCCView { get; set; }
+        public OutputCoordinateView OutputCCView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 

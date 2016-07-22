@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib" 
                     xmlns:local="clr-namespace:CoordinateConversionLibrary"
-                    xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary">
+                    xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties">
     <Style x:Key="BorderedButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Background" Value="#ffffff"/>
@@ -102,8 +102,8 @@
     <Style x:Key="buttonProperties" TargetType="Button" BasedOn="{StaticResource BorderedButtonStyle}">
         <Setter Property="Content">
             <Setter.Value>
-                <Image Width="18"
-                           Height="18"
+                <Image Width="16"
+                           Height="16"
                            Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" />
             </Setter.Value>
         </Setter>

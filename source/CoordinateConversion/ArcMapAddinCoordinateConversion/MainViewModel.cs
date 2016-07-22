@@ -33,13 +33,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
     {
         public MainViewModel()
         {
-            //_coordinateConversionView = new CCConvertTabView();
+            //TODO this is crashing ArcMap on load
             ConvertTabView = new CCConvertTabView();
             ConvertTabView.DataContext = new ConvertTabViewModel();
 
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new CollectTabViewModel();
-            
+
+            #region old code
             //HasInputError = false;
             //IsHistoryUpdate = true;
             //IsToolGenerated = false;
@@ -77,9 +78,33 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             //        InputCoordinate = amCoordGetter.GetInputDisplayString();
             //    }
             //});
-
+            #endregion
         }
 
+        public CCConvertTabView ConvertTabView { get; set; }
+        public CCCollectTabView CollectTabView { get; set; }
+
+        object selectedTab = null;
+        public object SelectedTab
+        {
+            get { return selectedTab; }
+            set
+            {
+                if (selectedTab == value)
+                    return;
+
+                selectedTab = value;
+                var tabItem = selectedTab as TabItem;
+                //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                //TODO let the other viewmodels determine what to do when tab selection changes
+                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
+                else
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
+            }
+        }
+
+        #region older code
         //public AddInPoint ListBoxItemAddInPoint { get; set; }
 
         //private void OnSetListBoxItemAddInPoint(object obj)
@@ -114,24 +139,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
         //public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
 
-        object selectedTab = null;
-        public object SelectedTab
-        {
-            get { return selectedTab; }
-            set
-            {
-                if (selectedTab == value)
-                    return;
-
-                selectedTab = value;
-                var tabItem = selectedTab as TabItem;
-                //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
-                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
-                else
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
-            }
-        }
 
         //public MapPointToolMode ToolMode { get; set; }
 
@@ -585,7 +592,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //}
 
         //private CCConvertTabView _coordinateConversionView;
-        public CCConvertTabView ConvertTabView { get; set; }
+        
         //{
         //    get
         //    {
@@ -596,7 +603,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //        _coordinateConversionView = value;
         //    }
         //}
-        public CCCollectTabView CollectTabView { get; set; }
 
         //private object _ListBoxSelectedItem = null;
         //public object ListBoxSelectedItem
@@ -1316,7 +1322,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //    //TODO check to see if we still need this
         //    //RaisePropertyChanged(() => HasMapGraphics);
         //}
-
+        #endregion older code
     }
 
     public class BoolToOppositeBoolConverter : IValueConverter

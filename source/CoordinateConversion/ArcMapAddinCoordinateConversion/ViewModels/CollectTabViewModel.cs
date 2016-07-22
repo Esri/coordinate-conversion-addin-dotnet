@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using ArcMapAddinCoordinateConversion.Models;
-using CoordinateConversionLibrary.Helpers;
+using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geometry;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using CoordinateConversionLibrary.Helpers;
+using ArcMapAddinCoordinateConversion.Models;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {

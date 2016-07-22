@@ -23,6 +23,7 @@ using CoordinateConversionLibrary.Helpers;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
+    //TODO start here, do we need this VM still?  if so, rename, etc
     public class CoordinateConversionViewModel : BaseViewModel
     {
         public CoordinateConversionViewModel()

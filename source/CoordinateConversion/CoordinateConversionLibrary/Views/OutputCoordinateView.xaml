@@ -1,48 +1,64 @@
 ﻿<UserControl x:Class="CoordinateConversionLibrary.Views.OutputCoordinateView"
-             x:Name="ocView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels"
-             mc:Ignorable="d" 
+             x:Name="ocView"
              Loaded="ocView_Loaded"
              Unloaded="ocView_Unloaded"
-             d:DesignHeight="150" d:DesignWidth="425">
+             d:DesignHeight="150"
+             d:DesignWidth="425"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <viewModels:OutputCoordinateViewModel x:Key="outputCoordViewModel"/>
-            <Image x:Key="expandImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/TablePlusExpand16_d.png" />
-            <Image x:Key="collapseImg" x:Shared="false" Width="16" Height="16" Source="/CoordinateConversionLibrary;component/Images/TableMinusCollaps16_d.png" />
-        <ContextMenu x:Key="RowMenu" DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
-            <MenuItem Header="Configure" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}, Path=DataContext.ConfigCommand}" 
-                              CommandParameter="{Binding Path=DataContext.Name}" />
-            <MenuItem Header="Delete" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}, Path=DataContext.DeleteCommand}" 
-                              CommandParameter="{Binding Path=DataContext.Name}" />
-        </ContextMenu>
+            <Image x:Key="expandImg"
+                   Width="16"
+                   Height="16"
+                   Source="/CoordinateConversionLibrary;component/Images/TablePlusExpand16_d.png"
+                   x:Shared="false" />
+            <Image x:Key="collapseImg"
+                   Width="16"
+                   Height="16"
+                   Source="/CoordinateConversionLibrary;component/Images/TableMinusCollaps16_d.png"
+                   x:Shared="false" />
+            <ContextMenu x:Key="RowMenu" DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+                <MenuItem Command="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                           AncestorType=DataGrid},
+                                            Path=DataContext.ConfigCommand}"
+                          CommandParameter="{Binding Path=DataContext.Name}"
+                          Header="Configure" />
+                <MenuItem Command="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                           AncestorType=DataGrid},
+                                            Path=DataContext.DeleteCommand}"
+                          CommandParameter="{Binding Path=DataContext.Name}"
+                          Header="Delete" />
+            </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
-    <UserControl.DataContext>
-        <StaticResourceExtension ResourceKey="outputCoordViewModel"/>
-    </UserControl.DataContext>
-    <Grid x:Name="layoutRoot" MouseLeftButtonUp="OnMouseLeftButtonUp" MouseMove="OnMouseMove">
-        <DataGrid ItemsSource="{Binding OutputCoordinateList}"
-            x:Name="ocGrid"
-            PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
-            AutoGenerateColumns="False"
-            SelectionMode="Single"
-            CanUserResizeRows="False"
-            CanUserDeleteRows="False"
-            CanUserAddRows="False"
-            CanUserReorderColumns="False"
-            CanUserSortColumns="False">
+    <Grid x:Name="layoutRoot"
+          MouseLeftButtonUp="OnMouseLeftButtonUp"
+          MouseMove="OnMouseMove">
+        <DataGrid x:Name="ocGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  CanUserSortColumns="False"
+                  ItemsSource="{Binding OutputCoordinateList}"
+                  PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
+                  SelectionMode="Single">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
-                    <Image Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" Width="10" Height="10" Cursor="Hand" />
+                    <Image Width="10"
+                           Height="10"
+                           Cursor="Hand"
+                           Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" />
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
             <DataGrid.RowStyle>
@@ -57,14 +73,14 @@
                         <DataTemplate>
                             <Button Command="{Binding DataContext.ExpandCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Name}">
                                 <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource BorderlessButtonStyle}">
+                                    <Style BasedOn="{StaticResource BorderlessButtonStyle}" TargetType="Button">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor,AncestorType=DataGridRow}}" Value="Collapsed">
+                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Collapsed">
                                                 <!--<Setter Property="Content" Value="▼" />-->
                                                 <Setter Property="Content" Value="{StaticResource expandImg}" />
                                                 <Setter Property="ToolTip" Value="Expand" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor,AncestorType=DataGridRow}}" Value="Visible">
+                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Visible">
                                                 <!--<Setter Property="Content" Value="▲" />-->
                                                 <Setter Property="Content" Value="{StaticResource collapseImg}" />
                                                 <Setter Property="ToolTip" Value="Collapse" />
@@ -76,33 +92,40 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    SortDirection="Ascending"
-                    IsReadOnly="True"
-                    Header="{x:Static prop:Resources.HeaderName}"
-                    Width="Auto"
-                    FontWeight="Bold"
-                    MinWidth="40"
-                    Binding="{Binding Path=Name}">
+                <DataGridTextColumn Width="Auto"
+                                    MinWidth="40"
+                                    Binding="{Binding Path=Name}"
+                                    FontWeight="Bold"
+                                    Header="{x:Static prop:Resources.HeaderName}"
+                                    IsReadOnly="True"
+                                    SortDirection="Ascending">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="{x:Static prop:Resources.HeaderCoordinate}" Width="*">
+                <DataGridTemplateColumn Width="*" Header="{x:Static prop:Resources.HeaderCoordinate}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding OutputCoordinate}" IsReadOnly="True" BorderThickness="0" />
+                            <TextBox BorderThickness="0"
+                                     IsReadOnly="True"
+                                     Text="{Binding OutputCoordinate}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding OutputCoordinate}" ToolTip="{x:Static prop:Resources.TooltipCopy}"
-                                    Style="{StaticResource BorderlessButtonStyle}">
-                                <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="16" Height="16" />
+                            <Button Command="{Binding DataContext.CopyCommand,
+                                                      RelativeSource={RelativeSource FindAncestor,
+                                                                                     AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding OutputCoordinate}"
+                                    Style="{StaticResource BorderlessButtonStyle}"
+                                    ToolTip="{x:Static prop:Resources.TooltipCopy}">
+                                <Image Width="16"
+                                       Height="16"
+                                       Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -111,7 +134,7 @@
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <ListBox ItemsSource="{Binding Props}" HorizontalContentAlignment="Stretch">
+                        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Props}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -120,11 +143,26 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Key, Mode=OneWay}" Margin="3,3,0,0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" Margin="3,3,0,0" />
-                                        <Button Grid.Column="2" Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Value}" ToolTip="Copy" Margin="3,3,0,0"
-                                                Style="{StaticResource BorderedButtonStyle}">
-                                            <Image Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" Width="16" Height="16" />
+                                        <TextBlock Margin="3,3,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Key,
+                                                                  Mode=OneWay}" />
+                                        <TextBox Grid.Column="1"
+                                                 Margin="3,3,0,0"
+                                                 IsReadOnly="True"
+                                                 Text="{Binding Value,
+                                                                Mode=OneWay}" />
+                                        <Button Grid.Column="2"
+                                                Margin="3,3,0,0"
+                                                Command="{Binding DataContext.CopyCommand,
+                                                                  RelativeSource={RelativeSource FindAncestor,
+                                                                                                 AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding Value}"
+                                                Style="{StaticResource BorderedButtonStyle}"
+                                                ToolTip="Copy">
+                                            <Image Width="16"
+                                                   Height="16"
+                                                   Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
                                         </Button>
                                     </Grid>
                                 </DataTemplate>
@@ -136,17 +174,32 @@
             <!--<DataGrid.ContextMenu>
                 <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
                     <MenuItem Header="Configure" Command="{Binding DataContext.ConfigCommand}" CommandParameter="{Binding }" />
-                    <MenuItem Header="Configure2" Command="{Binding DataContext.ConfigCommand}" 
+                    <MenuItem Header="Configure2" Command="{Binding DataContext.ConfigCommand}"
                               CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.CurrentItem.Name}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>-->
         </DataGrid>
-        <!-- Drag and Drop Popup -->
-        <Popup x:Name="popup1" IsHitTestVisible="False" Placement="RelativePoint" PlacementTarget="{Binding ElementName=ocView}" AllowsTransparency="True">
-            <Border BorderBrush="LightSteelBlue" BorderThickness="2" Background="White" Opacity="0.85">
-                <StackPanel Orientation="Horizontal" Margin="4,3,8,3">
-                    <Image Source="/CoordinateConversionLibrary;component/Images/hand.png" Width="16" Height="16" Margin="5,0,0,0" />
-                    <TextBlock FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding ElementName=ocView, Path=DraggedItem.Name}" Margin="8,0,0,0" />
+        <!--  Drag and Drop Popup  -->
+        <Popup x:Name="popup1"
+               AllowsTransparency="True"
+               IsHitTestVisible="False"
+               Placement="RelativePoint"
+               PlacementTarget="{Binding ElementName=ocView}">
+            <Border Background="White"
+                    BorderBrush="LightSteelBlue"
+                    BorderThickness="2"
+                    Opacity="0.85">
+                <StackPanel Margin="4,3,8,3" Orientation="Horizontal">
+                    <Image Width="16"
+                           Height="16"
+                           Margin="5,0,0,0"
+                           Source="/CoordinateConversionLibrary;component/Images/hand.png" />
+                    <TextBlock Margin="8,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Text="{Binding ElementName=ocView,
+                                              Path=DraggedItem.Name}" />
                 </StackPanel>
             </Border>
         </Popup>

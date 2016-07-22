@@ -276,4 +276,10 @@
   <data name="HeaderFlash" xml:space="preserve">
     <value>Flash</value>
   </data>
+  <data name="HeaderInput" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="HeaderOutput" xml:space="preserve">
+    <value>Output</value>
+  </data>
 </root>

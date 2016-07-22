@@ -279,7 +279,7 @@ namespace CoordinateConversionLibrary.Tests
         }
 
         [TestMethod]
-        public void CTViewModel()
+        public void CCViewModel()
         {
             var ctvm = new CoordinateConversionViewModel();
 

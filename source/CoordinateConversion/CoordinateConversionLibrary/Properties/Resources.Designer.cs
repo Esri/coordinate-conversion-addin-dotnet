@@ -277,11 +277,29 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input.
+        /// </summary>
+        public static string HeaderInput {
+            get {
+                return ResourceManager.GetString("HeaderInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string HeaderName {
             get {
                 return ResourceManager.GetString("HeaderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string HeaderOutput {
+            get {
+                return ResourceManager.GetString("HeaderOutput", resourceCulture);
             }
         }
         

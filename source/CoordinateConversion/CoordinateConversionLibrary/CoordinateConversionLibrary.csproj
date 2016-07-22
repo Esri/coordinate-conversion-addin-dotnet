@@ -79,17 +79,20 @@
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
-    <Compile Include="Views\CollectTabView.xaml.cs">
-      <DependentUpon>CollectTabView.xaml</DependentUpon>
+    <Compile Include="Views\CCCollectTabView.xaml.cs">
+      <DependentUpon>CCCollectTabView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CoordinateConversionView.xaml.cs">
-      <DependentUpon>CoordinateConversionView.xaml</DependentUpon>
+    <Compile Include="Views\ConvertTabView.xaml.cs">
+      <DependentUpon>ConvertTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditOutputCoordinateView.xaml.cs">
       <DependentUpon>EditOutputCoordinateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditPropertiesView.xaml.cs">
       <DependentUpon>EditPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InputCoordinateConversionView.xaml.cs">
+      <DependentUpon>InputCoordinateConversionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OutputCoordinateView.xaml.cs">
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
@@ -103,11 +106,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CollectTabView.xaml">
+    <Page Include="Views\CCCollectTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CoordinateConversionView.xaml">
+    <Page Include="Views\ConvertTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,6 +121,10 @@
     <Page Include="Views\EditPropertiesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InputCoordinateConversionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OutputCoordinateView.xaml">
       <Generator>MSBuild:Compile</Generator>
