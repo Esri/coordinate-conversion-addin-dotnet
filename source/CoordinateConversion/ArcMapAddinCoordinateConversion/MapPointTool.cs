@@ -18,6 +18,7 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary.Helpers;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -77,6 +78,8 @@ namespace ArcMapAddinCoordinateConversion
 
                 //if(doc.GetMainVM().ToolMode == CoordinateConversionLibrary.MapPointToolMode.Convert)
                 //    doc.GetMainVM().IsToolActive = false;
+
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, point);
             }
             catch { }
         }

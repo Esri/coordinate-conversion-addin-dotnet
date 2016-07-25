@@ -32,5 +32,6 @@ namespace CoordinateConversionLibrary
         public const string NewMapPointSelection = "NEW_MAP_POINT_SELECTION";
         public const string SetCoordinateGetter = "SET_COORDINATE_GETTER";
         public const string SetToolMode = "SET_TOOL_MODE";
+        public const string NEW_MAP_POINT = "NEW_MAP_POINT";
     }
 }
