@@ -33,5 +33,7 @@ namespace CoordinateConversionLibrary
         public const string SetCoordinateGetter = "SET_COORDINATE_GETTER";
         public const string SetToolMode = "SET_TOOL_MODE";
         public const string NEW_MAP_POINT = "NEW_MAP_POINT";
+        public const string MOUSE_MOVE_POINT = "MOUSE_MOVE_POINT";
+        public const string TAB_ITEM_SELECTED = "TAB_ITEM_SELECTED";
     }
 }

@@ -42,6 +42,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
 
+            Mediator.Register(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, OnTabItemSelected);
+            Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register(CoordinateConversionLibrary.Constants.SetToolMode, (mode) => 
@@ -92,6 +94,26 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 RaisePropertyChanged(() => IsToolActive);
             }
         }
+
+        private bool isActiveTab = false;
+        /// <summary>
+        /// Property to keep track of which tab/viewmodel is the active item
+        /// </summary>
+        public bool IsActiveTab
+        {
+            get
+            {
+                return isActiveTab;
+            }
+            set
+            {
+                //TODO do we need a reset?
+                //Reset(true);
+                isActiveTab = value;
+                RaisePropertyChanged(() => IsActiveTab);
+            }
+        }
+
 
         private string _inputCoordinate;
         public string InputCoordinate
@@ -256,6 +278,33 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 //    activeView.Refresh();
                 //}
             }
+        }
+
+        /// <summary>
+        /// Handler for the tab item selected event
+        /// Helps keep track of which tab item/viewmodel is active
+        /// </summary>
+        /// <param name="obj">bool if selected or not</param>
+        private void OnTabItemSelected(object obj)
+        {
+            if (obj == null)
+                return;
+
+            IsActiveTab = (obj == this);
+        }
+
+        internal virtual void OnNewMapPoint(object obj)
+        {
+            if (!IsActiveTab)
+                return;
+
+            var point = obj as IPoint;
+
+            if (point == null)
+                return;
+
+            amCoordGetter.Point = point;
+            InputCoordinate = amCoordGetter.GetInputDisplayString();
         }
 
         private void OnNewMapPointSelection(object obj)

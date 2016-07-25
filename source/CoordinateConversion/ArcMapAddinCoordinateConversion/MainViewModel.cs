@@ -95,7 +95,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 selectedTab = value;
                 var tabItem = selectedTab as TabItem;
-                //Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
                 //TODO let the other viewmodels determine what to do when tab selection changes
                 if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);

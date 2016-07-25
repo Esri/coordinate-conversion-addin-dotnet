@@ -62,5 +62,24 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
+        #region overrides
+
+        /// <summary>
+        /// Override to include the update of input coordinate history
+        /// </summary>
+        /// <param name="obj"></param>
+        internal override void OnNewMapPoint(object obj)
+        {
+            base.OnNewMapPoint(obj);
+
+            if (!IsActiveTab)
+                return;
+            
+            var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
+            
+            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+        }
+
+        #endregion overrides
     }
 }

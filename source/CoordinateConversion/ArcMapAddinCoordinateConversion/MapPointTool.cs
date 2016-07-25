@@ -104,6 +104,10 @@ namespace ArcMapAddinCoordinateConversion
                 //    doc.GetMainVM().IsHistoryUpdate = false;
                 //    doc.SetInput(point.X, point.Y);
                 //}
+
+                //TODO need to deal with IsHistoryUpdate flag
+                //TODO make sure we Register this msg and deal with SetInput, etc
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, point);
             }
             catch { }
         }
