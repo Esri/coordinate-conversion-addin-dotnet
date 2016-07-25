@@ -17,8 +17,8 @@ using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geometry;
-using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -119,7 +119,7 @@ namespace ArcMapAddinCoordinateConversion
 
             var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
 
-            if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
+            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
             {
                 //IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
                 point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;

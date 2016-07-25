@@ -19,7 +19,6 @@ using System.Linq;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -97,7 +96,7 @@ namespace ArcMapAddinCoordinateConversion
         {
             string format = "";
 
-            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
             if (tt != null)
             {
                 format = tt.Format;

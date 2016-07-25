@@ -15,15 +15,10 @@
   ******************************************************************************/ 
 
 using System;
-using System.Linq;
 using System.Windows.Data;
 using System.Windows.Controls;
-using ESRI.ArcGIS.Geometry;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Display;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
 
@@ -699,7 +694,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //{
         //    string format = "";
 
-        //    var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+        //    var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
         //    if (tt != null)
         //    {
         //        format = tt.Format;
@@ -733,7 +728,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         //        amCoordGetter.Point = point;
         //        try
         //        {
-        //            if(CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
+        //            if(CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
         //            {
         //                result = string.Format("{0:0.0} {1:0.0}", point.Y, point.X);
         //            }

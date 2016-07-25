@@ -1,12 +1,8 @@
-﻿using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.ViewModels;
-using ESRI.ArcGIS.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Data;
+using ESRI.ArcGIS.Geometry;
+using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Models;
 
 namespace ArcMapAddinCoordinateConversion.ValueConverters
 {
@@ -30,7 +26,7 @@ namespace ArcMapAddinCoordinateConversion.ValueConverters
             var cn = point as IConversionNotation;
             if (cn != null)
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         result = cn.GetDDFromCoords(6);

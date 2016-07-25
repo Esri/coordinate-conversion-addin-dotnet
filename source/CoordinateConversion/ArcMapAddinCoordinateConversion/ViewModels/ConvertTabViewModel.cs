@@ -12,16 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -63,6 +58,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
+        private void UpdateOutputs()
+        {
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+        }
+
         #region overrides
 
         /// <summary>
@@ -79,6 +79,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
             
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
+
+            UpdateOutputs();
+
+            // deactivate map point tool
+            IsToolActive = false;
+        }
+
+        internal override void OnMouseMove(object obj)
+        {
+            base.OnMouseMove(obj);
+
+            if (!IsActiveTab)
+                return;
+
+            UpdateOutputs();
         }
 
         #endregion overrides

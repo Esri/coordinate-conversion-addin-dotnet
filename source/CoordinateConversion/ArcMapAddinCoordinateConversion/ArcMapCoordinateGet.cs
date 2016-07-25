@@ -17,8 +17,8 @@
 using System;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Models;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -190,7 +190,7 @@ namespace ArcMapAddinCoordinateConversion
 
         public override void Project(int srfactoryCode)
         {
-            if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateTypes.None)
+            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateTypes.None)
                 return;
 
             ISpatialReference sr = null;
@@ -243,7 +243,7 @@ namespace ArcMapAddinCoordinateConversion
             var cn = Point as IConversionNotation;
             if (cn != null)
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         result = cn.GetDDFromCoords(6);

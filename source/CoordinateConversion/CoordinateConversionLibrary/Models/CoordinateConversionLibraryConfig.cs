@@ -34,6 +34,8 @@ namespace CoordinateConversionLibrary.Models
             LoadSomeDefaults();
         }
 
+        public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
+
         private CoordinateTypes displayCoordinateType = CoordinateTypes.None;
         public CoordinateTypes DisplayCoordinateType
         {

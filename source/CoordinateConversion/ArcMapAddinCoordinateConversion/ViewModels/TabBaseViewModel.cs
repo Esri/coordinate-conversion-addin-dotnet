@@ -56,7 +56,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
 
-            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, n =>
                 {
                     if (amCoordGetter != null && amCoordGetter.Point != null)
@@ -308,7 +308,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             InputCoordinate = amCoordGetter.GetInputDisplayString();
         }
 
-        private void OnMouseMove(object obj)
+        internal virtual void OnMouseMove(object obj)
         {
             if (!IsActiveTab)
                 return;
@@ -355,7 +355,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 amCoordGetter.Point = point;
                 try
                 {
-                    if (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
+                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
                     {
                         result = string.Format("{0:0.0} {1:0.0}", point.Y, point.X);
                     }

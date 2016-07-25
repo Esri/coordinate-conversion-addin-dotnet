@@ -61,7 +61,7 @@ namespace ProAppCoordConversionModule
             //}
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
 
-            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
             .RegisterHandler(n => n.DisplayCoordinateType, n => {
                 if(proCoordGetter != null && proCoordGetter.Point != null)
                 {
@@ -240,50 +240,54 @@ namespace ProAppCoordConversionModule
                 IsToolActive = true;
             }
 
-            CoordinateDD dd;
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-            if (ctvm != null)
-            {
-                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
-                {
-                    Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+            //TODO fix this
+            //CoordinateDD dd;
+            //var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
+            //if (ctvm != null)
+            //{
+            //    if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
+            //    {
+            //        Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
 
-                    var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
+            //        var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
 
-                    if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
-                    {
-                        try
-                        {
-                            var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                            var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                            point = QueuedTask.Run(() =>
-                            {
-                                return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
-                            }).Result;
-                        }
-                        catch (Exception ex)
-                        {
-                            // do nothing
-                        }
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
-            else { return; }
+            //        if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
+            //        {
+            //            try
+            //            {
+            //                var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+            //                var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+            //                point = QueuedTask.Run(() =>
+            //                {
+            //                    return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+            //                }).Result;
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                // do nothing
+            //            }
+            //        }
+            //        else
+            //        {
+            //            return;
+            //        }
+            //    }
+            //}
+            //else { return; }
 
             ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
 
-            if (point == null)
-            {
-                point = await QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });
-            }
+            //TODO fix this also
+            //if (point == null)
+            //{
+            //    point = await QueuedTask.Run(() =>
+            //    {
+            //        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+            //        return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+            //    });
+            //}
+
+            ////
 
             //await QueuedTask.Run(() =>
             //{
@@ -356,7 +360,7 @@ namespace ProAppCoordConversionModule
         {
             string format = "";
 
-            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
             if (tt != null)
             {
                 format = tt.Format;

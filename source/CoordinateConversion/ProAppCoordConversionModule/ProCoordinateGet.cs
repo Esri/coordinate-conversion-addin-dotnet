@@ -205,7 +205,7 @@ namespace ProAppCoordConversionModule
 
             try
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);
