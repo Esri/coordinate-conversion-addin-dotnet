@@ -33,7 +33,7 @@ namespace CoordinateConversionLibrary.Helpers
             {
                 bool found = false;
                 foreach (var item in pl_dict[token])
-                    if (item.Method.ToString() == callback.Method.ToString())
+                    if (item.Method.ToString() == callback.Method.ToString() && item.Target.ToString() == callback.Target.ToString())
                         found = true;
                 if (!found)
                     pl_dict[token].Add(callback);
