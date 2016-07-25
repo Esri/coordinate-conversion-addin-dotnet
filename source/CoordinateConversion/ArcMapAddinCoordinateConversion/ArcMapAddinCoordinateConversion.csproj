@@ -102,6 +102,7 @@
     <Compile Include="ContextMenuCommands.cs" />
     <Compile Include="Helpers\ArcMapHelpers.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="MapPointTool.cs" />
     <Compile Include="Models\AddInPoint.cs" />
     <Compile Include="Models\AMGraphic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

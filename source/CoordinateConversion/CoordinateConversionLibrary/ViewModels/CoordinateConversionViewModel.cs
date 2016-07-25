@@ -28,6 +28,7 @@ namespace CoordinateConversionLibrary.ViewModels
     {
         public CoordinateConversionViewModel()
         {
+            //TODO this might no longer be needed here
             OCView = new OutputCoordinateView();
 
             // set default CoordinateGetter
@@ -38,7 +39,7 @@ namespace CoordinateConversionLibrary.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
         }
 
-
+        //TODO this might no longer be needed here
         public OutputCoordinateView OCView { get; set; }
         private CoordinateGetBase coordinateGetter;
 
