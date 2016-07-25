@@ -57,13 +57,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
-                .RegisterHandler(n => n.DisplayCoordinateType, n =>
-                {
-                    if (amCoordGetter != null && amCoordGetter.Point != null)
-                    {
-                        InputCoordinate = amCoordGetter.GetInputDisplayString();
-                    }
-                });
+                .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
         }
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
@@ -320,6 +314,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             amCoordGetter.Point = point;
             InputCoordinate = amCoordGetter.GetInputDisplayString();
+        }
+
+        internal virtual void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
+        {
+            if (amCoordGetter != null && amCoordGetter.Point != null)
+            {
+                InputCoordinate = amCoordGetter.GetInputDisplayString();
+            }
         }
 
         private void OnNewMapPointSelection(object obj)

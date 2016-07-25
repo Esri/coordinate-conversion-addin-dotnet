@@ -392,6 +392,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             CoordinateAddInPoints.Add(addInPoint);
         }
 
+        internal override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
+        {
+            base.OnDisplayCoordinateTypeChanged(obj);
+
+            // update list box coordinates
+            var list = CoordinateAddInPoints.ToList();
+            CoordinateAddInPoints.Clear();
+            foreach (var item in list)
+                CoordinateAddInPoints.Add(item);
+        }
+
         #endregion overrides
     }
 }
