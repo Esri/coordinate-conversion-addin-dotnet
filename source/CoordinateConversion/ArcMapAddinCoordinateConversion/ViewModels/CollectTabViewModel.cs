@@ -371,5 +371,27 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+
+        #region overrides
+
+        internal override void OnNewMapPoint(object obj)
+        {
+            base.OnNewMapPoint(obj);
+
+            if (!IsActiveTab)
+                return;
+
+            var point = obj as IPoint;
+
+            if (point == null)
+                return;
+
+            var color = new RgbColorClass() { Red = 255 } as IColor;
+            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+            CoordinateAddInPoints.Add(addInPoint);
+        }
+
+        #endregion overrides
     }
 }

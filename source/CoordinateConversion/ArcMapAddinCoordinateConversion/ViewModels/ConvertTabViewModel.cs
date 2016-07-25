@@ -30,7 +30,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public ConvertTabViewModel()
         {
             InputCCView = new InputCoordinateConversionView();
-            InputCCView.DataContext = new CoordinateConversionViewModel();
+            //TODO need to decide what to do with this
+            InputCCView.DataContext = this;// new CoordinateConversionViewModel();
 
             OutputCCView = new OutputCoordinateView();
             OutputCCView.DataContext = new OutputCoordinateViewModel();

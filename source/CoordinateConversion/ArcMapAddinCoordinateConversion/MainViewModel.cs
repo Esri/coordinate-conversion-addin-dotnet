@@ -33,7 +33,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
     {
         public MainViewModel()
         {
-            //TODO this is crashing ArcMap on load
             ConvertTabView = new CCConvertTabView();
             ConvertTabView.DataContext = new ConvertTabViewModel();
 

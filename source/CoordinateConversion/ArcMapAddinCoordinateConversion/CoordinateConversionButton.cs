@@ -46,10 +46,4 @@ namespace ArcMapAddinCoordinateConversion
             Enabled = ArcMap.Application != null;
         }
     }
-
-    public class PointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
-    {
-
-    }
-
 }

@@ -44,6 +44,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             Mediator.Register(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, OnTabItemSelected);
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPoint);
+            Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMove);
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register(CoordinateConversionLibrary.Constants.SetToolMode, (mode) => 
@@ -174,7 +175,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public bool IsToolGenerated { get; set; }
 
         //TODO check if this is a good home for this
-        public ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
+        public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
         
         internal void OnActivatePointToolCommand(object obj)
         {
@@ -294,6 +295,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         internal virtual void OnNewMapPoint(object obj)
+        {
+            if (!IsActiveTab)
+                return;
+
+            var point = obj as IPoint;
+
+            if (point == null)
+                return;
+
+            amCoordGetter.Point = point;
+            InputCoordinate = amCoordGetter.GetInputDisplayString();
+        }
+
+        private void OnMouseMove(object obj)
         {
             if (!IsActiveTab)
                 return;
