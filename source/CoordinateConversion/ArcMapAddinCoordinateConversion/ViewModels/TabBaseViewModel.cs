@@ -186,18 +186,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         internal virtual void OnFlashPointCommand(object obj)
         {
-            IGeometry address = null;
+            IGeometry address = obj as IGeometry;
 
-            //TODO override in ConvertTabViewModel
-            //if (amCoordGetter != null && amCoordGetter.Point != null)
-            //    address = amCoordGetter.Point;
-
-            //TODO override in CollectTabViewModel
-            //if (ListBoxItemAddInPoint != null)
-            //{
-            //    address = ListBoxItemAddInPoint.Point;
-            //    ListBoxItemAddInPoint = null;
-            //}
+            if (address == null && amCoordGetter != null && amCoordGetter.Point != null)
+                address = amCoordGetter.Point;
 
             if (address != null)
             {

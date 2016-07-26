@@ -374,6 +374,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         #region overrides
 
+        internal override void OnFlashPointCommand(object obj)
+        {
+            if (ListBoxItemAddInPoint != null)
+            {
+                var geometry = ListBoxItemAddInPoint.Point;
+                ListBoxItemAddInPoint = null;
+
+                base.OnFlashPointCommand(geometry);
+            }
+        }
+
         internal override void OnNewMapPoint(object obj)
         {
             base.OnNewMapPoint(obj);
