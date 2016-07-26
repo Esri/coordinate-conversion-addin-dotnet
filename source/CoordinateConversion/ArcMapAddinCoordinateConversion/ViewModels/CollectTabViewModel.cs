@@ -37,6 +37,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
             DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
+            EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
         }
@@ -79,6 +80,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
+        public RelayCommand EnterKeyCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
         private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -116,6 +118,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             //av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             av.Refresh(); // sometimes a partial refresh is not working
+        }
+
+        private void OnEnterKeyCommand(object obj)
+        {
+            if(!HasInputError && InputCoordinate.Length > 0)
+            {
+                AddCollectionPoint(amCoordGetter.Point);
+            }
         }
 
         /// <summary>
