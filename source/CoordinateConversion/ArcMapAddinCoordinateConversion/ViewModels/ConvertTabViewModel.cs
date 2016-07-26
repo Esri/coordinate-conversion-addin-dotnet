@@ -58,10 +58,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
-        private void UpdateOutputs()
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-        }
+        //private void UpdateOutputs()
+        //{
+        //    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+        //}
 
         #region overrides
 
@@ -80,21 +80,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
-            UpdateOutputs();
+            //UpdateOutputs();
 
             // deactivate map point tool
             IsToolActive = false;
         }
 
-        internal override void OnMouseMove(object obj)
-        {
-            base.OnMouseMove(obj);
+        //internal override void OnMouseMove(object obj)
+        //{
+        //    base.OnMouseMove(obj);
 
-            if (!IsActiveTab)
-                return;
+        //    if (!IsActiveTab)
+        //        return;
 
-            UpdateOutputs();
-        }
+        //    //UpdateOutputs();
+        //}
 
         #endregion overrides
     }

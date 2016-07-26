@@ -125,6 +125,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 _inputCoordinate = value;
                 var tempDD = ProcessInput(_inputCoordinate);
+
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
                 //TODO where does this belong, virtual method call? Mediator call?
                 // update tool view model
                 //var ctvm = ConvertTabView.Resources["CTViewModel"] as CoordinateConversionViewModel;
