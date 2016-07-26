@@ -605,6 +605,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             display.FinishDrawing();
         }
 
+        //TODO move methods like this to arcobjects helper class
         private static void DrawCrossHair(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IDisplay display, IEnvelope extent, ISymbol markerSymbol, ISymbol lineSymbol)
         {
             var point = geometry as IPoint;

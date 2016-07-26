@@ -128,6 +128,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+        //TODO see if you can move this to an arcobjects helper class
         /// <summary>
         /// Method used to remove graphics from the graphics container
         /// Elements are tagged with a GUID on the IElementProperties.Name property
@@ -237,6 +238,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             CoordinateAddInPoints.Add(addInPoint);
         }
 
+        //TODO move to arcobjects helper class
         /// <summary>
         /// Adds a graphic element to the map graphics container
         /// </summary>
