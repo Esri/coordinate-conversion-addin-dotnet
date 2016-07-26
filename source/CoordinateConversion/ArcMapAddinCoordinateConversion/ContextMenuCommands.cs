@@ -70,17 +70,7 @@ namespace ArcMapAddinCoordinateConversion
                         break;
                 }
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                if (doc != null)
-                {
-                    var vm = doc.GetMainVM();
-
-                    if(vm != null)
-                    {
-                        coord = GetFormattedCoordinate(coord, ctype);
-                    }
-                }
+                coord = GetFormattedCoordinate(coord, ctype);
                 
                 System.Windows.Clipboard.SetText(coord);
             }

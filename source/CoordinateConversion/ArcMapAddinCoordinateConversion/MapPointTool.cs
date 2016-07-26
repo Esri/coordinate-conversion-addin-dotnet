@@ -19,6 +19,7 @@ using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
+using ArcMapAddinCoordinateConversion.Helpers;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -100,7 +101,7 @@ namespace ArcMapAddinCoordinateConversion
             else
             {
                 // always use WGS84
-                var sr = GetSR();
+                var sr = ArcMapHelpers.GetGCS_WGS_1984_SR();
 
                 if (sr != null)
                 {
@@ -109,21 +110,6 @@ namespace ArcMapAddinCoordinateConversion
             }
 
             return point;
-        }
-
-        private ISpatialReference GetSR()
-        {
-            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
-            System.Object obj = Activator.CreateInstance(t);
-            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
-
-            // Use the enumeration to create an instance of the predefined object.
-
-            IGeographicCoordinateSystem geographicCS =
-                srFact.CreateGeographicCoordinateSystem((int)
-                esriSRGeoCSType.esriSRGeoCS_WGS1984);
-
-            return geographicCS as ISpatialReference;
         }
     }
 }
