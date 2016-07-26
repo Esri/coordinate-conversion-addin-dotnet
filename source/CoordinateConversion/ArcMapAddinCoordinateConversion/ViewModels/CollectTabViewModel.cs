@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +22,7 @@ using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using ArcMapAddinCoordinateConversion.Models;
+using ArcMapAddinCoordinateConversion.Helpers;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -231,91 +231,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void AddCollectionPoint(IPoint point)
         {
             var color = new RgbColorClass() { Red = 255 } as IColor;
-            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+            var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
             var addInPoint = new AddInPoint() { Point = point, GUID = guid };
             CoordinateAddInPoints.Add(addInPoint);
-        }
 
-        //TODO move to arcobjects helper class
-        /// <summary>
-        /// Adds a graphic element to the map graphics container
-        /// </summary>
-        /// <param name="geom">IGeometry</param>
-        private string AddGraphicToMap(IGeometry geom, IColor color, bool IsTempGraphic = false, esriSimpleMarkerStyle markerStyle = esriSimpleMarkerStyle.esriSMSCircle, int size = 5)
-        {
-            if (geom == null || ArcMap.Document == null || ArcMap.Document.FocusMap == null)
-                return string.Empty;
-
-            IElement element = null;
-            double width = 2.0;
-
-            geom.Project(ArcMap.Document.FocusMap.SpatialReference);
-
-            if (geom.GeometryType == esriGeometryType.esriGeometryPoint)
-            {
-                // Marker symbols
-                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
-                simpleMarkerSymbol.Color = color;
-                simpleMarkerSymbol.Outline = false;
-                simpleMarkerSymbol.OutlineColor = color;
-                simpleMarkerSymbol.Size = size;
-                simpleMarkerSymbol.Style = markerStyle;
-
-                var markerElement = new MarkerElement() as IMarkerElement;
-                markerElement.Symbol = simpleMarkerSymbol;
-                element = markerElement as IElement;
-            }
-            else if (geom.GeometryType == esriGeometryType.esriGeometryPolyline)
-            {
-                // create graphic then add to map
-                var le = new LineElementClass() as ILineElement;
-                element = le as IElement;
-
-                var lineSymbol = new SimpleLineSymbolClass();
-                lineSymbol.Color = color;
-                lineSymbol.Width = width;
-
-                le.Symbol = lineSymbol;
-            }
-            else if (geom.GeometryType == esriGeometryType.esriGeometryPolygon)
-            {
-                // create graphic then add to map
-                IPolygonElement pe = new PolygonElementClass() as IPolygonElement;
-                element = pe as IElement;
-                IFillShapeElement fe = pe as IFillShapeElement;
-
-                var fillSymbol = new SimpleFillSymbolClass();
-                RgbColor selectedColor = new RgbColorClass();
-                selectedColor.Red = 0;
-                selectedColor.Green = 0;
-                selectedColor.Blue = 0;
-
-                selectedColor.Transparency = (byte)0;
-                fillSymbol.Color = selectedColor;
-
-                fe.Symbol = fillSymbol;
-            }
-
-            if (element == null)
-                return string.Empty;
-
-            element.Geometry = geom;
-
-            var mxdoc = ArcMap.Application.Document as IMxDocument;
-            var av = mxdoc.FocusMap as IActiveView;
-            var gc = av as IGraphicsContainer;
-
-            // store guid
-            var eprop = element as IElementProperties;
-            eprop.Name = Guid.NewGuid().ToString();
-
-            GraphicsList.Add(new AMGraphic(eprop.Name, geom, IsTempGraphic));
-
-            gc.AddElement(element, 0);
-
-            av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-
-            return eprop.Name;
+            GraphicsList.Add(new AMGraphic(guid, point, true));
         }
 
         private void RemoveGraphics(List<string> guidList)
@@ -404,10 +324,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (point == null)
                 return;
 
-            var color = new RgbColorClass() { Red = 255 } as IColor;
-            var guid = AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
-            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
-            CoordinateAddInPoints.Add(addInPoint);
+            AddCollectionPoint(point);
         }
 
         internal override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
