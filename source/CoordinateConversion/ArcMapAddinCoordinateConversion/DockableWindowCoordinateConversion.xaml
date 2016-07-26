@@ -7,7 +7,6 @@
              Height="300">
     <UserControl.Resources>
         <viewModels:MainViewModel x:Key="viewModelMain" />
-        <viewModels:BoolToOppositeBoolConverter x:Key="negateBool" />
     </UserControl.Resources>
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />

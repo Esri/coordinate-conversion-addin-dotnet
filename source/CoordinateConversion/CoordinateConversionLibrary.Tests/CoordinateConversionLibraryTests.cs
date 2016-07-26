@@ -278,12 +278,12 @@ namespace CoordinateConversionLibrary.Tests
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
         }
 
-        [TestMethod]
-        public void CCViewModel()
-        {
-            var ctvm = new CoordinateConversionViewModel();
+        //[TestMethod]
+        //public void CCViewModel()
+        //{
+        //    var ctvm = new CoordinateConversionViewModel();
 
-            Assert.IsNotNull(ctvm.OCView);
-        }
+        //    //Assert.IsNotNull(ctvm.OCView);
+        //}
     }
 }

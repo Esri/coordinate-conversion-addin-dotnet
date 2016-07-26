@@ -64,21 +64,6 @@ namespace ArcMapAddinCoordinateConversion
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
-                //TODO replace with Mediator calls, new map point
-                //var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                //if (doc != null && point != null)
-                //{
-                //    doc.GetMainVM().IsToolGenerated = true;
-                //    doc.SetInput(point.X, point.Y);
-                //    //TODO Tool mode
-                //    // update collection
-                //    doc.GetMainVM().AddCollectionPoint(point);
-                //}
-
-                //if(doc.GetMainVM().ToolMode == CoordinateConversionLibrary.MapPointToolMode.Convert)
-                //    doc.GetMainVM().IsToolActive = false;
-
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, point);
             }
             catch { }
@@ -88,7 +73,7 @@ namespace ArcMapAddinCoordinateConversion
         {
             try
             {
-                IPoint point = GetMapPoint(arg.X, arg.Y);
+                var point = GetMapPoint(arg.X, arg.Y);
                 ISnappingResult snapResult = null;
                 //Try to snap the current position
                 snapResult = m_Snapper.Snap(point);
@@ -96,17 +81,6 @@ namespace ArcMapAddinCoordinateConversion
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
-                //TODO replace with Mediator call, MOUSE_MOVE_POINT
-                //var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                //if (doc != null && point != null)
-                //{
-                //    doc.GetMainVM().IsHistoryUpdate = false;
-                //    doc.SetInput(point.X, point.Y);
-                //}
-
-                //TODO need to deal with IsHistoryUpdate flag
-                //TODO make sure we Register this msg and deal with SetInput, etc
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, point);
             }
             catch { }
@@ -121,7 +95,6 @@ namespace ArcMapAddinCoordinateConversion
 
             if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
             {
-                //IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
                 point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
             }
             else

@@ -23,25 +23,21 @@ using CoordinateConversionLibrary.Helpers;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
-    //TODO start here, do we need this VM still?  if so, rename, etc
     public class CoordinateConversionViewModel : BaseViewModel
     {
         public CoordinateConversionViewModel()
         {
-            //TODO this might no longer be needed here
-            OCView = new OutputCoordinateView();
+            //OCView = new OutputCoordinateView();
 
             //// set default CoordinateGetter
             //coordinateGetter = new CoordinateGetBase();
 
-            //TODO move to output view VM
             //Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnUpdateOutputs);
             //Mediator.Register(CoordinateConversionLibrary.Constants.SelectSpatialReference, OnSelectSpatialReference);
             //Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
         }
 
-        //TODO this might no longer be needed here
-        public OutputCoordinateView OCView { get; set; }
+        //public OutputCoordinateView OCView { get; set; }
         //private CoordinateGetBase coordinateGetter;
 
         //public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
@@ -225,7 +221,6 @@ namespace CoordinateConversionLibrary.ViewModels
         //    }
         //}
 
-        //TODO see if this is needed
         //private void OnSelectSpatialReference(object obj)
         //{
         //    if (coordinateGetter == null)

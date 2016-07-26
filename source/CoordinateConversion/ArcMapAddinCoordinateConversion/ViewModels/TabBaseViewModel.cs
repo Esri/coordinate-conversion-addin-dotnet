@@ -171,7 +171,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public bool IsHistoryUpdate { get; set; }
         public bool IsToolGenerated { get; set; }
 
-        //TODO check if this is a good home for this
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
         
         internal void OnActivatePointToolCommand(object obj)

@@ -165,8 +165,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     GraphicsList.Remove(graphic);
             }
             elementList.Clear();
-            //TODO check to see if we still need this
-            //RaisePropertyChanged(() => HasMapGraphics);
         }
 
         private void UpdateHighlightedGraphics()
@@ -316,9 +314,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             gc.AddElement(element, 0);
 
             av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-
-            //TODO check to see if this is still needed
-            //RaisePropertyChanged(() => HasMapGraphics);
 
             return eprop.Name;
         }
