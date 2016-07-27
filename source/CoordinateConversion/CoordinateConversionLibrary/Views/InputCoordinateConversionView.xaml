@@ -24,7 +24,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ComboBox x:Name="input"
                   Margin="0,3,0,0"

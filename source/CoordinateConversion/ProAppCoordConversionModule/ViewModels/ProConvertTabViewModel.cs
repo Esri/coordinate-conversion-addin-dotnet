@@ -13,16 +13,16 @@
 // limitations under the License.
 
 using System.Collections.ObjectModel;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 
-namespace ArcMapAddinCoordinateConversion.ViewModels
+namespace ProAppCoordConversionModule.ViewModels
 {
-    public class ConvertTabViewModel : ArcMapTabBaseViewModel
+    public class ProConvertTabViewModel : ProTabBaseViewModel
     {
-        public ConvertTabViewModel()
+        public ProConvertTabViewModel()
         {
             InputCCView = new InputCoordinateConversionView();
             //TODO need to decide what to do with this
@@ -52,7 +52,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             string name = CoordinateType.DD.ToString();
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
-        
+
         private void OnCopyAllCommand(object obj)
         {
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
@@ -69,8 +69,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (!base.OnNewMapPoint(obj))
                 return false;
 
-            var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
-            
+            var formattedInputCoordinate = proCoordGetter.GetInputDisplayString();
+
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool

@@ -115,7 +115,7 @@
     <Compile Include="ValueConverters\OppositeBoolValueConverter.cs" />
     <Compile Include="ViewModels\CollectTabViewModel.cs" />
     <Compile Include="ViewModels\ConvertTabViewModel.cs" />
-    <Compile Include="ViewModels\TabBaseViewModel.cs" />
+    <Compile Include="ViewModels\ArcMapTabBaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">

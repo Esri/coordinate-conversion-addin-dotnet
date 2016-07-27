@@ -19,56 +19,32 @@ using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Display;
-using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
 using ArcMapAddinCoordinateConversion.Helpers;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
-    public class TabBaseViewModel : BaseViewModel
+    public class ArcMapTabBaseViewModel : TabBaseViewModel
     {
-        public TabBaseViewModel()
+        public ArcMapTabBaseViewModel()
         {
-            HasInputError = false;
-            IsHistoryUpdate = true;
-            IsToolGenerated = false;
-            ToolMode = MapPointToolMode.Unknown;
-
             // commands
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
-            EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
 
-            Mediator.Register(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, OnTabItemSelected);
-            Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPoint);
-            Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMove);
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
-            Mediator.Register(CoordinateConversionLibrary.Constants.SetToolMode, (mode) => 
-            {
-                MapPointToolMode eMode = MapPointToolMode.Unknown;
-                Enum.TryParse<MapPointToolMode>(mode.ToString(), out eMode);
-                ToolMode = eMode;
-            });
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
-
-            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
-                .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
         }
 
-        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
-
         public RelayCommand ActivatePointToolCommand { get; set; }
-        public RelayCommand EditPropertiesDialogCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
 
-        public MapPointToolMode ToolMode { get; set; }
-
         public CoordinateType InputCoordinateType { get; set; }
+
         public bool IsToolActive
         {
             get
@@ -90,101 +66,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        private bool isActiveTab = false;
-        /// <summary>
-        /// Property to keep track of which tab/viewmodel is the active item
-        /// </summary>
-        public bool IsActiveTab
-        {
-            get
-            {
-                return isActiveTab;
-            }
-            set
-            {
-                //TODO do we need a reset?
-                //Reset(true);
-                isActiveTab = value;
-                RaisePropertyChanged(() => IsActiveTab);
-            }
-        }
-
-
-        private string _inputCoordinate;
-        public string InputCoordinate
-        {
-            get
-            {
-                return _inputCoordinate;
-            }
-
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    return;
-
-                _inputCoordinate = value;
-                var tempDD = ProcessInput(_inputCoordinate);
-
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
-                //TODO where does this belong, virtual method call? Mediator call?
-                // update tool view model
-                //var ctvm = ConvertTabView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-                //if (ctvm != null)
-                //{
-                //    ctvm.SetCoordinateGetter(amCoordGetter);
-                //    ctvm.InputCoordinate = tempDD;
-                //    var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
-                //    // update history
-                //    if (IsHistoryUpdate)
-                //    {
-                //        if (IsToolGenerated)
-                //        {
-                //            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
-                //        }
-                //        else
-                //        {
-                //            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
-                //        }
-                //    }
-                //    // reset flags
-                //    IsHistoryUpdate = true;
-                //    IsToolGenerated = false;
-
-                //    _inputCoordinate = formattedInputCoordinate;
-                //}
-
-                RaisePropertyChanged(() => InputCoordinate);
-            }
-        }
-        private bool _hasInputError = false;
-        public bool HasInputError
-        {
-            get { return _hasInputError; }
-            set
-            {
-                _hasInputError = value;
-                RaisePropertyChanged(() => HasInputError);
-            }
-        }
-        public bool IsHistoryUpdate { get; set; }
-        public bool IsToolGenerated { get; set; }
-
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
         
         internal void OnActivatePointToolCommand(object obj)
         {
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
         }
-
-        internal void OnEditPropertiesDialogCommand(object obj)
-        {
-            var dlg = new EditPropertiesView();
-
-            dlg.ShowDialog();
-        }
-
 
         internal virtual void OnFlashPointCommand(object obj)
         {
@@ -269,71 +156,52 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        /// <summary>
-        /// Handler for the tab item selected event
-        /// Helps keep track of which tab item/viewmodel is active
-        /// </summary>
-        /// <param name="obj">bool if selected or not</param>
-        private void OnTabItemSelected(object obj)
+        public override bool OnNewMapPoint(object obj)
         {
-            if (obj == null)
-                return;
-
-            IsActiveTab = (obj == this);
-        }
-
-        internal virtual void OnNewMapPoint(object obj)
-        {
-            if (!IsActiveTab)
-                return;
+            if (!base.OnNewMapPoint(obj))
+                return false;
 
             var point = obj as IPoint;
 
             if (point == null)
-                return;
+                return false;
 
             amCoordGetter.Point = point;
             InputCoordinate = amCoordGetter.GetInputDisplayString();
+
+            return true;
         }
 
-        internal virtual void OnMouseMove(object obj)
+        public override bool OnMouseMove(object obj)
         {
-            if (!IsActiveTab)
-                return;
+            if (!base.OnMouseMove(obj))
+                return false;
 
             var point = obj as IPoint;
 
             if (point == null)
-                return;
+                return false;
 
             amCoordGetter.Point = point;
             InputCoordinate = amCoordGetter.GetInputDisplayString();
+
+            return true;
         }
 
-        internal virtual void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
+        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
         {
+            base.OnDisplayCoordinateTypeChanged(obj);
+
             if (amCoordGetter != null && amCoordGetter.Point != null)
             {
                 InputCoordinate = amCoordGetter.GetInputDisplayString();
             }
         }
 
-        private void OnNewMapPointSelection(object obj)
+        public override string ProcessInput(string input)
         {
-            var point = obj as IPoint;
+            base.ProcessInput(input);
 
-            if (point == null)
-                return;
-
-            var sr = ArcMapHelpers.GetGCS_WGS_1984_SR();
-
-            point.Project(sr);
-
-            InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
-        }
-
-        private string ProcessInput(string input)
-        {
             string result = string.Empty;
             ESRI.ArcGIS.Geometry.IPoint point;
 
@@ -365,6 +233,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
 
             return result;
+        }
+
+        private void OnNewMapPointSelection(object obj)
+        {
+            var point = obj as IPoint;
+
+            if (point == null)
+                return;
+
+            var sr = ArcMapHelpers.GetGCS_WGS_1984_SR();
+
+            point.Project(sr);
+
+            InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
         }
 
         private void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)

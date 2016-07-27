@@ -122,6 +122,9 @@
       <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
+    <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
+    <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateConversionDockpane.xaml">

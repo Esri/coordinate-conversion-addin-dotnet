@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="CoordinateConversionLibrary.Views.CCConvertTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:libprop="clr-namespace:CoordinateConversionLibrary.Properties"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="160"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="3,3,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <GroupBox Header="{x:Static libprop:Resources.HeaderInput}">
+                    <UserControl Content="{Binding InputCCView}" />
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="{x:Static libprop:Resources.HeaderOutput}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <UserControl Content="{Binding OutputCCView}" />
+                    </ScrollViewer>
+                </GroupBox>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -79,11 +79,12 @@
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
+    <Compile Include="ViewModels\TabBaseViewModel.cs" />
     <Compile Include="Views\CCCollectTabView.xaml.cs">
       <DependentUpon>CCCollectTabView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ConvertTabView.xaml.cs">
-      <DependentUpon>ConvertTabView.xaml</DependentUpon>
+    <Compile Include="Views\CCConvertTabView.xaml.cs">
+      <DependentUpon>CCConvertTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditOutputCoordinateView.xaml.cs">
       <DependentUpon>EditOutputCoordinateView.xaml</DependentUpon>
@@ -110,7 +111,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ConvertTabView.xaml">
+    <Page Include="Views\CCConvertTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -18,10 +18,8 @@ using System.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
 using ProAppCoordConversionModule.UI;
 using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule
@@ -49,24 +47,15 @@ namespace ProAppCoordConversionModule
         {
             var mp = geometry as MapPoint;
 
-            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-            if (vm != null)
-            {
-                vm.IsToolGenerated = true;
-                vm.IsToolActive = false;
-            }
-            UpdateInputWithMapPoint(mp);
+            //TODO ViewModels will determine if tool is disabled, etc
+
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
 
             return base.OnSketchCompleteAsync(geometry);
         }
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
         {
-            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-            if (vm != null)
-            {
-                vm.IsHistoryUpdate = false;
-            }
             UpdateInputWithMapPoint(e.ClientPoint);
         }
 
@@ -127,11 +116,7 @@ namespace ProAppCoordConversionModule
                 if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
                     mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-                if (vm != null)
-                {
-                    vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);
-                }
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
             }
         }
 
@@ -164,11 +149,7 @@ namespace ProAppCoordConversionModule
 
             if (mp != null)
             {
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-                if (vm != null)
-                {
-                    vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);
-                }
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
             }
         }
     }

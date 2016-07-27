@@ -26,7 +26,7 @@ using ArcMapAddinCoordinateConversion.Helpers;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
-    public class CollectTabViewModel : TabBaseViewModel
+    public class CollectTabViewModel : ArcMapTabBaseViewModel
     {
         public CollectTabViewModel()
         {
@@ -312,22 +312,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        internal override void OnNewMapPoint(object obj)
+        public override bool OnNewMapPoint(object obj)
         {
-            base.OnNewMapPoint(obj);
+            if (!base.OnNewMapPoint(obj))
+                return false;
 
-            if (!IsActiveTab)
-                return;
+            AddCollectionPoint(obj as IPoint);
 
-            var point = obj as IPoint;
-
-            if (point == null)
-                return;
-
-            AddCollectionPoint(point);
+            return true;
         }
 
-        internal override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
+        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
         {
             base.OnDisplayCoordinateTypeChanged(obj);
 

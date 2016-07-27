@@ -15,11 +15,11 @@
   ******************************************************************************/
 
 using System;
+using System.Linq;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Framework;
 using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule
@@ -97,17 +97,33 @@ namespace ProAppCoordConversionModule
                         break;
                 }
 
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-                if (vm != null)
-                {
-                    coord = vm.GetFormattedCoordinate(coord, cType);
-                }
+                coord = GetFormattedCoordinate(coord, cType);
 
                 System.Windows.Clipboard.SetText(coord);
             }
             catch {}
 
         }
+
+        private string GetFormattedCoordinate(string coord, CoordinateType cType)
+        {
+            string format = "";
+
+            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (tt != null)
+            {
+                format = tt.Format;
+                Console.WriteLine(tt.Format);
+            }
+
+            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
+
+            if (!String.IsNullOrWhiteSpace(cf))
+                return cf;
+
+            return string.Empty;
+        }
+
     }
 
     internal class ContextCopyDD : ContextCopyBase
