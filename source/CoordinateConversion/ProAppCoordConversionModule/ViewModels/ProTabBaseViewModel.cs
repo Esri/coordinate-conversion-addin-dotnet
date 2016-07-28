@@ -188,6 +188,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 await QueuedTask.Run(() =>
                 {
                     var s = SymbolFactory.ConstructPointSymbol(color, size, markerStyle);
+                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.GreenRGB);
+                    haloSymbol.SetOutlineColor(ColorFactory.GreenRGB);
+                    s.HaloSymbol = haloSymbol;
+                    s.HaloSize = 0;
                     symbol = new CIMSymbolReference() { Symbol = s };
                 });
             }
@@ -213,7 +217,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 var disposable = MapView.Active.AddOverlay(geom, symbol);
                 var guid = Guid.NewGuid().ToString();
-                ProGraphicsList.Add(new ProGraphic(disposable, guid, geom, IsTempGraphic, tag));
+                ProGraphicsList.Add(new ProGraphic(disposable, guid, geom, symbol, IsTempGraphic, tag));
                 return guid;
             });
 

@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary.Helpers;
 using ProAppCoordConversionModule.Models;
@@ -169,66 +171,32 @@ namespace ProAppCoordConversionModule.ViewModels
         //    elementList.Clear();
         //}
 
-        private void UpdateHighlightedGraphics()
+        private async void UpdateHighlightedGraphics()
         {
-            //TODO fix this for Pro
-            //var mxdoc = ArcMap.Application.Document as IMxDocument;
-            //var av = mxdoc.FocusMap as IActiveView;
-            //var gc = av as IGraphicsContainer;
+            foreach (var proGraphic in ProGraphicsList)
+            {
+                var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == proGraphic.GUID);
 
-            //gc.Reset();
-            //var element = gc.Next();
+                if (aiPoint != null)
+                {
+                    var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
 
-            //while (element != null)
-            //{
-            //    var eProp = element as IElementProperties;
+                    if (s == null)
+                        continue;
 
-            //    if (eProp != null)
-            //    {
-            //        var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == eProp.Name);
+                    if (aiPoint.IsSelected)
+                        s.HaloSize = 2;
+                    else
+                        s.HaloSize = 0;
+                    
+                    var result = await QueuedTask.Run(() =>
+                    {
+                        var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
+                        return temp;
+                    });
 
-            //        if (aiPoint != null)
-            //        {
-            //            // highlight
-            //            var markerElement = element as IMarkerElement;
-            //            if (markerElement != null)
-            //            {
-            //                var sms = markerElement.Symbol as ISimpleMarkerSymbol;
-            //                if (sms != null)
-            //                {
-            //                    var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
-
-            //                    simpleMarkerSymbol.Color = sms.Color;
-            //                    simpleMarkerSymbol.Size = sms.Size;
-            //                    simpleMarkerSymbol.Style = sms.Style;
-            //                    simpleMarkerSymbol.OutlineSize = 1;
-
-            //                    if (aiPoint.IsSelected)
-            //                    {
-            //                        var color = new RgbColorClass() { Green = 255 } as IColor;
-            //                        // Marker symbols
-            //                        simpleMarkerSymbol.Outline = true;
-            //                        simpleMarkerSymbol.OutlineColor = color;
-            //                    }
-            //                    else
-            //                    {
-            //                        simpleMarkerSymbol.Outline = false;
-            //                        //simpleMarkerSymbol.OutlineColor = sms.Color;
-            //                    }
-
-            //                    markerElement.Symbol = simpleMarkerSymbol;
-
-            //                    gc.UpdateElement(element);
-            //                }
-            //            }
-            //        }
-            //    }
-
-
-            //    element = gc.Next();
-            //}
-
-            //av.Refresh();
+                }
+            }
         }
 
         private async void AddCollectionPoint(MapPoint point)
