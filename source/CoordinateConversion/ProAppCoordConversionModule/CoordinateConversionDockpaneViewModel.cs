@@ -33,6 +33,8 @@ using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
 using System.Text.RegularExpressions;
 using ProAppCoordConversionModule.ViewModels;
+using System.Windows.Controls;
+using CoordinateConversionLibrary;
 
 namespace ProAppCoordConversionModule
 {
@@ -77,6 +79,26 @@ namespace ProAppCoordConversionModule
         
         public CCConvertTabView ConvertTabView { get; set; }
         public CCCollectTabView CollectTabView { get; set; }
+
+        object selectedTab = null;
+        public object SelectedTab
+        {
+            get { return selectedTab; }
+            set
+            {
+                if (selectedTab == value)
+                    return;
+
+                selectedTab = value;
+                var tabItem = selectedTab as TabItem;
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                //TODO let the other viewmodels determine what to do when tab selection changes
+                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
+                else
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
+            }
+        }
 
         //PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
@@ -610,7 +632,7 @@ namespace ProAppCoordConversionModule
     /// <summary>
     /// Button implementation to show the DockPane.
     /// </summary>
-    internal class CoordinateConversionDockpane_ShowButton : Button
+    internal class CoordinateConversionDockpane_ShowButton : ArcGIS.Desktop.Framework.Contracts.Button
     {
         protected override void OnClick()
         {

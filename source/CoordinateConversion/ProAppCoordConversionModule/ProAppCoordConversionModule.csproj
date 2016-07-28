@@ -100,6 +100,9 @@
       <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
     </Compile>
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
+    <Compile Include="Helpers\MapPointHelper.cs" />
+    <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\ProGraphic.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="PropertiesButton.cs" />

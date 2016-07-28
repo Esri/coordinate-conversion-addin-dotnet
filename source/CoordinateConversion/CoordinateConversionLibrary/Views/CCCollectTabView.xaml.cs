@@ -26,6 +26,7 @@ namespace CoordinateConversionLibrary.Views
             InitializeComponent();
         }
 
+        //TODO do we still need this?
         private void ListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             // right mouse click selects item in list box

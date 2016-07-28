@@ -22,6 +22,9 @@ using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.ViewModels;
+using System.Threading.Tasks;
+using ArcGIS.Core.CIM;
+using ProAppCoordConversionModule.Models;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -66,6 +69,11 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private static System.IDisposable _overlayObject = null;
 
+        /// <summary>
+        /// lists to store GUIDs of graphics, temp feedback and map graphics
+        /// </summary>
+        public static List<ProGraphic> ProGraphicsList = new List<ProGraphic>();
+
         private void ClearOverlay()
         {
             if (_overlayObject != null)
@@ -86,6 +94,25 @@ namespace ProAppCoordConversionModule.ViewModels
 
             if (mp == null)
                 return false;
+
+            proCoordGetter.Point = mp;
+            InputCoordinate = proCoordGetter.GetInputDisplayString();
+
+            return true;
+        }
+
+        public override bool OnMouseMove(object obj)
+        {
+            if (!base.OnMouseMove(obj))
+                return false;
+
+            var mp = obj as MapPoint;
+
+            if (mp == null)
+                return false;
+
+            proCoordGetter.Point = mp;
+            InputCoordinate = proCoordGetter.GetInputDisplayString();
 
             return true;
         }
@@ -141,9 +168,66 @@ namespace ProAppCoordConversionModule.ViewModels
             FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
         }
 
-        private async void OnFlashPointCommand(object obj)
+        internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
         {
-            MapPoint point = null;
+            if (geom == null || MapView.Active == null)
+                return string.Empty;
+
+            CIMSymbolReference symbol = null;
+
+            if (!string.IsNullOrWhiteSpace(text) && geom.GeometryType == GeometryType.Point)
+            {
+                await QueuedTask.Run(() =>
+                {
+                    // TODO add text graphic
+                    //var tg = new CIMTextGraphic() { Placement = Anchor.CenterPoint, Text = text};
+                });
+            }
+            else if (geom.GeometryType == GeometryType.Point)
+            {
+                await QueuedTask.Run(() =>
+                {
+                    var s = SymbolFactory.ConstructPointSymbol(color, size, markerStyle);
+                    symbol = new CIMSymbolReference() { Symbol = s };
+                });
+            }
+            else if (geom.GeometryType == GeometryType.Polyline)
+            {
+                await QueuedTask.Run(() =>
+                {
+                    var s = SymbolFactory.ConstructLineSymbol(color, size);
+                    symbol = new CIMSymbolReference() { Symbol = s };
+                });
+            }
+            else if (geom.GeometryType == GeometryType.Polygon)
+            {
+                await QueuedTask.Run(() =>
+                {
+                    var outline = SymbolFactory.ConstructStroke(ColorFactory.BlackRGB, 1.0, SimpleLineStyle.Solid);
+                    var s = SymbolFactory.ConstructPolygonSymbol(color, SimpleFillStyle.Solid, outline);
+                    symbol = new CIMSymbolReference() { Symbol = s };
+                });
+            }
+
+            var result = await QueuedTask.Run(() =>
+            {
+                var disposable = MapView.Active.AddOverlay(geom, symbol);
+                var guid = Guid.NewGuid().ToString();
+                ProGraphicsList.Add(new ProGraphic(disposable, guid, geom, IsTempGraphic, tag));
+                return guid;
+            });
+
+            return result;
+        }
+
+
+        internal async virtual void OnFlashPointCommand(object obj)
+        {
+            var point = obj as MapPoint;
+
+            if(point == null)
+                return;
+
             var previous = IsToolActive;
             if (!IsToolActive)
             {
@@ -152,40 +236,36 @@ namespace ProAppCoordConversionModule.ViewModels
 
             //TODO fix this
             //CoordinateDD dd;
-            //var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-            //if (ctvm != null)
+            
+            //if (!CoordinateDD.TryParse(ListBox ctvm.InputCoordinate, out dd))
             //{
-            //    if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
+            //    Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+            //    var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
+
+            //    if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
             //    {
-            //        Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
-
-            //        var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
-
-            //        if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
+            //        try
             //        {
-            //            try
+            //            var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+            //            var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+            //            point = QueuedTask.Run(() =>
             //            {
-            //                var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-            //                var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-            //                point = QueuedTask.Run(() =>
-            //                {
-            //                    return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
-            //                }).Result;
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                // do nothing
-            //            }
+            //                return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+            //            }).Result;
             //        }
-            //        else
+            //        catch (Exception ex)
             //        {
-            //            return;
+            //            // do nothing
             //        }
             //    }
+            //    else
+            //    {
+            //        return;
+            //    }
             //}
-            //else { return; }
 
-            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
+            //ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
 
             //TODO fix this also
             //if (point == null)
