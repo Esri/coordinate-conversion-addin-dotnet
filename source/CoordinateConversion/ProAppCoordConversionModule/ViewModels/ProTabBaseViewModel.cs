@@ -43,7 +43,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
 
-        public ProCoordinateGet proCoordGetter = new ProCoordinateGet();
+        public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
 
         public bool IsToolActive
         {

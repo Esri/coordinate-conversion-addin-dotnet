@@ -36,6 +36,8 @@ namespace ProAppCoordConversionModule.ViewModels
             // commands
             AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
             CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+
+            IsActiveTab = true;
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
