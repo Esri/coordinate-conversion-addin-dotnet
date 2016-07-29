@@ -74,7 +74,6 @@
     </Compile>
     <Compile Include="ValueConverters\EnumToFriendlyNameConverter.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\CoordinateConversionViewModel.cs" />
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
