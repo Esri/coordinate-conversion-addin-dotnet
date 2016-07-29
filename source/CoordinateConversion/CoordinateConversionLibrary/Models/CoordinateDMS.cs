@@ -49,7 +49,6 @@ namespace CoordinateConversionLibrary.Models
             LonSeconds = (lonm - LonMinutes) * 60.0;
         }
 
-
         #region Properties
 
         public int LatDegrees { get; set; }
