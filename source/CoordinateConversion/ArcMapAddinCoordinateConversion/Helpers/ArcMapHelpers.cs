@@ -141,14 +141,178 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             var eprop = element as IElementProperties;
             eprop.Name = Guid.NewGuid().ToString();
 
-            //TODO remove when ready
-            //GraphicsList.Add(new AMGraphic(eprop.Name, geom, IsTempGraphic));
-
             gc.AddElement(element, 0);
 
             av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
 
             return eprop.Name;
+        }
+
+        ///<summary>Flash geometry on the display. The geometry type could be polygon, polyline, point, or multipoint.</summary>
+        ///
+        ///<param name="geometry"> An IGeometry interface</param>
+        ///<param name="color">An IRgbColor interface</param>
+        ///<param name="display">An IDisplay interface</param>
+        ///<param name="delay">A System.Int32 that is the time im milliseconds to wait.</param>
+        /// 
+        ///<remarks></remarks>
+        public static void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay, IEnvelope envelope)
+        {
+            if (geometry == null || color == null || display == null)
+            {
+                return;
+            }
+
+            display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
+
+            switch (geometry.GeometryType)
+            {
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolygon:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleFillSymbol simpleFillSymbol = new ESRI.ArcGIS.Display.SimpleFillSymbolClass();
+                        simpleFillSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleFillSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input polygon geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawPolygon(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPolygon(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolyline:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleLineSymbol simpleLineSymbol = new ESRI.ArcGIS.Display.SimpleLineSymbolClass();
+                        simpleLineSymbol.Width = 4;
+                        simpleLineSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleLineSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input polyline geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawPolyline(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPolyline(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPoint:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Size = 12;
+                        simpleMarkerSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol markerSymbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        markerSymbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        ESRI.ArcGIS.Display.ISimpleLineSymbol simpleLineSymbol = new ESRI.ArcGIS.Display.SimpleLineSymbolClass();
+                        simpleLineSymbol.Width = 1;
+                        simpleLineSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol lineSymbol = simpleLineSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        lineSymbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input polygon geometry.
+                        display.SetSymbol(markerSymbol);
+                        display.SetSymbol(lineSymbol);
+
+                        ArcMapHelpers.DrawCrossHair(geometry, display, envelope, markerSymbol, lineSymbol);
+
+                        //Flash the input point geometry.
+                        display.SetSymbol(markerSymbol);
+                        display.DrawPoint(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawPoint(geometry);
+                        break;
+                    }
+
+                case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryMultipoint:
+                    {
+                        //Set the flash geometry's symbol.
+                        ESRI.ArcGIS.Display.ISimpleMarkerSymbol simpleMarkerSymbol = new ESRI.ArcGIS.Display.SimpleMarkerSymbolClass();
+                        simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
+                        simpleMarkerSymbol.Size = 12;
+                        simpleMarkerSymbol.Color = color;
+                        ESRI.ArcGIS.Display.ISymbol symbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
+
+                        //Flash the input multipoint geometry.
+                        display.SetSymbol(symbol);
+                        display.DrawMultipoint(geometry);
+                        System.Threading.Thread.Sleep(delay);
+                        display.DrawMultipoint(geometry);
+                        break;
+                    }
+            }
+
+            display.FinishDrawing();
+        }
+
+        private static void DrawCrossHair(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IDisplay display, IEnvelope extent, ISymbol markerSymbol, ISymbol lineSymbol)
+        {
+            var point = geometry as IPoint;
+            var numSegments = 10;
+
+            var latitudeMid = point.Y;//envelope.YMin + ((envelope.YMax - envelope.YMin) / 2);
+            var longitudeMid = point.X;
+            var leftLongSegment = (point.X - extent.XMin) / numSegments;
+            var rightLongSegment = (extent.XMax - point.X) / numSegments;
+            var topLatSegment = (extent.YMax - point.Y) / numSegments;
+            var bottomLatSegment = (point.Y - extent.YMin) / numSegments;
+            var fromLeftLong = extent.XMin;
+            var fromRightLong = extent.XMax;
+            var fromTopLat = extent.YMax;
+            var fromBottomLat = extent.YMin;
+            var av = (ArcMap.Application.Document as IMxDocument).ActiveView;
+
+            var leftPolyline = new PolylineClass();
+            var rightPolyline = new PolylineClass();
+            var topPolyline = new PolylineClass();
+            var bottomPolyline = new PolylineClass();
+
+            leftPolyline.SpatialReference = geometry.SpatialReference;
+            rightPolyline.SpatialReference = geometry.SpatialReference;
+            topPolyline.SpatialReference = geometry.SpatialReference;
+            bottomPolyline.SpatialReference = geometry.SpatialReference;
+
+            var leftPC = leftPolyline as IPointCollection;
+            var rightPC = rightPolyline as IPointCollection;
+            var topPC = topPolyline as IPointCollection;
+            var bottomPC = bottomPolyline as IPointCollection;
+
+            leftPC.AddPoint(new PointClass() { X = fromLeftLong, Y = latitudeMid });
+            rightPC.AddPoint(new PointClass() { X = fromRightLong, Y = latitudeMid });
+            topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat });
+            bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat });
+
+            for (int x = 1; x <= numSegments; x++)
+            {
+                //Flash the input polygon geometry.
+                display.SetSymbol(markerSymbol);
+                display.SetSymbol(lineSymbol);
+
+                leftPC.AddPoint(new PointClass() { X = fromLeftLong + leftLongSegment * x, Y = latitudeMid });
+                rightPC.AddPoint(new PointClass() { X = fromRightLong - rightLongSegment * x, Y = latitudeMid });
+                topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat - topLatSegment * x });
+                bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat + bottomLatSegment * x });
+
+                // draw
+                display.DrawPolyline(leftPolyline);
+                display.DrawPolyline(rightPolyline);
+                display.DrawPolyline(topPolyline);
+                display.DrawPolyline(bottomPolyline);
+
+                System.Threading.Thread.Sleep(15);
+                display.FinishDrawing();
+                av.PartialRefresh(esriViewDrawPhase.esriViewForeground, null, null);
+                //av.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+                display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
+            }
         }
 
     }
