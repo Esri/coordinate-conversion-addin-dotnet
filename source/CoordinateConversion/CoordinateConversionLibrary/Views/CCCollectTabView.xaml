@@ -68,7 +68,6 @@
                          MinHeight="40"
                          Margin="3,3,0,0"
                          ItemsSource="{Binding CoordinateAddInPoints}"
-                         PreviewMouseRightButtonDown="ListBox_PreviewMouseRightButtonDown"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                          SelectedIndex="{Binding ListBoxSelectedIndex}"
                          SelectedItem="{Binding ListBoxSelectedItem}"

@@ -26,15 +26,6 @@ namespace CoordinateConversionLibrary.Views
             InitializeComponent();
         }
 
-        //TODO do we still need this?
-        private void ListBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // right mouse click selects item in list box
-            // avoid this by setting e.Handled to true
-            //e.Handled = true;
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, null);
-        }
-
         private void listBoxItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListBoxItem;
