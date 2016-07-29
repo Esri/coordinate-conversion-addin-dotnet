@@ -278,6 +278,14 @@ namespace CoordinateConversionLibrary.Tests
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
         }
 
+        [TestMethod]
+        public void CoordDD()
+        {
+            var dms = new CoordinateDDM(38, 53.2788, -76, 56.907);
+            var dd = new CoordinateDD(dms);
+            Assert.AreEqual(38.88798, dd.Lat);
+            Assert.AreEqual(-76.94845, dd.Lon);
+        }
         //[TestMethod]
         //public void CCViewModel()
         //{
