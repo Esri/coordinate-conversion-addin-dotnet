@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary.Helpers;
 using ProAppCoordConversionModule.Models;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-//TODO implement this view model
 namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProCollectTabViewModel : ProTabBaseViewModel
@@ -48,7 +44,6 @@ namespace ProAppCoordConversionModule.ViewModels
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
         public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
-
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -85,9 +80,6 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
 
-        // lists to store GUIDs of graphics, temp feedback and map graphics
-        //private static List<ProGraphic> ProGraphicsList = new List<ProGraphic>();
-
         private void OnDeletePointCommand(object obj)
         {
             var items = obj as IList;
@@ -107,21 +99,6 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnClearGraphicsCommand(object obj)
         {
             //TODO update this to Pro
-            //var mxdoc = ArcMap.Application.Document as IMxDocument;
-            //if (mxdoc == null)
-            //    return;
-            //var av = mxdoc.FocusMap as IActiveView;
-            //if (av == null)
-            //    return;
-            //var gc = av as IGraphicsContainer;
-            //if (gc == null)
-            //    return;
-            ////TODO need to clarify what clear graphics button does
-            //// seems to be different than the other Military Tools when doing batch collection
-            //RemoveGraphics(gc, ProGraphicsList.Where(g => g.IsTemp == false).ToList());
-
-            ////av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-            //av.Refresh(); // sometimes a partial refresh is not working
         }
 
         private void OnEnterKeyCommand(object obj)
@@ -194,7 +171,6 @@ namespace ProAppCoordConversionModule.ViewModels
                         var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
                         return temp;
                     });
-
                 }
             }
         }
@@ -239,26 +215,6 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
         }
-
-        //TODO fix this for Pro
-        //private void ClearGraphicsContainer(IMap map)
-        //{
-        //    var graphicsContainer = map as IGraphicsContainer;
-        //    if (graphicsContainer != null)
-        //    {
-        //        //graphicsContainer.DeleteAllElements();
-        //        // now we have a collection feature and need to not clear those related graphics
-        //        graphicsContainer.Reset();
-        //        var g = graphicsContainer.Next();
-        //        while (g != null)
-        //        {
-        //            if (!CoordinateAddInPoints.Any(aiPoint => aiPoint.GUID == ((IElementProperties)g).Name))
-        //                graphicsContainer.DeleteElement(g);
-        //            g = graphicsContainer.Next();
-        //        }
-        //    }
-        //}
-
 
         #region overrides
 

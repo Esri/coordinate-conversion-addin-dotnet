@@ -33,13 +33,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new CollectTabViewModel();
-
-            //HasInputError = false;
-            //IsToolGenerated = false;
         }
-
-        //public bool IsHistoryUpdate { get; set; }
-        //public bool IsToolGenerated { get; set; }
 
         public CCConvertTabView ConvertTabView { get; set; }
         public CCCollectTabView CollectTabView { get; set; }

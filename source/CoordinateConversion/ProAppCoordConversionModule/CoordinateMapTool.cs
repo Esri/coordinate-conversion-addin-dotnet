@@ -47,8 +47,6 @@ namespace ProAppCoordConversionModule
         {
             var mp = geometry as MapPoint;
 
-            //TODO ViewModels will determine if tool is disabled, etc
-
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
 
             return base.OnSketchCompleteAsync(geometry);
