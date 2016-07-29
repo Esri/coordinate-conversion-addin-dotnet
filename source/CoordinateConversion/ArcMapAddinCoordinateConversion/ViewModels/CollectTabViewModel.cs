@@ -128,7 +128,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        //TODO see if you can move this to an arcobjects helper class
         /// <summary>
         /// Method used to remove graphics from the graphics container
         /// Elements are tagged with a GUID on the IElementProperties.Name property
