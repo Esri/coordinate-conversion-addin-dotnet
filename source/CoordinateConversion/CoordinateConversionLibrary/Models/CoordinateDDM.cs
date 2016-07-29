@@ -37,9 +37,9 @@ namespace CoordinateConversionLibrary.Models
         public CoordinateDDM(CoordinateDD dd)
         {
             LatDegrees = (int)Math.Truncate(dd.Lat);
-            LatMinutes = (dd.Lat - Math.Truncate(dd.Lat)) * 60.0;
+            LatMinutes = Math.Abs(dd.Lat - Math.Truncate(dd.Lat)) * 60.0;
             LonDegrees = (int)Math.Truncate(dd.Lon);
-            LonMinutes = (dd.Lon - Math.Truncate(dd.Lon)) * 60.0;
+            LonMinutes = Math.Abs(dd.Lon - Math.Truncate(dd.Lon)) * 60.0;
         }
 
         #region Properties
