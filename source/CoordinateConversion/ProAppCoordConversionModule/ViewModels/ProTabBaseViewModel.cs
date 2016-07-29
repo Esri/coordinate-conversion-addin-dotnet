@@ -62,8 +62,6 @@ namespace ProAppCoordConversionModule.ViewModels
                     FrameworkApplication.SetCurrentToolAsync(string.Empty);
 
                 RaisePropertyChanged(() => IsToolActive);
-                //TODO remove if not needed
-                //NotifyPropertyChanged(new PropertyChangedEventArgs("IsToolActive"));
             }
         }
 

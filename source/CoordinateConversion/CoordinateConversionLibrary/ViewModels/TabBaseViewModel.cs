@@ -166,7 +166,6 @@ namespace CoordinateConversionLibrary.ViewModels
             return string.Empty;
         }
 
-
         /// <summary>
         /// Handler for the tab item selected event
         /// Helps keep track of which tab item/viewmodel is active

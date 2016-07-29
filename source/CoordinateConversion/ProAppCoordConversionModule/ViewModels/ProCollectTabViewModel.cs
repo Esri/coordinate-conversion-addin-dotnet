@@ -109,45 +109,6 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        //TODO fix this for Pro
-        /// <summary>
-        /// Method used to remove graphics from the graphics container
-        /// Elements are tagged with a GUID on the IElementProperties.Name property
-        /// </summary>
-        /// <param name="gc">map graphics container</param>
-        /// <param name="list">list of GUIDs to remove</param>
-        //private void RemoveGraphics(IGraphicsContainer gc, List<AMGraphic> list)
-        //{
-        //    if (gc == null || !list.Any())
-        //        return;
-
-        //    var elementList = new List<IElement>();
-        //    gc.Reset();
-        //    var element = gc.Next();
-        //    while (element != null)
-        //    {
-        //        var eleProps = element as IElementProperties;
-        //        if (list.Any(g => g.UniqueId == eleProps.Name))
-        //        {
-        //            elementList.Add(element);
-        //        }
-        //        element = gc.Next();
-        //    }
-
-        //    foreach (var ele in elementList)
-        //    {
-        //        gc.DeleteElement(ele);
-        //    }
-
-        //    // remove from master graphics list
-        //    foreach (var graphic in list)
-        //    {
-        //        if (ProGraphicsList.Contains(graphic))
-        //            ProGraphicsList.Remove(graphic);
-        //    }
-        //    elementList.Clear();
-        //}
-
         private async void UpdateHighlightedGraphics()
         {
             foreach (var proGraphic in ProGraphicsList)
