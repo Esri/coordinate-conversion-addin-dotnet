@@ -14,6 +14,8 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using System;
+using System.Linq;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -82,6 +84,25 @@ namespace CoordinateConversionLibrary.Models
             }
 
             return null;
+        }
+
+        public static string GetFormattedCoordinate(string coord, CoordinateType cType)
+        {
+            string format = "";
+
+            var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
+            if (outputCoordinate != null)
+            {
+                format = outputCoordinate.Format;
+                //Console.WriteLine(tt.Format);
+            }
+
+            var formattedCoordinate = CoordinateHandler.GetFormattedCoord(cType, coord, format);
+
+            if (!String.IsNullOrWhiteSpace(formattedCoordinate))
+                return formattedCoordinate;
+
+            return string.Empty;
         }
 
     }

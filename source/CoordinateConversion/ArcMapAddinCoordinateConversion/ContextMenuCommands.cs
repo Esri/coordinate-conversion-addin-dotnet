@@ -70,7 +70,7 @@ namespace ArcMapAddinCoordinateConversion
                         break;
                 }
 
-                coord = GetFormattedCoordinate(coord, ctype);
+                coord = CoordinateHandler.GetFormattedCoordinate(coord, ctype);
                 
                 System.Windows.Clipboard.SetText(coord);
             }
@@ -81,26 +81,6 @@ namespace ArcMapAddinCoordinateConversion
         {
             Enabled = ArcMap.Document != null;
         }
-
-        private static string GetFormattedCoordinate(string coord, CoordinateType cType)
-        {
-            string format = "";
-
-            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-            if (tt != null)
-            {
-                format = tt.Format;
-                Console.WriteLine(tt.Format);
-            }
-
-            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
-
-            if (!String.IsNullOrWhiteSpace(cf))
-                return cf;
-
-            return string.Empty;
-        }
-
     }
 
     public class ContextCopyDD : ContextCopyBase

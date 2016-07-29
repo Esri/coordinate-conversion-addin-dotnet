@@ -146,26 +146,6 @@ namespace CoordinateConversionLibrary.ViewModels
             return IsActiveTab;
         }
 
-        //TODO this may move somewhere
-        public string GetFormattedCoordinate(string coord, CoordinateType cType)
-        {
-            string format = "";
-
-            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-            if (tt != null)
-            {
-                format = tt.Format;
-                Console.WriteLine(tt.Format);
-            }
-
-            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
-
-            if (!String.IsNullOrWhiteSpace(cf))
-                return cf;
-
-            return string.Empty;
-        }
-
         /// <summary>
         /// Handler for the tab item selected event
         /// Helps keep track of which tab item/viewmodel is active

@@ -97,33 +97,13 @@ namespace ProAppCoordConversionModule
                         break;
                 }
 
-                coord = GetFormattedCoordinate(coord, cType);
+                coord = CoordinateHandler.GetFormattedCoordinate(coord, cType);
 
                 System.Windows.Clipboard.SetText(coord);
             }
             catch {}
 
         }
-
-        private string GetFormattedCoordinate(string coord, CoordinateType cType)
-        {
-            string format = "";
-
-            var tt = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-            if (tt != null)
-            {
-                format = tt.Format;
-                Console.WriteLine(tt.Format);
-            }
-
-            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
-
-            if (!String.IsNullOrWhiteSpace(cf))
-                return cf;
-
-            return string.Empty;
-        }
-
     }
 
     internal class ContextCopyDD : ContextCopyBase
