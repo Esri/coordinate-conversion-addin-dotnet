@@ -191,6 +191,19 @@ namespace CoordinateConversionLibrary.Views
             // save the config file
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
         }
+        /// <summary>
+        /// This fixes an issue with DataGrid Column * width when resizing control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ocGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var dg = sender as DataGrid;
+            if (dg == null)
+                return;
+
+            dg.Columns[2].Width = new DataGridLength(1.0, DataGridLengthUnitType.Star);
+        }
 
     }
 }

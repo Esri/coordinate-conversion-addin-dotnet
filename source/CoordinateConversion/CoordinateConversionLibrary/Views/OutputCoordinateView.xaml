@@ -52,6 +52,7 @@
                   CanUserSortColumns="False"
                   ItemsSource="{Binding OutputCoordinateList}"
                   PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
+                  SizeChanged="ocGrid_SizeChanged"
                   SelectionMode="Single">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
