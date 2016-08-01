@@ -42,4 +42,15 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTNone", typeof(Resources))]
         None = 8
     }
+
+    /// <summary>
+    /// Enumeration used for the different tool modes
+    /// </summary>
+    public enum MapPointToolMode : int
+    {
+        Unknown = 0,
+        Convert = 1,
+        Collect = 2
+    }
+
 }

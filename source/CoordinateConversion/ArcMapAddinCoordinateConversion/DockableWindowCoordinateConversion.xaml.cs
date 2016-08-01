@@ -21,6 +21,7 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ArcMapAddinCoordinateConversion.ViewModels;
+using CoordinateConversionLibrary.Helpers;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -83,7 +84,7 @@ namespace ArcMapAddinCoordinateConversion
                                         var tempX = point.X;
                                         var tempY = point.Y;
 
-                                        UpdateInputCoordinate(point);
+                                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, point);
                                     }
                                 }
                             }
@@ -93,37 +94,6 @@ namespace ArcMapAddinCoordinateConversion
                 }
             }
         }
-
-        private void UpdateInputCoordinate(IPoint point)
-        {
-            var vm = this.DataContext as MainViewModel;
-
-            if (vm == null)
-                return;
-
-            var sr = GetSR();
-
-            point.Project(sr);
-
-            vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
-        }
-
-        // always use WGS1984
-        private ISpatialReference GetSR()
-        {
-            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
-            System.Object obj = Activator.CreateInstance(t);
-            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
-
-            // Use the enumeration to create an instance of the predefined object.
-
-            IGeographicCoordinateSystem geographicCS =
-                srFact.CreateGeographicCoordinateSystem((int)
-                esriSRGeoCSType.esriSRGeoCS_WGS1984);
-
-            return geographicCS as ISpatialReference;
-        }
-
 
         /// <summary>
         /// Implementation class of the dockable window add-in. It is responsible for 
@@ -135,25 +105,6 @@ namespace ArcMapAddinCoordinateConversion
 
             public AddinImpl()
             {
-            }
-
-            public MainViewModel GetMainVM()
-            {
-                var tool = this.m_windowUI.Child as DockableWindowCoordinateConversion;
-
-                if (tool == null)
-                    return null;
-
-                return tool.DataContext as MainViewModel;
-            }
-            public void SetInput(double x, double y)
-            {
-                var tool = this.m_windowUI.Child as DockableWindowCoordinateConversion;
-
-                if(tool == null)
-                    return;
-
-                tool.input.Text = String.Format("{0:0.0####} {1:0.0####}", y, x);
             }
 
             protected override IntPtr OnCreateChild()

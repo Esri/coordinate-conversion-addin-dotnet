@@ -36,26 +36,34 @@ namespace ProAppCoordConversionModule
 
         // use base CanGetDD
 
+        public override bool CanGetDD(int srFactoryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
         public override bool CanGetDDM(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if(base.CanGetDDM(srFactoryCode, out coord))
+            if (Point != null)
             {
-                return true;
-            }
-            else
-            {
-                if(base.CanGetDD(srFactoryCode, out coord))
+                try
                 {
-                    // convert dd to ddm
-                    CoordinateDD dd;
-                    if(CoordinateDD.TryParse(coord, out dd))
-                    {
-                        var ddm = new CoordinateDDM(dd);
-                        coord = ddm.ToString("", new CoordinateDDMFormatter());
-                        return true;
-                    }
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DDM);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
                 }
+                catch { }
             }
             return false;
         }
@@ -63,23 +71,15 @@ namespace ProAppCoordConversionModule
         public override bool CanGetDMS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if (base.CanGetDMS(srFactoryCode, out coord))
+            if (Point != null)
             {
-                return true;
-            }
-            else
-            {
-                if (base.CanGetDD(srFactoryCode, out coord))
+                try
                 {
-                    // convert dd to ddm
-                    CoordinateDD dd;
-                    if (CoordinateDD.TryParse(coord, out dd))
-                    {
-                        var dms = new CoordinateDMS(dd);
-                        coord = dms.ToString("", new CoordinateDMSFormatter());
-                        return true;
-                    }
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DMS);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
                 }
+                catch { }
             }
             return false;
         }
@@ -205,7 +205,7 @@ namespace ProAppCoordConversionModule
 
             try
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);

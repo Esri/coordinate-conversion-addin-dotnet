@@ -21,9 +21,9 @@ namespace CoordinateConversionLibrary.Views
     /// <summary>
     /// Interaction logic for CoordinateConversionView.xaml
     /// </summary>
-    public partial class CoordinateConversionView : UserControl
+    public partial class CCConvertTabView : UserControl
     {
-        public CoordinateConversionView()
+        public CCConvertTabView()
         {
             InitializeComponent();
         }

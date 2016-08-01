@@ -21,7 +21,7 @@
         <Button id="Esri_ArcMapAddinCoordinateConversion_ContextCopyUSNG" class="ContextCopyUSNG" message="Add-in command to copy map point to clipboard." caption="Copy USNG Coordinate" tip="Copy USNG to clipboard" category="Add-In Controls" image="Images\coordinate-conversion-16.png" />
         <Button id="Esri_ArcMapAddinCoordinateConversion_ContextCopyUTM" class="ContextCopyUTM" message="Add-in command to copy map point to clipboard." caption="Copy UTM Coordinate" tip="Copy UTM to clipboard" category="Add-In Controls" image="Images\coordinate-conversion-16.png" />
         <Button id="Esri_ArcMapAddinCoordinateConversion_CoordinateConversionButton" class="CoordinateConversionButton" message="Add-in command to show Coordinate Conversion Window." caption="Show Coordinate Conversion" tip="Show Coordinate Conversion" category="Add-In Controls" image="Images\coordinate-conversion-16.png" />
-        <Tool id="Esri_ArcMapAddinCoordinateConversion_PointTool" class="PointTool" message="Add-in command for Map Point Tool" caption="Map Point" tip="Map Point Tool" category="Add-In Controls" image="Images\Tool1.png" />
+        <Tool id="Esri_ArcMapAddinCoordinateConversion_MapPointTool" class="MapPointTool" message="Add-in command for Map Point Tool" caption="Map Point" tip="Map Point Tool" category="Add-In Controls" image="Images\Tool1.png" />
       </Commands>
       <DockableWindows>
         <DockableWindow id="ESRI_ArcMapAddinCoordinateConversion_DockableWindowCoordinateConversion" class="DockableWindowCoordinateConversion+AddinImpl" caption="Coordinate Conversion" image="Images\coordinate-conversion-16.png">

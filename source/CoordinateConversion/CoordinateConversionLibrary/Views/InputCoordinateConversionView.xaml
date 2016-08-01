@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="CoordinateConversionLibrary.Views.InputCoordinateConversionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:libprop="clr-namespace:CoordinateConversionLibrary.Properties"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="input"
+                  Margin="0,3,0,0"
+                  HorizontalAlignment="Stretch"
+                  IsEditable="True"
+                  ItemsSource="{Binding InputCoordinateHistoryList}"
+                  Text="{Binding InputCoordinate,
+                                 UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                            <Setter Property="TextBox.Background" Value="LightPink" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                            <Setter Property="TextBox.Background" Value="White" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.Style>
+            <ComboBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
+            </ComboBox.InputBindings>
+        </ComboBox>
+        <Button Grid.Column="1"
+                Margin="3,3,0,0"
+                Style="{StaticResource buttonProperties}"
+                ToolTip="{x:Static libprop:Resources.TooltipEditProperties}" />
+        <Button Grid.Column="2"
+                Margin="3,3,0,0"
+                Command="{Binding AddNewOCCommand}"
+                Style="{StaticResource BorderedButtonStyle}"
+                ToolTip="{x:Static libprop:Resources.TooltipAdd}">
+            <Image Width="18"
+                   Height="18"
+                   Source="/CoordinateConversionLibrary;component/Images/hand.png" />
+        </Button>
+        <ToggleButton Grid.Column="3"
+                      Margin="3,3,0,0"
+                      IsChecked="{Binding IsToolActive}"
+                      Style="{StaticResource BorderedTButtonStyle}"
+                      ToolTip="{x:Static libprop:Resources.TooltipMapPointTool}">
+            <Image Width="18"
+                   Height="18"
+                   Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
+        </ToggleButton>
+        <Button Grid.Column="4"
+                Margin="3,3,0,0"
+                Command="{Binding CopyAllCommand}"
+                Style="{StaticResource BorderedButtonStyle}"
+                ToolTip="{x:Static libprop:Resources.TooltipCopyAll}">
+            <Image Width="18"
+                   Height="18"
+                   Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
+        </Button>
+    </Grid>
+</UserControl>

@@ -104,7 +104,7 @@ namespace CoordinateConversionLibrary.Views
 
             if (targetItem == null || !ReferenceEquals(DraggedItem, targetItem))
             {
-                var list = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList;
+                var list = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList;
                 
                 //remove the source from the list
                 list.Remove(DraggedItem);
@@ -118,7 +118,7 @@ namespace CoordinateConversionLibrary.Views
                 //select the dropped item
                 ocGrid.SelectedItem = DraggedItem;
 
-                CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
+                CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
             }
 
             //reset
@@ -179,7 +179,7 @@ namespace CoordinateConversionLibrary.Views
                 return;
 
             // load the config file
-            CoordinateConversionViewModel.AddInConfig.LoadConfiguration();
+            CoordinateConversionLibraryConfig.AddInConfig.LoadConfiguration();
         }
 
         private void ocView_Unloaded(object sender, RoutedEventArgs e)
@@ -189,7 +189,20 @@ namespace CoordinateConversionLibrary.Views
                 return;
 
             // save the config file
-            CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
+            CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
+        }
+        /// <summary>
+        /// This fixes an issue with DataGrid Column * width when resizing control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ocGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var dg = sender as DataGrid;
+            if (dg == null)
+                return;
+
+            dg.Columns[2].Width = new DataGridLength(1.0, DataGridLengthUnitType.Star);
         }
 
     }

@@ -279,11 +279,19 @@ namespace CoordinateConversionLibrary.Tests
         }
 
         [TestMethod]
-        public void CTViewModel()
+        public void CoordDD()
         {
-            var ctvm = new CoordinateConversionViewModel();
-
-            Assert.IsNotNull(ctvm.OCView);
+            var dms = new CoordinateDDM(38, 53.2788, -76, 56.907);
+            var dd = new CoordinateDD(dms);
+            Assert.AreEqual(38.88798, dd.Lat);
+            Assert.AreEqual(-76.94845, dd.Lon);
         }
+        //[TestMethod]
+        //public void CCViewModel()
+        //{
+        //    var ctvm = new CoordinateConversionViewModel();
+
+        //    //Assert.IsNotNull(ctvm.OCView);
+        //}
     }
 }

@@ -100,6 +100,9 @@
       <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
     </Compile>
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
+    <Compile Include="Helpers\MapPointHelper.cs" />
+    <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\ProGraphic.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="PropertiesButton.cs" />
@@ -122,6 +125,9 @@
       <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
+    <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
+    <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateConversionDockpane.xaml">

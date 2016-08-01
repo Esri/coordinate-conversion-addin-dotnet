@@ -59,23 +59,5 @@ namespace ArcMapAddinCoordinateConversion.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Input.
-        /// </summary>
-        public static string HeaderInput {
-            get {
-                return ResourceManager.GetString("HeaderInput", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Output.
-        /// </summary>
-        public static string HeaderOutput {
-            get {
-                return ResourceManager.GetString("HeaderOutput", resourceCulture);
-            }
-        }
     }
 }

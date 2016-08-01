@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -20,7 +21,7 @@ namespace CoordinateConversionLibrary.ViewModels
     {
         public EditPropertiesViewModel()
         {
-            SelectedCoordinateType = CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType;
+            SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
         }
 
@@ -45,9 +46,9 @@ namespace CoordinateConversionLibrary.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
-            CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
 
-            CoordinateConversionViewModel.AddInConfig.SaveConfiguration();
+            CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
 
             // close dialog
             DialogResult = true;
