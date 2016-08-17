@@ -42,10 +42,24 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
         }
 
+        public bool HasListBoxRightClickSelectedItem
+        {
+            get
+            {
+                return ListBoxItemAddInPoint != null;
+            }
+        }
+        public bool HasAnySelectedItems
+        {
+            get
+            {
+                return CoordinateAddInPoints.Any(p => p.IsSelected == true);
+            }
+        }
+
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
         public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
-
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -277,6 +291,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnSetListBoxItemAddInPoint(object obj)
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
+            RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
         }
 
         private void ClearGraphicsContainer(IMap map)
