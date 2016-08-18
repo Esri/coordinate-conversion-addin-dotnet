@@ -41,6 +41,21 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
         }
 
+        public bool HasListBoxRightClickSelectedItem 
+        {
+            get 
+            {
+                return ListBoxItemAddInPoint != null;
+            }
+        }
+        public bool HasAnySelectedItems
+        {
+            get
+            {
+                return CoordinateAddInPoints.Any(p => p.IsSelected == true);
+            }
+        }
+
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
         public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
@@ -175,6 +190,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnSetListBoxItemAddInPoint(object obj)
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
+            RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
         }
 
         #region overrides

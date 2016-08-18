@@ -33,5 +33,9 @@ namespace CoordinateConversionLibrary.Views
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, obj);
             e.Handled = true;
         }
+        private void listBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, null);
+        }
     }
 }

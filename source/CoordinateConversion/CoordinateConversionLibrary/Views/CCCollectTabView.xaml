@@ -83,11 +83,15 @@
                         <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
                             <MenuItem Command="{Binding DataContext.DeletePointCommand}"
                                       CommandParameter="{Binding Path=SelectedItems}"
-                                      Header="{x:Static prop:Resources.MenuLabelDelete}" />
-                            <MenuItem Command="{Binding DataContext.DeleteAllPointsCommand}" Header="{x:Static prop:Resources.MenuLabelDeleteAll}" />
+                                      Header="{x:Static prop:Resources.MenuLabelDelete}"
+                                      IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
+                            <MenuItem Command="{Binding DataContext.DeleteAllPointsCommand}"
+                                      Header="{x:Static prop:Resources.MenuLabelDeleteAll}"
+                                      IsEnabled="{Binding HasItems}" />
                             <MenuItem Command="{Binding DataContext.FlashPointCommand}"
                                       CommandParameter="{Binding}"
-                                      Header="{x:Static prop:Resources.HeaderFlash}" />
+                                      Header="{x:Static prop:Resources.HeaderFlash}"
+                                      IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.InputBindings>
@@ -98,6 +102,7 @@
                     </ListBox.InputBindings>
                     <ListBox.Style>
                         <Style TargetType="ListBox">
+                            <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
                             <Setter Property="IsEnabled" Value="True" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsRunning}" Value="True">
