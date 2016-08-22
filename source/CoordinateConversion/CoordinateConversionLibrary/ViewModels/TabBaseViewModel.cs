@@ -13,10 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
+using Microsoft.Win32;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -31,6 +34,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
             // commands
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
+            ImportCSVFileCommand = new RelayCommand(OnImportCSVFileCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPointInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
@@ -49,6 +53,7 @@ namespace CoordinateConversionLibrary.ViewModels
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         public RelayCommand EditPropertiesDialogCommand { get; set; }
+        public RelayCommand ImportCSVFileCommand { get; set; }
 
         //TODO is this used anymore?
         public bool IsHistoryUpdate { get; set; }
@@ -126,6 +131,49 @@ namespace CoordinateConversionLibrary.ViewModels
             dlg.ShowDialog();
         }
 
+        private void OnImportCSVFileCommand(object obj)
+        {
+            var fileDialog = new OpenFileDialog();
+            fileDialog.CheckFileExists = true;
+            fileDialog.CheckPathExists = true;
+            fileDialog.Filter = "csv files|*.csv";
+
+            var result = fileDialog.ShowDialog();
+            if(result.HasValue && result.Value == true)
+            {
+                // attemp to import
+                var fieldVM = new SelectCoordinateFieldsViewModel();
+
+                var headers = ImportCSV.GetHeaders(File.OpenRead(fileDialog.FileName), ',');
+                foreach (var header in headers)
+                {
+                    fieldVM.AvailableFields.Add(header);
+                    Console.WriteLine("header : {0}", header);
+                }
+
+                var dlg = new SelectCoordinateFieldsView();
+                dlg.DataContext = fieldVM;
+                if (dlg.ShowDialog() == true)
+                {
+                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(@"C:\temp\cctest.csv"), ',', fieldVM.SelectedFields.ToArray());
+
+                    var coordinates = new List<string>();
+
+                    foreach(var item in lists)
+                    {
+                        var sb = new StringBuilder();
+                        sb.Append(item.lat.Trim());
+                        if (fieldVM.SelectedInputTypeIndex == 1)
+                            sb.Append(string.Format(" {0}", item.lon.Trim()));
+
+                        coordinates.Add(sb.ToString());
+                    }
+
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+                }
+            }
+        }
+
         private void OnNewMapPointInternal(object obj)
         {
             OnNewMapPoint(obj);
@@ -158,5 +206,11 @@ namespace CoordinateConversionLibrary.ViewModels
 
             IsActiveTab = (obj == this);
         }
+    }
+
+    public class ImportCoordinatesList
+    {
+        public string lat { get; set; }
+        public string lon { get; set; }
     }
 }

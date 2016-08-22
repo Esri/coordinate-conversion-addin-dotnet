@@ -282,4 +282,16 @@
   <data name="HeaderOutput" xml:space="preserve">
     <value>Output</value>
   </data>
+  <data name="TitleSelectCoordinateFields" xml:space="preserve">
+    <value>Select Coordinate Fields</value>
+  </data>
+  <data name="LabelField1" xml:space="preserve">
+    <value>Field 1</value>
+  </data>
+  <data name="LabelField2" xml:space="preserve">
+    <value>Field 2</value>
+  </data>
+  <data name="LabelInputType" xml:space="preserve">
+    <value>Input Type</value>
+  </data>
 </root>
