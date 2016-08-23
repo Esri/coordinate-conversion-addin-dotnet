@@ -24,13 +24,9 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             AvailableFields = new ObservableCollection<string>();
             SelectedFields = new List<string>();
-            InputTypes = new ObservableCollection<string>();
-            InputTypes.Add("Single Field");
-            InputTypes.Add("Lat Lon Fields");
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
         }
         public ObservableCollection<string> AvailableFields { get; set; }
-        public ObservableCollection<string> InputTypes { get; set; }
         public List<string> SelectedFields { get; set; }
         public string SelectedInputType { get; set; }
         private int selectedInputTypeIndex = 0;

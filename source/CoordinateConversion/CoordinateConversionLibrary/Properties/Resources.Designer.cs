@@ -223,6 +223,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dual Field.
+        /// </summary>
+        public static string EnumSITDF {
+            get {
+                return ResourceManager.GetString("EnumSITDF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Field.
+        /// </summary>
+        public static string EnumSITSF {
+            get {
+                return ResourceManager.GetString("EnumSITSF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove {0}?.
         /// </summary>
         public static string FormattedRemove {

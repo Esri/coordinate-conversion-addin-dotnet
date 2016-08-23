@@ -294,4 +294,10 @@
   <data name="LabelInputType" xml:space="preserve">
     <value>Input Type</value>
   </data>
+  <data name="EnumSITDF" xml:space="preserve">
+    <value>Dual Field</value>
+  </data>
+  <data name="EnumSITSF" xml:space="preserve">
+    <value>Single Field</value>
+  </data>
 </root>
