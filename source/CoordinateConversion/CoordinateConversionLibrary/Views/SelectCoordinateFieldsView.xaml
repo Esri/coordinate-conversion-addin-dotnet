@@ -25,12 +25,24 @@
             SelectedItem="{Binding SelectedField1}"
             Height="Auto"
             Margin="3,3,3,0" />
+        <StackPanel>
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedInputTypeIndex}" Value="1">
+                            <Setter Property="IsEnabled" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
         <TextBlock Text="{x:Static prop:Resources.LabelField2}" Margin="3,3,0,0" />
         <ComboBox
             ItemsSource="{Binding AvailableFields}"
             SelectedItem="{Binding SelectedField2}"
             Height="Auto"
             Margin="3,3,3,0" />
+        </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{x:Static prop:Resources.ButtonOK}" 
                     Command="{Binding OKButtonPressedCommand}" 
