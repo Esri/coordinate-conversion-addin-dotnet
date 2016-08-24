@@ -125,26 +125,31 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override string ProcessInput(string input)
+        public override async void ProcessInput(string input)
         {
             string result = string.Empty;
-            MapPoint point;
+            //MapPoint point;
             HasInputError = false;
 
             if (string.IsNullOrWhiteSpace(input))
-                return result;
+                return;
 
-            var coordType = GetCoordinateType(input, out point);
+            //var coordType = GetCoordinateType(input, out point);
+            var ccc = await QueuedTask.Run(() =>
+                {
+                    return GetCoordinateType(input);
+                });
+                
 
-            if (coordType == CoordinateType.Unknown)
+            if (ccc.Type == CoordinateType.Unknown)
                 HasInputError = true;
             else
             {
-                proCoordGetter.Point = point;
-                result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
+                proCoordGetter.Point = ccc.Point;
+                result = new CoordinateDD(ccc.Point.Y, ccc.Point.X).ToString("", new CoordinateDDFormatter());
             }
 
-            return result;
+            return;
         }
 
         #endregion overrides
@@ -488,8 +493,148 @@ namespace ProAppCoordConversionModule.ViewModels
 
             return CoordinateType.Unknown;
         }
+        private async Task<CCCoordinate> GetCoordinateType(string input)
+        {
+            MapPoint point = null;
+
+            // DD
+            CoordinateDD dd;
+            if (CoordinateDD.TryParse(input, out dd))
+            {
+                point = await QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                });//.Result;
+                return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
+            }
+
+            // DDM
+            CoordinateDDM ddm;
+            if (CoordinateDDM.TryParse(input, out ddm))
+            {
+                dd = new CoordinateDD(ddm);
+                point = await QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                });//.Result;
+                return new CCCoordinate() { Type = CoordinateType.DDM, Point = point };
+            }
+            // DMS
+            CoordinateDMS dms;
+            if (CoordinateDMS.TryParse(input, out dms))
+            {
+                dd = new CoordinateDD(dms);
+                point = await QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+                });//.Result;
+                return new CCCoordinate() { Type = CoordinateType.DMS, Point = point };
+            }
+
+            CoordinateGARS gars;
+            if (CoordinateGARS.TryParse(input, out gars))
+            {
+                try
+                {
+                    point = await QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    });//.Result;
+
+                    return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
+                }
+                catch { }
+            }
+
+            CoordinateMGRS mgrs;
+            if (CoordinateMGRS.TryParse(input, out mgrs))
+            {
+                try
+                {
+                    point = await QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    });//.Result;
+
+                    return new CCCoordinate() { Type = CoordinateType.MGRS, Point = point };
+                }
+                catch { }
+            }
+
+            CoordinateUSNG usng;
+            if (CoordinateUSNG.TryParse(input, out usng))
+            {
+                try
+                {
+                    point = await QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    });//.Result;
+
+                    return new CCCoordinate() { Type = CoordinateType.USNG, Point = point }; ;
+                }
+                catch { }
+            }
+
+            CoordinateUTM utm;
+            if (CoordinateUTM.TryParse(input, out utm))
+            {
+                try
+                {
+                    point = await QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
+                        return tmp;
+                    });//.Result;
+
+                    return new CCCoordinate() { Type = CoordinateType.UTM, Point = point };
+                }
+                catch { }
+            }
+
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+            var matchMercator = regexMercator.Match(input);
+
+            if (matchMercator.Success && matchMercator.Length == input.Length)
+            {
+                try
+                {
+                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    point = await QueuedTask.Run(() =>
+                    {
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+                    });//.Result;
+                    return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
+                }
+                catch (Exception ex)
+                {
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
+                }
+            }
+
+            return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
+        }
 
         #endregion Private Methods
 
+    }
+
+    public class CCCoordinate
+    {
+        public CCCoordinate() { }
+        public CoordinateType Type { get; set; }
+        public MapPoint Point { get; set; }
     }
 }

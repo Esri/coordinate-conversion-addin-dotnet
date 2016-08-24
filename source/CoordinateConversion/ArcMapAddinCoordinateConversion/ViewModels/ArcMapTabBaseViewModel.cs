@@ -198,7 +198,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        public override string ProcessInput(string input)
+        public override void ProcessInput(string input)
         {
             base.ProcessInput(input);
 
@@ -208,7 +208,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             HasInputError = false;
 
             if (string.IsNullOrWhiteSpace(input))
-                return result;
+                return;
 
             InputCoordinateType = GetCoordinateType(input, out point);
 
@@ -232,7 +232,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
             }
 
-            return result;
+            return;
         }
 
         private void OnNewMapPointSelection(object obj)

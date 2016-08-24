@@ -16,6 +16,20 @@ using CoordinateConversionLibrary.Properties;
 
 namespace CoordinateConversionLibrary
 {
+    public enum GeomType : int
+    {
+        Point = 1,
+        PolyLine = 2,
+        Polygon = 3
+    }
+
+    public enum SaveAsType : int
+    {
+        FileGDB = 1,
+        Shapefile = 2,
+        KML = 3
+    }
+
     public enum CoordinateTypes : int
     {
         [LocalizableDescription(@"EnumCTDD", typeof(Resources))]

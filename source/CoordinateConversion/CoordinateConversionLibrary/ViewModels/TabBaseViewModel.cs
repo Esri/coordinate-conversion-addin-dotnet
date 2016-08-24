@@ -98,7 +98,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     return;
 
                 _inputCoordinate = value;
-                var tempDD = ProcessInput(_inputCoordinate);
+                ProcessInput(_inputCoordinate);
 
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
@@ -114,9 +114,9 @@ namespace CoordinateConversionLibrary.ViewModels
             // do nothing
         }
 
-        public virtual string ProcessInput(string input)
+        public virtual void ProcessInput(string input)
         {
-            return input;
+            return;
         }
 
         public void OnEditPropertiesDialogCommand(object obj)

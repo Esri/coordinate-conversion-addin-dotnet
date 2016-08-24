@@ -102,6 +102,8 @@
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
     <Compile Include="Helpers\MapPointHelper.cs" />
     <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\FeatureClassUtils.cs" />
+    <Compile Include="Models\KMLUtils.cs" />
     <Compile Include="Models\ProGraphic.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
@@ -127,7 +129,11 @@
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
     <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
     <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
+    <Compile Include="Views\ProSaveAsFormatView.xaml.cs">
+      <DependentUpon>ProSaveAsFormatView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateConversionDockpane.xaml">
@@ -145,6 +151,10 @@
     <Page Include="UI\FlashEmbeddedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProSaveAsFormatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
