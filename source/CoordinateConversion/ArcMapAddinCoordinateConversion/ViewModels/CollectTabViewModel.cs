@@ -40,6 +40,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
+            Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
         }
 
         public bool HasListBoxRightClickSelectedItem
@@ -292,6 +293,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
             RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
+        }
+
+        private void OnImportCoordinates(object obj)
+        {
+            var coordinates = obj as List<string>;
+
+            if (coordinates == null)
+                return;
+
+            foreach (var coordinate in coordinates)
+            {
+                InputCoordinate = coordinate;
+                if (!HasInputError)
+                    OnNewMapPoint(amCoordGetter.Point);
+            }
         }
 
         private void ClearGraphicsContainer(IMap map)

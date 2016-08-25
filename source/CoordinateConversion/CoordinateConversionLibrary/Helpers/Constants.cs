@@ -35,5 +35,6 @@ namespace CoordinateConversionLibrary
         public const string NEW_MAP_POINT = "NEW_MAP_POINT";
         public const string MOUSE_MOVE_POINT = "MOUSE_MOVE_POINT";
         public const string TAB_ITEM_SELECTED = "TAB_ITEM_SELECTED";
+        public const string IMPORT_COORDINATES = "IMPORT_COORDINATES";
     }
 }

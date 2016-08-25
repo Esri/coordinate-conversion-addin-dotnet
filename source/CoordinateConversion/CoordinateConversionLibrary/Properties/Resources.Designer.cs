@@ -223,6 +223,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dual Field.
+        /// </summary>
+        public static string EnumSITDF {
+            get {
+                return ResourceManager.GetString("EnumSITDF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Field.
+        /// </summary>
+        public static string EnumSITSF {
+            get {
+                return ResourceManager.GetString("EnumSITSF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove {0}?.
         /// </summary>
         public static string FormattedRemove {
@@ -340,6 +358,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field 1.
+        /// </summary>
+        public static string LabelField1 {
+            get {
+                return ResourceManager.GetString("LabelField1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field 2.
+        /// </summary>
+        public static string LabelField2 {
+            get {
+                return ResourceManager.GetString("LabelField2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Formats.
         /// </summary>
         public static string LabelFormats {
@@ -354,6 +390,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string LabelImport {
             get {
                 return ResourceManager.GetString("LabelImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input Type.
+        /// </summary>
+        public static string LabelInputType {
+            get {
+                return ResourceManager.GetString("LabelInputType", resourceCulture);
             }
         }
         
@@ -507,6 +552,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string TitleEditProperties {
             get {
                 return ResourceManager.GetString("TitleEditProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Coordinate Fields.
+        /// </summary>
+        public static string TitleSelectCoordinateFields {
+            get {
+                return ResourceManager.GetString("TitleSelectCoordinateFields", resourceCulture);
             }
         }
         
