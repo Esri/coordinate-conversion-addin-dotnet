@@ -46,6 +46,7 @@
     <Compile Include="Attributes\LocalizableDescriptionAttribute.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\ImportCSV.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
     <Compile Include="Helpers\Wpf.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
+    <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
     <Compile Include="ViewModels\TabBaseViewModel.cs" />
     <Compile Include="Views\CCCollectTabView.xaml.cs">
       <DependentUpon>CCCollectTabView.xaml</DependentUpon>
@@ -96,6 +98,9 @@
     </Compile>
     <Compile Include="Views\OutputCoordinateView.xaml.cs">
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectCoordinateFieldsView.xaml.cs">
+      <DependentUpon>SelectCoordinateFieldsView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OutputCoordinateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SelectCoordinateFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

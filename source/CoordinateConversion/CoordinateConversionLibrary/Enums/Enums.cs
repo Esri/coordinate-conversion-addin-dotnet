@@ -16,6 +16,15 @@ using CoordinateConversionLibrary.Properties;
 
 namespace CoordinateConversionLibrary
 {
+    public enum SelectInputTypes : int
+    {
+        [LocalizableDescription(@"EnumSITSF", typeof(Resources))]
+        SingleField = 1,
+
+        [LocalizableDescription(@"EnumSITDF", typeof(Resources))]
+        DualField = 2
+    }
+
     public enum CoordinateTypes : int
     {
         [LocalizableDescription(@"EnumCTDD", typeof(Resources))]
