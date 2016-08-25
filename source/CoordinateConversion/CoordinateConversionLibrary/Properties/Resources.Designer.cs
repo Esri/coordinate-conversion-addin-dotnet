@@ -79,6 +79,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overwrite Feature Class.
+        /// </summary>
+        public static string CaptionOverwrite {
+            get {
+                return ResourceManager.GetString("CaptionOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DD.
         /// </summary>
         public static string CategoryListDD {
@@ -439,6 +448,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve selected a feature class that already exists. Do you wish to replace it?.
+        /// </summary>
+        public static string MsgOverwrite {
+            get {
+                return ResourceManager.GetString("MsgOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Easting.
         /// </summary>
         public static string StringEasting {
@@ -561,6 +579,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string TitleSelectCoordinateFields {
             get {
                 return ResourceManager.GetString("TitleSelectCoordinateFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select output.
+        /// </summary>
+        public static string TitleSelectOutput {
+            get {
+                return ResourceManager.GetString("TitleSelectOutput", resourceCulture);
             }
         }
         

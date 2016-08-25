@@ -28,7 +28,7 @@ namespace CoordinateSystemAddin.UI {
 
         private CoordSysPickerViewModel _vm = new CoordSysPickerViewModel();
         private SpatialReference _sr = null;
-        private bool _cancelled = false;
+        //private bool _cancelled = false;
 
         public CoordSysDialog() {
             InitializeComponent();

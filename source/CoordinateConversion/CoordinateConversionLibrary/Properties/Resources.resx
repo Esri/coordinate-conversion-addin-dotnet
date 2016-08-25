@@ -300,4 +300,13 @@
   <data name="EnumSITSF" xml:space="preserve">
     <value>Single Field</value>
   </data>
+  <data name="CaptionOverwrite" xml:space="preserve">
+    <value>Overwrite Feature Class</value>
+  </data>
+  <data name="MsgOverwrite" xml:space="preserve">
+    <value>You've selected a feature class that already exists. Do you wish to replace it?</value>
+  </data>
+  <data name="TitleSelectOutput" xml:space="preserve">
+    <value>Select output</value>
+  </data>
 </root>

@@ -185,7 +185,7 @@ namespace CoordinateSystemAddin.UI {
 
                     string content = ProAppCoordConversionModule.Properties.FileResources.sr_out;// Resources.sr_out;//Stored coordinate system information
 
-                    int startIndex = 0;
+                    //int startIndex = 0;
                     string coordSystemType = "]]Geographic Coordinate Systems";
                     string remainder = "";
                     int idx = 9999;

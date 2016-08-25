@@ -49,7 +49,7 @@ namespace ProAppCoordConversionModule.Models
         {
             //Prep the dialog
             SaveItemDialog saveItemDlg = new SaveItemDialog();
-            saveItemDlg.Title = "Select output";
+            saveItemDlg.Title = CoordinateConversionLibrary.Properties.Resources.TitleSelectOutput;
             saveItemDlg.OverwritePrompt = true;
             if (!string.IsNullOrEmpty(previousLocation))
                 saveItemDlg.InitialLocation = previousLocation;
