@@ -22,6 +22,10 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary.Helpers;
 using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.Views;
+using ProAppCoordConversionModule.ViewModels;
+using CoordinateConversionLibrary;
+using System;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -37,6 +41,7 @@ namespace ProAppCoordConversionModule.ViewModels
             DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
+            SaveAsCommand = new RelayCommand(OnSaveAsCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
@@ -111,6 +116,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
+        public RelayCommand SaveAsCommand { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -141,6 +147,45 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
+        private async void OnSaveAsCommand(object obj)
+        {
+            var saveAsDialog = new ProSaveAsFormatView();
+            var vm = new ProSaveAsFormatViewModel();
+            saveAsDialog.DataContext = vm;
+
+            if(saveAsDialog.ShowDialog() == true)
+            {
+                var fcUtils = new FeatureClassUtils();
+
+                string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked);
+                if (path != null)
+                {
+                    try
+                    {
+                        string folderName = System.IO.Path.GetDirectoryName(path);
+                        var mapPointList = CoordinateAddInPoints.Select(i => i.Point).ToList();
+                        if (vm.FeatureIsChecked)
+                        {
+                            await fcUtils.CreateFCOutput(path, 
+                                                         SaveAsType.FileGDB,
+                                                         mapPointList, 
+                                                         MapView.Active.Map.SpatialReference, 
+                                                         MapView.Active, 
+                                                         CoordinateConversionLibrary.GeomType.Point);
+                        }
+                        else if (vm.ShapeIsChecked || vm.KmlIsChecked)
+                        {
+                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, mapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+        }
+        
         private async void UpdateHighlightedGraphics()
         {
             foreach (var proGraphic in ProGraphicsList)

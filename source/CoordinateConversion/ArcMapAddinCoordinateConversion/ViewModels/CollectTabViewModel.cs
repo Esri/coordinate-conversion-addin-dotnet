@@ -23,6 +23,10 @@ using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using ArcMapAddinCoordinateConversion.Models;
 using ArcMapAddinCoordinateConversion.Helpers;
+using ArcMapAddinCoordinateConversion.Views;
+using ESRI.ArcGIS.Geodatabase;
+using CoordinateConversionLibrary;
+using System.Windows.Forms;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -38,6 +42,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             DeleteAllPointsCommand = new RelayCommand(OnDeleteAllPointsCommand);
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
+            SaveAsCommand = new RelayCommand(OnSaveAsCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
@@ -96,6 +101,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
+        public RelayCommand SaveAsCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
         private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -141,6 +147,128 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 AddCollectionPoint(amCoordGetter.Point);
             }
+        }
+
+        private void OnSaveAsCommand(object obj)
+        {
+            var saveAsDialog = new AMSaveAsFormatView();
+            var vm = new SaveAsFormatViewModel();
+            saveAsDialog.DataContext = vm;
+
+            if (saveAsDialog.ShowDialog() == true)
+            {
+                IFeatureClass fc = null;
+                string path = null;
+                var fcUtils = new FeatureClassUtils();
+                if (vm.FeatureShapeIsChecked)
+                {
+                    path = fcUtils.PromptUserWithGxDialog(ArcMap.Application.hWnd);
+                    if (path != null)
+                    {
+                        if (System.IO.Path.GetExtension(path).Equals(".shp"))
+                        {
+                            fc = fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
+                        }
+                        else
+                        {
+                            fc = fcUtils.CreateFCOutput(path, SaveAsType.FileGDB, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
+                        }
+                    }
+                }
+                else
+                {
+                    path = PromptSaveFileDialog();
+                    if (path != null)
+                    {
+                        string kmlName = System.IO.Path.GetFileName(path);
+                        string folderName = System.IO.Path.GetDirectoryName(path);
+                        string tempShapeFile = folderName + "\\tmpShapefile.shp";
+                        IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
+
+                        if (tempFc != null)
+                        {
+                            var kmlUtils = new KMLUtils();
+                            kmlUtils.ConvertLayerToKML(path, tempShapeFile, ArcMap.Document.FocusMap);
+
+                            // delete the temporary shapefile
+                            fcUtils.DeleteShapeFile(tempShapeFile);
+                        }
+                    }
+                }
+
+                if (fc != null)
+                {
+                    AddFeatureLayerToMap(fc);
+                }
+            }
+        }
+        /// <summary>
+        /// Add the feature layer to the map 
+        /// </summary>
+        /// <param name="fc">IFeatureClass</param>
+        private void AddFeatureLayerToMap(IFeatureClass fc)
+        {
+            IFeatureLayer outputFeatureLayer = new FeatureLayerClass();
+            outputFeatureLayer.FeatureClass = fc;
+
+            IGeoFeatureLayer geoLayer = outputFeatureLayer as IGeoFeatureLayer;
+            if(geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                IFeatureRenderer pFeatureRender;
+                pFeatureRender = (IFeatureRenderer)new SimpleRenderer();
+                ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
+                pSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
+                pSimpleMarkerSymbol.Size = 3.0;
+
+                ISimpleRenderer pSimpleRenderer;
+                pSimpleRenderer = new SimpleRenderer();
+                pSimpleRenderer.Symbol = (ISymbol)pSimpleMarkerSymbol;
+
+                geoLayer.Renderer = (IFeatureRenderer)pSimpleRenderer;
+            }
+            else if (geoLayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolyline)
+            {
+                IFeatureRenderer pFeatureRender;
+                pFeatureRender = (IFeatureRenderer)new SimpleRenderer();
+                ISimpleFillSymbol pSimpleFillSymbol = new SimpleFillSymbolClass();
+                pSimpleFillSymbol.Style = esriSimpleFillStyle.esriSFSHollow;
+                pSimpleFillSymbol.Outline.Width = 0.4;
+
+                ISimpleRenderer pSimpleRenderer;
+                pSimpleRenderer = new SimpleRenderer();
+                pSimpleRenderer.Symbol = (ISymbol)pSimpleFillSymbol;
+
+                geoLayer.Renderer = (IFeatureRenderer)pSimpleRenderer;
+            }
+
+            geoLayer.Name = fc.AliasName;
+
+            ESRI.ArcGIS.Carto.IMap map = ArcMap.Document.FocusMap;
+            map.AddLayer((ILayer)outputFeatureLayer);
+        }
+
+        private SaveFileDialog sfDlg = null;
+        private string PromptSaveFileDialog()
+        {
+            if (sfDlg == null)
+            {
+                sfDlg = new SaveFileDialog();
+                sfDlg.AddExtension = true;
+                sfDlg.CheckPathExists = true;
+                sfDlg.DefaultExt = "kmz";
+                sfDlg.Filter = "KMZ File (*.kmz)|*.kmz";
+                sfDlg.OverwritePrompt = true;
+                sfDlg.Title = "Choose location to create KMZ file";
+
+            }
+            sfDlg.FileName = "";
+
+            if (sfDlg.ShowDialog() == DialogResult.OK)
+            {
+                return sfDlg.FileName;
+            }
+
+            return null;
         }
 
         /// <summary>

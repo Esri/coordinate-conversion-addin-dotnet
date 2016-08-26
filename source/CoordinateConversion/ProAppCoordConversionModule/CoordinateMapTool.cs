@@ -122,9 +122,9 @@ namespace ProAppCoordConversionModule
         /// Method to update the input coordinate text box
         /// </summary>
         /// <param name="e"></param>
-        private void UpdateInputWithMapPoint(System.Windows.Point e)
+        private async void UpdateInputWithMapPoint(System.Windows.Point e)
         {
-            var mp = QueuedTask.Run(() =>
+            var mp = await QueuedTask.Run(() =>
             {
                 MapPoint temp = null;
 
@@ -143,7 +143,7 @@ namespace ProAppCoordConversionModule
                 }
 
                 return temp;
-            }).Result as MapPoint;
+            });//.Result as MapPoint;
 
             if (mp != null)
             {
