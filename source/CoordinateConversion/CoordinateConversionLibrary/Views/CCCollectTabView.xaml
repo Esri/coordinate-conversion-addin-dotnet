@@ -129,7 +129,7 @@
                             Command="{Binding ImportCSVFileCommand}"
                             Content="{x:Static prop:Resources.LabelImport}"
                             ToolTip="{x:Static prop:Resources.LabelImport}" />
-                    <Button Width="Auto"
+                    <!--<Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
                             Command="{Binding ClearGraphicsCommand}"
@@ -145,7 +145,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                    </Button>
+                    </Button>-->
                     <Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
