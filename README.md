@@ -145,12 +145,13 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* Example : "Z S X00000 Y00000" will output "19T DE 14639 28236"
 		* **UTM**
 			* "Z" = Zone
+			* "B" = Latitude Band
 			* "H" = Hemisphere
 			* "X" = Easting
 			* "Y" = Northing
 			* "+" = add "+" prefix if number is positive
 			* "-" = add "-" prefix if number is negative
-			* Example : "Z#H X#m Y#m" will output "19N 414639m 4428236m"	
+			* Example : "Z#B X#m Y#m" will output "19N 414639m 4428236m"
 			
 ## Resources
 
