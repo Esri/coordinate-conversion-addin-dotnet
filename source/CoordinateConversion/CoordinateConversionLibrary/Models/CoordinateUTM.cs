@@ -27,7 +27,6 @@ namespace CoordinateConversionLibrary.Models
         public CoordinateUTM()
         {
             Zone = 17;
-            Hemi = "N";
             Band = "S";
             Easting = 716777;
             Northing = 4444511;
@@ -39,13 +38,20 @@ namespace CoordinateConversionLibrary.Models
             Band = band;
             Easting = easting;
             Northing = northing;
-
-            SetHemiFromBand(this);
         }
 
         public int Zone { get; set; }
         public string Band { get; set; }
-        public string Hemi { get; set; } 
+        public string Hemi
+        {
+            get
+            {
+                if (Convert.ToChar(this.Band) >= 'N')
+                    return "N";
+                else
+                    return "S";
+            }
+        }
         public int Easting { get; set; }
         public int Northing { get; set; }
 
@@ -75,7 +81,6 @@ namespace CoordinateConversionLibrary.Models
                         utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
                         utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
                         utm.Band = matchUTM.Groups["band"].Value;
-                        SetHemiFromBand(utm);
                     }
                     catch
                     {
@@ -87,14 +92,6 @@ namespace CoordinateConversionLibrary.Models
             }
 
             return false;
-        }
-
-        private static void SetHemiFromBand(CoordinateUTM utm)
-        {
-            if (Convert.ToChar(utm.Band) >= 'N')
-                utm.Hemi = "N";
-            else
-                utm.Hemi = "S";
         }
 
         public static bool Validate(CoordinateUTM utm)
