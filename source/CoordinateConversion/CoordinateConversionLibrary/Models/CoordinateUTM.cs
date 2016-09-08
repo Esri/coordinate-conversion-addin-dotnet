@@ -28,17 +28,19 @@ namespace CoordinateConversionLibrary.Models
         {
             Zone = 17;
             Hemi = "N";
-            Band = "M";
+            Band = "S";
             Easting = 716777;
             Northing = 4444511;
         }
 
-        public CoordinateUTM(int zone, string hemi, int easting, int northing)
+        public CoordinateUTM(int zone, string band, int easting, int northing)
         {
             Zone = zone;
-            Hemi = hemi;
+            Band = band;
             Easting = easting;
             Northing = northing;
+
+            SetHemiFromBand(this);
         }
 
         public int Zone { get; set; }
@@ -73,11 +75,7 @@ namespace CoordinateConversionLibrary.Models
                         utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
                         utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
                         utm.Band = matchUTM.Groups["band"].Value;
-                        char temp = Convert.ToChar(utm.Band);
-                        if (temp >= 'N')
-                            utm.Hemi = "N";
-                        else
-                            utm.Hemi = "S";
+                        SetHemiFromBand(utm);
                     }
                     catch
                     {
@@ -89,6 +87,14 @@ namespace CoordinateConversionLibrary.Models
             }
 
             return false;
+        }
+
+        private static void SetHemiFromBand(CoordinateUTM utm)
+        {
+            if (Convert.ToChar(utm.Band) >= 'N')
+                utm.Hemi = "N";
+            else
+                utm.Hemi = "S";
         }
 
         public static bool Validate(CoordinateUTM utm)
@@ -144,7 +150,7 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H X0 Y0", arg, this);
+                    return this.Format("Z#B X0 Y0", arg, this);
                 }
                 else
                 {
