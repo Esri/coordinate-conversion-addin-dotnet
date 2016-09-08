@@ -142,7 +142,7 @@ namespace ProAppCoordConversionModule
                 try
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
-                    tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
+                    tgparam.GeoCoordMode = ToGeoCoordinateMode.Default;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }

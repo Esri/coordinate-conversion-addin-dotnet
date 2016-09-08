@@ -28,6 +28,7 @@ namespace CoordinateConversionLibrary.Models
         {
             Zone = 17;
             Hemi = "N";
+            Band = "M";
             Easting = 716777;
             Northing = 4444511;
         }
@@ -41,6 +42,7 @@ namespace CoordinateConversionLibrary.Models
         }
 
         public int Zone { get; set; }
+        public string Band { get; set; }
         public string Hemi { get; set; } 
         public int Easting { get; set; }
         public int Northing { get; set; }
@@ -56,7 +58,7 @@ namespace CoordinateConversionLibrary.Models
             
             input = input.Trim();
 
-            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
+            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<band>[A-HJ-NP-Z]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
 
             var matchUTM = regexUTM.Match(input);
 
@@ -70,7 +72,12 @@ namespace CoordinateConversionLibrary.Models
                         utm.Zone = Int32.Parse(matchUTM.Groups["zone"].Value);
                         utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
                         utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
-                        utm.Hemi = matchUTM.Groups["hemi"].Value;
+                        utm.Band = matchUTM.Groups["band"].Value;
+                        char temp = Convert.ToChar(utm.Band);
+                        if (temp >= 'N')
+                            utm.Hemi = "N";
+                        else
+                            utm.Hemi = "S";
                     }
                     catch
                     {
@@ -192,6 +199,9 @@ namespace CoordinateConversionLibrary.Models
                                 break;
                             case 'H': // N or S
                                 sb.Append(coord.Hemi);
+                                break;
+                            case 'B': // Latitude Band
+                                sb.Append(coord.Band);
                                 break;
                             default:
                                 sb.Append(c);
