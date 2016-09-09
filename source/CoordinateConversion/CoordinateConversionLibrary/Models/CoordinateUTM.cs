@@ -27,21 +27,31 @@ namespace CoordinateConversionLibrary.Models
         public CoordinateUTM()
         {
             Zone = 17;
-            Hemi = "N";
+            Band = "S";
             Easting = 716777;
             Northing = 4444511;
         }
 
-        public CoordinateUTM(int zone, string hemi, int easting, int northing)
+        public CoordinateUTM(int zone, string band, int easting, int northing)
         {
             Zone = zone;
-            Hemi = hemi;
+            Band = band;
             Easting = easting;
             Northing = northing;
         }
 
         public int Zone { get; set; }
-        public string Hemi { get; set; } 
+        public string Band { get; set; }
+        public string Hemi
+        {
+            get
+            {
+                if (Convert.ToChar(this.Band) >= 'N')
+                    return "N";
+                else
+                    return "S";
+            }
+        }
         public int Easting { get; set; }
         public int Northing { get; set; }
 
@@ -56,7 +66,7 @@ namespace CoordinateConversionLibrary.Models
             
             input = input.Trim();
 
-            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<hemi>[NS]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
+            Regex regexUTM = new Regex(@"^\s*(?<zone>\d{1,2})(?<band>[A-HJ-NP-Z]?)[-,;:\sm]*(?<easting>\d{1,9})[-,;:\sm]*(?<northing>\d{1,9})[-,;:\sm]*");
 
             var matchUTM = regexUTM.Match(input);
 
@@ -70,7 +80,7 @@ namespace CoordinateConversionLibrary.Models
                         utm.Zone = Int32.Parse(matchUTM.Groups["zone"].Value);
                         utm.Easting = Int32.Parse(matchUTM.Groups["easting"].Value);
                         utm.Northing = Int32.Parse(matchUTM.Groups["northing"].Value);
-                        utm.Hemi = matchUTM.Groups["hemi"].Value;
+                        utm.Band = matchUTM.Groups["band"].Value;
                     }
                     catch
                     {
@@ -137,7 +147,7 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format("Z#H X0 Y0", arg, this);
+                    return this.Format("Z#B X0 Y0", arg, this);
                 }
                 else
                 {
@@ -192,6 +202,9 @@ namespace CoordinateConversionLibrary.Models
                                 break;
                             case 'H': // N or S
                                 sb.Append(coord.Hemi);
+                                break;
+                            case 'B': // Latitude Band
+                                sb.Append(coord.Band);
                                 break;
                             default:
                                 sb.Append(c);

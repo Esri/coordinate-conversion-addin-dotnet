@@ -264,9 +264,9 @@ namespace CoordinateConversionLibrary.Tests
         [TestMethod]
         public void FormatterUTM()
         {
-            var coord = new CoordinateUTM(17, "N", 683016, 4460286);
+            var coord = new CoordinateUTM(17, "P", 683016, 4460286);
             var temp = coord.ToString("", new CoordinateUTMFormatter());
-            Assert.AreEqual(temp, "17N 683016 4460286");
+            Assert.AreEqual(temp, "17P 683016 4460286");
 
             temp = coord.ToString("Z+-# X0m Y0m", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "+17 683016m 4460286m");
@@ -276,6 +276,13 @@ namespace CoordinateConversionLibrary.Tests
             
             temp = coord.ToString("Z#H X0 E Y0 N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
+
+            var coord2 = new CoordinateUTM(17, "C", 683016, 4460286);
+            temp = coord2.ToString("", new CoordinateUTMFormatter());
+            Assert.AreEqual(temp, "17C 683016 4460286");
+
+            temp = coord2.ToString("Z#H X0 Y0", new CoordinateUTMFormatter());
+            Assert.AreEqual(temp, "17S 683016 4460286");
         }
 
         [TestMethod]

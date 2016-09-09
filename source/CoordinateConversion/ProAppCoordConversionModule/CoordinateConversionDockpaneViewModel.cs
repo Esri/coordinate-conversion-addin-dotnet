@@ -72,7 +72,8 @@ namespace ProAppCoordConversionModule
 
                 selectedTab = value;
                 var tabItem = selectedTab as TabItem;
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                if(tabItem != null && tabItem.Content != null && ((tabItem.Content as UserControl).Content != null))
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
                 //TODO let the other viewmodels determine what to do when tab selection changes
                 if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
