@@ -155,7 +155,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 dlg.DataContext = fieldVM;
                 if (dlg.ShowDialog() == true)
                 {
-                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(@"C:\temp\cctest.csv"), ',', fieldVM.SelectedFields.ToArray());
+                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(fileDialog.FileName), ',', fieldVM.SelectedFields.ToArray());
 
                     var coordinates = new List<string>();
 
