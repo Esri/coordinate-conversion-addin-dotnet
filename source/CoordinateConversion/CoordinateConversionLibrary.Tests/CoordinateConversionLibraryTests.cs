@@ -116,6 +116,13 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateMGRS.TryParse("17APE8301660286", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("17ZPE8301660286", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("17TPW8301660286", out coord));
+
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT9902", out coord));
+            Assert.AreEqual(99000, coord.Easting);
+            Assert.AreEqual(2000, coord.Northing);
+
+            Assert.IsFalse(CoordinateMGRS.TryParse("11SMT992", out coord));
+
         }
 
         [TestMethod]
@@ -187,6 +194,12 @@ namespace CoordinateConversionLibrary.Tests
             // test the default
             temp = coord.ToString("", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE8301660286");
+
+            // test 11SMT9902
+            coord = new CoordinateMGRS("11S", "MT", 99000, 2000);
+            temp = coord.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
+            Assert.AreEqual(temp, "11SMT9900002000");
+
         }
 
         [TestMethod]
