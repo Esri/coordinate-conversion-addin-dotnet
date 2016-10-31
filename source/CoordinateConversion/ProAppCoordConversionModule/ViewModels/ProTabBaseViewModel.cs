@@ -125,7 +125,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override async void ProcessInput(string input)
+        public override void ProcessInput(string input)
         {
             string result = string.Empty;
             //MapPoint point;
@@ -135,10 +135,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 return;
 
             //var coordType = GetCoordinateType(input, out point);
-            var ccc = await QueuedTask.Run(() =>
-                {
-                    return GetCoordinateType(input);
-                });
+            // must force non async here to avoid returning to base class early
+            var ccc = QueuedTask.Run(() =>
+            {
+                return GetCoordinateType(input);
+            }).Result;
                 
 
             if (ccc.Type == CoordinateType.Unknown)
