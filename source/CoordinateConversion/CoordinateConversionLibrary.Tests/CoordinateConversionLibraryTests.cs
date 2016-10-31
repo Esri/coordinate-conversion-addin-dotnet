@@ -117,11 +117,39 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateMGRS.TryParse("17ZPE8301660286", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("17TPW8301660286", out coord));
 
+            //Test base MGRS:11SMT9915302431 for 117 0 32.8W 33 27 40.8N
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT", out coord));
+            Assert.AreEqual(0, coord.Easting);
+            Assert.AreEqual(0, coord.Northing);
+
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT90", out coord));
+            Assert.AreEqual(90000, coord.Easting);
+            Assert.AreEqual(0, coord.Northing);
+
+
             Assert.IsTrue(CoordinateMGRS.TryParse("11SMT9902", out coord));
             Assert.AreEqual(99000, coord.Easting);
             Assert.AreEqual(2000, coord.Northing);
 
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT991024", out coord));
+            Assert.AreEqual(99100, coord.Easting);
+            Assert.AreEqual(2400, coord.Northing);
+
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT99150243", out coord));
+            Assert.AreEqual(99150, coord.Easting);
+            Assert.AreEqual(2430, coord.Northing);
+
+            Assert.IsTrue(CoordinateMGRS.TryParse("11SMT9915302431", out coord));
+            Assert.AreEqual(99153, coord.Easting);
+            Assert.AreEqual(2431, coord.Northing);
+
+            // test bad MGRS with odd number northings/eastings
+            Assert.IsFalse(CoordinateMGRS.TryParse("11SMT991530243", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("11SMT9915024", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("11SMT99102", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("11SMT992", out coord));
+            Assert.IsFalse(CoordinateMGRS.TryParse("11SMT9", out coord));
+
 
         }
 
