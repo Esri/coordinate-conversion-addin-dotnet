@@ -165,6 +165,48 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsTrue(CoordinateUSNG.TryParse("17T;PE;8301660286", out coord));
 
             Assert.IsFalse(CoordinateUSNG.TryParse("This is not a coordinate", out coord));
+
+            //Test base USNG 13SBB4476129499 as 107 52 43.6W 37 16 37.6N
+
+            //enter "13SBB" should get "13SBB0000000000"
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB", out coord));
+            Assert.AreEqual(0, coord.Northing);
+            Assert.AreEqual(0, coord.Easting);
+
+            //In actual conversion, we should bget a different case in a zipper region
+            //"13SBB" should end up as "12SYF3393697916"
+            //Assert.AreEqual("12S", coord.GZD);
+            //Assert.AreEqual("YF", coord.GS);
+            //Assert.AreEqual(33936, coord.Northing);
+            //Assert.AreEqual(97916, coord.Easting);
+
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB42", out coord));
+            Assert.AreEqual(40000, coord.Easting);
+            Assert.AreEqual(20000, coord.Northing);
+
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB4429", out coord));
+            Assert.AreEqual(44000, coord.Easting);
+            Assert.AreEqual(29000, coord.Northing);
+
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB447294", out coord));
+            Assert.AreEqual(44700, coord.Easting);
+            Assert.AreEqual(29400, coord.Northing);
+
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB44762949", out coord));
+            Assert.AreEqual(44760, coord.Easting);
+            Assert.AreEqual(29490, coord.Northing);
+
+            Assert.IsTrue(CoordinateUSNG.TryParse("13SBB4476129499", out coord));
+            Assert.AreEqual(44761, coord.Easting);
+            Assert.AreEqual(29499, coord.Northing);
+
+            // test bad USNG with odd number northings/eastings
+            Assert.IsFalse(CoordinateUSNG.TryParse("13SBB447612949", out coord));
+            Assert.IsFalse(CoordinateUSNG.TryParse("13SBB4476294", out coord));
+            Assert.IsFalse(CoordinateUSNG.TryParse("13SBB44729", out coord));
+            Assert.IsFalse(CoordinateUSNG.TryParse("13SBB442", out coord));
+            Assert.IsFalse(CoordinateUSNG.TryParse("13SBB4", out coord));
+
         }
 
         [TestMethod]
