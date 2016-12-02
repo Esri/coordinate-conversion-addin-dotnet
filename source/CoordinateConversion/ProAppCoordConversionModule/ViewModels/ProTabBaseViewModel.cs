@@ -192,8 +192,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 await QueuedTask.Run(() =>
                 {
                     var s = SymbolFactory.ConstructPointSymbol(color, size, markerStyle);
-                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.GreenRGB);
-                    haloSymbol.SetOutlineColor(ColorFactory.GreenRGB);
+                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.Green);
+                    haloSymbol.SetOutlineColor(ColorFactory.Green);
                     s.HaloSymbol = haloSymbol;
                     s.HaloSize = 0;
                     symbol = new CIMSymbolReference() { Symbol = s };
@@ -211,7 +211,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await QueuedTask.Run(() =>
                 {
-                    var outline = SymbolFactory.ConstructStroke(ColorFactory.BlackRGB, 1.0, SimpleLineStyle.Solid);
+                    var outline = SymbolFactory.ConstructStroke(ColorFactory.Black, 1.0, SimpleLineStyle.Solid);
                     var s = SymbolFactory.ConstructPolygonSymbol(color, SimpleFillStyle.Solid, outline);
                     symbol = new CIMSymbolReference() { Symbol = s };
                 });
