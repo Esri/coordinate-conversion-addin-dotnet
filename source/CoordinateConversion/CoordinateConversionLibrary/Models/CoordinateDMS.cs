@@ -95,10 +95,6 @@ namespace CoordinateConversionLibrary.Models
 
             Regex regexDMS = new Regex("^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NSEW' ,:]*)?[' ,:]*(?<latitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<firstSuffix>[NSEW])? *[+,]*(?<lastPrefix>[NSEW])?(?<longitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^NSEW' ,:]*)?[' ,:]*(?<longitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<lastPrefix>[NSEW])?[\\\"]*", RegexOptions.ExplicitCapture);
 
-            // new
-            Regex regexDD = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>[^NSEWDd*° ,]*)?[Dd*°,]*(?<firstSuffix>[NSEW])?[+,;:\s]*(?<lastPrefix>[NSEW])?(?<longitude>[^NSEWDd*° ]*)?[Dd*° ]*(?<lastSuffix>[NSEW])?");
-
-
             var matchDMS = regexDMS.Match(input);
             
             if (matchDMS.Success && matchDMS.Length == input.Length)
