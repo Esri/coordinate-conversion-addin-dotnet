@@ -93,7 +93,11 @@ namespace CoordinateConversionLibrary.Models
             
             input = input.Trim();
 
-            Regex regexDMS = new Regex("^ *[+]*(?<latitudeSuffix>[NS])?(?<latitudeD>[^NSDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NS' ,:]*)?[' ,:]*(?<latitudeS>[^NS\\\" ,:]*)?[\\\" ,:]*(?<latitudeSuffix>[NS])? *[+,]*(?<longitudeSuffix>[EW])?(?<longitudeD>[^EWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^EW' ,:]*)?[' ,:]*(?<longitudeS>[^EW\\\" ,:]*)?[\\\" ,:]*(?<longitudeSuffix>[EW])?[\\\"]*", RegexOptions.ExplicitCapture); 
+            Regex regexDMS = new Regex("^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NSEW' ,:]*)?[' ,:]*(?<latitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<firstSuffix>[NSEW])? *[+,]*(?<lastPrefix>[NSEW])?(?<longitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^NSEW' ,:]*)?[' ,:]*(?<longitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<lastPrefix>[NSEW])?[\\\"]*", RegexOptions.ExplicitCapture);
+
+            // new
+            Regex regexDD = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>[^NSEWDd*° ,]*)?[Dd*°,]*(?<firstSuffix>[NSEW])?[+,;:\s]*(?<lastPrefix>[NSEW])?(?<longitude>[^NSEWDd*° ]*)?[Dd*° ]*(?<lastSuffix>[NSEW])?");
+
 
             var matchDMS = regexDMS.Match(input);
             
@@ -103,6 +107,39 @@ namespace CoordinateConversionLibrary.Models
                 {
                     try
                     {
+                        var firstPrefix = matchDMS.Groups["firstPrefix"];
+                        var firstSuffix = matchDMS.Groups["firstSuffix"];
+                        var lastPrefix = matchDMS.Groups["lastPrefix"];
+                        var lastSuffix = matchDMS.Groups["lastSuffix"];
+
+                        // Don't allow both prefix and suffix for lat or lon
+                        if (firstPrefix.Success && firstSuffix.Success)
+                        {
+                            return false;
+                        }
+
+                        if (lastPrefix.Success && lastSuffix.Success)
+                        {
+                            return false;
+                        }
+
+                        // Don't allow same prefix/suffix for both lat and lon
+                        if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("E") || firstPrefix.Value.ToUpper().Equals("E") ||
+                                                                           firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) &&
+                            (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("E") || lastPrefix.Value.ToUpper().Equals("E") ||
+                                                                           lastSuffix.Value.ToUpper().Equals("W") || lastPrefix.Value.ToUpper().Equals("W")))
+                        {
+                            return false;
+                        }
+
+                        if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("N") || firstPrefix.Value.ToUpper().Equals("N") ||
+                                                                           firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) &&
+                            (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("N") || lastPrefix.Value.ToUpper().Equals("N") ||
+                                                                           lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
+                        {
+                            return false;
+                        }
+
                         var LatDegrees = int.Parse(matchDMS.Groups["latitudeD"].Value);
                         var LatMinutes = int.Parse(matchDMS.Groups["latitudeM"].Value);
                         var LatSeconds = double.Parse(matchDMS.Groups["latitudeS"].Value);
@@ -110,13 +147,48 @@ namespace CoordinateConversionLibrary.Models
                         var LonMinutes = int.Parse(matchDMS.Groups["longitudeM"].Value);
                         var LonSeconds = double.Parse(matchDMS.Groups["longitudeS"].Value);
 
-                        var temp = matchDMS.Groups["latitudeSuffix"];
-                        if (temp.Success && temp.Value.ToUpper().Equals("S"))
+                        // if E/W is in first coordinate or N/S is in second coordinate then flip the lat/lon values
+                        if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("E") || firstPrefix.Value.ToUpper().Equals("E") ||
+                                                                           firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) ||
+                            (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("N") || lastPrefix.Value.ToUpper().Equals("N") ||
+                                                                           lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
+                        {
+                            LatDegrees = int.Parse(matchDMS.Groups["longitudeD"].Value);
+                            LatMinutes = int.Parse(matchDMS.Groups["longitudeM"].Value);
+                            LatSeconds = double.Parse(matchDMS.Groups["longitudeS"].Value);
+                            LonDegrees = int.Parse(matchDMS.Groups["latitudeD"].Value);
+                            LonMinutes = int.Parse(matchDMS.Groups["latitudeM"].Value);
+                            LonSeconds = double.Parse(matchDMS.Groups["latitudeS"].Value);
+                        }
+
+                        // no suffix or prefix was added so allow user to specify longitude first by checking for absolute value greater than 90
+                        // fix for bug Bob Booth found in issue #42
+                        if (!firstPrefix.Success && !firstSuffix.Success && !lastPrefix.Success && !lastSuffix.Success)
+                        {
+                            // switch the values if longitude was added first
+                            if ((Math.Abs(LatDegrees) > 90.0) && (Math.Abs(LonDegrees) <= 90.0))
+                            {
+                                LatDegrees = int.Parse(matchDMS.Groups["longitudeD"].Value);
+                                LatMinutes = int.Parse(matchDMS.Groups["longitudeM"].Value);
+                                LatSeconds = double.Parse(matchDMS.Groups["longitudeS"].Value);
+                                LonDegrees = int.Parse(matchDMS.Groups["latitudeD"].Value);
+                                LonMinutes = int.Parse(matchDMS.Groups["latitudeM"].Value);
+                                LonSeconds = double.Parse(matchDMS.Groups["latitudeS"].Value);
+                            }
+                            if ((Math.Abs(LatDegrees) > 90.0) && (Math.Abs(LonDegrees) > 90.0))
+                            {
+                                return false;
+                            }
+                        }
+
+                        if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) ||
+                            (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
                         {
                             LatDegrees = Math.Abs(LatDegrees) * -1;
                         }
-                        temp = matchDMS.Groups["longitudeSuffix"];
-                        if (temp.Success && temp.Value.ToUpper().Equals("W"))
+
+                        if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) ||
+                            (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("W") || lastPrefix.Value.ToUpper().Equals("W")))
                         {
                             LonDegrees = Math.Abs(LonDegrees) * -1;
                         }
