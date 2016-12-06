@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.ArcMapUI;
@@ -399,22 +400,67 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             try
             {
-                cn.PutCoordsFromDD(input);
-                return CoordinateType.DD;
+                CoordinateDD dd;
+                if (CoordinateDD.TryParse(input, out dd))
+                {
+                    string format = "";
+
+                    // Allows longitude to be first in input string
+                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DD);
+                    if (outputCoordinate != null)
+                    {
+                        format = outputCoordinate.Format;
+                    }
+
+                    string newInput = dd.ToString(format, new CoordinateDDFormatter());
+                    cn.PutCoordsFromDD(newInput);
+
+                    return CoordinateType.DD;
+                }
             }
             catch { }
 
             try
             {
-                cn.PutCoordsFromDDM(input);
-                return CoordinateType.DDM;
+                CoordinateDDM ddm;
+                if (CoordinateDDM.TryParse(input, out ddm))
+                {
+                    string format = "";
+
+                    // Allows longitude to be first in input string
+                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DDM);
+                    if (outputCoordinate != null)
+                    {
+                        format = outputCoordinate.Format;
+                    }
+
+                    string newInput = ddm.ToString(format, new CoordinateDDMFormatter());
+                    cn.PutCoordsFromDD(newInput);
+
+                    return CoordinateType.DDM;
+                }
             }
             catch { }
 
             try
             {
-                cn.PutCoordsFromDMS(input);
-                return CoordinateType.DMS;
+                CoordinateDMS dms;
+                if (CoordinateDMS.TryParse(input, out dms))
+                {
+                    string format = "";
+
+                    // Allows longitude to be first in input string
+                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DMS);
+                    if (outputCoordinate != null)
+                    {
+                        format = outputCoordinate.Format;
+                    }
+
+                    string newInput = dms.ToString(format, new CoordinateDMSFormatter());
+                    cn.PutCoordsFromDD(newInput);
+
+                    return CoordinateType.DMS;
+                }
             }
             catch { }
 
