@@ -127,7 +127,7 @@ namespace CoordinateConversionLibrary.Models
                                                                            lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
                         {
                             coord.Lat = Double.Parse(matchDD.Groups["longitude"].Value);
-                            coord.Lon = Double.Parse(matchDD.Groups["latitude"].Value);
+                            coord.Lon = Double.Parse(matchDD.Groups["latitude"].Value);      
                         }
 
                         // no suffix or prefix was added so allow user to specify longitude first by checking for absolute value greater than 90
@@ -163,6 +163,7 @@ namespace CoordinateConversionLibrary.Models
                         {
                             coord.Lon = Math.Abs(coord.Lon) * -1;
                         }
+
                     }
                     catch
                     {
