@@ -163,7 +163,7 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     Project(srFactoryCode);
                     var cn = Point as IConversionNotation;
-                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces|esriUTMConversionOptionsEnum.esriUTMUseNS);
+                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                     return true;
                 }
                 catch { }
