@@ -80,6 +80,14 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
+        internal override async void OnFlashPointCommand(object obj)
+        {
+            if (obj == null)
+                base.OnFlashPointCommand(proCoordGetter.Point);
+            else
+                base.OnFlashPointCommand(obj);
+        }
+
         #endregion overrides
     }
 }
