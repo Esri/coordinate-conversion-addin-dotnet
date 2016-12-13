@@ -403,16 +403,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 CoordinateDD dd;
                 if (CoordinateDD.TryParse(input, out dd))
                 {
-                    string format = "";
-
-                    // Allows longitude to be first in input string
-                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DD);
-                    if (outputCoordinate != null)
-                    {
-                        format = outputCoordinate.Format;
-                    }
-
-                    string newInput = dd.ToString(format, new CoordinateDDFormatter());
+                    // Reformat the string for cases where lat/lon have been switched
+                    string newInput = string.Format("{0} {1}", dd.Lat, dd.Lon);
                     cn.PutCoordsFromDD(newInput);
 
                     return CoordinateType.DD;
@@ -425,16 +417,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 CoordinateDDM ddm;
                 if (CoordinateDDM.TryParse(input, out ddm))
                 {
-                    string format = "";
-
-                    // Allows longitude to be first in input string
-                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DDM);
-                    if (outputCoordinate != null)
-                    {
-                        format = outputCoordinate.Format;
-                    }
-
-                    string newInput = ddm.ToString(format, new CoordinateDDMFormatter());
+                    // Reformat the string for cases where lat/lon have been switched
+                    string newInput = string.Format("{0} {1} {2} {3}", ddm.LatDegrees, ddm.LatMinutes, ddm.LonDegrees, ddm.LonMinutes);
                     cn.PutCoordsFromDD(newInput);
 
                     return CoordinateType.DDM;
@@ -447,16 +431,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 CoordinateDMS dms;
                 if (CoordinateDMS.TryParse(input, out dms))
                 {
-                    string format = "";
-
-                    // Allows longitude to be first in input string
-                    var outputCoordinate = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.FirstOrDefault(type => type.CType == CoordinateType.DMS);
-                    if (outputCoordinate != null)
-                    {
-                        format = outputCoordinate.Format;
-                    }
-
-                    string newInput = dms.ToString(format, new CoordinateDMSFormatter());
+                    // Reformat the string for cases where lat/lon have been switched
+                    string newInput = string.Format("{0} {1} {2} {3} {4} {5}", dms.LatDegrees, dms.LatMinutes, dms.LatSeconds, dms.LonDegrees, dms.LonMinutes, dms.LonSeconds);
                     cn.PutCoordsFromDD(newInput);
 
                     return CoordinateType.DMS;
