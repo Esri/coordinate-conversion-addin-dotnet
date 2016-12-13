@@ -60,7 +60,7 @@ namespace CoordinateConversionLibrary.Models
 
             input = input.Trim();
 
-            Regex regexDDM = new Regex(@"^\s*[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>[^NSEWDd*°,:\s]*)?[Dd*°,:\s]*(?<latitudeM>[^NSEW',:\s]*)?[',:\s]*(?<firstSuffix>[NSEW])? *[+,]*(?<lastPrefix>[NSEW])?(?<longitudeD>[^NSEWDd*°,:\s]*)?[Dd*°,:\s]*(?<longitudeM>[^NSEW',:\s]*)?[',:\s]*(?<lastSuffix>[NSEW])?");
+            Regex regexDDM = new Regex(@"^\s*[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|(?=\d))\d+)[° ]?(?<latitudeM>\d+[.,:\s]\d+)(?<firstSuffix>[NSEW])?[',\s]*(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|(?=\d))\d+)[° ]?(?<longitudeM>\d+[.,:\s]\d+)?[',:\s]*(?<lastSuffix>[NSEW])?");
 
             var matchDDM = regexDDM.Match(input);
 
