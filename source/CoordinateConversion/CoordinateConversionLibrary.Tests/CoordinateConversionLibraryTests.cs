@@ -26,19 +26,74 @@ namespace CoordinateConversionLibrary.Tests
         [TestMethod]
         public void ParseDD()
         {
+            double v;
+            double.TryParse("3", out v);
             CoordinateDD coord;
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");    
+            Assert.IsFalse(CoordinateDD.TryParse("", out coord));
             Assert.IsTrue(CoordinateDD.TryParse("40.273048 -78.847427", out coord));
             Assert.AreEqual(40.273048, coord.Lat);
             Assert.AreEqual(-78.847427, coord.Lon);
-
-            Assert.IsFalse(CoordinateDD.TryParse("", out coord));
-
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N 78.847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N,78.847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N78.847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N;78.847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N:78.847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40.273048, 78.847427", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40.273048,78.847427", out coord)); //fails with current expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40.273048;78.847427", out coord)); //fails with original expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40.273048:78.847427", out coord)); //fails with original expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsFalse(CoordinateDD.TryParse("This is not a coordinate", out coord));
 
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("es-ES");
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048 -78,847427", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048N 78,847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048N,78,847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048N78,847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048N;78,847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048N:78,847427W", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048, 78,847427", out coord));
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048,78,847427", out coord)); //fails with current expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048;78,847427", out coord)); //fails with current expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("40,273048:78,847427", out coord)); //fails with current expression
+            Assert.AreEqual(40.273048, coord.Lat);
+            Assert.AreEqual(78.847427, coord.Lon);
             Assert.IsFalse(CoordinateDD.TryParse("This is not a coordinate", out coord));
         }
 
@@ -46,9 +101,28 @@ namespace CoordinateConversionLibrary.Tests
         public void ParseDDM()
         {
             CoordinateDDM coord;
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288',78°50.84562'", out coord));
             Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288', -78°50.84562'", out coord));
             Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288', -078°50.84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288, -078°50.84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16.38288, -078 50.84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288',-078°50.84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16.38288,-078 50.84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16.38288' -078°50.84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16.38288 -078 50.84562", out coord));
+            Assert.IsFalse(CoordinateDDM.TryParse("This is not a coordinate", out coord));
 
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("es-ES");
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288',78°50,84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288', -78°50,84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288', -078°50,84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288, -078°50,84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16,38288, -078 50,84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288',-078°50,84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16,38288,-078 50,84562", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40°16,38288' -078°50,84562'", out coord));
+            Assert.IsTrue(CoordinateDDM.TryParse("40 16,38288 -078 50,84562", out coord));
             Assert.IsFalse(CoordinateDDM.TryParse("This is not a coordinate", out coord));
         }
 
@@ -56,10 +130,19 @@ namespace CoordinateConversionLibrary.Tests
         public void ParseDMS()
         {
             CoordinateDMS coord;
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -78°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40°16'22.9728\", -078°50'50.7372\"", out coord));
             Assert.IsTrue(CoordinateDMS.TryParse("40° 16' 22.9728\", -78° 50' 50.7372\"", out coord));
-            Assert.IsTrue(CoordinateDMS.TryParse("40° 7' 22.8\"N 77° 32' 38.4W\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40° 7' 22.8\"N 77° 32' 38.4\"W", out coord));
+
+            Assert.IsFalse(CoordinateDMS.TryParse("This is not a coordinate", out coord));
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("es-ES");
+            Assert.IsTrue(CoordinateDMS.TryParse("40°16'22,9728\", -78°50'50,7372\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40°16'22,9728\", -078°50'50,7372\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40° 16' 22,9728\", -78° 50' 50,7372\"", out coord));
+            Assert.IsTrue(CoordinateDMS.TryParse("40° 7' 22,8\"N 77° 32' 38,4\"W", out coord));
 
             Assert.IsFalse(CoordinateDMS.TryParse("This is not a coordinate", out coord));
         }
@@ -212,6 +295,7 @@ namespace CoordinateConversionLibrary.Tests
         [TestMethod]
         public void FormatterDD()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
             var coord = new CoordinateDD(40.273048, -78.847427);
             var temp = coord.ToString("Y0.0#N X0.0#E", new CoordinateDDFormatter());
             Assert.AreEqual(temp, "40.27N 78.85W");
@@ -275,6 +359,7 @@ namespace CoordinateConversionLibrary.Tests
         [TestMethod]
         public void FormatterDDM()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
             var coord = new CoordinateDDM(40, 16.38288, -78, 50.84562);
             var temp = coord.ToString("", new CoordinateDDMFormatter());
             Assert.AreEqual(temp, "40°16.3829' -78°50.8456'");
@@ -298,6 +383,7 @@ namespace CoordinateConversionLibrary.Tests
         [TestMethod]
         public void FormatterDMS()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
             var coord = new CoordinateDMS(40, 16, 22.9728, -78, 50, 50.7372);
             var temp = coord.ToString("", new CoordinateDMSFormatter());
             Assert.AreEqual(temp, "40°16'22.97\"N 78°50'50.74\"W");
