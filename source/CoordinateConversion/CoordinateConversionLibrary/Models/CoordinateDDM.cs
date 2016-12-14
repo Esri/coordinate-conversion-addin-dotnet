@@ -59,6 +59,8 @@ namespace CoordinateConversionLibrary.Models
                 return false;
 
             input = input.Trim();
+            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            input = numSep != "." ? input.Replace(".", numSep) : input;
 
             Regex regexDDM = new Regex(@"^\s*[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|(?=\d))\d+)[° ]?(?<latitudeM>\d+[.,:\s]\d+)(?<firstSuffix>[NSEW])?[',\s]*(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|(?=\d))\d+)[° ]?(?<longitudeM>\d+[.,:\s]\d+)?[',:\s]*(?<lastSuffix>[NSEW])?");
 

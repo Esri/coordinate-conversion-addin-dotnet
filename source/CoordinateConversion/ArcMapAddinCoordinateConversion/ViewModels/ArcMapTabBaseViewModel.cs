@@ -397,6 +397,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);
 
             point.SpatialReference = geographicCS;
+            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            input = numSep != "." ? input.Replace(numSep, ".") : input;
 
             try
             {
@@ -582,7 +584,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
