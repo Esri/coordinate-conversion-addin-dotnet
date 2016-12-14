@@ -470,7 +470,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)(?<wkid>[^\s]\d+)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -480,9 +480,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    var wkid = int.Parse(matchMercator.Groups["wkid"].Value);
                     point = QueuedTask.Run(() =>
                     {
-                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferenceBuilder.CreateSpatialReference(wkid));
                     }).Result;
                     return CoordinateType.DD;
                 }
@@ -603,7 +604,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)(?<wkid>[^\s]\d+)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -613,9 +614,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    var wkid = int.Parse(matchMercator.Groups["wkid"].Value);
                     point = await QueuedTask.Run(() =>
                     {
-                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferenceBuilder.CreateSpatialReference(wkid));
                     });//.Result;
                     return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
                 }
