@@ -560,7 +560,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)\s*(?<wkid>\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -570,9 +571,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    int wkid;
+                    wkid = int.TryParse(matchMercator.Groups["wkid"].Value, out wkid) ? wkid : (int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere;
                     point.X = Lon;
                     point.Y = Lat;
-                    point.SpatialReference = ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
+                    point.SpatialReference = ArcMapHelpers.GetSR(wkid);
                     return CoordinateType.DD;
                 }
                 catch (Exception ex)
