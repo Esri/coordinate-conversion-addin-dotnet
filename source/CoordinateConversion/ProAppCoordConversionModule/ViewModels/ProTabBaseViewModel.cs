@@ -470,7 +470,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)\s*(?<wkid>\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)\s*(?<wkid>\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -605,7 +605,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)\s*(?<wkid>\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)\s*(?<wkid>\d*)");
 
             var matchMercator = regexMercator.Match(input);
 

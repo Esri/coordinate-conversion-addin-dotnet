@@ -92,6 +92,8 @@ namespace CoordinateConversionLibrary.Models
                 return false;
 
             input = input.Trim();
+            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            input = numSep != "." ? input.Replace(".", numSep) : input;
 
             Regex regexDMS = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|)\d+)[° ]*(?<latitudeM>\d+)[' ]*(?<latitudeS>\d+[.,]\d+)[""]?(?<firstSuffix>[NSEW]?)([, +]*)(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|)\d+)[° ]*(?<longitudeM>\d+)[' ]*(?<longitudeS>\d+[.,]\d+)[""]?(?<lastSuffix>[NSEW]?)", RegexOptions.ExplicitCapture);
 
@@ -240,12 +242,10 @@ namespace CoordinateConversionLibrary.Models
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDMS)
-            {
-                var sep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                var sepChar = Char.Parse(sep);
+            {       
                 if (string.IsNullOrWhiteSpace(format))
                 {
-                    return this.Format(string.Format("A0°B0'C0{0}00\"N X0°Y0'Z0{0}00\"E", sep), arg, this);
+                    return this.Format("A0°B0'C0.00\"N X0°Y0'Z0.00\"E", arg, this);
                 }
                 else
                 {
@@ -259,7 +259,7 @@ namespace CoordinateConversionLibrary.Models
 
                     foreach (char c in format)
                     {
-                        if (startIndexNeeded && (c == '#' || c == sepChar || c == '0'))
+                        if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
                         {
                             // add {<index>:
                             sb.AppendFormat("{{{0}:", currentIndex++);
@@ -267,7 +267,7 @@ namespace CoordinateConversionLibrary.Models
                             endIndexNeeded = true;
                         }
 
-                        if (endIndexNeeded && (c != '#' && c != sepChar && c != '0'))
+                        if (endIndexNeeded && (c != '#' && c != '.' && c != '0'))
                         {
                             sb.Append("}");
                             endIndexNeeded = false;
