@@ -188,7 +188,10 @@ namespace CoordinateConversionLibrary.Models
                         {
                             LonDegrees = Math.Abs(LonDegrees) * -1;
                         }
-
+                        if ((Math.Abs(LatDegrees) > 90.0) && (Math.Abs(LonDegrees) > 90.0))
+                        {
+                            return false;
+                        }
                         dms = new CoordinateDMS(LatDegrees, LatMinutes, LatSeconds, LonDegrees, LonMinutes, LonSeconds);
                     }
                     catch
