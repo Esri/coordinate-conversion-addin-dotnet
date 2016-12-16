@@ -86,10 +86,12 @@ namespace ProAppCoordConversionModule.UI
             set
             {
                 SetProperty(ref _screenPoint, value, () => ScreenPoint);
-                //Flash = false;
-                Flash = true;
-                Flash = false;
             }
+        }
+
+        public void RunFlashAnimation()
+        {
+            Flash = !Flash;
         }
     }
 

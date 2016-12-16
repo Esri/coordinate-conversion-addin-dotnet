@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using CoordinateConversionLibrary.Helpers;
+using System.Windows.Controls;
 
 namespace ProAppCoordConversionModule.UI
 {
@@ -10,6 +11,11 @@ namespace ProAppCoordConversionModule.UI
         public FlashEmbeddedControl()
         {
             InitializeComponent();
+        }
+
+        private void Storyboard_Completed(object sender, System.EventArgs e)
+        {
+            Mediator.NotifyColleagues("FLASH_COMPLETED", null);
         }
     }
 }

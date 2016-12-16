@@ -98,6 +98,7 @@ namespace ProAppCoordConversionModule
                         var height = (p1.Y - p3.Y) + 1;
                         flashVM.MapWidth = width;
                         flashVM.MapHeight = height;
+                        flashVM.RunFlashAnimation();
                     }
                     return true;
                 }).Result;

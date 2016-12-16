@@ -257,14 +257,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #region overrides
 
-        internal override void OnFlashPointCommand(object obj)
+        internal override void OnFlashPointCommandAsync(object obj)
         {
             if (ListBoxItemAddInPoint != null)
             {
                 var geometry = ListBoxItemAddInPoint.Point;
                 ListBoxItemAddInPoint = null;
 
-                base.OnFlashPointCommand(geometry);
+                base.OnFlashPointCommandAsync(geometry);
             }
         }
 
