@@ -235,7 +235,7 @@ namespace ArcMapAddinCoordinateConversion
             if (Point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
+            var result = string.Format("{0:0.0} {1:0.0} {2}", Point.Y, Point.X, Point.SpatialReference.FactoryCode);
 
             if (Point.SpatialReference == null)
                 return result;
