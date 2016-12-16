@@ -23,7 +23,7 @@ using ArcMapAddinCoordinateConversion.Helpers;
 
 namespace ArcMapAddinCoordinateConversion
 {
-    class MapPointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
+    public class MapPointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
     {
         ISnappingEnvironment m_SnappingEnv;
         IPointSnapper m_Snapper;
