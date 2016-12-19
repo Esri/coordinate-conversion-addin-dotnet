@@ -12,10 +12,5 @@ namespace ProAppCoordConversionModule.UI
         {
             InitializeComponent();
         }
-
-        private void Storyboard_Completed(object sender, System.EventArgs e)
-        {
-            Mediator.NotifyColleagues("FLASH_COMPLETED", null);
-        }
     }
 }

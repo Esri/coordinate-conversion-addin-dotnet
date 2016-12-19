@@ -18,6 +18,7 @@ using ArcGIS.Desktop.Framework.Controls;
 using System.Xml.Linq;
 using System.Windows.Data;
 using System.Windows;
+using CoordinateConversionLibrary.Helpers;
 
 namespace ProAppCoordConversionModule.UI
 {
@@ -29,7 +30,10 @@ namespace ProAppCoordConversionModule.UI
         public FlashEmbeddedControlViewModel(XElement options)
             : base(options)
         {
+            FlashAnimationCompletedCommand = new RelayCommand(OnFlashAnimationCompletedCommand);
         }
+
+        public RelayCommand FlashAnimationCompletedCommand { get; set; }
 
         private double _mapWidth = 1920.0;
         public double MapWidth
@@ -89,9 +93,14 @@ namespace ProAppCoordConversionModule.UI
             }
         }
 
+        private void OnFlashAnimationCompletedCommand(object obj)
+        {
+            Mediator.NotifyColleagues("FLASH_COMPLETED", null);
+        }
+
         public void RunFlashAnimation()
         {
-            Flash = !Flash;
+            Flash = true;
         }
     }
 
