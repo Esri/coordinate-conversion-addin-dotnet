@@ -470,7 +470,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)\s*(?<wkid>\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -479,9 +479,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 try
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    int wkid;
-                    var sr = int.TryParse(matchMercator.Groups["wkid"].Value, out wkid) ? SpatialReferenceBuilder.CreateSpatialReference(wkid) : SpatialReferences.WebMercator;
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);                 
+                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
@@ -605,7 +604,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)\s*(?<wkid>\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -615,8 +614,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    int wkid;
-                    var sr = int.TryParse(matchMercator.Groups["wkid"].Value, out wkid) ? SpatialReferenceBuilder.CreateSpatialReference(wkid) : SpatialReferences.WebMercator;
+                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = await QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
