@@ -33,9 +33,10 @@ namespace ProAppCoordConversionModule.ViewModels
         public ProTabBaseViewModel()
         {
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
+            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
+            Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
         }
@@ -165,6 +166,11 @@ namespace ProAppCoordConversionModule.ViewModels
             BroadcastCoordinateValues(proCoordGetter.Point);
         }
 
+        private void OnFlashCompleted(object obj)
+        {
+            IsToolActive = false;
+        }
+
         #endregion Mediator handlers
 
         private void OnMapToolCommand(object obj)
@@ -229,80 +235,17 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
 
-        internal async virtual void OnFlashPointCommand(object obj)
+        internal async virtual void OnFlashPointCommandAsync(object obj)
         {
             var point = obj as MapPoint;
 
             if(point == null)
                 return;
 
-            var previous = IsToolActive;
             if (!IsToolActive)
             {
                 IsToolActive = true;
             }
-
-            //TODO fix this
-            //CoordinateDD dd;
-            
-            //if (!CoordinateDD.TryParse(ListBox ctvm.InputCoordinate, out dd))
-            //{
-            //    Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
-
-            //    var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
-
-            //    if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
-            //    {
-            //        try
-            //        {
-            //            var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-            //            var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-            //            point = QueuedTask.Run(() =>
-            //            {
-            //                return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
-            //            }).Result;
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            // do nothing
-            //        }
-            //    }
-            //    else
-            //    {
-            //        return;
-            //    }
-            //}
-
-            //ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
-
-            //TODO fix this also
-            //if (point == null)
-            //{
-            //    point = await QueuedTask.Run(() =>
-            //    {
-            //        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-            //        return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-            //    });
-            //}
-
-            ////
-
-            //await QueuedTask.Run(() =>
-            //{
-            //    // Construct point symbol
-            //    symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
-            //});
-
-            ////Get symbol reference from the symbol 
-            //CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
-
-            //QueuedTask.Run(() =>
-            //{
-            //    ClearOverlay();
-            //    _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            //});
-
 
             await QueuedTask.Run(() =>
             {
@@ -314,22 +257,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
-
-            //await QueuedTask.Run(() =>
-            //{
-            //    Task.Delay(500);
-            //    ClearOverlay();
-            //    //_overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            //});
-            //if (previous != IsToolActive)
-            //    IsToolActive = previous;
-            //await QueuedTask.Run(() =>
-            //{
-            //    Task.Delay(500);
-            //    ClearOverlay();
-            //    MapView.Active.LookAt(MapView.Active.Extent.Center);
-            //});
         }
 
         #region Private Methods
