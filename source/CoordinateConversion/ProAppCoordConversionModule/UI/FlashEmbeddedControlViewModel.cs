@@ -62,7 +62,7 @@ namespace ProAppCoordConversionModule.UI
             }
         }
         
-        private bool _flash = true;
+        private bool _flash = false;
         public bool Flash
         {
             get
