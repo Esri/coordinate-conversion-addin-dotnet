@@ -214,7 +214,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             InputCoordinateType = GetCoordinateType(input, out point);
 
             if (InputCoordinateType == CoordinateType.Unknown)
+            {
                 HasInputError = true;
+                amCoordGetter.Point = null;
+                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    output.OutputCoordinate = "";
+                    output.Props.Clear();
+                }
+            }
             else
             {
                 amCoordGetter.Point = point;
