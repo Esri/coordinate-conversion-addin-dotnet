@@ -181,9 +181,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #endregion Mediator handlers
 
-        private void OnMapToolCommand(object obj)
+        private async Task SetAsCurrentToolAsync()
+        {	
+            await FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
+        }
+
+        private async void OnMapToolCommand(object obj)
         {
-            FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
+            await SetAsCurrentToolAsync();
         }
 
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
@@ -252,7 +257,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             if (!IsToolActive)
             {
-                IsToolActive = true;
+                await SetAsCurrentToolAsync();
             }
 
             await QueuedTask.Run(() =>
