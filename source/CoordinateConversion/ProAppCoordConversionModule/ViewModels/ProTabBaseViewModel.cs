@@ -176,6 +176,8 @@ namespace ProAppCoordConversionModule.ViewModels
         private async Task SetAsCurrentToolAsync()
         {	
             await FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
+
+            RaisePropertyChanged(() => IsToolActive);
         }
 
         private async void OnMapToolCommand(object obj)
