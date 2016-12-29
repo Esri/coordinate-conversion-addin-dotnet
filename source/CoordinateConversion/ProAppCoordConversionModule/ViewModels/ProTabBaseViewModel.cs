@@ -141,10 +141,18 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 return GetCoordinateType(input);
             }).Result;
-                
+
 
             if (ccc.Type == CoordinateType.Unknown)
+            {
                 HasInputError = true;
+                proCoordGetter.Point = null;
+                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    output.OutputCoordinate = "";
+                    output.Props.Clear();
+                }
+            }
             else
             {
                 proCoordGetter.Point = ccc.Point;
