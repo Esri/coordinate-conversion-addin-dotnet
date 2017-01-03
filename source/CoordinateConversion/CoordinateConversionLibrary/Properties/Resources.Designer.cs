@@ -574,7 +574,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Coordinate Fields.
+        ///   Looks up a localized string similar to Select Fields.
         /// </summary>
         public static string TitleSelectCoordinateFields {
             get {
@@ -633,6 +633,24 @@ namespace CoordinateConversionLibrary.Properties {
         public static string TooltipMapPointTool {
             get {
                 return ResourceManager.GetString("TooltipMapPointTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ImportCSV.GetSeperator(): Unrecognized field delimter..
+        /// </summary>
+        public static string UnrecognizedDelimiter {
+            get {
+                return ResourceManager.GetString("UnrecognizedDelimiter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use two fields.
+        /// </summary>
+        public static string UseTwoFields {
+            get {
+                return ResourceManager.GetString("UseTwoFields", resourceCulture);
             }
         }
     }

@@ -35,7 +35,7 @@ namespace ProAppCoordConversionModule.Helpers
             if (mp == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0} {1:0.0}", mp.Y, mp.X);
+            var result = string.Format("{0:0.0#####} {1:0.0#####}", mp.Y, mp.X);
 
             // .ToGeoCoordinate function calls will fail if there is no Spatial Reference
             if (mp.SpatialReference == null)

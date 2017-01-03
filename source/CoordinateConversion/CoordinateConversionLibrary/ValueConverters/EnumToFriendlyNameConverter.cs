@@ -54,6 +54,10 @@ namespace CoordinateConversionLibrary
                                    attributes[0].Description
                                : value.ToString();
                 }
+                else
+                {
+                    return value;
+                }
             }
 
             return string.Empty;

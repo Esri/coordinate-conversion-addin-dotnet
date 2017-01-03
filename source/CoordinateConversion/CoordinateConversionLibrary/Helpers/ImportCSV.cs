@@ -17,6 +17,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System;
+using System.Text.RegularExpressions;
 
 namespace CoordinateConversionLibrary.Helpers
 {
@@ -38,7 +39,7 @@ namespace CoordinateConversionLibrary.Helpers
 
     public class ImportCSV
     {
-        public static List<string> GetHeaders(Stream stream, char seperator)
+        public static List<string> GetHeaders(Stream stream)
         {
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -46,25 +47,40 @@ namespace CoordinateConversionLibrary.Helpers
                 if (string.IsNullOrEmpty(line))
                     return null;
 
-                return line.Split(seperator).ToList();
+                return line.Split(GetSeperator(line)).ToList();
             }
 
             return null;
         }
 
-        public static IEnumerable<T> Import<T>(Stream stream, char seperator, string[] fieldNames) where T : new()
+        private static char GetSeperator(string line)
+        {
+            Regex regexDD = new Regex(@"^(.+)(?<sep>[,;:| \t])(.+)");
+            var matchSep = regexDD.Match(line);
+            if (matchSep.Success && matchSep.Length == line.Length)
+            {
+                var sep = matchSep.Groups["sep"];
+                if (sep.Success)
+                    return char.Parse(sep.Value);
+            }
+            return '\0';
+        }
+
+        public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames) where T : new()
         {
             List<T> list = new List<T>();
-
+            char sep = '\0';
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     return list;
 
-                string[] row = line.Split(seperator);
+                var charSep = sep != '\0' ? sep : GetSeperator(line);
+
+                string[] row = line.Split(charSep);
                 List<ImportDescriptor> headers = ParseHeader<T>(row, fieldNames);
-                while (ImportLine(reader, headers, list, row.Count(), seperator)) ;
+                while (ImportLine(reader, headers, list, row.Count(), charSep)) ;
             }
 
             return list;
