@@ -95,7 +95,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDMS = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|)\d+)[° ]*(?<latitudeM>\d+)[' ]*(?<latitudeS>\d+[.,]\d+)[""]?(?<firstSuffix>[NSEW]?)([, +]*)(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|)\d+)[° ]*(?<longitudeM>\d+)[' ]*(?<longitudeS>\d+[.,]\d+)[""]?(?<lastSuffix>[NSEW]?)", RegexOptions.ExplicitCapture);
+            Regex regexDMS = new Regex(@"(?i)^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|)\d+)[° ]*(?<latitudeM>\d+)[' ]*(?<latitudeS>\d+[.,]\d+)[""]?(?<firstSuffix>[NSEW]?)([, +|/\\]*)(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|)\d+)[° ]*(?<longitudeM>\d+)[' ]*(?<longitudeS>\d+[.,]\d+)[""]?(?<lastSuffix>[NSEW]?)", RegexOptions.ExplicitCapture);
 
             var matchDMS = regexDMS.Match(input);
 
@@ -111,12 +111,12 @@ namespace CoordinateConversionLibrary.Models
                         var lastSuffix = matchDMS.Groups["lastSuffix"];
 
                         // Don't allow both prefix and suffix for lat or lon
-                        if (firstPrefix.Success && firstSuffix.Success)
+                        if ((firstPrefix.Success && firstSuffix.Success) && (firstPrefix.Length > 0 && firstSuffix.Length > 0))
                         {
                             return false;
                         }
 
-                        if (lastPrefix.Success && lastSuffix.Success)
+                        if ((lastPrefix.Success && lastSuffix.Success) && (lastPrefix.Length > 0 && lastSuffix.Length > 0))
                         {
                             return false;
                         }
