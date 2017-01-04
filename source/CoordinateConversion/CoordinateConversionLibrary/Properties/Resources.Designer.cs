@@ -637,7 +637,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImportCSV.GetSeperator(): Unrecognized field delimter..
+        ///   Looks up a localized string similar to ImportCSV.GetSeparator(): Unrecognized field delimter..
         /// </summary>
         public static string UnrecognizedDelimiter {
             get {

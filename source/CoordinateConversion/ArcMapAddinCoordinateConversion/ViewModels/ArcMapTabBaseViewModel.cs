@@ -415,7 +415,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (CoordinateDD.TryParse(input, out dd))
                 {
                     // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal seperator other than a decimal point
+                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
                     // Added InvariantCulture option to ensure the current culture is ignored
                     string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1}", dd.Lat, dd.Lon);
                     cn.PutCoordsFromDD(newInput);
@@ -431,7 +431,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (CoordinateDDM.TryParse(input, out ddm))
                 {
                     // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal seperator other than a decimal point
+                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
                     // Added InvariantCulture option to ensure the current culture is ignored
                     string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3}", ddm.LatDegrees, ddm.LatMinutes, ddm.LonDegrees, ddm.LonMinutes);
                     cn.PutCoordsFromDD(newInput);
@@ -447,7 +447,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (CoordinateDMS.TryParse(input, out dms))
                 {
                     // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal seperator other than a decimal point
+                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
                     // Added InvariantCulture option to ensure the current culture is ignored
                     string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5}", dms.LatDegrees, dms.LatMinutes, dms.LatSeconds, dms.LonDegrees, dms.LonMinutes, dms.LonSeconds);
                     cn.PutCoordsFromDD(newInput);

@@ -310,7 +310,7 @@
     <value>Select output</value>
   </data>
   <data name="UnrecognizedDelimiter" xml:space="preserve">
-    <value>ImportCSV.GetSeperator(): Unrecognized field delimter.</value>
+    <value>ImportCSV.GetSeparator(): Unrecognized field delimter.</value>
   </data>
   <data name="UseTwoFields" xml:space="preserve">
     <value>Use two fields</value>
