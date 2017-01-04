@@ -16,11 +16,9 @@
             <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
                 <UserControl Content="{Binding ConvertTabView}" />
             </TabItem>
-            <!--
             <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
                 <UserControl Content="{Binding CollectTabView}" />
             </TabItem>
-            -->
         </TabControl>
     </Grid>
 </UserControl>

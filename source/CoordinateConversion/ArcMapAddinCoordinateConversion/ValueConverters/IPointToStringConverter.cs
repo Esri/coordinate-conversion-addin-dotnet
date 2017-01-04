@@ -32,7 +32,7 @@ namespace ArcMapAddinCoordinateConversion.ValueConverters
             if (point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0} {1:0.0}", point.Y, point.X);
+            var result = string.Format("{0:0.0#####} {1:0.0#####}", point.Y, point.X);
 
             if (point.SpatialReference == null)
                 return result;

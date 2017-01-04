@@ -76,7 +76,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDD = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>-?\d+?[,.]?\d*?)(?<firstSuffix>[NSEW])?[,:; |]*(?<lastPrefix>[NSEW])*?(?<longitude>-?\d+?[,.]?\d*?)(?<lastSuffix>[NSEW])*?$");
+            Regex regexDD = new Regex(@"(?i)^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>-?\d+?[,.]?\d*?)(?<firstSuffix>[NSEW])?[,:; |/\\]*(?<lastPrefix>[NSEW])*?(?<longitude>-?\d+?[,.]?\d*?)(?<lastSuffix>[NSEW])*?$");
 
             var matchDD = regexDD.Match(input);
 

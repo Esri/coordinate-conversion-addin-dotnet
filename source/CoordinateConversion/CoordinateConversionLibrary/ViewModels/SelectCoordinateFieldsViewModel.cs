@@ -28,18 +28,18 @@ namespace CoordinateConversionLibrary.ViewModels
         }
         public ObservableCollection<string> AvailableFields { get; set; }
         public List<string> SelectedFields { get; set; }
-        public string SelectedInputType { get; set; }
-        private int selectedInputTypeIndex = 0;
-        public int SelectedInputTypeIndex
-        { 
-            get { return selectedInputTypeIndex; } 
+        private bool useTwoFields = false;
+        public bool UseTwoFields
+        {
+            get { return useTwoFields; }
             set
             {
-                selectedInputTypeIndex = value;
-                RaisePropertyChanged(() => SelectedInputTypeIndex);
+                useTwoFields = value;
+                RaisePropertyChanged(() => UseTwoFields);
                 RaisePropertyChanged(() => IsDialogComplete);
             }
         }
+
         private string selectedField1 = string.Empty;
         public string SelectedField1 
         {
@@ -67,10 +67,10 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             get
             {
-                if (SelectedInputTypeIndex == 0 && !string.IsNullOrWhiteSpace(SelectedField1))
+                if (!UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField1))
                     return true;
 
-                if (SelectedInputTypeIndex == 1 && !string.IsNullOrWhiteSpace(SelectedField1) && !string.IsNullOrWhiteSpace(SelectedField2))
+                if (UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField1) && !string.IsNullOrWhiteSpace(SelectedField2))
                     return true;
 
                 return false;
@@ -96,19 +96,11 @@ namespace CoordinateConversionLibrary.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
-            if(SelectedInputTypeIndex == 0 || SelectedInputType == "Single Field")
-            {
-                if(!string.IsNullOrWhiteSpace(SelectedField1))
-                    SelectedFields.Add(SelectedField1);
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(SelectedField1))
-                    SelectedFields.Add(SelectedField1);
+            if (!string.IsNullOrWhiteSpace(SelectedField1))
+                SelectedFields.Add(SelectedField1);
 
-                if (!string.IsNullOrWhiteSpace(SelectedField2))
-                    SelectedFields.Add(SelectedField2);
-            }
+            if (UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField2))
+                SelectedFields.Add(SelectedField2);
 
             // close dialog
             DialogResult = true;
