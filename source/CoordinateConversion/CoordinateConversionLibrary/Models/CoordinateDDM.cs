@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDDM : CoordinateBase
     {
-        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.38; LonDegrees = -78; LonMinutes = 27.36; }
+        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.1234; LonDegrees = -78; LonMinutes = 27.1234; }
 
         public CoordinateDDM(int latd, double latm, int lond, double lonm)
         {

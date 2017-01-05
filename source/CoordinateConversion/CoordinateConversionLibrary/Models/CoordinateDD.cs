@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { Lat = 40.123; Lon = -78.456; }
+        public CoordinateDD() { Lat = 40.123456; Lon = -78.123456; }
 
         public CoordinateDD(double lat, double lon)
         {
@@ -41,7 +41,7 @@ namespace CoordinateConversionLibrary.Models
         public CoordinateDD(CoordinateDMS dms)
         {
             Lat = (Math.Abs((double)dms.LatDegrees) + ((double)dms.LatMinutes / 60.0) + (dms.LatSeconds / 3600.0)) * ((dms.LatDegrees < 0) ? -1.0 : 1.0);
-            Lon = (Math.Abs((double)dms.LonDegrees) + ((double)dms.LonMinutes / 60.0) + (dms.LatSeconds / 3600.0)) * ((dms.LonDegrees < 0) ? -1.0 : 1.0);
+            Lon = (Math.Abs((double)dms.LonDegrees) + ((double)dms.LonMinutes / 60.0) + (dms.LonSeconds / 3600.0)) * ((dms.LonDegrees < 0) ? -1.0 : 1.0);
         }
 
         #region Properties
