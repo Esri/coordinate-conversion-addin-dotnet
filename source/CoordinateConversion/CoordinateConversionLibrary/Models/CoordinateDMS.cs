@@ -95,7 +95,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDMS = new Regex(@"(?i)^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|)\d+)[° -_]*?(?<latitudeM>\d+)[' -_]?(?<latitudeS>\d+[.,]\d+)[""]?(?<firstSuffix>[NSEW]?)([, +|\/\\]*)(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|)\d+)[° -_]*?(?<longitudeM>\d+)[' -_]?(?<longitudeS>\d+[.,]\d+)[""]?(?<lastSuffix>[NSEW]?)", RegexOptions.ExplicitCapture);
+            Regex regexDMS = new Regex(@"(?i)^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|)\d+)[° -_]*?(?<latitudeM>\d+)[' -_]?(?<latitudeS>\d+[.,]?\d+)[""]?(?<firstSuffix>[NSEW]?)([, +|\/\\]*)(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|)\d+)[° -_]*?(?<longitudeM>\d+)[' -_]?(?<longitudeS>\d+[.,]?\d+)[""]?(?<lastSuffix>[NSEW]?)", RegexOptions.ExplicitCapture);
 
            var matchDMS = regexDMS.Match(input);
 
