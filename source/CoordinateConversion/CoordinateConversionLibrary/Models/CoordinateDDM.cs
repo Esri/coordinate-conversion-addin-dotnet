@@ -62,7 +62,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDDM = new Regex(@"(?i)^\s*[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>((-| )|(?=\d))\d+)[° -_]*?(?<latitudeM>\d+[.,:\s]?\d+)(?<firstSuffix>[NSEW])?[',\s|\/\\]*(?<lastPrefix>[NSEW])?(?<longitudeD>((-| )|(?=\d))\d+)[° -_]?(?<longitudeM>\d+[.,:\s]?\d+)?[',:\s]?(?<lastSuffix>[NSEW])?");
+            Regex regexDDM = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>\-*\d*)?[°˚º^~*\s\-_]*(?<latitudeM>(?=\d+[.,:]\d+)\d+[.,:]\d*|\d+)['′]*(?<firstSuffix>[NSEW])?[,\s|\/\\]*[+]*(?<lastPrefix>[NSEW])?(?<longitudeD>\-*\d*)?[°˚º^~*\s\-_]*(?<longitudeM>\d+[.,:]?\d*)['′]*(?<lastSuffix>[NSEW])?");
 
             var matchDDM = regexDDM.Match(input);
 
