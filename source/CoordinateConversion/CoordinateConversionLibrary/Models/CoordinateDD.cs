@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { Lat = 40.123456; Lon = -78.123456; }
+        public CoordinateDD() { Lat = 40.378465; Lon = -78.456799; }
 
         public CoordinateDD(double lat, double lon)
         {

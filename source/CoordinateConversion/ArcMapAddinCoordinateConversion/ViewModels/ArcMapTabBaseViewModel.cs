@@ -585,7 +585,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    var sr = amCoordGetter.Point != null ? amCoordGetter.Point.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
+
+                    IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
+                    var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
                     point.X = Lon;
                     point.Y = Lat;
                     point.SpatialReference = sr;

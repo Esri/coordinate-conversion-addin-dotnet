@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDDM : CoordinateBase
     {
-        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.1234; LonDegrees = -78; LonMinutes = 27.1234; }
+        public CoordinateDDM() { LatDegrees = 40; LatMinutes = 7.4876; LonDegrees = -78; LonMinutes = 27.3292; }
 
         public CoordinateDDM(int latd, double latm, int lond, double lonm)
         {
@@ -62,7 +62,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDDM = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>\-*\d*)?[°˚º^~*\s\-_]*(?<latitudeM>(?=\d+[.,:]\d+)\d+[.,:]\d*|\d+)['′]*(?<firstSuffix>[NSEW])?[,\s|\/\\]*[+]*(?<lastPrefix>[NSEW])?(?<longitudeD>\-*\d*)?[°˚º^~*\s\-_]*(?<longitudeM>\d+[.,:]?\d*)['′]*(?<lastSuffix>[NSEW])?");
+            Regex regexDDM = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>\-*\d{1,3})?[°˚º^~*\s\-_]+(?<latitudeM>(?=\d+[.,:]\d+)\d+[.,:]\d*|\d+)['′]*(?<firstSuffix>[NSEW])?[,\s|\/\\]*[+]*(?<lastPrefix>[NSEW])?(?<longitudeD>\-*\d{1,3})?[°˚º^~*\s\-_]+(?<longitudeM>\d+[.,:]?\d*)['′]*(?<lastSuffix>[NSEW])?");
 
             var matchDDM = regexDDM.Match(input);
 
