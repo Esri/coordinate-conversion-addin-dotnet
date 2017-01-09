@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { Lat = 40.123456; Lon = -78.123456; }
+        public CoordinateDD() { Lat = 40.378465; Lon = -78.456799; }
 
         public CoordinateDD(double lat, double lon)
         {
@@ -76,7 +76,7 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDD = new Regex(@"(?i)^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>-?\d+?[,.]?\d*?)(?<firstSuffix>[NSEW])?[,:; |/\\]*(?<lastPrefix>[NSEW])*?(?<longitude>-?\d+?[,.]?\d*?)(?<lastSuffix>[NSEW])*?$");
+            Regex regexDD = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitude>\-*\d+[,.:]?\d*)[°˚º^~*]*?(?<firstSuffix>[NSEW])*[,:; |\/\\]*[+]*(?<lastPrefix>[NSEW])*(?<longitude>-*\d+[,.:]?\d*)[°˚º^~*]*(?<lastSuffix>[NSEW])*");
 
             var matchDD = regexDD.Match(input);
 

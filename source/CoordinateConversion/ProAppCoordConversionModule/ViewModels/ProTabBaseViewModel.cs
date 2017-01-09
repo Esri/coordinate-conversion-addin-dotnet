@@ -556,7 +556,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
+                    var sr = MapView.Active.Extent.SpatialReference != null ? MapView.Active.Extent.SpatialReference : SpatialReferences.WebMercator;
+
                     point = await QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
