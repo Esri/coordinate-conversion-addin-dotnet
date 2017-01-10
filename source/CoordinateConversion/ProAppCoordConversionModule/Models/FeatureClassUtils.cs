@@ -213,8 +213,10 @@ namespace ProAppCoordConversionModule.Models
                             foreach (var point in mapPointList)
                             {
                                 rowBuffer = table.CreateRowBuffer();
+                                var mpBuilder = new MapPointBuilder(point);
+                                mpBuilder.HasZ = false;
 
-                                rowBuffer[shapeIndex] = new MapPointBuilder(point).ToGeometry();
+                                rowBuffer[shapeIndex] = mpBuilder.ToGeometry();
 
                                 Row row = table.CreateRow(rowBuffer);
                             }
