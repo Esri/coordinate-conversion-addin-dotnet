@@ -47,6 +47,11 @@
             <ComboBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
             </ComboBox.InputBindings>
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="Black" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
         </ComboBox>
         <Button Grid.Column="1"
                 Margin="3,3,0,0"
