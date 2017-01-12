@@ -367,7 +367,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Field 1.
+        ///   Looks up a localized string similar to X.
         /// </summary>
         public static string LabelField1 {
             get {
@@ -376,11 +376,20 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Field 2.
+        ///   Looks up a localized string similar to Y.
         /// </summary>
         public static string LabelField2 {
             get {
                 return ResourceManager.GetString("LabelField2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X/Y.
+        /// </summary>
+        public static string LabelFieldCombined {
+            get {
+                return ResourceManager.GetString("LabelFieldCombined", resourceCulture);
             }
         }
         
