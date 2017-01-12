@@ -264,7 +264,7 @@ namespace ArcMapAddinCoordinateConversion
                         result = cn.GetUSNGFromCoords(5, true, true);
                         break;
                     case CoordinateTypes.UTM:
-                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces | esriUTMConversionOptionsEnum.esriUTMUseNS);
+                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                         break;
                     default:
                         break;
