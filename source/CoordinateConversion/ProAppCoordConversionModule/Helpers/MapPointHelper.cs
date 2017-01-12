@@ -68,6 +68,7 @@ namespace ProAppCoordConversionModule.Helpers
                         break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                        tgparam.Round = false;
                         result = mp.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.USNG:
