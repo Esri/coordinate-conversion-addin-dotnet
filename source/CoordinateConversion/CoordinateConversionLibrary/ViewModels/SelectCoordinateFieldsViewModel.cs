@@ -35,7 +35,20 @@ namespace CoordinateConversionLibrary.ViewModels
             set
             {
                 useTwoFields = value;
+                LabelField = useTwoFields ? Properties.Resources.LabelField1 : Properties.Resources.LabelFieldCombined;
                 RaisePropertyChanged(() => UseTwoFields);
+                RaisePropertyChanged(() => IsDialogComplete);
+            }
+        }
+
+        private string labelField = Properties.Resources.LabelFieldCombined;
+        public string LabelField
+        {
+            get { return labelField; }
+            set
+            {
+                labelField = value;
+                RaisePropertyChanged(() => labelField);
                 RaisePropertyChanged(() => IsDialogComplete);
             }
         }

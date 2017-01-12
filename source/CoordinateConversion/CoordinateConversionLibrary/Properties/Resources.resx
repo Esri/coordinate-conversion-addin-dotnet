@@ -286,10 +286,10 @@
     <value>Select Fields</value>
   </data>
   <data name="LabelField1" xml:space="preserve">
-    <value>Field 1</value>
+    <value>X</value>
   </data>
   <data name="LabelField2" xml:space="preserve">
-    <value>Field 2</value>
+    <value>Y</value>
   </data>
   <data name="LabelInputType" xml:space="preserve">
     <value>Input Type</value>
@@ -314,5 +314,8 @@
   </data>
   <data name="UseTwoFields" xml:space="preserve">
     <value>Use two fields</value>
+  </data>
+  <data name="LabelFieldCombined" xml:space="preserve">
+    <value>X/Y</value>
   </data>
 </root>

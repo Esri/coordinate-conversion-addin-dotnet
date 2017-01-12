@@ -237,7 +237,7 @@ namespace ProAppCoordConversionModule
                         break;
                     case CoordinateTypes.UTM:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
-                        tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
+                        tgparam.GeoCoordMode = ToGeoCoordinateMode.Default;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     default:
