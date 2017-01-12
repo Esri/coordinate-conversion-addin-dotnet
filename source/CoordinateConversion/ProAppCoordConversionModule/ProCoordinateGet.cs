@@ -109,6 +109,7 @@ namespace ProAppCoordConversionModule
                 {
                     // 5 numeric units in MGRS is 1m resolution
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -228,6 +229,7 @@ namespace ProAppCoordConversionModule
                         break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                        tgparam.Round = false;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.USNG:
