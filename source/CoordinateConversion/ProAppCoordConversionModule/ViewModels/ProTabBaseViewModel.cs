@@ -261,11 +261,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await SetAsCurrentToolAsync();
             }
-
-            ProcessInput(InputCoordinate);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
-
+            
             await QueuedTask.Run(() =>
             {
                 // is point within current map extent

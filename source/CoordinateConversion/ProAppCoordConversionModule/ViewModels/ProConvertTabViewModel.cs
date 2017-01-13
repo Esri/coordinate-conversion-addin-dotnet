@@ -86,6 +86,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 base.OnFlashPointCommandAsync(proCoordGetter.Point);
             else
                 base.OnFlashPointCommandAsync(obj);
+
+            ProcessInput(InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
         }
 
         #endregion overrides
