@@ -17,11 +17,9 @@
             <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
                 <UserControl Content="{Binding ConvertTabView}" />
             </TabItem>
-<!-- Removed: see: https://github.com/Esri/coordinate-conversion-addin-dotnet/issues/23
             <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
                 <UserControl Content="{Binding CollectTabView}" />
             </TabItem>
---> 
         </TabControl>
     </Grid>
 </UserControl>
