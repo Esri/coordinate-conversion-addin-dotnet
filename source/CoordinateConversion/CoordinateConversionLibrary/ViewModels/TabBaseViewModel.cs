@@ -103,9 +103,10 @@ namespace CoordinateConversionLibrary.ViewModels
                     return;
 
                 _inputCoordinate = value;
-                ProcessInput(_inputCoordinate);
 
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
+                //ProcessInput(_inputCoordinate);
+                //Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
                 RaisePropertyChanged(() => InputCoordinate);
             }
