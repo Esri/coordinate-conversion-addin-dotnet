@@ -157,8 +157,6 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 var fcUtils = new FeatureClassUtils();
 
-                var wasActive = base.IsToolActive;
-                base.IsToolActive = false;
                 string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked);
                 if (path != null)
                 {
@@ -184,7 +182,6 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
 
                     }
-                    base.IsToolActive = wasActive;
                 }
             }
         }

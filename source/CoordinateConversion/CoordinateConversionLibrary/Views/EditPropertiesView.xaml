@@ -53,13 +53,7 @@
             ItemsSource="{Binding Source={StaticResource coordinateTypes}}"
             SelectedItem="{Binding Path=SelectedCoordinateType, Mode=TwoWay}"
             Height="Auto" 
-            Margin="3,3,0,0" >
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="Black" />
-                </Style>
-            </ComboBox.ItemContainerStyle>
-        </ComboBox>
+            Margin="3,3,0,0" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{x:Static prop:Resources.ButtonOK}" 
                     Command="{Binding OKButtonPressedCommand}" 

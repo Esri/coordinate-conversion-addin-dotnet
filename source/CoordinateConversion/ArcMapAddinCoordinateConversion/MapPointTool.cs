@@ -83,6 +83,7 @@ namespace ArcMapAddinCoordinateConversion
                     point = snapResult.Location;
 
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, point);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
             catch { }
         }

@@ -25,6 +25,7 @@ using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.ViewModels;
 using ArcMapAddinCoordinateConversion.Helpers;
 using System.Globalization;
+using System.Windows.Input;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -35,7 +36,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             // commands
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
-
+            PreviewKeyDownCommand = new RelayCommand(OnPreviewKeyDownCommand);
+            
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
 
@@ -44,7 +46,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
-
+        public RelayCommand PreviewKeyDownCommand { get; set; }
+        
         public CoordinateType InputCoordinateType { get; set; }
 
         public bool IsToolActive
@@ -65,6 +68,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         ArcMap.Application.CurrentTool = null;
 
                 RaisePropertyChanged(() => IsToolActive);
+
+                Mediator.NotifyColleagues("IsMapPointToolActive", value);
+                
             }
         }
 
@@ -75,8 +81,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
         }
 
+        internal virtual void OnPreviewKeyDownCommand(object obj)
+        {
+            int i = 3;
+        }
+
         internal virtual void OnFlashPointCommand(object obj)
         {
+            ProcessInput(InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
+            
             IGeometry address = obj as IGeometry;
 
             if (address == null && amCoordGetter != null && amCoordGetter.Point != null)
@@ -585,7 +600,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-
                     IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
                     var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
                     point.X = Lon;

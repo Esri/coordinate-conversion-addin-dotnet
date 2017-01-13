@@ -262,6 +262,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 await SetAsCurrentToolAsync();
             }
 
+            ProcessInput(InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
+
             await QueuedTask.Run(() =>
             {
                 // is point within current map extent
@@ -556,8 +560,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    var sr = MapView.Active.Extent.SpatialReference != null ? MapView.Active.Extent.SpatialReference : SpatialReferences.WebMercator;
-
+                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = await QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);

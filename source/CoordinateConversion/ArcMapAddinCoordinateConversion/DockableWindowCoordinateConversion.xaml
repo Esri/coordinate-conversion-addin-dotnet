@@ -1,5 +1,4 @@
-
-<UserControl x:Class="ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion"
+﻿<UserControl x:Class="ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:libprop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
@@ -17,9 +16,11 @@
             <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
                 <UserControl Content="{Binding ConvertTabView}" />
             </TabItem>
-            <!--<TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
+            <!--
+            <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
                 <UserControl Content="{Binding CollectTabView}" />
-            </TabItem>-->
+            </TabItem>
+            -->
         </TabControl>
     </Grid>
 </UserControl>

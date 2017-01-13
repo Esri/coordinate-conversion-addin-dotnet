@@ -42,6 +42,7 @@ namespace CoordinateConversionLibrary.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
             Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnOutputUpdate);
+            Mediator.Register(CoordinateConversionLibrary.Constants.ClearOutputCoordinates, OnClearOutputs);
 
             //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
@@ -66,6 +67,11 @@ namespace CoordinateConversionLibrary.ViewModels
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
         private CoordinateGetBase coordinateGetter;
+
+        private void OnClearOutputs(object obj)
+        {
+            ClearOutputs();
+        }
 
         private void OnCopyAllCoordinateOutputs(object obj)
         {
@@ -257,6 +263,15 @@ namespace CoordinateConversionLibrary.ViewModels
             }
 
             return null;
+        }
+
+        private void ClearOutputs()
+        {
+            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+            {
+                output.OutputCoordinate = "";
+                output.Props.Clear();
+            }
         }
 
         private void UpdateOutputs()
