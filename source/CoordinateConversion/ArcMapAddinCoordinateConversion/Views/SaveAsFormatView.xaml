@@ -6,8 +6,8 @@
              mc:Ignorable="d" Width="242" Height="102" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Title="Select Output" WindowStartupLocation="CenterScreen" Topmost="True">
     <StackPanel>
         <StackPanel>
-            <RadioButton IsChecked="{Binding FeatureShapeIsChecked}" x:Name="rbFeatureShape" Content="Feature class / Shapefile" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
-            <RadioButton IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KML" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
+            <RadioButton Foreground="Black" IsChecked="{Binding FeatureShapeIsChecked}" x:Name="rbFeatureShape" Content="Feature class / Shapefile" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
+            <RadioButton Foreground="Black" IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KML" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
         </StackPanel>
         <StackPanel Height="35" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnOk" Content="OK" Click="Button_Click" Width="75" Margin="3,8,3,5" />
