@@ -29,7 +29,7 @@ namespace CoordinateConversionLibrary.Views
 
         private void input_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Mediator.NotifyColleagues("ClearOutputCoordinates", null);  
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.ClearOutputCoordinates, null);  
         }
     }
 }

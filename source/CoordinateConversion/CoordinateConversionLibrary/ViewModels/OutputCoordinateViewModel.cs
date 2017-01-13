@@ -42,7 +42,7 @@ namespace CoordinateConversionLibrary.ViewModels
             Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
             Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnOutputUpdate);
-            Mediator.Register("ClearOutputCoordinates", OnClearOutputs);
+            Mediator.Register(CoordinateConversionLibrary.Constants.ClearOutputCoordinates, OnClearOutputs);
 
             //for testing without a config file, init a few sample items
             //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
