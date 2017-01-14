@@ -467,7 +467,7 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateDMS.TryParse("This is not a coordinate", out coord));
         }
 
-        [TestMethod]
+       /* [TestMethod]
         public void ParseGARS()
         {
             CoordinateGARS coord;
@@ -484,7 +484,7 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateGARS.TryParse("203AA08", out coord));
             Assert.IsFalse(CoordinateGARS.TryParse("203AA58", out coord));
             Assert.IsFalse(CoordinateGARS.TryParse("203AA10", out coord));
-        }
+        }*/
 
         [TestMethod]
         public void ParseUTM()
@@ -794,7 +794,7 @@ namespace CoordinateConversionLibrary.Tests
             Assert.AreEqual(temp, "40°16'22,973\"N, 78°50'50,737\"W");
         }
 
-        [TestMethod]
+       /* [TestMethod]
         public void FormatterGARS()
         {
             var coord = new CoordinateGARS(203, "LW", 1, 8);
@@ -815,7 +815,7 @@ namespace CoordinateConversionLibrary.Tests
 
             temp = coord.ToString("X#,Y,Q,K", new CoordinateGARSFormatter());
             Assert.AreEqual(temp, "203,LW,1,8");
-        }
+        }*/
 
         [TestMethod]
         public void FormatterUTM()

@@ -319,11 +319,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 dict.Add(CoordinateType.DMS, cn.GetDMSFromCoords(6));
             }
             catch { }
-            try
+            /*try
             {
                 dict.Add(CoordinateType.GARS, cn.GetGARSFromCoords());
             }
-            catch { }
+            catch { }*/
             try
             {
                 dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic));
@@ -472,7 +472,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
             catch { }
 
-            try
+            /*try
             {
                 cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, input);
                 return CoordinateType.GARS;
@@ -495,7 +495,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     return CoordinateType.GARS;
                 }
                 catch { }
-            }
+            }*/
 
             try
             {
