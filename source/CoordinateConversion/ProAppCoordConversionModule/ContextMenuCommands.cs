@@ -75,10 +75,10 @@ namespace ProAppCoordConversionModule
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DMS);
                         coord = mp.ToGeoCoordinateString(tgparam);
                         break;
-                   /* case CoordinateType.GARS:
+                    case CoordinateType.GARS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
                         coord = mp.ToGeoCoordinateString(tgparam);
-                        break;*/
+                        break;
                     case CoordinateType.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
                         tgparam.Round = false;
@@ -130,13 +130,13 @@ namespace ProAppCoordConversionModule
             cType = CoordinateType.DMS;
         }
     }
-   /* internal class ContextCopyGARS : ContextCopyBase
+    internal class ContextCopyGARS : ContextCopyBase
     {
         ContextCopyGARS()
         {
             cType = CoordinateType.GARS;
         }
-    }*/
+    }
     internal class ContextCopyMGRS : ContextCopyBase
     {
         ContextCopyMGRS()

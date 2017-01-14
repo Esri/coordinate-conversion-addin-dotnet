@@ -344,7 +344,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 return CoordinateType.DMS;
             }
 
-           /* CoordinateGARS gars;
+            CoordinateGARS gars;
             if (CoordinateGARS.TryParse(input, out gars))
             {
                 try
@@ -359,7 +359,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     return CoordinateType.GARS;
                 }
                 catch { }
-            }*/
+            }
 
             CoordinateMGRS mgrs;
             if (CoordinateMGRS.TryParse(input, out mgrs))
@@ -478,7 +478,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 return new CCCoordinate() { Type = CoordinateType.DMS, Point = point };
             }
 
-            /*CoordinateGARS gars;
+            CoordinateGARS gars;
             if (CoordinateGARS.TryParse(input, out gars))
             {
                 try
@@ -493,7 +493,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
                 }
                 catch { }
-            }*/
+            }
 
             CoordinateMGRS mgrs;
             if (CoordinateMGRS.TryParse(input, out mgrs))

@@ -84,7 +84,7 @@ namespace ProAppCoordConversionModule
             return false;
         }
 
-        /*public override bool CanGetGARS(int srFacotryCode, out string coord)
+        public override bool CanGetGARS(int srFacotryCode, out string coord)
         {
             coord = string.Empty;
             if (Point != null)
@@ -98,7 +98,7 @@ namespace ProAppCoordConversionModule
                 catch { }
             }
             return false;
-        }*/
+        }
 
         public override bool CanGetMGRS(int srFactoryCode, out string coord)
         {
@@ -223,10 +223,10 @@ namespace ProAppCoordConversionModule
                         tgparam.NumDigits = 2;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
-                    //case CoordinateTypes.GARS:
-                        //tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                        //result = Point.ToGeoCoordinateString(tgparam);
-                        //break;
+                    case CoordinateTypes.GARS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
                         tgparam.Round = false;

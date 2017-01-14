@@ -54,9 +54,9 @@ namespace ArcMapAddinCoordinateConversion
                     case CoordinateType.DMS:
                         coord = cn.GetDMSFromCoords(2);
                         break;
-                    //case CoordinateType.GARS:
-                        //coord = cn.GetGARSFromCoords();
-                        //break;
+                    case CoordinateType.GARS:
+                        coord = cn.GetGARSFromCoords();
+                        break;
                     case CoordinateType.MGRS:
                         coord = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                         break;
@@ -106,13 +106,13 @@ namespace ArcMapAddinCoordinateConversion
             ctype = CoordinateType.DMS;
         }
     }
-    /*public class ContextCopyGARS : ContextCopyBase
+    public class ContextCopyGARS : ContextCopyBase
     {
         public ContextCopyGARS()
         {
             ctype = CoordinateType.GARS;
         }
-    }*/
+    }
     public class ContextCopyMGRS : ContextCopyBase
     {
         public ContextCopyMGRS()
