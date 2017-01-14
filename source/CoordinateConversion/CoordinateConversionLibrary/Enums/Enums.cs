@@ -42,20 +42,20 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTDMS", typeof(Resources))]
         DMS = 3,
 
-        //[LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
-        //GARS = 4,
+        [LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
+        GARS = 4,
 
         [LocalizableDescription(@"EnumCTMGRS", typeof(Resources))]
-        MGRS = 4,
+        MGRS = 5,
 
         [LocalizableDescription(@"EnumCTUSNG", typeof(Resources))]
-        USNG = 5,
+        USNG = 6,
 
         [LocalizableDescription(@"EnumCTUTM", typeof(Resources))]
-        UTM = 6,
+        UTM = 7,
 
         [LocalizableDescription(@"EnumCTNone", typeof(Resources))]
-        None = 7
+        None = 8
     }
 
     /// <summary>

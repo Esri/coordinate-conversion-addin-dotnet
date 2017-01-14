@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace CoordinateConversionLibrary.Models
 {
-    /*public class CoordinateGARS : CoordinateBase
+    public class CoordinateGARS : CoordinateBase
     {
         public CoordinateGARS()
         {
@@ -219,5 +219,5 @@ namespace CoordinateConversionLibrary.Models
                 return arg.ToString();
             }
         }
-    }*/
+    }
 }

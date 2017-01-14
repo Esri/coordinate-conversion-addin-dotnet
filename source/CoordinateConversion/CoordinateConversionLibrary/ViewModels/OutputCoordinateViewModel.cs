@@ -370,7 +370,7 @@ namespace CoordinateConversionLibrary.ViewModels
                             output.Props = props;
                         }
                         break;
-                    /*case CoordinateType.GARS:
+                    case CoordinateType.GARS:
                         CoordinateGARS gars;
                         if (coordinateGetter.CanGetGARS(output.SRFactoryCode, out coord) &&
                             CoordinateGARS.TryParse(coord, out gars))
@@ -382,7 +382,7 @@ namespace CoordinateConversionLibrary.ViewModels
                             props.Add(Properties.Resources.StringKey, gars.Key.ToString());
                             output.Props = props;
                         }
-                        break;*/
+                        break;
                     case CoordinateType.MGRS:
                         CoordinateMGRS mgrs;
                         if (coordinateGetter.CanGetMGRS(output.SRFactoryCode, out coord) &&

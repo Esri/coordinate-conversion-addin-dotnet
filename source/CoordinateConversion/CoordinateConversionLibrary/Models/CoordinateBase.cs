@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
         DD,
         DDM,
         DMS,
-        //GARS,
+        GARS,
         MGRS,
         Unknown,
         USNG,
