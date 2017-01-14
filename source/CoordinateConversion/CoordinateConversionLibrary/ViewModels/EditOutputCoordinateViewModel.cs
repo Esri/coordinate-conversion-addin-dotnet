@@ -32,7 +32,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
                                                                     Properties.Resources.CategoryListDDM,
                                                                     Properties.Resources.CategoryListDMS,
-                                                                    Properties.Resources.CategoryListGARS,
+                                                                    //Properties.Resources.CategoryListGARS,
                                                                     Properties.Resources.CategoryListMGRS,
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
@@ -42,7 +42,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
                                                                     Properties.Resources.CategoryListDDM,
                                                                     Properties.Resources.CategoryListDMS,
-                                                                    Properties.Resources.CategoryListGARS,
+                                                                    //Properties.Resources.CategoryListGARS,
                                                                     Properties.Resources.CategoryListMGRS,
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
@@ -53,7 +53,7 @@ namespace CoordinateConversionLibrary.ViewModels
                                                               "Four",
                                                               "Five",
                                                               "Six",
-                                                              "Seven",
+                                                              //"Seven",
                                                               "Custom" };
             Sample = "Sample";
             Format = "Y-+0.####,X-+0.####";
@@ -264,7 +264,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     }
                     Sample = dms.ToString(Format, new CoordinateDMSFormatter());
                     break;
-                case CoordinateType.GARS:
+               /* case CoordinateType.GARS:
                     var gars = new CoordinateGARS();
 
                     if(ctdict.ContainsKey(type))
@@ -273,7 +273,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     }
 
                     Sample = gars.ToString(Format, new CoordinateGARSFormatter());
-                    break;
+                    break;*/
                 case CoordinateType.MGRS:
                     var mgrs = new CoordinateMGRS();
 

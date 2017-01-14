@@ -50,14 +50,14 @@ namespace CoordinateConversionLibrary.Models
                     return dms.ToString(format, new CoordinateDMSFormatter());
                 }
             }
-            if (cType == CoordinateType.GARS)
+            /*if (cType == CoordinateType.GARS)
             {
                 CoordinateGARS gars;
                 if (CoordinateGARS.TryParse(coord, out gars))
                 {
                     return gars.ToString(format, new CoordinateGARSFormatter());
                 }
-            }
+            }*/
             if (cType == CoordinateType.MGRS)
             {
                 CoordinateMGRS mgrs;

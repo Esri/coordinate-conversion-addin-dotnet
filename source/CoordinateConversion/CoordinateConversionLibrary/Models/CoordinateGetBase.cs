@@ -73,11 +73,11 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
-        public virtual bool CanGetGARS(int srFactoryCode, out string coord)
+        /*public virtual bool CanGetGARS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
             return false;
-        }
+        }*/
 
         public virtual bool CanGetMGRS(int srFactoryCode, out string coord)
         {
