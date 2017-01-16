@@ -32,7 +32,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
                                                                     Properties.Resources.CategoryListDDM,
                                                                     Properties.Resources.CategoryListDMS,
-                                                                    Properties.Resources.CategoryListGARS,
+                                                                    //Properties.Resources.CategoryListGARS,
                                                                     Properties.Resources.CategoryListMGRS,
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
@@ -42,7 +42,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
                                                                     Properties.Resources.CategoryListDDM,
                                                                     Properties.Resources.CategoryListDMS,
-                                                                    Properties.Resources.CategoryListGARS,
+                                                                    //Properties.Resources.CategoryListGARS,
                                                                     Properties.Resources.CategoryListMGRS,
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
@@ -50,7 +50,7 @@ namespace CoordinateConversionLibrary.ViewModels
             FormatList = new ObservableCollection<string>() { "One",
                                                               "Two",
                                                               "Three",
-                                                              "Four",
+                                                              //"Four",
                                                               "Five",
                                                               "Six",
                                                               "Seven",

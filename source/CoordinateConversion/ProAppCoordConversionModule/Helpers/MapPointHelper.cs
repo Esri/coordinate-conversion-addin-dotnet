@@ -62,10 +62,10 @@ namespace ProAppCoordConversionModule.Helpers
                         tgparam.NumDigits = 2;
                         result = mp.ToGeoCoordinateString(tgparam);
                         break;
-                    case CoordinateTypes.GARS:
-                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                        result = mp.ToGeoCoordinateString(tgparam);
-                        break;
+                    //case CoordinateTypes.GARS:
+                    //    tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                    //    result = mp.ToGeoCoordinateString(tgparam);
+                    //    break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
                         tgparam.Round = false;

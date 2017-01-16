@@ -223,10 +223,10 @@ namespace ProAppCoordConversionModule
                         tgparam.NumDigits = 2;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
-                    case CoordinateTypes.GARS:
-                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                        result = Point.ToGeoCoordinateString(tgparam);
-                        break;
+                    //case CoordinateTypes.GARS:
+                    //    tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                    //    result = Point.ToGeoCoordinateString(tgparam);
+                    //    break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
                         tgparam.Round = false;

@@ -42,8 +42,8 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTDMS", typeof(Resources))]
         DMS = 3,
 
-        [LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
-        GARS = 4,
+        //[LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
+        //GARS = 4,
 
         [LocalizableDescription(@"EnumCTMGRS", typeof(Resources))]
         MGRS = 5,

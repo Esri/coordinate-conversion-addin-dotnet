@@ -49,9 +49,9 @@
         <button id="ProAppCoordConversionModule_ContextCopyDMSButton" caption="DMS" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DMS Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+        <!--<button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy GARS Coordinate"></tooltip>
-        </button>
+        </button>-->
         <button id="ProAppCoordConversionModule_ContextCopyMGRSButton" caption="MGRS" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy MGRS Coordinate"></tooltip>
         </button>
