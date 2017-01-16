@@ -82,14 +82,13 @@ namespace ProAppCoordConversionModule.ViewModels
 
         internal override async void OnFlashPointCommandAsync(object obj)
         {
+            ProcessInput(InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
             if (obj == null)
                 base.OnFlashPointCommandAsync(proCoordGetter.Point);
             else
                 base.OnFlashPointCommandAsync(obj);
-
-            ProcessInput(InputCoordinate);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
         }
 
         #endregion overrides
