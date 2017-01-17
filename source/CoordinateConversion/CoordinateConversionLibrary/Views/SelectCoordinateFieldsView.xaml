@@ -24,6 +24,11 @@
                       Margin="3,3,3,0"
                       ItemsSource="{Binding AvailableFields}"
                       SelectedItem="{Binding SelectedField1}">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                </ComboBox.ItemContainerStyle>
             </ComboBox>
         </StackPanel>
         <CheckBox x:Name="useTwoFields" Height="Auto" Margin="3,15,10,3" HorizontalAlignment="Left" Content="{x:Static prop:Resources.UseTwoFields}" IsChecked="{Binding UseTwoFields}"/>
