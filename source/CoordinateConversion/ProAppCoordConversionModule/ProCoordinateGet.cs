@@ -127,7 +127,6 @@ namespace ProAppCoordConversionModule
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
                     tgparam.NumDigits = 5;
-                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
