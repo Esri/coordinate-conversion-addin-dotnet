@@ -35,6 +35,8 @@ namespace ProAppCoordConversionModule.ViewModels
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
 
+            CurrentTool = FrameworkApplication.CurrentTool;
+
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
@@ -45,6 +47,14 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
+
+        private string currentTool;
+
+        public string CurrentTool
+        {
+            get { return currentTool; }
+            set { currentTool = value; }
+        }
 
         public bool IsToolActive
         {
@@ -58,9 +68,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 if (value)
+                {
+                    CurrentTool = FrameworkApplication.CurrentTool;
                     OnMapToolCommand(null);
+                }  
                 else
-                    FrameworkApplication.SetCurrentToolAsync(string.Empty);
+                    FrameworkApplication.SetCurrentToolAsync(CurrentTool);
 
                 RaisePropertyChanged(() => IsToolActive);
             }
