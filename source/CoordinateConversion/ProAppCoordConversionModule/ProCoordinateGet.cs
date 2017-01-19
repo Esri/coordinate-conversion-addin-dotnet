@@ -235,13 +235,12 @@ namespace ProAppCoordConversionModule
                         break;
                     case CoordinateTypes.USNG:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
-                        tgparam.Round = false;
                         tgparam.NumDigits = 5;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.UTM:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
-                        tgparam.GeoCoordMode = ToGeoCoordinateMode.Default;
+                        tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     default:
