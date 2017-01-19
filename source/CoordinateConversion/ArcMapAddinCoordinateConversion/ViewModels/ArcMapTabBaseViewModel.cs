@@ -69,8 +69,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 RaisePropertyChanged(() => IsToolActive);
 
-                Mediator.NotifyColleagues("IsMapPointToolActive", value);
-                
+                Mediator.NotifyColleagues("IsMapPointToolActive", value);                
             }
         }
 
