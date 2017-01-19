@@ -35,18 +35,12 @@ namespace ProAppCoordConversionModule
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
-
         }
 
         protected override Task OnToolActivateAsync(bool active)
         {
             ContextMenuID = "esri_mapping_popupToolContextMenu";
             return base.OnToolActivateAsync(active);
-        }
-
-        protected override Task OnToolDeactivateAsync(bool hasMapViewChanged)
-        {
-            return base.OnToolDeactivateAsync(hasMapViewChanged);
         }
 
         protected override Task<bool> OnSketchCompleteAsync(Geometry geometry)
