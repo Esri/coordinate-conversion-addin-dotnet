@@ -37,7 +37,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             // commands
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
-            
+            PreviewKeyDownCommand = new RelayCommand(OnPreviewKeyDownCommand);
+
             CurrentTool = ArcMap.Application.CurrentTool;
             
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
@@ -59,11 +60,41 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             set { currentTool = value; }
         }
 
+        public bool IsToolActive
+        {
+            get
+            {
+                if (ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_MapPointTool";
+
+                return false;
+            }
+            set
+            {
+                if (value)
+                {
+                    CurrentTool = ArcMap.Application.CurrentTool;
+                    OnActivatePointToolCommand(null);
+                }
+                else
+                    ArcMap.Application.CurrentTool = CurrentTool;
+
+                RaisePropertyChanged(() => IsToolActive);
+
+                Mediator.NotifyColleagues("IsMapPointToolActive", value);
+
+            }
+        }
+
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
         
         internal void OnActivatePointToolCommand(object obj)
         {
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
+        }
+
+        internal virtual void OnPreviewKeyDownCommand(object obj)
+        {
         }
 
         internal virtual void OnFlashPointCommand(object obj)
