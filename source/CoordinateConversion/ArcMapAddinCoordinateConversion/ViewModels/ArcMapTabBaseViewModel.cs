@@ -33,6 +33,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 {
     public class ArcMapTabBaseViewModel : TabBaseViewModel
     {
+        // This name should correlate to the name specified in Config.esriaddinx - Tool id="Esri_ArcMapAddinCoordinateConversion_MapPointTool"
+        internal const string MapPointToolName = "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+
         public ArcMapTabBaseViewModel()
         {
             // commands
@@ -52,39 +55,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
-        //public bool IsToolActive
-        //{
-        //    get
-        //    {
-        //        if (ArcMap.Application.CurrentTool != null)
-        //            return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
-
-        //        return false;
-        //    }
-
-        //    set
-        //    {
-        //        if (value)
-        //        {
-        //            MessageBox.Show("MapPoint Tool is Active");
-        //            CurrentTool = ArcMap.Application.CurrentTool;
-        //            OnActivatePointToolCommand(null);
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("MapPoint Tool is NOT Active");
-        //            ArcMap.Application.CurrentTool = CurrentTool;
-        //        }
-                    
-
-        //        RaisePropertyChanged(() => IsToolActive);
-        //        Mediator.NotifyColleagues("IsMapPointToolActive", value);
-        //    }
-        //}
-
         internal void OnActivatePointToolCommand(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
+            SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
         }
 
         internal virtual void OnFlashPointCommand(object obj)

@@ -51,7 +51,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             get
             {
                 if (ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+                    return ArcMap.Application.CurrentTool.Name.ToLower() == MapPointToolName.ToLower();
 
                 return false;
             }
@@ -60,20 +60,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 if (value)
                 {
-                    MessageBox.Show("MapPoint Tool is Active");
                     CurrentTool = ArcMap.Application.CurrentTool;
                     OnActivateTool(null);
                 }
                 else
                 {
-                    MessageBox.Show("MapPoint Tool is NOT Active");
                     ArcMap.Application.CurrentTool = CurrentTool;
                 }
 
-                if (CurrentTool != null)
-                    MessageBox.Show(string.Format("Current tool is {0}", ArcMap.Application.CurrentTool.Name));
-                else
-                    MessageBox.Show("CurrentTool is null");
                 RaisePropertyChanged(() => IsToolActive);
                 Mediator.NotifyColleagues("IsMapPointToolActive", value);
             }
@@ -85,7 +79,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, "Esri_ArcMapAddinCoordinateConversion_MapPointTool");
+            SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
         }
  
 
