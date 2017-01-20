@@ -51,6 +51,31 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
+        public bool IsToolActive
+        {
+            get
+            {
+                if (ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+
+                return false;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    CurrentTool = ArcMap.Application.CurrentTool;
+                    OnActivatePointToolCommand(null);
+                }
+                else
+                    ArcMap.Application.CurrentTool = CurrentTool;
+
+                RaisePropertyChanged(() => IsToolActive);
+                Mediator.NotifyColleagues("IsMapPointToolActive", value);
+            }
+        }
+
         internal void OnActivatePointToolCommand(object obj)
         {
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
