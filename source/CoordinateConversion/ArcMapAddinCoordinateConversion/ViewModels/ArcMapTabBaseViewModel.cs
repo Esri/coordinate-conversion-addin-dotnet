@@ -52,35 +52,35 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
-        public bool IsToolActive
-        {
-            get
-            {
-                if (ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+        //public bool IsToolActive
+        //{
+        //    get
+        //    {
+        //        if (ArcMap.Application.CurrentTool != null)
+        //            return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
 
-                return false;
-            }
+        //        return false;
+        //    }
 
-            set
-            {
-                if (value)
-                {
-                    MessageBox.Show("MapPoint Tool is Active");
-                    CurrentTool = ArcMap.Application.CurrentTool;
-                    OnActivatePointToolCommand(null);
-                }
-                else
-                {
-                    MessageBox.Show("MapPoint Tool is NOT Active");
-                    ArcMap.Application.CurrentTool = CurrentTool;
-                }
+        //    set
+        //    {
+        //        if (value)
+        //        {
+        //            MessageBox.Show("MapPoint Tool is Active");
+        //            CurrentTool = ArcMap.Application.CurrentTool;
+        //            OnActivatePointToolCommand(null);
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("MapPoint Tool is NOT Active");
+        //            ArcMap.Application.CurrentTool = CurrentTool;
+        //        }
                     
 
-                RaisePropertyChanged(() => IsToolActive);
-                Mediator.NotifyColleagues("IsMapPointToolActive", value);
-            }
-        }
+        //        RaisePropertyChanged(() => IsToolActive);
+        //        Mediator.NotifyColleagues("IsMapPointToolActive", value);
+        //    }
+        //}
 
         internal void OnActivatePointToolCommand(object obj)
         {
