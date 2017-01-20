@@ -45,30 +45,30 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
 
-        public bool IsToolActive
-        {
-            get
-            {
-                if (ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+        //public bool IsToolActive
+        //{
+        //    get
+        //    {
+        //        if (ArcMap.Application.CurrentTool != null)
+        //            return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
  
-                return false;
-            }
+        //        return false;
+        //    }
  
-            set
-            {
-                if (value)
-                {
-                    CurrentTool = ArcMap.Application.CurrentTool;
-                    OnActivatePointToolCommand(null);
-                }                   
-                else
-                    ArcMap.Application.CurrentTool = CurrentTool;
+        //    set
+        //    {
+        //        if (value)
+        //        {
+        //            CurrentTool = ArcMap.Application.CurrentTool;
+        //            OnActivatePointToolCommand(null);
+        //        }                   
+        //        else
+        //            ArcMap.Application.CurrentTool = CurrentTool;
 
-                RaisePropertyChanged(() => IsToolActive);
-                Mediator.NotifyColleagues("IsMapPointToolActive", value);
-            }
-        }
+        //        RaisePropertyChanged(() => IsToolActive);
+        //        Mediator.NotifyColleagues("IsMapPointToolActive", value);
+        //    }
+        //}
  
         /// <summary>
         /// Activates the map tool to get map points from mouse clicks/movement
