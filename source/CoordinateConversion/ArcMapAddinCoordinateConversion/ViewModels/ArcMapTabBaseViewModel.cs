@@ -27,6 +27,7 @@ using ArcMapAddinCoordinateConversion.Helpers;
 using System.Globalization;
 using System.Windows.Input;
 using ESRI.ArcGIS.Framework;
+using System.Windows.Forms;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -65,11 +66,16 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 if (value)
                 {
+                    MessageBox.Show("MapPoint Tool is Active");
                     CurrentTool = ArcMap.Application.CurrentTool;
                     OnActivatePointToolCommand(null);
                 }
                 else
+                {
+                    MessageBox.Show("MapPoint Tool is NOT Active");
                     ArcMap.Application.CurrentTool = CurrentTool;
+                }
+                    
 
                 RaisePropertyChanged(() => IsToolActive);
                 Mediator.NotifyColleagues("IsMapPointToolActive", value);
