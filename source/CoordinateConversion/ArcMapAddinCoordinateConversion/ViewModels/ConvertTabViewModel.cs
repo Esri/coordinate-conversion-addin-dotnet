@@ -51,7 +51,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             get
             {
                 if (ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+                    return ArcMap.Application.CurrentTool.Name.ToLower() == MapPointToolName.ToLower();
 
                 return false;
             }
@@ -79,7 +79,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, "Esri_ArcMapAddinCoordinateConversion_MapPointTool");
+            SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
         }
  
 
