@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDMS : CoordinateBase
     {
-        public CoordinateDMS() { LatDegrees = 40; LatMinutes = 7; LatSeconds = 22.68; LonDegrees = -78; LonMinutes = 27; LonSeconds = 21.27; }
+        public CoordinateDMS() { LatDegrees = 40; LatMinutes = 7; LatSeconds = 22.8; LonDegrees = -78; LonMinutes = 27; LonSeconds = 21.6; }
 
         public CoordinateDMS(int latd, int latm, double lats, int lond, int lonm, double lons)
         {
@@ -90,15 +90,13 @@ namespace CoordinateConversionLibrary.Models
 
             if (string.IsNullOrWhiteSpace(input))
                 return false;
-
+            
             input = input.Trim();
-            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDMS = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>\-*\d{1,3})?[°˚º^~*\s\-_]+(?<latitudeM>\d+)['′]*[ _-]*(?<latitudeS>(?=\d+[.,:]\d+)(\d+[.,:]\d*)|(\d+))[""]*(?<firstSuffix>[NSEW])?[,\s |\/\\]*[+]*(?<lastPrefix>[NSEW])?(?<longitudeD>\-*\d{1,3})?[°˚º^~*\s\-_]+(?<longitudeM>\d+)['′]?[_ -]*(?<longitudeS>\d+[.,:]?\d*)[""]*(?<lastSuffix>[NSEW])?", RegexOptions.ExplicitCapture);
+            Regex regexDMS = new Regex("^ *[+]*(?<firstPrefix>[NSEW])?(?<latitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<latitudeM>[^NSEW' ,:]*)?[' ,:]*(?<latitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<firstSuffix>[NSEW])? *[+,]*(?<lastPrefix>[NSEW])?(?<longitudeD>[^NSEWDd*° ,:]*)?[Dd*° ,:]*(?<longitudeM>[^NSEW' ,:]*)?[' ,:]*(?<longitudeS>[^NSEW\\\" ,:]*)?[\\\" ,:]*(?<lastPrefix>[NSEW])?[\\\"]*", RegexOptions.ExplicitCapture);
 
             var matchDMS = regexDMS.Match(input);
-
+            
             if (matchDMS.Success && matchDMS.Length == input.Length)
             {
                 if (ValidateNumericCoordinateMatch(matchDMS, new string[] { "latitudeD", "latitudeM", "latitudeS", "longitudeD", "longitudeM", "longitudeS" }))
@@ -111,12 +109,12 @@ namespace CoordinateConversionLibrary.Models
                         var lastSuffix = matchDMS.Groups["lastSuffix"];
 
                         // Don't allow both prefix and suffix for lat or lon
-                        if ((firstPrefix.Success && firstSuffix.Success) && (firstPrefix.Length > 0 && firstSuffix.Length > 0))
+                        if (firstPrefix.Success && firstSuffix.Success)
                         {
                             return false;
                         }
 
-                        if ((lastPrefix.Success && lastSuffix.Success) && (lastPrefix.Length > 0 && lastSuffix.Length > 0))
+                        if (lastPrefix.Success && lastSuffix.Success)
                         {
                             return false;
                         }
@@ -190,10 +188,7 @@ namespace CoordinateConversionLibrary.Models
                         {
                             LonDegrees = Math.Abs(LonDegrees) * -1;
                         }
-                        if ((Math.Abs(LatDegrees) > 90.0) && (Math.Abs(LonDegrees) > 90.0))
-                        {
-                            return false;
-                        }
+
                         dms = new CoordinateDMS(LatDegrees, LatMinutes, LatSeconds, LonDegrees, LonMinutes, LonSeconds);
                     }
                     catch
@@ -242,7 +237,7 @@ namespace CoordinateConversionLibrary.Models
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDMS)
-            {       
+            {
                 if (string.IsNullOrWhiteSpace(format))
                 {
                     return this.Format("A0°B0'C0.00\"N X0°Y0'Z0.00\"E", arg, this);

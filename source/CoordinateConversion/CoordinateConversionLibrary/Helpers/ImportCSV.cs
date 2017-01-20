@@ -17,7 +17,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System;
-using System.Text.RegularExpressions;
 
 namespace CoordinateConversionLibrary.Helpers
 {
@@ -39,7 +38,7 @@ namespace CoordinateConversionLibrary.Helpers
 
     public class ImportCSV
     {
-        public static List<string> GetHeaders(Stream stream)
+        public static List<string> GetHeaders(Stream stream, char seperator)
         {
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -47,40 +46,25 @@ namespace CoordinateConversionLibrary.Helpers
                 if (string.IsNullOrEmpty(line))
                     return null;
 
-                return line.Split(GetSeparator(line)).ToList();
+                return line.Split(seperator).ToList();
             }
 
             return null;
         }
 
-        private static char GetSeparator(string line)
-        {
-            Regex regexDD = new Regex(@"^(.+)(?<sep>[,;:| \t])(.+)");
-            var matchSep = regexDD.Match(line);
-            if (matchSep.Success && matchSep.Length == line.Length)
-            {
-                var sep = matchSep.Groups["sep"];
-                if (sep.Success)
-                    return char.Parse(sep.Value);
-            }
-            return '\0';
-        }
-
-        public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames) where T : new()
+        public static IEnumerable<T> Import<T>(Stream stream, char seperator, string[] fieldNames) where T : new()
         {
             List<T> list = new List<T>();
-            char sep = '\0';
+
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     return list;
 
-                var charSep = sep != '\0' ? sep : GetSeparator(line);
-
-                string[] row = line.Split(charSep);
+                string[] row = line.Split(seperator);
                 List<ImportDescriptor> headers = ParseHeader<T>(row, fieldNames);
-                while (ImportLine(reader, headers, list, row.Count(), charSep)) ;
+                while (ImportLine(reader, headers, list, row.Count(), seperator)) ;
             }
 
             return list;
@@ -140,7 +124,7 @@ namespace CoordinateConversionLibrary.Helpers
             throw new Exception("Import was unable to convert [" + name + "] string (" + value + ") to " + type);
         }
 
-        private static bool ImportLine<T>(StreamReader reader, List<ImportDescriptor> headers, List<T> list, int nColumns, char separator) where T : new()
+        private static bool ImportLine<T>(StreamReader reader, List<ImportDescriptor> headers, List<T> list, int nColumns, char seperator) where T : new()
         {
             List<string> row = new List<string>();
             string line = string.Empty;
@@ -158,7 +142,7 @@ namespace CoordinateConversionLibrary.Helpers
 
                     return false; // end of file
                 }
-                line = AddToRow(line + temp, row, separator, nColumns);
+                line = AddToRow(line + temp, row, seperator, nColumns);
             }
 
             if (row.Count() == nColumns || LastColumnIsEmpty(nColumns, row))
@@ -178,7 +162,7 @@ namespace CoordinateConversionLibrary.Helpers
         // This function will split the string at ; and handle escape chars etc.
         // The output is put in row.
         // if the whole line was not passed, then the remaining line will be returned.
-        private static string AddToRow(string line, List<string> row, char separator, int nColumns)
+        private static string AddToRow(string line, List<string> row, char seperator, int nColumns)
         {
 
             bool bSpecial = false;
@@ -189,16 +173,16 @@ namespace CoordinateConversionLibrary.Helpers
                 // only if the line does not start with NewLine or special shall we look for Escape sequence that will start a new quouted line.
                 if (!line.StartsWith(Environment.NewLine) && !bSpecial && !line.StartsWith("\""))
                 {
-                    pos = line.IndexOf(separator + "\""); // start of string section
+                    pos = line.IndexOf(seperator + "\""); // start of string section
                     if (pos == -1)
                     {
-                        row.AddRange(line.Split(separator));
+                        row.AddRange(line.Split(seperator));
                         return string.Empty;
                     }
 
                     if (pos > 0)
                     {
-                        row.AddRange(line.Substring(0, pos).Split(separator));
+                        row.AddRange(line.Substring(0, pos).Split(seperator));
                         line = line.Substring(pos + 2);
                     }
                     else if (pos == 0)
@@ -211,7 +195,7 @@ namespace CoordinateConversionLibrary.Helpers
                 // now look for end of escape sequence.
                 // we will only get here if start of a quoted sequence was found
                 // now replace all double quotes with single quotes ...
-                pos = line.IndexOf("\"" + separator); // end of string section.
+                pos = line.IndexOf("\"" + seperator); // end of string section.
                 if (pos == -1)
                 {
                     // special case when the "; is not found at the end of the line because the quoated string is the last column
@@ -236,9 +220,9 @@ namespace CoordinateConversionLibrary.Helpers
                 // we know that an end "; was found.
                 // now check if this is inside the string or the ned of it.
                 bSpecial = false;
-                if (!FindQuotedEnd(ref line, row, separator))
+                if (!FindQuotedEnd(ref line, row, seperator))
                 {
-                    line = line.Substring(0, pos).Replace("\"\"", "\"") + "\" " + separator + line.Substring(pos + 3);
+                    line = line.Substring(0, pos).Replace("\"\"", "\"") + "\" " + seperator + line.Substring(pos + 3);
                     bSpecial = true;
                 }
 
@@ -252,14 +236,14 @@ namespace CoordinateConversionLibrary.Helpers
         // if double quotes are just before ; then it is not end of quotes string.
         // This method only return true if it finds the real end of the quoted string.
         // note when it finds the ned it also add the string to row
-        private static bool FindQuotedEnd(ref string line, List<string> row, char separator)
+        private static bool FindQuotedEnd(ref string line, List<string> row, char seperator)
         {
-            int pos1 = line.IndexOf("\"" + separator);
-            int pos2 = line.IndexOf("\"\"\"" + separator);
-            int pos3 = line.IndexOf("\"" + separator + "\"" + separator);
+            int pos1 = line.IndexOf("\"" + seperator);
+            int pos2 = line.IndexOf("\"\"\"" + seperator);
+            int pos3 = line.IndexOf("\"" + seperator + "\"" + seperator);
             if (pos3 == 0)
             {
-                row.Add(";");  // very special case/error when column contain just one separator (;) -- we handle it gracefully.
+                row.Add(";");  // very special case/error when column contain just one seperator (;) -- we handle it gracefully.
                 line = line.Substring(4);
                 return true;
             }

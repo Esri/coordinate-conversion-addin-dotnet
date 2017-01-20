@@ -28,31 +28,18 @@ namespace CoordinateConversionLibrary.ViewModels
         }
         public ObservableCollection<string> AvailableFields { get; set; }
         public List<string> SelectedFields { get; set; }
-        private bool useTwoFields = false;
-        public bool UseTwoFields
-        {
-            get { return useTwoFields; }
+        public string SelectedInputType { get; set; }
+        private int selectedInputTypeIndex = 0;
+        public int SelectedInputTypeIndex
+        { 
+            get { return selectedInputTypeIndex; } 
             set
             {
-                useTwoFields = value;
-                LabelField = useTwoFields ? Properties.Resources.LabelField1 : Properties.Resources.LabelFieldCombined;
-                RaisePropertyChanged(() => UseTwoFields);
+                selectedInputTypeIndex = value;
+                RaisePropertyChanged(() => SelectedInputTypeIndex);
                 RaisePropertyChanged(() => IsDialogComplete);
             }
         }
-
-        private string labelField = Properties.Resources.LabelFieldCombined;
-        public string LabelField
-        {
-            get { return labelField; }
-            set
-            {
-                labelField = value;
-                RaisePropertyChanged(() => labelField);
-                RaisePropertyChanged(() => IsDialogComplete);
-            }
-        }
-
         private string selectedField1 = string.Empty;
         public string SelectedField1 
         {
@@ -80,10 +67,10 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             get
             {
-                if (!UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField1))
+                if (SelectedInputTypeIndex == 0 && !string.IsNullOrWhiteSpace(SelectedField1))
                     return true;
 
-                if (UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField1) && !string.IsNullOrWhiteSpace(SelectedField2))
+                if (SelectedInputTypeIndex == 1 && !string.IsNullOrWhiteSpace(SelectedField1) && !string.IsNullOrWhiteSpace(SelectedField2))
                     return true;
 
                 return false;
@@ -109,11 +96,19 @@ namespace CoordinateConversionLibrary.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
-            if (!string.IsNullOrWhiteSpace(SelectedField1))
-                SelectedFields.Add(SelectedField1);
+            if(SelectedInputTypeIndex == 0 || SelectedInputType == "Single Field")
+            {
+                if(!string.IsNullOrWhiteSpace(SelectedField1))
+                    SelectedFields.Add(SelectedField1);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(SelectedField1))
+                    SelectedFields.Add(SelectedField1);
 
-            if (UseTwoFields && !string.IsNullOrWhiteSpace(SelectedField2))
-                SelectedFields.Add(SelectedField2);
+                if (!string.IsNullOrWhiteSpace(SelectedField2))
+                    SelectedFields.Add(SelectedField2);
+            }
 
             // close dialog
             DialogResult = true;

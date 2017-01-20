@@ -163,7 +163,7 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     Project(srFactoryCode);
                     var cn = Point as IConversionNotation;
-                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
+                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces|esriUTMConversionOptionsEnum.esriUTMUseNS);
                     return true;
                 }
                 catch { }
@@ -235,7 +235,7 @@ namespace ArcMapAddinCoordinateConversion
             if (Point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
+            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
 
             if (Point.SpatialReference == null)
                 return result;
@@ -254,9 +254,9 @@ namespace ArcMapAddinCoordinateConversion
                     case CoordinateTypes.DMS:
                         result = cn.GetDMSFromCoords(2);
                         break;
-                    //case CoordinateTypes.GARS:
-                    //    result = cn.GetGARSFromCoords();
-                    //    break;
+                    case CoordinateTypes.GARS:
+                        result = cn.GetGARSFromCoords();
+                        break;
                     case CoordinateTypes.MGRS:
                         result = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                         break;
@@ -264,7 +264,7 @@ namespace ArcMapAddinCoordinateConversion
                         result = cn.GetUSNGFromCoords(5, true, true);
                         break;
                     case CoordinateTypes.UTM:
-                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
+                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces | esriUTMConversionOptionsEnum.esriUTMUseNS);
                         break;
                     default:
                         break;

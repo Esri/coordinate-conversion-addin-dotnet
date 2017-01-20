@@ -367,7 +367,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X.
+        ///   Looks up a localized string similar to Field 1.
         /// </summary>
         public static string LabelField1 {
             get {
@@ -376,20 +376,11 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y.
+        ///   Looks up a localized string similar to Field 2.
         /// </summary>
         public static string LabelField2 {
             get {
                 return ResourceManager.GetString("LabelField2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to X/Y.
-        /// </summary>
-        public static string LabelFieldCombined {
-            get {
-                return ResourceManager.GetString("LabelFieldCombined", resourceCulture);
             }
         }
         
@@ -583,7 +574,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Fields.
+        ///   Looks up a localized string similar to Select Coordinate Fields.
         /// </summary>
         public static string TitleSelectCoordinateFields {
             get {
@@ -642,24 +633,6 @@ namespace CoordinateConversionLibrary.Properties {
         public static string TooltipMapPointTool {
             get {
                 return ResourceManager.GetString("TooltipMapPointTool", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ImportCSV.GetSeparator(): Unrecognized field delimter..
-        /// </summary>
-        public static string UnrecognizedDelimiter {
-            get {
-                return ResourceManager.GetString("UnrecognizedDelimiter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use two fields.
-        /// </summary>
-        public static string UseTwoFields {
-            get {
-                return ResourceManager.GetString("UseTwoFields", resourceCulture);
             }
         }
     }

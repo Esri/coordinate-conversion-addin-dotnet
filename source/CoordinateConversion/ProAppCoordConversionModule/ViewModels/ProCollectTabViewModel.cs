@@ -94,7 +94,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
-                UpdateHighlightedGraphics();
+                //UpdateHighlightedGraphics();
             }
         }
 
@@ -108,7 +108,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
                 RaisePropertyChanged(() => ListBoxSelectedIndex);
-                UpdateHighlightedGraphics();
+                //UpdateHighlightedGraphics();
             }
         }
 
@@ -204,18 +204,19 @@ namespace ProAppCoordConversionModule.ViewModels
                     else
                         s.HaloSize = 0;
                     
-                    var result = await QueuedTask.Run(() =>
-                    {
-                        var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
-                        return temp;
-                    });
+                    // Not available at 1.2
+                    //var result = await QueuedTask.Run(() =>
+                    //{
+                    //    var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
+                    //    return temp;
+                    //});
                 }
             }
         }
 
         private async void AddCollectionPoint(MapPoint point)
         {
-            var guid = await AddGraphicToMap(point, ColorFactory.RedRGB, true, 7);
+            var guid = await AddGraphicToMap(point, ColorFactory.Red, true, 7);
             var addInPoint = new AddInPoint() { Point = point, GUID = guid };
             CoordinateAddInPoints.Add(addInPoint);
         }
@@ -257,14 +258,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #region overrides
 
-        internal override void OnFlashPointCommandAsync(object obj)
+        internal override void OnFlashPointCommand(object obj)
         {
             if (ListBoxItemAddInPoint != null)
             {
                 var geometry = ListBoxItemAddInPoint.Point;
                 ListBoxItemAddInPoint = null;
 
-                base.OnFlashPointCommandAsync(geometry);
+                base.OnFlashPointCommand(geometry);
             }
         }
 

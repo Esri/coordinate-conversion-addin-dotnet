@@ -254,71 +254,64 @@ namespace ArcMapAddinCoordinateConversion.Helpers
 
         private static void DrawCrossHair(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IDisplay display, IEnvelope extent, ISymbol markerSymbol, ISymbol lineSymbol)
         {
-            try
+            var point = geometry as IPoint;
+            var numSegments = 10;
+
+            var latitudeMid = point.Y;//envelope.YMin + ((envelope.YMax - envelope.YMin) / 2);
+            var longitudeMid = point.X;
+            var leftLongSegment = (point.X - extent.XMin) / numSegments;
+            var rightLongSegment = (extent.XMax - point.X) / numSegments;
+            var topLatSegment = (extent.YMax - point.Y) / numSegments;
+            var bottomLatSegment = (point.Y - extent.YMin) / numSegments;
+            var fromLeftLong = extent.XMin;
+            var fromRightLong = extent.XMax;
+            var fromTopLat = extent.YMax;
+            var fromBottomLat = extent.YMin;
+            var av = (ArcMap.Application.Document as IMxDocument).ActiveView;
+
+            var leftPolyline = new PolylineClass();
+            var rightPolyline = new PolylineClass();
+            var topPolyline = new PolylineClass();
+            var bottomPolyline = new PolylineClass();
+
+            leftPolyline.SpatialReference = geometry.SpatialReference;
+            rightPolyline.SpatialReference = geometry.SpatialReference;
+            topPolyline.SpatialReference = geometry.SpatialReference;
+            bottomPolyline.SpatialReference = geometry.SpatialReference;
+
+            var leftPC = leftPolyline as IPointCollection;
+            var rightPC = rightPolyline as IPointCollection;
+            var topPC = topPolyline as IPointCollection;
+            var bottomPC = bottomPolyline as IPointCollection;
+
+            leftPC.AddPoint(new PointClass() { X = fromLeftLong, Y = latitudeMid });
+            rightPC.AddPoint(new PointClass() { X = fromRightLong, Y = latitudeMid });
+            topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat });
+            bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat });
+
+            for (int x = 1; x <= numSegments; x++)
             {
-                var point = geometry as IPoint;
-                var numSegments = 10;
+                //Flash the input polygon geometry.
+                display.SetSymbol(markerSymbol);
+                display.SetSymbol(lineSymbol);
 
-                var latitudeMid = point.Y;//envelope.YMin + ((envelope.YMax - envelope.YMin) / 2);
-                var longitudeMid = point.X;
-                var leftLongSegment = (point.X - extent.XMin) / numSegments;
-                var rightLongSegment = (extent.XMax - point.X) / numSegments;
-                var topLatSegment = (extent.YMax - point.Y) / numSegments;
-                var bottomLatSegment = (point.Y - extent.YMin) / numSegments;
-                var fromLeftLong = extent.XMin;
-                var fromRightLong = extent.XMax;
-                var fromTopLat = extent.YMax;
-                var fromBottomLat = extent.YMin;
-                var av = (ArcMap.Application.Document as IMxDocument).ActiveView;
+                leftPC.AddPoint(new PointClass() { X = fromLeftLong + leftLongSegment * x, Y = latitudeMid });
+                rightPC.AddPoint(new PointClass() { X = fromRightLong - rightLongSegment * x, Y = latitudeMid });
+                topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat - topLatSegment * x });
+                bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat + bottomLatSegment * x });
 
-                var leftPolyline = new PolylineClass();
-                var rightPolyline = new PolylineClass();
-                var topPolyline = new PolylineClass();
-                var bottomPolyline = new PolylineClass();
+                // draw
+                display.DrawPolyline(leftPolyline);
+                display.DrawPolyline(rightPolyline);
+                display.DrawPolyline(topPolyline);
+                display.DrawPolyline(bottomPolyline);
 
-                leftPolyline.SpatialReference = geometry.SpatialReference;
-                rightPolyline.SpatialReference = geometry.SpatialReference;
-                topPolyline.SpatialReference = geometry.SpatialReference;
-                bottomPolyline.SpatialReference = geometry.SpatialReference;
-
-                var leftPC = leftPolyline as IPointCollection;
-                var rightPC = rightPolyline as IPointCollection;
-                var topPC = topPolyline as IPointCollection;
-                var bottomPC = bottomPolyline as IPointCollection;
-
-                leftPC.AddPoint(new PointClass() { X = fromLeftLong, Y = latitudeMid });
-                rightPC.AddPoint(new PointClass() { X = fromRightLong, Y = latitudeMid });
-                topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat });
-                bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat });
-
-                for (int x = 1; x <= numSegments; x++)
-                {
-                    //Flash the input polygon geometry.
-                    display.SetSymbol(markerSymbol);
-                    display.SetSymbol(lineSymbol);
-
-                    leftPC.AddPoint(new PointClass() { X = fromLeftLong + leftLongSegment * x, Y = latitudeMid });
-                    rightPC.AddPoint(new PointClass() { X = fromRightLong - rightLongSegment * x, Y = latitudeMid });
-                    topPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromTopLat - topLatSegment * x });
-                    bottomPC.AddPoint(new PointClass() { X = longitudeMid, Y = fromBottomLat + bottomLatSegment * x });
-
-                    // draw
-                    display.DrawPolyline(leftPolyline);
-                    display.DrawPolyline(rightPolyline);
-                    display.DrawPolyline(topPolyline);
-                    display.DrawPolyline(bottomPolyline);
-
-                    System.Threading.Thread.Sleep(15);
-                    display.FinishDrawing();
-                    av.PartialRefresh(esriViewDrawPhase.esriViewForeground, null, null);
-                    //av.Refresh();
-                    System.Windows.Forms.Application.DoEvents();
-                    display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
-                }
-            }
-            catch(Exception ex)
-            {
-
+                System.Threading.Thread.Sleep(15);
+                display.FinishDrawing();
+                av.PartialRefresh(esriViewDrawPhase.esriViewForeground, null, null);
+                //av.Refresh();
+                System.Windows.Forms.Application.DoEvents();
+                display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
             }
         }
 

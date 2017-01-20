@@ -1,5 +1,5 @@
 ﻿<ArcGIS defaultAssembly="CoordinateConversion.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0.2" desktopVersion="1.2.4905">
+  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0" desktopVersion="1.2.4905">
     <Name>Coordinate Conversion</Name>
     <Description>Quickly convert coordinate between several formats</Description>
     <Image>Images\AddinDesktop32.png</Image>
@@ -37,8 +37,8 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Convert Coords" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
-          <tooltip heading="Coordinate Conversion">Convert coordinate notation from one notation format to another.<disabledText /></tooltip>
+        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Coordinate Conversion" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Coordinate Conversion">Show Coordinate Conversion Dockpane<disabledText /></tooltip>
         </button>
         <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="DD" className="ContextCopyDD" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DD Coordinate"></tooltip>
@@ -49,9 +49,9 @@
         <button id="ProAppCoordConversionModule_ContextCopyDMSButton" caption="DMS" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DMS Coordinate"></tooltip>
         </button>
-        <!--<button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy GARS Coordinate"></tooltip>
-        </button>-->
+        </button>
         <button id="ProAppCoordConversionModule_ContextCopyMGRSButton" caption="MGRS" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy MGRS Coordinate"></tooltip>
         </button>

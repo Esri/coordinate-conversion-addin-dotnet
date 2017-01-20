@@ -20,11 +20,10 @@ using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using ArcMapAddinCoordinateConversion.Helpers;
-using System.Windows.Forms;
 
 namespace ArcMapAddinCoordinateConversion
 {
-    public class MapPointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
+    class MapPointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
     {
         ISnappingEnvironment m_SnappingEnv;
         IPointSnapper m_Snapper;
@@ -43,7 +42,7 @@ namespace ArcMapAddinCoordinateConversion
         {
             //Get the snap environment and initialize the feedback
             UID snapUID = new UID();
-            this.Cursor = Cursors.Cross;
+
             snapUID.Value = "{E07B4C52-C894-4558-B8D4-D4050018D1DA}";
             m_SnappingEnv = ArcMap.Application.FindExtensionByCLSID(snapUID) as ISnappingEnvironment;
             m_Snapper = m_SnappingEnv.PointSnapper;
@@ -84,7 +83,6 @@ namespace ArcMapAddinCoordinateConversion
                     point = snapResult.Location;
 
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, point);
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
             catch { }
         }

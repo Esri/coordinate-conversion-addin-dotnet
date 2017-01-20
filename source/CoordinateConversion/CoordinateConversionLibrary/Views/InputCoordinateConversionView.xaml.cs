@@ -1,6 +1,4 @@
-﻿using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,11 +23,6 @@ namespace CoordinateConversionLibrary.Views
         public InputCoordinateConversionView()
         {
             InitializeComponent();
-        }
-
-        private void input_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.ClearOutputCoordinates, null);  
         }
     }
 }

@@ -109,7 +109,6 @@ namespace ProAppCoordConversionModule
                 {
                     // 5 numeric units in MGRS is 1m resolution
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
-                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -127,7 +126,6 @@ namespace ProAppCoordConversionModule
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
                     tgparam.NumDigits = 5;
-                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -198,7 +196,7 @@ namespace ProAppCoordConversionModule
             if (Point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
+            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
 
             if (Point.SpatialReference == null)
                 return result;
@@ -224,13 +222,12 @@ namespace ProAppCoordConversionModule
                         tgparam.NumDigits = 2;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
-                    //case CoordinateTypes.GARS:
-                    //    tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                    //    result = Point.ToGeoCoordinateString(tgparam);
-                    //    break;
+                    case CoordinateTypes.GARS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                        result = Point.ToGeoCoordinateString(tgparam);
+                        break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
-                        tgparam.Round = false;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.USNG:

@@ -283,13 +283,13 @@
     <value>Output</value>
   </data>
   <data name="TitleSelectCoordinateFields" xml:space="preserve">
-    <value>Select Fields</value>
+    <value>Select Coordinate Fields</value>
   </data>
   <data name="LabelField1" xml:space="preserve">
-    <value>X</value>
+    <value>Field 1</value>
   </data>
   <data name="LabelField2" xml:space="preserve">
-    <value>Y</value>
+    <value>Field 2</value>
   </data>
   <data name="LabelInputType" xml:space="preserve">
     <value>Input Type</value>
@@ -308,14 +308,5 @@
   </data>
   <data name="TitleSelectOutput" xml:space="preserve">
     <value>Select output</value>
-  </data>
-  <data name="UnrecognizedDelimiter" xml:space="preserve">
-    <value>ImportCSV.GetSeparator(): Unrecognized field delimter.</value>
-  </data>
-  <data name="UseTwoFields" xml:space="preserve">
-    <value>Use two fields</value>
-  </data>
-  <data name="LabelFieldCombined" xml:space="preserve">
-    <value>X/Y</value>
   </data>
 </root>

@@ -33,10 +33,9 @@ namespace ProAppCoordConversionModule.ViewModels
         public ProTabBaseViewModel()
         {
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
+            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
-            Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
         }
@@ -141,18 +140,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 return GetCoordinateType(input);
             }).Result;
-
+                
 
             if (ccc.Type == CoordinateType.Unknown)
-            {
                 HasInputError = true;
-                proCoordGetter.Point = null;
-                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
-                {
-                    output.OutputCoordinate = "";
-                    output.Props.Clear();
-                }
-            }
             else
             {
                 proCoordGetter.Point = ccc.Point;
@@ -174,23 +165,11 @@ namespace ProAppCoordConversionModule.ViewModels
             BroadcastCoordinateValues(proCoordGetter.Point);
         }
 
-        private void OnFlashCompleted(object obj)
-        {
-            IsToolActive = false;
-        }
-
         #endregion Mediator handlers
 
-        private async Task SetAsCurrentToolAsync()
-        {	
-            await FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
-
-            RaisePropertyChanged(() => IsToolActive);
-        }
-
-        private async void OnMapToolCommand(object obj)
+        private void OnMapToolCommand(object obj)
         {
-            await SetAsCurrentToolAsync();
+            FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
         }
 
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
@@ -213,8 +192,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 await QueuedTask.Run(() =>
                 {
                     var s = SymbolFactory.ConstructPointSymbol(color, size, markerStyle);
-                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.GreenRGB);
-                    haloSymbol.SetOutlineColor(ColorFactory.GreenRGB);
+                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.Green);
+                    haloSymbol.SetOutlineColor(ColorFactory.Green);
                     s.HaloSymbol = haloSymbol;
                     s.HaloSize = 0;
                     symbol = new CIMSymbolReference() { Symbol = s };
@@ -232,7 +211,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await QueuedTask.Run(() =>
                 {
-                    var outline = SymbolFactory.ConstructStroke(ColorFactory.BlackRGB, 1.0, SimpleLineStyle.Solid);
+                    var outline = SymbolFactory.ConstructStroke(ColorFactory.Black, 1.0, SimpleLineStyle.Solid);
                     var s = SymbolFactory.ConstructPolygonSymbol(color, SimpleFillStyle.Solid, outline);
                     symbol = new CIMSymbolReference() { Symbol = s };
                 });
@@ -250,18 +229,81 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
 
-        internal async virtual void OnFlashPointCommandAsync(object obj)
+        internal async virtual void OnFlashPointCommand(object obj)
         {
             var point = obj as MapPoint;
 
             if(point == null)
                 return;
 
+            var previous = IsToolActive;
             if (!IsToolActive)
             {
-                await SetAsCurrentToolAsync();
+                IsToolActive = true;
             }
+
+            //TODO fix this
+            //CoordinateDD dd;
             
+            //if (!CoordinateDD.TryParse(ListBox ctvm.InputCoordinate, out dd))
+            //{
+            //    Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
+
+            //    var matchMercator = regexMercator.Match(ctvm.InputCoordinate);
+
+            //    if (matchMercator.Success && matchMercator.Length == ctvm.InputCoordinate.Length)
+            //    {
+            //        try
+            //        {
+            //            var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+            //            var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+            //            point = QueuedTask.Run(() =>
+            //            {
+            //                return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
+            //            }).Result;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            // do nothing
+            //        }
+            //    }
+            //    else
+            //    {
+            //        return;
+            //    }
+            //}
+
+            //ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
+
+            //TODO fix this also
+            //if (point == null)
+            //{
+            //    point = await QueuedTask.Run(() =>
+            //    {
+            //        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+            //        return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
+            //    });
+            //}
+
+            ////
+
+            //await QueuedTask.Run(() =>
+            //{
+            //    // Construct point symbol
+            //    symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
+            //});
+
+            ////Get symbol reference from the symbol 
+            //CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
+
+            //QueuedTask.Run(() =>
+            //{
+            //    ClearOverlay();
+            //    _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            //});
+
+
             await QueuedTask.Run(() =>
             {
                 // is point within current map extent
@@ -272,6 +314,22 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
+
+            //await QueuedTask.Run(() =>
+            //{
+            //    Task.Delay(500);
+            //    ClearOverlay();
+            //    //_overlayObject = MapView.Active.AddOverlay(point, symbolReference);
+            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
+            //});
+            //if (previous != IsToolActive)
+            //    IsToolActive = previous;
+            //await QueuedTask.Run(() =>
+            //{
+            //    Task.Delay(500);
+            //    ClearOverlay();
+            //    MapView.Active.LookAt(MapView.Active.Extent.Center);
+            //});
         }
 
         #region Private Methods
@@ -412,7 +470,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -421,11 +479,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 try
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);                 
-                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     point = QueuedTask.Run(() =>
                     {
-                        return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
                     }).Result;
                     return CoordinateType.DD;
                 }
@@ -546,7 +603,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -556,10 +613,9 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = await QueuedTask.Run(() =>
                     {
-                        return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, SpatialReferences.WebMercator);
                     });//.Result;
                     return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
                 }

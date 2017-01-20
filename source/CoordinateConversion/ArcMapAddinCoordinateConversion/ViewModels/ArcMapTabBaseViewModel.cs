@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.ArcMapUI;
@@ -24,10 +23,6 @@ using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.ViewModels;
 using ArcMapAddinCoordinateConversion.Helpers;
-using System.Globalization;
-using System.Windows.Input;
-using ESRI.ArcGIS.Framework;
-using System.Windows.Forms;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -47,41 +42,32 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
+
         public CoordinateType InputCoordinateType { get; set; }
-        public ICommandItem CurrentTool { get; set; }
+
+        public bool IsToolActive
+        {
+            get
+            {
+                if (ArcMap.Application.CurrentTool != null)
+                    return ArcMap.Application.CurrentTool.Name == "ESRI_ArcMapAddinCoordinateConversion_MapPointTool";
+
+                return false;
+            }
+            set
+            {
+                if (value)
+                    OnActivatePointToolCommand(null);
+                else
+                    if (ArcMap.Application.CurrentTool != null)
+                        ArcMap.Application.CurrentTool = null;
+
+                RaisePropertyChanged(() => IsToolActive);
+            }
+        }
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
-
-        //public bool IsToolActive
-        //{
-        //    get
-        //    {
-        //        if (ArcMap.Application.CurrentTool != null)
-        //            return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
-
-        //        return false;
-        //    }
-
-        //    set
-        //    {
-        //        if (value)
-        //        {
-        //            MessageBox.Show("MapPoint Tool is Active");
-        //            CurrentTool = ArcMap.Application.CurrentTool;
-        //            OnActivatePointToolCommand(null);
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("MapPoint Tool is NOT Active");
-        //            ArcMap.Application.CurrentTool = CurrentTool;
-        //        }
-                    
-
-        //        RaisePropertyChanged(() => IsToolActive);
-        //        Mediator.NotifyColleagues("IsMapPointToolActive", value);
-        //    }
-        //}
-
+        
         internal void OnActivatePointToolCommand(object obj)
         {
             SetToolActiveInToolBar(ArcMap.Application, "ESRI_ArcMapAddinCoordinateConversion_MapPointTool");
@@ -89,10 +75,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         internal virtual void OnFlashPointCommand(object obj)
         {
-            ProcessInput(InputCoordinate);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
-
             IGeometry address = obj as IGeometry;
 
             if (address == null && amCoordGetter != null && amCoordGetter.Point != null)
@@ -231,15 +213,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             InputCoordinateType = GetCoordinateType(input, out point);
 
             if (InputCoordinateType == CoordinateType.Unknown)
-            {
                 HasInputError = true;
-                amCoordGetter.Point = null;
-                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
-                {
-                    output.OutputCoordinate = "";
-                    output.Props.Clear();
-                }
-            }
             else
             {
                 amCoordGetter.Point = point;
@@ -275,7 +249,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", point.Y, point.X);
         }
 
-        public void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
+        private void SetToolActiveInToolBar(ESRI.ArcGIS.Framework.IApplication application, System.String toolName)
         {
             ESRI.ArcGIS.Framework.ICommandBars commandBars = application.Document.CommandBars;
             ESRI.ArcGIS.esriSystem.UID commandID = new ESRI.ArcGIS.esriSystem.UIDClass();
@@ -422,54 +396,25 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);
 
             point.SpatialReference = geographicCS;
-            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            input = numSep != "." ? input.Replace(numSep, ".") : input;
 
             try
             {
-                CoordinateDD dd;
-                if (CoordinateDD.TryParse(input, out dd))
-                {
-                    // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
-                    // Added InvariantCulture option to ensure the current culture is ignored
-                    string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1}", dd.Lat, dd.Lon);
-                    cn.PutCoordsFromDD(newInput);
-
-                    return CoordinateType.DD;
-                }
+                cn.PutCoordsFromDD(input);
+                return CoordinateType.DD;
             }
             catch { }
 
             try
             {
-                CoordinateDDM ddm;
-                if (CoordinateDDM.TryParse(input, out ddm))
-                {
-                    // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
-                    // Added InvariantCulture option to ensure the current culture is ignored
-                    string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3}", ddm.LatDegrees, ddm.LatMinutes, ddm.LonDegrees, ddm.LonMinutes);
-                    cn.PutCoordsFromDD(newInput);
-
-                    return CoordinateType.DDM;
-                }
+                cn.PutCoordsFromDDM(input);
+                return CoordinateType.DDM;
             }
             catch { }
 
             try
             {
-                CoordinateDMS dms;
-                if (CoordinateDMS.TryParse(input, out dms))
-                {
-                    // Reformat the string for cases where lat/lon have been switched
-                    // PutCoords calls fail if the double uses decimal separator other than a decimal point
-                    // Added InvariantCulture option to ensure the current culture is ignored
-                    string newInput = string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5}", dms.LatDegrees, dms.LatMinutes, dms.LatSeconds, dms.LonDegrees, dms.LonMinutes, dms.LonSeconds);
-                    cn.PutCoordsFromDD(newInput);
-
-                    return CoordinateType.DMS;
-                }
+                cn.PutCoordsFromDMS(input);
+                return CoordinateType.DMS;
             }
             catch { }
 
@@ -591,7 +536,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+\.?\d*)[+,;:\s]*(?<longitude>\-?\d+\.?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 
@@ -601,11 +546,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
-                    var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
                     point.X = Lon;
                     point.Y = Lat;
-                    point.SpatialReference = sr;
+                    point.SpatialReference = ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
                     return CoordinateType.DD;
                 }
                 catch (Exception ex)

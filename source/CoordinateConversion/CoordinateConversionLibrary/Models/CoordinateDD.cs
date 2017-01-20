@@ -24,7 +24,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public class CoordinateDD : CoordinateBase
     {
-        public CoordinateDD() { Lat = 40.378465; Lon = -78.456799; }
+        public CoordinateDD() { Lat = 40.123; Lon = -78.456; }
 
         public CoordinateDD(double lat, double lon)
         {
@@ -41,7 +41,7 @@ namespace CoordinateConversionLibrary.Models
         public CoordinateDD(CoordinateDMS dms)
         {
             Lat = (Math.Abs((double)dms.LatDegrees) + ((double)dms.LatMinutes / 60.0) + (dms.LatSeconds / 3600.0)) * ((dms.LatDegrees < 0) ? -1.0 : 1.0);
-            Lon = (Math.Abs((double)dms.LonDegrees) + ((double)dms.LonMinutes / 60.0) + (dms.LonSeconds / 3600.0)) * ((dms.LonDegrees < 0) ? -1.0 : 1.0);
+            Lon = (Math.Abs((double)dms.LonDegrees) + ((double)dms.LonMinutes / 60.0) + (dms.LatSeconds / 3600.0)) * ((dms.LonDegrees < 0) ? -1.0 : 1.0);
         }
 
         #region Properties
@@ -73,10 +73,8 @@ namespace CoordinateConversionLibrary.Models
                 return false;
 
             input = input.Trim();
-            string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDD = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitude>\-*\d+[,.:]?\d*)[°˚º^~*]*?(?<firstSuffix>[NSEW])*[,:; |\/\\]*[+]*(?<lastPrefix>[NSEW])*(?<longitude>-*\d+[,.:]?\d*)[°˚º^~*]*(?<lastSuffix>[NSEW])*");
+            Regex regexDD = new Regex(@"^ *[+]*(?<firstPrefix>[NSEW])?(?<latitude>[^NSEWDd*° ,]*)?[Dd*°,]*(?<firstSuffix>[NSEW])?[+,;:\s]*(?<lastPrefix>[NSEW])?(?<longitude>[^NSEWDd*° ]*)?[Dd*° ]*(?<lastSuffix>[NSEW])?");
 
             var matchDD = regexDD.Match(input);
 
@@ -129,7 +127,7 @@ namespace CoordinateConversionLibrary.Models
                                                                            lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
                         {
                             coord.Lat = Double.Parse(matchDD.Groups["longitude"].Value);
-                            coord.Lon = Double.Parse(matchDD.Groups["latitude"].Value);      
+                            coord.Lon = Double.Parse(matchDD.Groups["latitude"].Value);
                         }
 
                         // no suffix or prefix was added so allow user to specify longitude first by checking for absolute value greater than 90
@@ -165,7 +163,6 @@ namespace CoordinateConversionLibrary.Models
                         {
                             coord.Lon = Math.Abs(coord.Lon) * -1;
                         }
-
                     }
                     catch
                     {
@@ -173,7 +170,7 @@ namespace CoordinateConversionLibrary.Models
                     }
 
                     return true;
-                }
+                }        
             }
 
             return false;
@@ -201,8 +198,8 @@ namespace CoordinateConversionLibrary.Models
             {
                 case "":
                 case "DD":
-                    sb.AppendFormat(fi, "x = {0:0.0000##}", this.Lon);
-                    sb.AppendFormat(fi, " y = {0:0.0000##}", this.Lat);
+                    sb.AppendFormat(fi, "x = {0:0.0000}", this.Lon);
+                    sb.AppendFormat(fi, " y = {0:0.0000}", this.Lat);
                     break;
                 default:
                     throw new Exception("CoordinateDD.ToString(): Invalid formatting string.");

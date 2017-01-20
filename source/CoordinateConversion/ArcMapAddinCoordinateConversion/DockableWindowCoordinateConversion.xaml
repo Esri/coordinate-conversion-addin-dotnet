@@ -16,6 +16,7 @@
             <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
                 <UserControl Content="{Binding ConvertTabView}" />
             </TabItem>
+            <!-- Removing Tab for 1.2 branch.  Work has not been completed yet. -->
             <!--
             <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
                 <UserControl Content="{Binding CollectTabView}" />

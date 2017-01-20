@@ -16,6 +16,14 @@ using CoordinateConversionLibrary.Properties;
 
 namespace CoordinateConversionLibrary
 {
+    public enum SelectInputTypes : int
+    {
+        [LocalizableDescription(@"EnumSITSF", typeof(Resources))]
+        SingleField = 1,
+
+        [LocalizableDescription(@"EnumSITDF", typeof(Resources))]
+        DualField = 2
+    }
 
     public enum GeomType : int
     {
@@ -42,8 +50,8 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTDMS", typeof(Resources))]
         DMS = 3,
 
-        //[LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
-        //GARS = 4,
+        [LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
+        GARS = 4,
 
         [LocalizableDescription(@"EnumCTMGRS", typeof(Resources))]
         MGRS = 5,

@@ -103,10 +103,9 @@ namespace CoordinateConversionLibrary.ViewModels
                     return;
 
                 _inputCoordinate = value;
+                ProcessInput(_inputCoordinate);
 
-                // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
-                //ProcessInput(_inputCoordinate);
-                //Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
                 RaisePropertyChanged(() => InputCoordinate);
             }
@@ -145,7 +144,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 // attemp to import
                 var fieldVM = new SelectCoordinateFieldsViewModel();
 
-                var headers = ImportCSV.GetHeaders(File.OpenRead(fileDialog.FileName));
+                var headers = ImportCSV.GetHeaders(File.OpenRead(fileDialog.FileName), ',');
                 foreach (var header in headers)
                 {
                     fieldVM.AvailableFields.Add(header);
@@ -156,7 +155,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 dlg.DataContext = fieldVM;
                 if (dlg.ShowDialog() == true)
                 {
-                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(fileDialog.FileName), fieldVM.SelectedFields.ToArray());
+                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(fileDialog.FileName), ',', fieldVM.SelectedFields.ToArray());
 
                     var coordinates = new List<string>();
 
@@ -164,7 +163,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     {
                         var sb = new StringBuilder();
                         sb.Append(item.lat.Trim());
-                        if (fieldVM.UseTwoFields)
+                        if (fieldVM.SelectedInputTypeIndex == 1)
                             sb.Append(string.Format(" {0}", item.lon.Trim()));
 
                         coordinates.Add(sb.ToString());

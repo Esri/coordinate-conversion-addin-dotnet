@@ -49,7 +49,6 @@
     <Compile Include="Helpers\ImportCSV.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
-    <Compile Include="Helpers\Storyboard.cs" />
     <Compile Include="Helpers\Wpf.cs" />
     <Compile Include="Models\CoordinateConversionLibraryConfig.cs" />
     <Compile Include="Models\CoordinateMGRS.cs" />

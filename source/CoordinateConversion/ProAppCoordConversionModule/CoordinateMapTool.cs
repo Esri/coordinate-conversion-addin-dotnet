@@ -98,7 +98,6 @@ namespace ProAppCoordConversionModule
                         var height = (p1.Y - p3.Y) + 1;
                         flashVM.MapWidth = width;
                         flashVM.MapHeight = height;
-                        flashVM.RunFlashAnimation();
                     }
                     return true;
                 }).Result;
@@ -149,7 +148,6 @@ namespace ProAppCoordConversionModule
             if (mp != null)
             {
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
         }
     }

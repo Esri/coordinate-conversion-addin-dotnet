@@ -17,7 +17,6 @@ using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
-using System.Windows.Forms;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -46,56 +45,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand AddNewOCCommand { get; set; }
         public RelayCommand CopyAllCommand { get; set; }
 
-        public bool IsToolActive
-        {
-            get
-            {
-                if (ArcMap.Application.CurrentTool != null)
-                    return ArcMap.Application.CurrentTool.Name == "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
-
-                return false;
-            }
-
-            set
-            {
-                if (value)
-                {
-                    MessageBox.Show("MapPoint Tool is Active");
-                    CurrentTool = ArcMap.Application.CurrentTool;
-                    OnActivateTool(null);
-                }
-                else
-                {
-                    MessageBox.Show("MapPoint Tool is NOT Active");
-                    ArcMap.Application.CurrentTool = CurrentTool;
-                }
-
-                if (CurrentTool != null)
-                    MessageBox.Show(string.Format("Current tool is {0}", ArcMap.Application.CurrentTool.Name));
-                else
-                    MessageBox.Show("CurrentTool is null");
-                RaisePropertyChanged(() => IsToolActive);
-                Mediator.NotifyColleagues("IsMapPointToolActive", value);
-            }
-        }
- 
-        /// <summary>
-        /// Activates the map tool to get map points from mouse clicks/movement
-        /// </summary>
-        /// <param name="obj"></param>
-        internal void OnActivateTool(object obj)
-        {
-            SetToolActiveInToolBar(ArcMap.Application, "Esri_ArcMapAddinCoordinateConversion_MapPointTool");
-        }
- 
-
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
             string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#####N X0.0#####E" });
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
         }
-
+        
         private void OnCopyAllCommand(object obj)
         {
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
@@ -113,7 +69,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 return false;
 
             var formattedInputCoordinate = amCoordGetter.GetInputDisplayString();
-
+            
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool

@@ -35,7 +35,7 @@ namespace ProAppCoordConversionModule.Helpers
             if (mp == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0#####} {1:0.0#####}", mp.Y, mp.X);
+            var result = string.Format("{0:0.0} {1:0.0}", mp.Y, mp.X);
 
             // .ToGeoCoordinate function calls will fail if there is no Spatial Reference
             if (mp.SpatialReference == null)
@@ -62,13 +62,12 @@ namespace ProAppCoordConversionModule.Helpers
                         tgparam.NumDigits = 2;
                         result = mp.ToGeoCoordinateString(tgparam);
                         break;
-                    //case CoordinateTypes.GARS:
-                    //    tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                    //    result = mp.ToGeoCoordinateString(tgparam);
-                    //    break;
+                    case CoordinateTypes.GARS:
+                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                        result = mp.ToGeoCoordinateString(tgparam);
+                        break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
-                        tgparam.Round = false;
                         result = mp.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.USNG:
