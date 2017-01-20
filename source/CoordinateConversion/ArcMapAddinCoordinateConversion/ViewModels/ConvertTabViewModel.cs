@@ -60,20 +60,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 if (value)
                 {
-                    MessageBox.Show("MapPoint Tool is Active");
                     CurrentTool = ArcMap.Application.CurrentTool;
                     OnActivateTool(null);
                 }
                 else
                 {
-                    MessageBox.Show("MapPoint Tool is NOT Active");
                     ArcMap.Application.CurrentTool = CurrentTool;
                 }
 
-                if (CurrentTool != null)
-                    MessageBox.Show(string.Format("Current tool is {0}", ArcMap.Application.CurrentTool.Name));
-                else
-                    MessageBox.Show("CurrentTool is null");
                 RaisePropertyChanged(() => IsToolActive);
                 Mediator.NotifyColleagues("IsMapPointToolActive", value);
             }
