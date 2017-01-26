@@ -36,26 +36,34 @@ namespace ProAppCoordConversionModule
 
         // use base CanGetDD
 
+        public override bool CanGetDD(int srFactoryCode, out string coord)
+        {
+            coord = string.Empty;
+            if (Point != null)
+            {
+                try
+                {
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
         public override bool CanGetDDM(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if(base.CanGetDDM(srFactoryCode, out coord))
+            if (Point != null)
             {
-                return true;
-            }
-            else
-            {
-                if(base.CanGetDD(srFactoryCode, out coord))
+                try
                 {
-                    // convert dd to ddm
-                    CoordinateDD dd;
-                    if(CoordinateDD.TryParse(coord, out dd))
-                    {
-                        var ddm = new CoordinateDDM(dd);
-                        coord = ddm.ToString("", new CoordinateDDMFormatter());
-                        return true;
-                    }
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DDM);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
                 }
+                catch { }
             }
             return false;
         }
@@ -63,23 +71,15 @@ namespace ProAppCoordConversionModule
         public override bool CanGetDMS(int srFactoryCode, out string coord)
         {
             coord = string.Empty;
-            if (base.CanGetDMS(srFactoryCode, out coord))
+            if (Point != null)
             {
-                return true;
-            }
-            else
-            {
-                if (base.CanGetDD(srFactoryCode, out coord))
+                try
                 {
-                    // convert dd to ddm
-                    CoordinateDD dd;
-                    if (CoordinateDD.TryParse(coord, out dd))
-                    {
-                        var dms = new CoordinateDMS(dd);
-                        coord = dms.ToString("", new CoordinateDMSFormatter());
-                        return true;
-                    }
+                    var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DMS);
+                    coord = Point.ToGeoCoordinateString(tgparam);
+                    return true;
                 }
+                catch { }
             }
             return false;
         }
@@ -109,6 +109,7 @@ namespace ProAppCoordConversionModule
                 {
                     // 5 numeric units in MGRS is 1m resolution
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -126,6 +127,7 @@ namespace ProAppCoordConversionModule
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
                     tgparam.NumDigits = 5;
+                    tgparam.Round = false;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -142,7 +144,7 @@ namespace ProAppCoordConversionModule
                 try
                 {
                     var tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.UTM);
-                    tgparam.GeoCoordMode = ToGeoCoordinateMode.UtmNorthSouth;
+                    tgparam.GeoCoordMode = ToGeoCoordinateMode.Default;
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
@@ -196,7 +198,7 @@ namespace ProAppCoordConversionModule
             if (Point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
+            var result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
 
             if (Point.SpatialReference == null)
                 return result;
@@ -205,7 +207,7 @@ namespace ProAppCoordConversionModule
 
             try
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.DD);
@@ -222,12 +224,13 @@ namespace ProAppCoordConversionModule
                         tgparam.NumDigits = 2;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
-                    case CoordinateTypes.GARS:
-                        tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
-                        result = Point.ToGeoCoordinateString(tgparam);
-                        break;
+                    //case CoordinateTypes.GARS:
+                    //    tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.GARS);
+                    //    result = Point.ToGeoCoordinateString(tgparam);
+                    //    break;
                     case CoordinateTypes.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                        tgparam.Round = false;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.USNG:

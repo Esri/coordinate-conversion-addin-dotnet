@@ -1,5 +1,5 @@
-﻿<ArcGIS defaultAssembly="ProAppCoordConversionModule.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0" desktopVersion="1.2.4905">
+﻿<ArcGIS defaultAssembly="CoordinateConversion.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="1.0.2" desktopVersion="1.2.4905">
     <Name>Coordinate Conversion</Name>
     <Description>Quickly convert coordinate between several formats</Description>
     <Image>Images\AddinDesktop32.png</Image>
@@ -31,40 +31,40 @@
         <group id="ProAppCoordConversionModule_Group1" caption="Coordinate Conversion" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" size="large" />
-          <tool refID="ProAppCoordConversionModule_CoordinateMapTool" size="large" />
-          <button refID="ProAppCoordConversionModule_PropertiesButton" size="large" />
+          <!--<tool refID="ProAppCoordConversionModule_CoordinateMapTool" size="large" />
+          <button refID="ProAppCoordConversionModule_PropertiesButton" size="large" />-->
         </group>
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Show" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
-          <tooltip heading="Coordinate Conversion">Show Coordinate Conversion Dockpane<disabledText /></tooltip>
+        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Convert Coords" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Coordinate Conversion">Convert coordinate notation from one notation format to another.<disabledText /></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="Copy DD Coordinate" className="ContextCopyDD" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="DD" className="ContextCopyDD" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DD Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyDDMButton" caption="Copy DDM Coordinate" className="ContextCopyDDM" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyDDMButton" caption="DDM" className="ContextCopyDDM" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DDM Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyDMSButton" caption="Copy DMS Coordinate" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyDMSButton" caption="DMS" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy DMS Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="Copy GARS Coordinate" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <!--<button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy GARS Coordinate"></tooltip>
-        </button>
-        <button id="ProAppCoordConversionModule_ContextCopyMGRSButton" caption="Copy MGRS Coordinate" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        </button>-->
+        <button id="ProAppCoordConversionModule_ContextCopyMGRSButton" caption="MGRS" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy MGRS Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyUSNGButton" caption="Copy USNG Coordinate" className="ContextCopyUSNG" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyUSNGButton" caption="USNG" className="ContextCopyUSNG" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy USNG Coordinate"></tooltip>
         </button>
-        <button id="ProAppCoordConversionModule_ContextCopyUTMButton" caption="Copy UTM Coordinate" className="ContextCopyUTM" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProAppCoordConversionModule_ContextCopyUTMButton" caption="UTM" className="ContextCopyUTM" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Copy UTM Coordinate"></tooltip>
         </button>
-        <tool id="ProAppCoordConversionModule_CoordinateMapTool" caption="Map Point Tool" className="CoordinateMapTool" loadOnClick="true" smallImage="Images\GenericButtonRed16.png" largeImage="Images\GenericButtonRed32.png" condition="esri_mapping_mapPane">
+        <tool id="ProAppCoordConversionModule_CoordinateMapTool" caption="Map Point Tool" className="CoordinateMapTool" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Coordinate Conversion">Map Point Tool<disabledText /></tooltip>
         </tool>
-        <button id="ProAppCoordConversionModule_PropertiesButton" caption="Properties" className="PropertiesButton" loadOnClick="true" smallImage="Images\GenericButtonBlue16.png" largeImage="Images\GenericButtonBlue32.png">
+        <button id="ProAppCoordConversionModule_PropertiesButton" caption="Properties" className="PropertiesButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Coordiante Conversion Properties">Edit Properties<disabledText /></tooltip>
         </button>
       </controls>
@@ -73,51 +73,26 @@
           <content className="CoordinateConversionDockpaneView" />
         </dockPane>
       </dockPanes>
+      <menus>
+        <menu id="ProAppCoordConversionModule_ContextCopyMenu" caption="Copy Coordinate">
+          <button refID="ProAppCoordConversionModule_ContextCopyDDButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyDDMButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyDMSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyGARSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyMGRSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyUSNGButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyUTMButton" />
+        </menu>
+      </menus>
     </insertModule>
     <!-- Update the mapping module. Insert our custom button into the layers existing context menu. -->
     <updateModule refID="esri_mapping">
       <menus>
         <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDDButton" separator="true" />
+          <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
         </updateMenu>
         <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDDButton" separator="true" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDDMButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDDMButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDMSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyDMSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyGARSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyGARSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyMGRSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyMGRSButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyUSNGButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyUSNGButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyUTMButton" separator="false" />
-        </updateMenu>
-        <updateMenu refID="esri_mapping_popupToolContextMenu">
-          <insertButton refID="ProAppCoordConversionModule_ContextCopyUTMButton" separator="false" />
+          <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
         </updateMenu>
       </menus>
     </updateModule>

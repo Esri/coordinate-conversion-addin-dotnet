@@ -59,14 +59,5 @@ namespace ArcMapAddinCoordinateConversion.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Edit Properties.
-        /// </summary>
-        public static string TooltipEditProperties {
-            get {
-                return ResourceManager.GetString("TooltipEditProperties", resourceCulture);
-            }
-        }
     }
 }

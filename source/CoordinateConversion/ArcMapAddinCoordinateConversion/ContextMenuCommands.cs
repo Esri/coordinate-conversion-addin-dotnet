@@ -14,6 +14,8 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using System;
+using System.Linq;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
 using CoordinateConversionLibrary.Models;
@@ -68,17 +70,7 @@ namespace ArcMapAddinCoordinateConversion
                         break;
                 }
 
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                if (doc != null)
-                {
-                    var vm = doc.GetMainVM();
-
-                    if(vm != null)
-                    {
-                        coord = vm.GetFormattedCoordinate(coord, ctype);
-                    }
-                }
+                coord = CoordinateHandler.GetFormattedCoordinate(coord, ctype);
                 
                 System.Windows.Clipboard.SetText(coord);
             }

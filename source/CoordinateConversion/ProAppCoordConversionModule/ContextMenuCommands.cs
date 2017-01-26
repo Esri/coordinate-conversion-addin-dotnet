@@ -15,11 +15,11 @@
   ******************************************************************************/
 
 using System;
+using System.Linq;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Framework;
 using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule
@@ -32,7 +32,7 @@ namespace ProAppCoordConversionModule
 
         internal CoordinateType cType = CoordinateType.Unknown;
 
-        protected async override void OnClick()
+        protected override void OnClick()
         {
             if (MapView.Active == null || MapView.Active.Map == null)
                 return;
@@ -81,6 +81,7 @@ namespace ProAppCoordConversionModule
                         break;
                     case CoordinateType.MGRS:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.MGRS);
+                        tgparam.Round = false;
                         coord = mp.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateType.USNG:
@@ -97,11 +98,7 @@ namespace ProAppCoordConversionModule
                         break;
                 }
 
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-                if (vm != null)
-                {
-                    coord = vm.GetFormattedCoordinate(coord, cType);
-                }
+                coord = CoordinateHandler.GetFormattedCoordinate(coord, cType);
 
                 System.Windows.Clipboard.SetText(coord);
             }

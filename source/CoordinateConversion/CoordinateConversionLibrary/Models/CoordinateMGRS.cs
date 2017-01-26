@@ -72,11 +72,19 @@ namespace CoordinateConversionLibrary.Models
                         mgrs.GS = string.Format("{0}{1}",matchMGRS.Groups["gs1"].Value,matchMGRS.Groups["gs2"].Value);
                         var tempEN = string.Format("{0}{1}",matchMGRS.Groups["numlocation"].Value,matchMGRS.Groups["numlocation2"].Value);
 
-                        if (tempEN.Length % 2 == 0 && tempEN.Length > 0)
+                        if (tempEN.Length > 0)
                         {
-                            int numSize = tempEN.Length / 2;
-                            mgrs.Easting = Int32.Parse(tempEN.Substring(0, numSize));
-                            mgrs.Northing = Int32.Parse(tempEN.Substring(numSize, numSize));
+                            if (tempEN.Length % 2 == 0) // must be even to be valid
+                            {
+                                int numSize = tempEN.Length / 2;
+                                mgrs.Easting = Int32.Parse(tempEN.Substring(0, numSize).PadRight(5, '0'));
+                                mgrs.Northing = Int32.Parse(tempEN.Substring(numSize, numSize).PadRight(5, '0'));
+                            }
+                            else
+                            {
+                                // odd length is invalid
+                                return false;
+                            }
                         }
                         else
                         {

@@ -17,8 +17,8 @@
 using System;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Models;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -163,7 +163,7 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     Project(srFactoryCode);
                     var cn = Point as IConversionNotation;
-                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces|esriUTMConversionOptionsEnum.esriUTMUseNS);
+                    coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                     return true;
                 }
                 catch { }
@@ -190,6 +190,9 @@ namespace ArcMapAddinCoordinateConversion
 
         public override void Project(int srfactoryCode)
         {
+            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateTypes.None)
+                return;
+
             ISpatialReference sr = null;
 
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
@@ -232,7 +235,7 @@ namespace ArcMapAddinCoordinateConversion
             if (Point == null)
                 return "NA";
 
-            var result = string.Format("{0:0.0} {1:0.0}", Point.Y, Point.X);
+            var result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
 
             if (Point.SpatialReference == null)
                 return result;
@@ -240,7 +243,7 @@ namespace ArcMapAddinCoordinateConversion
             var cn = Point as IConversionNotation;
             if (cn != null)
             {
-                switch (CoordinateConversionViewModel.AddInConfig.DisplayCoordinateType)
+                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
                 {
                     case CoordinateTypes.DD:
                         result = cn.GetDDFromCoords(6);
@@ -251,9 +254,9 @@ namespace ArcMapAddinCoordinateConversion
                     case CoordinateTypes.DMS:
                         result = cn.GetDMSFromCoords(2);
                         break;
-                    case CoordinateTypes.GARS:
-                        result = cn.GetGARSFromCoords();
-                        break;
+                    //case CoordinateTypes.GARS:
+                    //    result = cn.GetGARSFromCoords();
+                    //    break;
                     case CoordinateTypes.MGRS:
                         result = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                         break;
@@ -261,7 +264,7 @@ namespace ArcMapAddinCoordinateConversion
                         result = cn.GetUSNGFromCoords(5, true, true);
                         break;
                     case CoordinateTypes.UTM:
-                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces | esriUTMConversionOptionsEnum.esriUTMUseNS);
+                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                         break;
                     default:
                         break;

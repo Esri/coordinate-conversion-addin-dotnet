@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,9 +9,10 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProAppCoordConversionModule</RootNamespace>
-    <AssemblyName>ProAppCoordConversionModule</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>CoordinateConversion</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,11 @@
       <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
     </Compile>
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
+    <Compile Include="Helpers\MapPointHelper.cs" />
+    <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\FeatureClassUtils.cs" />
+    <Compile Include="Models\KMLUtils.cs" />
+    <Compile Include="Models\ProGraphic.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="PropertiesButton.cs" />
@@ -121,6 +127,13 @@
       <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
+    <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
+    <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
+    <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
+    <Compile Include="Views\ProSaveAsFormatView.xaml.cs">
+      <DependentUpon>ProSaveAsFormatView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateConversionDockpane.xaml">
@@ -138,6 +151,10 @@
     <Page Include="UI\FlashEmbeddedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProSaveAsFormatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +189,13 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\GenericButtonBlue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\CoordinateConversionIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\coordinate-conversion-16.png" />
+    <AddInContent Include="Images\coordinate-conversion-32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />

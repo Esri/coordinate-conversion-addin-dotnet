@@ -46,8 +46,10 @@
     <Compile Include="Attributes\LocalizableDescriptionAttribute.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\ImportCSV.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
+    <Compile Include="Helpers\Storyboard.cs" />
     <Compile Include="Helpers\Wpf.cs" />
     <Compile Include="Models\CoordinateConversionLibraryConfig.cs" />
     <Compile Include="Models\CoordinateMGRS.cs" />
@@ -74,13 +76,17 @@
     </Compile>
     <Compile Include="ValueConverters\EnumToFriendlyNameConverter.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\CoordinateConversionViewModel.cs" />
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
-    <Compile Include="Views\CoordinateConversionView.xaml.cs">
-      <DependentUpon>CoordinateConversionView.xaml</DependentUpon>
+    <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
+    <Compile Include="ViewModels\TabBaseViewModel.cs" />
+    <Compile Include="Views\CCCollectTabView.xaml.cs">
+      <DependentUpon>CCCollectTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CCConvertTabView.xaml.cs">
+      <DependentUpon>CCConvertTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditOutputCoordinateView.xaml.cs">
       <DependentUpon>EditOutputCoordinateView.xaml</DependentUpon>
@@ -88,8 +94,14 @@
     <Compile Include="Views\EditPropertiesView.xaml.cs">
       <DependentUpon>EditPropertiesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\InputCoordinateConversionView.xaml.cs">
+      <DependentUpon>InputCoordinateConversionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OutputCoordinateView.xaml.cs">
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectCoordinateFieldsView.xaml.cs">
+      <DependentUpon>SelectCoordinateFieldsView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +112,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CoordinateConversionView.xaml">
+    <Page Include="Views\CCCollectTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CCConvertTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -112,7 +128,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\InputCoordinateConversionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OutputCoordinateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SelectCoordinateFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -131,16 +155,7 @@
     <Resource Include="Images\copyall.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\EditCopy32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\GeoprocessingEnvironmentSettings32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\GenericDeleteRed32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Add_Point32_d.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -151,6 +166,11 @@
   <ItemGroup>
     <Resource Include="Images\TableMinusCollaps16_d.png" />
     <Resource Include="Images\TablePlusExpand16_d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Add_Point.png" />
+    <Resource Include="Images\EditCopy16.png" />
+    <Resource Include="Images\GeoprocessingEnvironmentSettings16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

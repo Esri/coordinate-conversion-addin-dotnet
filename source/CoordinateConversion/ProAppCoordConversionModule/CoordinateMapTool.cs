@@ -18,9 +18,9 @@ using System.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
 using ProAppCoordConversionModule.UI;
 using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule
 {
@@ -28,6 +28,10 @@ namespace ProAppCoordConversionModule
     {
         public CoordinateMapTool()
         {
+            IsSketchTool = true;
+            SketchType = SketchGeometryType.Point;
+            UseSnapping = true;
+
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
@@ -39,27 +43,17 @@ namespace ProAppCoordConversionModule
             return base.OnToolActivateAsync(active);
         }
 
-        protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
+        protected override Task<bool> OnSketchCompleteAsync(Geometry geometry)
         {
-            if (e.ChangedButton != System.Windows.Input.MouseButton.Left)
-                return;
+            var mp = geometry as MapPoint;
 
-            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-            if (vm != null)
-            {
-                vm.IsToolGenerated = true;
-                vm.IsToolActive = false;
-            }
-            UpdateInputWithMapPoint(e.ClientPoint);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
+
+            return base.OnSketchCompleteAsync(geometry);
         }
 
         protected override void OnToolMouseMove(MapViewMouseEventArgs e)
         {
-            var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-            if (vm != null)
-            {
-                vm.IsHistoryUpdate = false;
-            }
             UpdateInputWithMapPoint(e.ClientPoint);
         }
 
@@ -96,7 +90,16 @@ namespace ProAppCoordConversionModule
             var temp = QueuedTask.Run(() =>
                 {
                     if (flashVM != null && MapView.Active != null)
+                    {
                         flashVM.ScreenPoint = MapView.Active.ClientToScreen(point.Value);
+                        var p1 = MapView.Active.MapToScreen(MapPointBuilder.CreateMapPoint(MapView.Active.Extent.XMin, MapView.Active.Extent.YMin));
+                        var p3 = MapView.Active.MapToScreen(MapPointBuilder.CreateMapPoint(MapView.Active.Extent.XMax, MapView.Active.Extent.YMax));
+                        var width = (p3.X - p1.X) + 1;
+                        var height = (p1.Y - p3.Y) + 1;
+                        flashVM.MapWidth = width;
+                        flashVM.MapHeight = height;
+                        flashVM.RunFlashAnimation();
+                    }
                     return true;
                 }).Result;
         }
@@ -104,10 +107,25 @@ namespace ProAppCoordConversionModule
         /// <summary>
         /// Method to update the input coordinate text box
         /// </summary>
-        /// <param name="e"></param>
-        private void UpdateInputWithMapPoint(System.Windows.Point e)
+        /// <param name="mp">MapPoint</param>
+        private void UpdateInputWithMapPoint(MapPoint mp)
         {
-            var mp = QueuedTask.Run(() =>
+            if (mp != null)
+            {
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                    mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+            }
+        }
+
+        /// <summary>
+        /// Method to update the input coordinate text box
+        /// </summary>
+        /// <param name="e"></param>
+        private async void UpdateInputWithMapPoint(System.Windows.Point e)
+        {
+            var mp = await QueuedTask.Run(() =>
             {
                 MapPoint temp = null;
 
@@ -117,22 +135,21 @@ namespace ProAppCoordConversionModule
                     try
                     {
                         // for now we will always project to WGS84
-                        var result = GeometryEngine.Project(temp, SpatialReferences.WGS84);
-                        return result;
+                        if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                            temp = GeometryEngine.Project(temp, SpatialReferences.WGS84) as MapPoint;
+                        
+                        return temp;
                     }
                     catch { }
                 }
 
                 return temp;
-            }).Result as MapPoint;
+            });//.Result as MapPoint;
 
             if (mp != null)
             {
-                var vm = FrameworkApplication.DockPaneManager.Find("ProAppCoordConversionModule_CoordinateConversionDockpane") as CoordinateConversionDockpaneViewModel;
-                if (vm != null)
-                {
-                    vm.InputCoordinate = string.Format("{0:0.0####} {1:0.0####}", mp.Y, mp.X);
-                }
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
         }
     }

@@ -31,40 +31,24 @@ using ArcGIS.Core.CIM;
 using System.Collections.ObjectModel;
 using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
+using System.Text.RegularExpressions;
+using ProAppCoordConversionModule.ViewModels;
+using System.Windows.Controls;
+using CoordinateConversionLibrary;
 
 namespace ProAppCoordConversionModule
 {
     internal class CoordinateConversionDockpaneViewModel : DockPane
     {
-        private const string _dockPaneID = "ProAppCoordConversionModule_CoordinateConversionDockpane";
-
         protected CoordinateConversionDockpaneViewModel() 
         {
-            _coordinateConversionView = new CoordinateConversionView();
-            HasInputError = false;
-            IsHistoryUpdate = true;
-            IsToolGenerated = false;
-            AddNewOCCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnAddNewOCCommand);
-            ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommand);
-            CopyAllCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnCopyAllCommand);
-            EditPropertiesDialogCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnEditPropertiesDialogCommand);
-            Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
-            InputCoordinateHistoryList = new ObservableCollection<string>();
-            MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
+            ConvertTabView = new CCConvertTabView();
+            ConvertTabView.DataContext = new ProConvertTabViewModel();
 
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-            if (ctvm != null)
-            {
-                ctvm.SetCoordinateGetter(proCoordGetter);
-            }
-            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionViewModel.AddInConfig)
-            .RegisterHandler(n => n.DisplayCoordinateType, n => {
-                if(proCoordGetter != null && proCoordGetter.Point != null)
-                {
-                    InputCoordinate = proCoordGetter.GetInputDisplayString();
-                }
-            });
+            CollectTabView = new CCCollectTabView();
+            CollectTabView.DataContext = new ProCollectTabViewModel();
+
+            MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
         }
 
         ~CoordinateConversionDockpaneViewModel()
@@ -72,398 +56,30 @@ namespace ProAppCoordConversionModule
             MapSelectionChangedEvent.Unsubscribe(OnSelectionChanged);
         }
 
-        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
+        private const string _dockPaneID = "ProAppCoordConversionModule_CoordinateConversionDockpane";
+        
+        public CCConvertTabView ConvertTabView { get; set; }
+        public CCCollectTabView CollectTabView { get; set; }
 
-        public bool IsToolActive
+        object selectedTab = null;
+        public object SelectedTab
         {
-            get
-            {
-                if (FrameworkApplication.CurrentTool != null)
-                    return FrameworkApplication.CurrentTool == "ProAppCoordConversionModule_CoordinateMapTool";
-
-                return false;
-            }
+            get { return selectedTab; }
             set
             {
-                if (value)
-                    OnMapToolCommand(null);
+                if (selectedTab == value)
+                    return;
+
+                selectedTab = value;
+                var tabItem = selectedTab as TabItem;
+                if(tabItem != null && tabItem.Content != null && ((tabItem.Content as UserControl).Content != null))
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
+                //TODO let the other viewmodels determine what to do when tab selection changes
+                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
                 else
-                    FrameworkApplication.SetCurrentToolAsync(string.Empty);
-
-                NotifyPropertyChanged(new PropertyChangedEventArgs("IsToolActive"));
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
             }
-        }
-
-        public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
-
-        private void BroadcastCoordinateValues(MapPoint mapPoint)
-        {
-            var dict = new Dictionary<CoordinateType, string>();
-            if (mapPoint == null)
-                return;
-
-            var dd = new CoordinateDD(mapPoint.Y, mapPoint.X);
-
-            try
-            {
-                dict.Add(CoordinateType.DD, dd.ToString("", new CoordinateDDFormatter()));
-            }
-            catch { }
-            try
-            {
-                dict.Add(CoordinateType.DDM, new CoordinateDDM(dd).ToString("", new CoordinateDDMFormatter()));
-            }
-            catch { }
-            try
-            {
-                dict.Add(CoordinateType.DMS, new CoordinateDMS(dd).ToString("", new CoordinateDMSFormatter()));
-            }
-            catch { }
-
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
-
-        }
-        private static System.IDisposable _overlayObject = null;
-
-        private void ClearOverlay()
-        {
-            if (_overlayObject != null)
-            {
-                _overlayObject.Dispose();
-                _overlayObject = null;
-            }
-        }
-
-        private ProCoordinateGet proCoordGetter = new ProCoordinateGet();
-
-        private bool _hasInputError = false;
-        public bool HasInputError
-        {
-            get { return _hasInputError; }
-            set
-            {
-                _hasInputError = value;
-                NotifyPropertyChanged(new PropertyChangedEventArgs("HasInputError"));
-            }
-        }
-
-        public CoordinateConversionLibrary.Helpers.RelayCommand AddNewOCCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand CopyAllCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
-
-        public bool IsHistoryUpdate { get; set; }
-        public bool IsToolGenerated { get; set; }
-
-        private string _inputCoordinate;
-        public string InputCoordinate
-        {
-            get
-            {
-                return _inputCoordinate;
-            }
-
-            set
-            {
-                ClearOverlay();
-
-                if (string.IsNullOrWhiteSpace(value))
-                    return;
-
-                _inputCoordinate = value;
-                var tempDD = ProcessInput(_inputCoordinate);
-
-                // update tool view model
-                var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-                if (ctvm != null)
-                {
-                    ctvm.SetCoordinateGetter(proCoordGetter);
-                    ctvm.InputCoordinate = tempDD;
-                    var formattedInputCoordinate = proCoordGetter.GetInputDisplayString();
-                    // update history
-                    if (IsHistoryUpdate)
-                    {
-                        if (IsToolGenerated)
-                            UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
-                        else
-                            UIHelpers.UpdateHistory(_inputCoordinate, InputCoordinateHistoryList);
-                    }
-                    // reset flags
-                    IsHistoryUpdate = true;
-                    IsToolGenerated = false;
-
-                    _inputCoordinate = formattedInputCoordinate;
-                }
-
-                NotifyPropertyChanged(new PropertyChangedEventArgs("InputCoordinate"));
-            }
-        }
-
-        private CoordinateConversionView _coordinateConversionView;
-        public CoordinateConversionView CTView
-        {
-            get
-            {
-                return _coordinateConversionView;
-            }
-            set
-            {
-                _coordinateConversionView = value;
-            }
-        }
-
-        #region command handlers
-
-        private void OnAddNewOCCommand(object obj)
-        {
-            // Get name from user
-            string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#N X0.0#E" });
-        }
-
-        private void OnMapToolCommand(object obj)
-        {
-            FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
-        }
-
-        private async void OnFlashPointCommand(object obj)
-        {
-            var previous = IsToolActive;
-            if (!IsToolActive)
-            {
-                IsToolActive = true;
-            }
-
-            CoordinateDD dd;
-            var ctvm = CTView.Resources["CTViewModel"] as CoordinateConversionViewModel;
-            if (ctvm != null)
-            {
-                if (!CoordinateDD.TryParse(ctvm.InputCoordinate, out dd))
-                    return;
-            }
-            else { return; }
-
-            ArcGIS.Core.CIM.CIMPointSymbol symbol = null;
-            var point = await QueuedTask.Run(() =>
-            {
-                ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-            });
-
-            //await QueuedTask.Run(() =>
-            //{
-            //    // Construct point symbol
-            //    symbol = SymbolFactory.ConstructPointSymbol(ColorFactory.Red, 10.0, SimpleMarkerStyle.Star);
-            //});
-
-            ////Get symbol reference from the symbol 
-            //CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
-
-            //QueuedTask.Run(() =>
-            //{
-            //    ClearOverlay();
-            //    _overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            //});
-
-
-            QueuedTask.Run(() =>
-                {
-                    Mediator.NotifyColleagues("UPDATE_FLASH", point);
-                });
-
-            //await QueuedTask.Run(() =>
-            //{
-            //    Task.Delay(500);
-            //    ClearOverlay();
-            //    //_overlayObject = MapView.Active.AddOverlay(point, symbolReference);
-            //    //MapView.Active.ZoomToAsync(point, new TimeSpan(2500000), true);
-            //});
-            //if (previous != IsToolActive)
-            //    IsToolActive = previous;
-            //await QueuedTask.Run(() =>
-            //{
-            //    Task.Delay(500);
-            //    ClearOverlay();
-            //    MapView.Active.LookAt(MapView.Active.Extent.Center);
-            //});
-        }
-
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
-        }
-
-        private void OnEditPropertiesDialogCommand(object obj)
-        {
-            var dlg = new EditPropertiesView();
-
-            dlg.ShowDialog();
-        }
-
-        private void OnBCNeeded(object obj)
-        {
-            if (proCoordGetter == null || proCoordGetter.Point == null)
-                return;
-
-            BroadcastCoordinateValues(proCoordGetter.Point);
-        }
-
-        #endregion command handlers
-
-        internal string GetFormattedCoordinate(string coord, CoordinateType cType)
-        {
-            string format = "";
-
-            var tt = CoordinateConversionViewModel.AddInConfig.OutputCoordinateList.FirstOrDefault(t => t.CType == cType);
-            if (tt != null)
-            {
-                format = tt.Format;
-                Console.WriteLine(tt.Format);
-            }
-
-            var cf = CoordinateHandler.GetFormattedCoord(cType, coord, format);
-
-            if (!String.IsNullOrWhiteSpace(cf))
-                return cf;
-
-            return string.Empty;
-        }
-
-        private string ProcessInput(string input)
-        {
-            string result = string.Empty;
-            MapPoint point;
-            HasInputError = false;
-
-            if (string.IsNullOrWhiteSpace(input))
-                return result;
-
-            var coordType = GetCoordinateType(input, out point);
-
-            if (coordType == CoordinateType.Unknown)
-                HasInputError = true;
-            else
-            {
-                proCoordGetter.Point = point;
-                result = new CoordinateDD(point.Y, point.X).ToString("", new CoordinateDDFormatter());
-            }
-
-            return result;
-        }
-
-        private CoordinateType GetCoordinateType(string input, out MapPoint point)
-        {
-            point = null;
-
-            // DD
-            CoordinateDD dd;
-            if(CoordinateDD.TryParse(input, out dd))
-            {
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                }).Result;
-                return CoordinateType.DD;
-            }
-
-            // DDM
-            CoordinateDDM ddm;
-            if(CoordinateDDM.TryParse(input, out ddm))
-            {
-                dd = new CoordinateDD(ddm);
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                }).Result;
-                return CoordinateType.DDM;
-            }
-            // DMS
-            CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
-            {
-                dd = new CoordinateDD(dms);
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                }).Result;
-                return CoordinateType.DMS;
-            }
-
-            CoordinateGARS gars;
-            if (CoordinateGARS.TryParse(input, out gars))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
-                        return tmp;
-                    }).Result;
-                    
-                    return CoordinateType.GARS;
-                }
-                catch { }
-            }
-
-            CoordinateMGRS mgrs;
-            if(CoordinateMGRS.TryParse(input, out mgrs))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.MGRS;
-                }
-                catch { }
-            }
-
-            CoordinateUSNG usng;
-            if (CoordinateUSNG.TryParse(input, out usng))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.USNG;
-                }
-                catch { }
-            }
-
-            CoordinateUTM utm;
-            if (CoordinateUTM.TryParse(input, out utm))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.UTM;
-                }
-                catch { }
-            }
-
-
-            return CoordinateType.Unknown;
         }
 
         /// <summary>
@@ -493,7 +109,7 @@ namespace ProAppCoordConversionModule
                     {
                         var SelectedOID = fl.GetSelection().GetObjectIDs().FirstOrDefault();
                         if (SelectedOID < 0)
-                            return string.Empty;
+                            return null;
 
                         var SelectedLayer = fl as BasicFeatureLayer;
 
@@ -506,7 +122,7 @@ namespace ProAppCoordConversionModule
                             row = cursor.Current;
 
                         if (row == null)
-                            return string.Empty;
+                            return null;
 
                         var fields = row.GetFields();
                         lock (_lock)
@@ -520,10 +136,7 @@ namespace ProAppCoordConversionModule
                                     if (val is MapPoint)
                                     {
                                         var temp = val as MapPoint;
-                                        // project to WGS1984
-                                        proCoordGetter.Point = temp;
-                                        proCoordGetter.Project(4326);
-                                        return string.Format("{0:0.0####} {1:0.0####}", proCoordGetter.Point.Y, proCoordGetter.Point.X);
+                                        return temp;
                                     }
                                     break;
                                 }
@@ -534,13 +147,11 @@ namespace ProAppCoordConversionModule
                     {
                     }
 
-                    return string.Empty;
+                    return null;
                 });
 
-                if (!string.IsNullOrWhiteSpace(pointd))
-                {
-                    InputCoordinate = pointd;
-                }
+                if(pointd != null)
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, pointd);
             }
         }
 
@@ -549,7 +160,7 @@ namespace ProAppCoordConversionModule
     /// <summary>
     /// Button implementation to show the DockPane.
     /// </summary>
-    internal class CoordinateConversionDockpane_ShowButton : Button
+    internal class CoordinateConversionDockpane_ShowButton : ArcGIS.Desktop.Framework.Contracts.Button
     {
         protected override void OnClick()
         {

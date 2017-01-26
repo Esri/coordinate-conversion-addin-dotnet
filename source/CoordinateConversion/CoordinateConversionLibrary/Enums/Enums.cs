@@ -16,6 +16,21 @@ using CoordinateConversionLibrary.Properties;
 
 namespace CoordinateConversionLibrary
 {
+
+    public enum GeomType : int
+    {
+        Point = 1,
+        PolyLine = 2,
+        Polygon = 3
+    }
+
+    public enum SaveAsType : int
+    {
+        FileGDB = 1,
+        Shapefile = 2,
+        KML = 3
+    }
+
     public enum CoordinateTypes : int
     {
         [LocalizableDescription(@"EnumCTDD", typeof(Resources))]
@@ -27,8 +42,8 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTDMS", typeof(Resources))]
         DMS = 3,
 
-        [LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
-        GARS = 4,
+        //[LocalizableDescription(@"EnumCTGARS", typeof(Resources))]
+        //GARS = 4,
 
         [LocalizableDescription(@"EnumCTMGRS", typeof(Resources))]
         MGRS = 5,
@@ -42,4 +57,15 @@ namespace CoordinateConversionLibrary
         [LocalizableDescription(@"EnumCTNone", typeof(Resources))]
         None = 8
     }
+
+    /// <summary>
+    /// Enumeration used for the different tool modes
+    /// </summary>
+    public enum MapPointToolMode : int
+    {
+        Unknown = 0,
+        Convert = 1,
+        Collect = 2
+    }
+
 }

@@ -18,6 +18,7 @@ using ArcGIS.Desktop.Framework.Controls;
 using System.Xml.Linq;
 using System.Windows.Data;
 using System.Windows;
+using CoordinateConversionLibrary.Helpers;
 
 namespace ProAppCoordConversionModule.UI
 {
@@ -29,9 +30,39 @@ namespace ProAppCoordConversionModule.UI
         public FlashEmbeddedControlViewModel(XElement options)
             : base(options)
         {
+            FlashAnimationCompletedCommand = new RelayCommand(OnFlashAnimationCompletedCommand);
         }
 
-        private bool _flash = true;
+        public RelayCommand FlashAnimationCompletedCommand { get; set; }
+
+        private double _mapWidth = 1920.0;
+        public double MapWidth
+        {
+            get
+            {
+                return _mapWidth;
+            }
+
+            set
+            {
+                SetProperty(ref _mapWidth, value, () => MapWidth);
+            }
+        }
+        private double _mapHeight = 1080.0;
+        public double MapHeight
+        {
+            get
+            {
+                return _mapHeight;
+            }
+
+            set
+            {
+                SetProperty(ref _mapHeight, value, () => MapHeight);
+            }
+        }
+        
+        private bool _flash = false;
         public bool Flash
         {
             get
@@ -59,10 +90,17 @@ namespace ProAppCoordConversionModule.UI
             set
             {
                 SetProperty(ref _screenPoint, value, () => ScreenPoint);
-                //Flash = false;
-                Flash = true;
-                Flash = false;
             }
+        }
+
+        private void OnFlashAnimationCompletedCommand(object obj)
+        {
+            Mediator.NotifyColleagues("FLASH_COMPLETED", null);
+        }
+
+        public void RunFlashAnimation()
+        {
+            Flash = true;
         }
     }
 
@@ -79,6 +117,9 @@ namespace ProAppCoordConversionModule.UI
 
             if (source == null)
                 return 0;
+
+            c.Width = (double)values[2] * 2.0;
+            c.Height = (double)values[3] * 2.0;
 
             var point = c.PointFromScreen(screenPoint);
             var ps = parameter.ToString();
@@ -113,12 +154,15 @@ namespace ProAppCoordConversionModule.UI
             if (source == null)
                 return 0;
 
+            c.Width = (double)values[2] * 2.0;
+            c.Height = (double)values[3] * 2.0;
+
             var point = c.PointFromScreen(screenPoint);
             var halfWidth = c.ActualWidth / 2.0;
             var halfHeight = c.ActualHeight / 2.0;
 
-            double x = point.X *2;
-            double y = point.Y *2;
+            double x = point.X * 2.0;
+            double y = point.Y * 2.0;
 
             if (point.Y > halfHeight)
                 y -= (point.Y - halfHeight) + 6;

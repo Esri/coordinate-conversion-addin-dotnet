@@ -123,6 +123,27 @@
   <data name="ButtonOK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="CategoryListDD" xml:space="preserve">
+    <value>DD</value>
+  </data>
+  <data name="CategoryListDDM" xml:space="preserve">
+    <value>DDM</value>
+  </data>
+  <data name="CategoryListDMS" xml:space="preserve">
+    <value>DMS</value>
+  </data>
+  <data name="CategoryListGARS" xml:space="preserve">
+    <value>GARS</value>
+  </data>
+  <data name="CategoryListMGRS" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
+  <data name="CategoryListUSNG" xml:space="preserve">
+    <value>USNG</value>
+  </data>
+  <data name="CategoryListUTM" xml:space="preserve">
+    <value>UTM</value>
+  </data>
   <data name="EnumCTDD" xml:space="preserve">
     <value>DD</value>
   </data>
@@ -147,13 +168,154 @@
   <data name="EnumCTUTM" xml:space="preserve">
     <value>UTM</value>
   </data>
+  <data name="FormattedRemove" xml:space="preserve">
+    <value>Remove {0}?</value>
+  </data>
+  <data name="HeaderAdvanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="HeaderCoordinate" xml:space="preserve">
+    <value>Coordinate</value>
+  </data>
+  <data name="HeaderName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LabelCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="LabelConfirmRemoval" xml:space="preserve">
+    <value>Confirm Removal?</value>
+  </data>
   <data name="LabelDisplayCoordinate" xml:space="preserve">
     <value>Display Coordinate</value>
+  </data>
+  <data name="LabelFormats" xml:space="preserve">
+    <value>Formats</value>
+  </data>
+  <data name="StringEasting" xml:space="preserve">
+    <value>Easting</value>
+  </data>
+  <data name="StringGridSq" xml:space="preserve">
+    <value>Grid Sq</value>
+  </data>
+  <data name="StringGZD" xml:space="preserve">
+    <value>GZD</value>
+  </data>
+  <data name="StringKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="StringLat" xml:space="preserve">
+    <value>Lat</value>
+  </data>
+  <data name="StringLon" xml:space="preserve">
+    <value>Lon</value>
+  </data>
+  <data name="StringNoFormatFound" xml:space="preserve">
+    <value>No Format Found</value>
+  </data>
+  <data name="StringNorthing" xml:space="preserve">
+    <value>Northing</value>
+  </data>
+  <data name="StringQuadrant" xml:space="preserve">
+    <value>Quadrant</value>
+  </data>
+  <data name="StringZone" xml:space="preserve">
+    <value>Zone</value>
+  </data>
+  <data name="TitleAddNewOutputCoordinate" xml:space="preserve">
+    <value>Add New Output Coordinate</value>
+  </data>
+  <data name="TitleEditOutputCoordinate" xml:space="preserve">
+    <value>Edit Output Coordinate</value>
   </data>
   <data name="TitleEditProperties" xml:space="preserve">
     <value>Edit Properties</value>
   </data>
+  <data name="TooltipAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="TooltipCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="TooltipCopyAll" xml:space="preserve">
+    <value>Copy All</value>
+  </data>
   <data name="TooltipEditProperties" xml:space="preserve">
     <value>Edit Properties</value>
+  </data>
+  <data name="TooltipMapPointTool" xml:space="preserve">
+    <value>Map Point Tool</value>
+  </data>
+  <data name="CustomString" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="LabelSample" xml:space="preserve">
+    <value>Sample</value>
+  </data>
+  <data name="HeaderCollect" xml:space="preserve">
+    <value>Collect</value>
+  </data>
+  <data name="HeaderConvert" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="LabelClearGraphics" xml:space="preserve">
+    <value>Clear Graphics</value>
+  </data>
+  <data name="LabelImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="LabelSaveAs" xml:space="preserve">
+    <value>Save As</value>
+  </data>
+  <data name="MenuLabelDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MenuLabelDeleteAll" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="HeaderFlash" xml:space="preserve">
+    <value>Flash</value>
+  </data>
+  <data name="HeaderInput" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="HeaderOutput" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="TitleSelectCoordinateFields" xml:space="preserve">
+    <value>Select Fields</value>
+  </data>
+  <data name="LabelField1" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="LabelField2" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="LabelInputType" xml:space="preserve">
+    <value>Input Type</value>
+  </data>
+  <data name="EnumSITDF" xml:space="preserve">
+    <value>Dual Field</value>
+  </data>
+  <data name="EnumSITSF" xml:space="preserve">
+    <value>Single Field</value>
+  </data>
+  <data name="CaptionOverwrite" xml:space="preserve">
+    <value>Overwrite Feature Class</value>
+  </data>
+  <data name="MsgOverwrite" xml:space="preserve">
+    <value>You've selected a feature class that already exists. Do you wish to replace it?</value>
+  </data>
+  <data name="TitleSelectOutput" xml:space="preserve">
+    <value>Select output</value>
+  </data>
+  <data name="UnrecognizedDelimiter" xml:space="preserve">
+    <value>ImportCSV.GetSeparator(): Unrecognized field delimter.</value>
+  </data>
+  <data name="UseTwoFields" xml:space="preserve">
+    <value>Use two fields</value>
+  </data>
+  <data name="LabelFieldCombined" xml:space="preserve">
+    <value>X/Y</value>
   </data>
 </root>

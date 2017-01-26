@@ -1,5 +1,5 @@
 ﻿/******************************************************************************* 
-  * Copyright 2015 Esri 
+  * Copyright 2016 Esri 
   *  
   *  Licensed under the Apache License, Version 2.0 (the "License"); 
   *  you may not use this file except in compliance with the License. 
@@ -14,18 +14,24 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using System.Windows.Controls;
+using System.Windows;
 
-namespace CoordinateConversionLibrary.Views
+
+namespace ArcMapAddinCoordinateConversion.Views
 {
     /// <summary>
-    /// Interaction logic for CoordinateConversionView.xaml
+    /// Interaction logic for SaveAsFormatView.xaml 
     /// </summary>
-    public partial class CoordinateConversionView : UserControl
+    public partial class AMSaveAsFormatView : Window
     {
-        public CoordinateConversionView()
+        public AMSaveAsFormatView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {       
+            DialogResult = true;
         }
     }
 }

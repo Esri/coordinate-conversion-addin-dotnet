@@ -20,6 +20,8 @@ using ESRI.ArcGIS.Framework;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Desktop.AddIns;
+using ESRI.ArcGIS.Controls;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -44,89 +46,4 @@ namespace ArcMapAddinCoordinateConversion
             Enabled = ArcMap.Application != null;
         }
     }
-
-    public class PointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
-    {
-        public PointTool()
-        {
-        }
-
-        protected override void OnUpdate()
-        {
-            Enabled = ArcMap.Application != null;
-        }
-
-        protected override void OnMouseDown(ESRI.ArcGIS.Desktop.AddIns.Tool.MouseEventArgs arg)
-        {
-            if (arg.Button != System.Windows.Forms.MouseButtons.Left)
-                return;
-            try
-            {
-                var point = GetMapPoint(arg.X, arg.Y);
-
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                if (doc != null && point != null)
-                {
-                    doc.GetMainVM().IsToolGenerated = true;
-                    doc.SetInput(point.X, point.Y);
-                }
-
-                doc.GetMainVM().IsToolActive = false;
-            }
-            catch { }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs arg)
-        {
-            try
-            {
-                IPoint point = GetMapPoint(arg.X, arg.Y);
-
-                var doc = AddIn.FromID<ArcMapAddinCoordinateConversion.DockableWindowCoordinateConversion.AddinImpl>(ThisAddIn.IDs.DockableWindowCoordinateConversion);
-
-                if (doc != null && point != null)
-                {
-                    doc.GetMainVM().IsHistoryUpdate = false;
-                    doc.SetInput(point.X, point.Y);
-                }
-            }
-            catch { }
-        }
-
-        private IPoint GetMapPoint(int X, int Y)
-        {
-            //Get the active view from the ArcMap static class.
-            IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
-
-            var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
-
-            // always use WGS84
-            var sr = GetSR();
-
-            if (sr != null)
-            {
-                point.Project(sr);
-            }
-
-            return point;
-        }
-
-        private ISpatialReference GetSR()
-        {
-            Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
-            System.Object obj = Activator.CreateInstance(t);
-            ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
-
-            // Use the enumeration to create an instance of the predefined object.
-
-            IGeographicCoordinateSystem geographicCS =
-                srFact.CreateGeographicCoordinateSystem((int)
-                esriSRGeoCSType.esriSRGeoCS_WGS1984);
-
-            return geographicCS as ISpatialReference;
-        }
-
-    }
-
 }
