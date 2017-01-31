@@ -77,14 +77,15 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            //Regex regexDD = new Regex(@"^(?i) *[+]*(?<firstPrefix>[NSEW])?(?<latitude>\-*\d+[,.:]?\d*)[°˚º^~*]*?(?<firstSuffix>[NSEW])*[,:; |\/\\]*[+]*(?<lastPrefix>[NSEW])*(?<longitude>-*\d+[,.:]?\d*)[°˚º^~*]*(?<lastSuffix>[NSEW])*");
             Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d(\.\d*)?|90(\.0*)?)([°˚º^~*]*)(?<firstSuffix>[NnSs\+-])*)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d(\.\d*)?|1[0-7]\d(\.\d*)?|180(\.0*)?)([°˚º^~*]*)(?<lastSuffix>[EeWw\+-])?)$");
             Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?((?<longitude>[0]?\d?\d(\.\d*)?|1[0-7]\d(\.\d*)?|180(\.0*)?))([°˚º^~*]*)(?<firstSuffix>[EeWw\+-])*)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d(\.\d*)?|90(\.0*)??)([°˚º^~*]*)(?<lastSuffix>[NnSs\+-])?)$");
 
             var matchDDLat = regexDDLat.Match(input);
             var matchDDLon = regexDDLon.Match(input);
 
-            bool blnMatchDDLat = false, blnMatchDDLon = false;
+            bool blnMatchDDLat = false;
+            double latitude = -1, longitude = -1;
+            Group firstPrefix = null, firstSuffix = null, lastPrefix = null, lastSuffix = null;
 
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDLat.Success && matchDDLat.Length == input.Length && matchDDLon.Success && matchDDLon.Length == input.Length)
@@ -92,9 +93,6 @@ namespace CoordinateConversionLibrary.Models
                 //MessageBox.Show("Ambiguous - Pick Lat/Lon or Lon/Lat");
                 blnMatchDDLat = true;
             }
-
-            double latitude = -1, longitude = -1;
-            Group firstPrefix = null, firstSuffix = null, lastPrefix = null, lastSuffix = null;
 
             // Lat/Lon
             if (matchDDLat.Success && matchDDLat.Length == input.Length)
@@ -122,8 +120,6 @@ namespace CoordinateConversionLibrary.Models
                     firstSuffix = matchDDLon.Groups["firstSuffix"];
                     lastPrefix = matchDDLon.Groups["lastPrefix"];
                     lastSuffix = matchDDLon.Groups["lastSuffix"];
-
-                    blnMatchDDLon = true;
                 }
             }
             else
@@ -145,58 +141,6 @@ namespace CoordinateConversionLibrary.Models
                 {
                     return false;
                 }
-
-                //// Don't allow same prefix/suffix for both lat and lon
-                //if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("E") || firstPrefix.Value.ToUpper().Equals("E") ||
-                //                                                    firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) &&
-                //    (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("E") || lastPrefix.Value.ToUpper().Equals("E") ||
-                //                                                    lastSuffix.Value.ToUpper().Equals("W") || lastPrefix.Value.ToUpper().Equals("W")))
-                //{
-                //    return false;
-                //}
-
-                //if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("N") || firstPrefix.Value.ToUpper().Equals("N") ||
-                //                                                    firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) &&
-                //    (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("N") || lastPrefix.Value.ToUpper().Equals("N") ||
-                //                                                    lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
-                //{
-                //    return false;
-                //}
-
-                //coord.Lat = latitude;
-                //coord.Lon = longitude;
-
-                // if E/W is in first coordinate or N/S is in second coordinate then flip the lat/lon values
-                //if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("E") || firstPrefix.Value.ToUpper().Equals("E") ||
-                //                                                    firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) ||
-                //    (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("N") || lastPrefix.Value.ToUpper().Equals("N") ||
-                //                                                    lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
-                //{
-                //    coord.Lat = longitude;
-                //    coord.Lon = latitude;
-                //}
-
-                //// no suffix or prefix was added so allow user to specify longitude first by checking for absolute value greater than 90
-                //// fix for bug Bob Booth found in issue #42
-                //if (!firstPrefix.Success && !firstSuffix.Success && !lastPrefix.Success && !lastSuffix.Success)
-                //{
-                //    // switch the values if longitude was added first
-                //    if ((Math.Abs(coord.Lat) > 90.0) && (Math.Abs(coord.Lon) <= 90.0))
-                //    {
-                //        coord.Lat = longitude;
-                //        coord.Lon = latitude;
-                //    }
-
-                //    if ((Math.Abs(coord.Lat) > 90.0) && (Math.Abs(coord.Lon) > 90.0))
-                //    {
-                //        return false;
-                //    }
-                //}
-
-                //if (coord.Lat > 90.0 || coord.Lat < -90.0)
-                //    return false;
-                //if (coord.Lon > 180.0 || coord.Lon < -180.0)
-                //    return false;
 
                 if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) ||
                     (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
