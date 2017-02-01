@@ -109,7 +109,6 @@ namespace CoordinateConversionLibrary.Models
                     LatMinutes = double.Parse(matchDDMLat.Groups["latitudeM"].Value);
                     LonDegrees = int.Parse(matchDDMLat.Groups["longitudeD"].Value);
                     LonMinutes = double.Parse(matchDDMLat.Groups["longitudeM"].Value);
-                    firstPrefix = matchDDMLat.Groups["firstPrefix"];
                     firstPrefix = matchDDMLon.Groups["firstPrefix"];
                     firstSuffix = matchDDMLon.Groups["firstSuffix"];
                     lastPrefix = matchDDMLon.Groups["lastPrefix"];
