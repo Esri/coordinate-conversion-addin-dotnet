@@ -63,8 +63,8 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDDMLat = new Regex(@"^((?<firstPrefix>[\+\-NnSs])?(?<latitudeD>[0-8]?\d|90)[°˚º^~*\s\-_]+(?<latitudeM>([0-5]?\d|\d)([.]\d*)?)['′\s_]*(?<firstSuffix>[\+\-NnSs])?)([,:;\s|\/\\]+)((?<lastPrefix>[\+\-EeWw])?(?<longitudeD>[0]?\d?\d|1[0-7]\d|180)[°˚º^~*\s\-_]+(?<longitudeM>([0-5]\d|\d)([.]\d*)?)['′\s_]*(?<lastSuffix>[\+\-EeWw])?)[\s]*$");
-            Regex regexDDMLon = new Regex(@"^((?<firstPrefix>[\+\-EeWw])?(?<longitudeD>[0]?\d?\d|1[0-7]\d|180)[°˚º^~*\s\-_]+(?<longitudeM>([0-5]\d|\d)([.]\d*)?)['′\s_]*(?<firstSuffix>[\+\-EeWw])?)([,:;\s|\/\\]+)((?<lastPrefix>[\+\-NnSs])?(?<latitudeD>[0-8]?\d|90)[°˚º^~*\s\-_]+(?<latitudeM>([0-5]?\d|\d)([.]\d*)?)['′\s_]*(?<lastSuffix>[\+\-NnSs])?)[\s]*$");
+            Regex regexDDMLat = new Regex(@"^((?<firstPrefix>[\+\-NnSs])?(?<latitudeD>[0-8]?\d|90)[°˚º^~*\s\-_]+(?<latitudeM>([0-5]?\d|\d)([.,:]\d*)?)['′\s_]*(?<firstSuffix>[\+\-NnSs])?)([,:;\s|\/\\]+)((?<lastPrefix>[\+\-EeWw])?(?<longitudeD>[0]?\d?\d|1[0-7]\d|180)[°˚º^~*\s\-_]+(?<longitudeM>([0-5]\d|\d)([.,:]\d*)?)['′\s_]*(?<lastSuffix>[\+\-EeWw])?)[\s]*$");
+            Regex regexDDMLon = new Regex(@"^((?<firstPrefix>[\+\-EeWw])?(?<longitudeD>[0]?\d?\d|1[0-7]\d|180)[°˚º^~*\s\-_]+(?<longitudeM>([0-5]\d|\d)([.,:]\d*)?)['′\s_]*(?<firstSuffix>[\+\-EeWw])?)([,:;\s|\/\\]+)((?<lastPrefix>[\+\-NnSs])?(?<latitudeD>[0-8]?\d|90)[°˚º^~*\s\-_]+(?<latitudeM>([0-5]?\d|\d)([.,:]\d*)?)['′\s_]*(?<lastSuffix>[\+\-NnSs])?)[\s]*$");
 
             var matchDDMLat = regexDDMLat.Match(input);
             var matchDDMLon = regexDDMLon.Match(input);
@@ -105,10 +105,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (ValidateNumericCoordinateMatch(matchDDMLon, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" } ))
                 {
-                    LatDegrees = int.Parse(matchDDMLat.Groups["latitudeD"].Value);
-                    LatMinutes = double.Parse(matchDDMLat.Groups["latitudeM"].Value);
-                    LonDegrees = int.Parse(matchDDMLat.Groups["longitudeD"].Value);
-                    LonMinutes = double.Parse(matchDDMLat.Groups["longitudeM"].Value);
+                    LatDegrees = int.Parse(matchDDMLon.Groups["latitudeD"].Value);
+                    LatMinutes = double.Parse(matchDDMLon.Groups["latitudeM"].Value);
+                    LonDegrees = int.Parse(matchDDMLon.Groups["longitudeD"].Value);
+                    LonMinutes = double.Parse(matchDDMLon.Groups["longitudeM"].Value);
                     firstPrefix = matchDDMLon.Groups["firstPrefix"];
                     firstSuffix = matchDDMLon.Groups["firstSuffix"];
                     lastPrefix = matchDDMLon.Groups["lastPrefix"];
