@@ -1,6 +1,14 @@
+﻿<Window x:Class="CoordinateConversionLibrary.Views.AmbiguousCoordsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="173.921" Width="279.87" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow" Title="Ambiguous Coordinates">
+    <Grid Margin="0,0,0,-5">
+        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="167,91,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.131,-6.576" Click="OkButton_Click"/>
+        <TextBox x:Name="txtAmbCoords" HorizontalAlignment="Left" Height="41" Margin="10,6,0,0" TextWrapping="Wrap" Text="Ambiguous coordinates have been entered.  Please choose from the following:" VerticalAlignment="Top" Width="241" IsEnabled="False" BorderThickness="0"/>
+        <RadioButton x:Name="rbLatLon" Content="Lat / Lon" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="rbLonLat" Content="Lon / Lat" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
 
     </Grid>
+</Window>

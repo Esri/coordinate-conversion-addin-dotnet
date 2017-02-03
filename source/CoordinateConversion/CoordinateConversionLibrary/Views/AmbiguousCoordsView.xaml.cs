@@ -18,6 +18,7 @@ namespace CoordinateConversionLibrary.Views
     /// <summary>
     /// Interaction logic for AmbiguousCoordsView.xaml
     /// </summary>
+    public partial class AmbiguousCoordsView : Window
     {
         public AmbiguousCoordsView()
         {
