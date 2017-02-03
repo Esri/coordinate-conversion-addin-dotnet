@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using CoordinateConversionLibrary.Views;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -83,19 +84,21 @@ namespace CoordinateConversionLibrary.Models
             var matchDDLat = regexDDLat.Match(input);
             var matchDDLon = regexDDLon.Match(input);
 
-            bool blnMatchDDLat = false;
+            bool blnMatchDDLat = matchDDLat.Success;
             double latitude = -1, longitude = -1;
             Group firstPrefix = null, firstSuffix = null, lastPrefix = null, lastSuffix = null;
 
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDLat.Success && matchDDLat.Length == input.Length && matchDDLon.Success && matchDDLon.Length == input.Length)
             {
-                //MessageBox.Show("Ambiguous - Pick Lat/Lon or Lon/Lat");
-                blnMatchDDLat = true;
+                var dlg = new AmbiguousCoordsView();
+                dlg.ShowDialog();
+
+                blnMatchDDLat = dlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon
-            if (matchDDLat.Success && matchDDLat.Length == input.Length)
+            if (matchDDLat.Success && matchDDLat.Length == input.Length && blnMatchDDLat)
             {
                 if (ValidateNumericCoordinateMatch(matchDDLat, new string[] { "latitude", "longitude" }))
                 {
@@ -105,8 +108,6 @@ namespace CoordinateConversionLibrary.Models
                     firstSuffix = matchDDLat.Groups["firstSuffix"];
                     lastPrefix = matchDDLat.Groups["lastPrefix"];
                     lastSuffix = matchDDLat.Groups["lastSuffix"];
-
-                    blnMatchDDLat = true;
                 }
             }
             // Lon/Lat

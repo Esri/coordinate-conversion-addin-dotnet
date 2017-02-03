@@ -14,6 +14,7 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using CoordinateConversionLibrary.Views;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -101,7 +102,7 @@ namespace CoordinateConversionLibrary.Models
             var matchDMSLat = regexDMSLat.Match(input);
             var matchDMSLon = regexDMSLon.Match(input);
 
-            bool blnMatchDMSLat = false;
+            bool blnMatchDMSLat = matchDMSLat.Success;
             int LatDegrees = -1, LonDegrees = -1, LatMinutes = -1, LonMinutes = -1;
             double LatSeconds = -1, LonSeconds = -1;
             Group firstPrefix = null, firstSuffix = null, lastPrefix = null, lastSuffix = null;
@@ -109,12 +110,14 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDMSLat.Success && matchDMSLat.Length == input.Length && matchDMSLon.Success && matchDMSLon.Length == input.Length)
             {
-                //MessageBox.Show("Ambiguous - Pick Lat/Lon or Lon/Lat");
-                blnMatchDMSLat = true;
+                var dlg = new AmbiguousCoordsView();
+                dlg.ShowDialog();
+
+                blnMatchDMSLat = dlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon
-            if (matchDMSLat.Success && matchDMSLat.Length == input.Length)
+            if (matchDMSLat.Success && matchDMSLat.Length == input.Length && blnMatchDMSLat)
             {
                 if (ValidateNumericCoordinateMatch(matchDMSLat, new string[] { "latitudeD", "latitudeM", "latitudeS", "longitudeD", "longitudeM", "longitudeS" }))
                 {

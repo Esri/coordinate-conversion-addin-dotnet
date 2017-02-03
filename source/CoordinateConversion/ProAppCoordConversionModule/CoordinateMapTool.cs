@@ -26,6 +26,8 @@ namespace ProAppCoordConversionModule
 {
     internal class CoordinateMapTool : MapTool
     {
+        public static bool AllowUpdates = true;
+
         public CoordinateMapTool()
         {
             IsSketchTool = true;
@@ -110,13 +112,16 @@ namespace ProAppCoordConversionModule
         /// <param name="mp">MapPoint</param>
         private void UpdateInputWithMapPoint(MapPoint mp)
         {
-            if (mp != null)
+            if (AllowUpdates)
             {
-                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
-                    mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+                if (mp != null)
+                {
+                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                        mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
-            }
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                }
+            } 
         }
 
         /// <summary>
@@ -125,32 +130,35 @@ namespace ProAppCoordConversionModule
         /// <param name="e"></param>
         private async void UpdateInputWithMapPoint(System.Windows.Point e)
         {
-            var mp = await QueuedTask.Run(() =>
+            if (AllowUpdates)
             {
-                MapPoint temp = null;
-
-                if (MapView.Active != null)
+                var mp = await QueuedTask.Run(() =>
                 {
-                    temp = MapView.Active.ClientToMap(e);
-                    try
+                    MapPoint temp = null;
+
+                    if (MapView.Active != null)
                     {
-                        // for now we will always project to WGS84
-                        if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
-                            temp = GeometryEngine.Project(temp, SpatialReferences.WGS84) as MapPoint;
-                        
-                        return temp;
+                        temp = MapView.Active.ClientToMap(e);
+                        try
+                        {
+                            // for now we will always project to WGS84
+                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                                temp = GeometryEngine.Project(temp, SpatialReferences.WGS84) as MapPoint;
+
+                            return temp;
+                        }
+                        catch { }
                     }
-                    catch { }
+
+                    return temp;
+                });//.Result as MapPoint;
+
+                if (mp != null)
+                {
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
                 }
-
-                return temp;
-            });//.Result as MapPoint;
-
-            if (mp != null)
-            {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-            }
+            } 
         }
     }
 }
