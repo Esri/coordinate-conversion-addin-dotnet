@@ -78,10 +78,10 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDMLat.Success && matchDDMLat.Length == input.Length && matchDDMLon.Success && matchDDMLon.Length == input.Length)
             {
-                var dlg = new AmbiguousCoordsView();
-                dlg.ShowDialog();
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
+                    ambiguousCoordsViewDlg.ShowDialog();
 
-                blnMatchDDMLat = dlg.rbLatLon.IsChecked.Value;
+                blnMatchDDMLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon

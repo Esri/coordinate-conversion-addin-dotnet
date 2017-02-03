@@ -110,10 +110,10 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDMSLat.Success && matchDMSLat.Length == input.Length && matchDMSLon.Success && matchDMSLon.Length == input.Length)
             {
-                var dlg = new AmbiguousCoordsView();
-                dlg.ShowDialog();
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
+                    ambiguousCoordsViewDlg.ShowDialog();
 
-                blnMatchDMSLat = dlg.rbLatLon.IsChecked.Value;
+                blnMatchDMSLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon

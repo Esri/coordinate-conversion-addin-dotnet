@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoordinateConversionLibrary.Models;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CoordinateConversionLibrary.Views
 {
@@ -28,6 +16,11 @@ namespace CoordinateConversionLibrary.Views
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void OnDontShowAgainClick(object sender, RoutedEventArgs e)
+        {
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = !cbDontShowAgain.IsChecked.Value;
         }
     }
 }

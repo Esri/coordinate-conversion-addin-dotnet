@@ -12,15 +12,15 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
+using CoordinateConversionLibrary.Views;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
-using CoordinateConversionLibrary.Views;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -79,7 +79,7 @@ namespace CoordinateConversionLibrary.Models
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
             Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[NnSs\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[EeWw\+-])?)$");
-            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[NnSs\+-])?)$");
+            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[NnSs\+-])?)$");
 
             var matchDDLat = regexDDLat.Match(input);
             var matchDDLon = regexDDLon.Match(input);
@@ -91,10 +91,10 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDLat.Success && matchDDLat.Length == input.Length && matchDDLon.Success && matchDDLon.Length == input.Length)
             {
-                var dlg = new AmbiguousCoordsView();
-                dlg.ShowDialog();
-
-                blnMatchDDLat = dlg.rbLatLon.IsChecked.Value;
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
+                    ambiguousCoordsViewDlg.ShowDialog();
+                
+                blnMatchDDLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon
