@@ -60,6 +60,10 @@
                 </Style>
             </ComboBox.ItemContainerStyle>
         </ComboBox>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates dialog" 
+                    Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
+        </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{x:Static prop:Resources.ButtonOK}" 
                     Command="{Binding OKButtonPressedCommand}" 

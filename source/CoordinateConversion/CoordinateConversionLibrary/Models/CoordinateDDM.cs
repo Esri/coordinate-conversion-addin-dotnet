@@ -12,8 +12,9 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
+using CoordinateConversionLibrary.Views;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -69,7 +70,7 @@ namespace CoordinateConversionLibrary.Models
             var matchDDMLat = regexDDMLat.Match(input);
             var matchDDMLon = regexDDMLon.Match(input);
 
-            bool blnMatchDDMLat = false;
+            bool blnMatchDDMLat = matchDDMLat.Success;
             int LatDegrees = -1, LonDegrees = -1;
             double LatMinutes = -1, LonMinutes = -1;
             Group firstPrefix = null, firstSuffix = null, lastPrefix = null, lastSuffix = null;
@@ -77,12 +78,14 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDMLat.Success && matchDDMLat.Length == input.Length && matchDDMLon.Success && matchDDMLon.Length == input.Length)
             {
-                //MessageBox.Show("Ambiguous - Pick Lat/Lon or Lon/Lat");
-                blnMatchDDMLat = true;
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
+                    ambiguousCoordsViewDlg.ShowDialog();
+
+                blnMatchDDMLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
             }
 
             // Lat/Lon
-            if (matchDDMLat.Success && matchDDMLat.Length == input.Length)
+            if (matchDDMLat.Success && matchDDMLat.Length == input.Length && blnMatchDDMLat)
             {
                 if (ValidateNumericCoordinateMatch(matchDDMLat, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" }))
                 {

@@ -22,12 +22,16 @@ namespace CoordinateConversionLibrary.ViewModels
         public EditPropertiesViewModel()
         {
             SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
+
         }
 
         public RelayCommand OKButtonPressedCommand { get; set; }
 
         public CoordinateTypes SelectedCoordinateType { get; set; }
+
+        public bool DisplayAmbiguousCoordsDlg { get; set; }
 
         private bool? dialogResult = null;
         public bool? DialogResult 
@@ -47,6 +51,8 @@ namespace CoordinateConversionLibrary.ViewModels
         private void OnOkButtonPressedCommand(object obj)
         {
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
+
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
 
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
 

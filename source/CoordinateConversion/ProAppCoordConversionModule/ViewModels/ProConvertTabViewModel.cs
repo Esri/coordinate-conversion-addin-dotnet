@@ -82,6 +82,9 @@ namespace ProAppCoordConversionModule.ViewModels
 
         internal override async void OnFlashPointCommandAsync(object obj)
         {
+            // Don't allow updating of the inputs or outputs while flashpoint is happening
+            CoordinateMapTool.AllowUpdates = false;
+
             ProcessInput(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 

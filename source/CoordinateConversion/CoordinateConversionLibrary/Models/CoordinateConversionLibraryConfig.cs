@@ -47,6 +47,17 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
+        private bool displayAmbiguousCoordsDlg = true;
+        public bool DisplayAmbiguousCoordsDlg
+        {
+            get { return displayAmbiguousCoordsDlg; }
+            set
+            {
+                displayAmbiguousCoordsDlg = value;
+                RaisePropertyChanged(() => DisplayAmbiguousCoordsDlg);
+            }
+        }
+
         public ObservableCollection<OutputCoordinateModel> OutputCoordinateList { get; set; }
         public ObservableCollection<DefaultFormatModel> DefaultFormatList { get; set; }
 
@@ -86,6 +97,7 @@ namespace CoordinateConversionLibrary.Models
                     return;
 
                 DisplayCoordinateType = temp.DisplayCoordinateType;
+                DisplayAmbiguousCoordsDlg = temp.DisplayAmbiguousCoordsDlg;
                 OutputCoordinateList = temp.OutputCoordinateList;
                 DefaultFormatList = temp.DefaultFormatList;
 
