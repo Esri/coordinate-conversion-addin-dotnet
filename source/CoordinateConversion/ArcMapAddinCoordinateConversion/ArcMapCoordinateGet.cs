@@ -232,10 +232,11 @@ namespace ArcMapAddinCoordinateConversion
 
         public string GetInputDisplayString()
         {
-            if (Point == null)
-                return "NA";
+            string result = "NA";
+            if (Point == null || Point.IsEmpty)
+                return result;
 
-            var result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
+            result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
 
             if (Point.SpatialReference == null)
                 return result;
