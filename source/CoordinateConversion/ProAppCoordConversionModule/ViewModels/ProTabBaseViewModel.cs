@@ -30,6 +30,9 @@ namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProTabBaseViewModel : TabBaseViewModel
     {
+        // This name should correlate to the name specified in Config.esriaddinx - Tool id="Esri_ArcMapAddinCoordinateConversion_MapPointTool"
+        internal const string MapPointToolName = "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+
         public ProTabBaseViewModel()
         {
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
@@ -45,22 +48,26 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
+        public String PreviousTool { get; set; }
 
         public bool IsToolActive
         {
             get
             {
                 if (FrameworkApplication.CurrentTool != null)
-                    return FrameworkApplication.CurrentTool == "ProAppCoordConversionModule_CoordinateMapTool";
+                    return FrameworkApplication.CurrentTool.ToLower() == MapPointToolName.ToLower();
 
                 return false;
             }
             set
             {
                 if (value)
+                {
+                    PreviousTool = FrameworkApplication.CurrentTool;
                     OnMapToolCommand(null);
+                }     
                 else
-                    FrameworkApplication.SetCurrentToolAsync(string.Empty);
+                    FrameworkApplication.SetCurrentToolAsync(PreviousTool);
 
                 RaisePropertyChanged(() => IsToolActive);
             }
@@ -177,6 +184,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnFlashCompleted(object obj)
         {
             IsToolActive = false;
+            CoordinateMapTool.AllowUpdates = true;
         }
 
         #endregion Mediator handlers
@@ -254,14 +262,14 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var point = obj as MapPoint;
 
-            if(point == null)
+            if (point == null)
                 return;
 
             if (!IsToolActive)
             {
                 await SetAsCurrentToolAsync();
             }
-            
+
             await QueuedTask.Run(() =>
             {
                 // is point within current map extent

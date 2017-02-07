@@ -14,6 +14,7 @@
   *   limitations under the License. 
   ******************************************************************************/ 
 
+using CoordinateConversionLibrary.Views;
 using System;
 using System.Text.RegularExpressions;
 
@@ -33,6 +34,15 @@ namespace CoordinateConversionLibrary.Models
 
     public class CoordinateBase
     {
+        protected static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
+        //public AmbiguousCoordsView AmbiguousCoordsViewDlg()
+        //{
+        //    if (ambiguousCoordsViewDlg == null)
+        //        ambiguousCoordsViewDlg = new AmbiguousCoordsView();
+
+        //    return ambiguousCoordsViewDlg;
+        //}
+
         // only works with numeric values
         protected static bool ValidateNumericCoordinateMatch(Match m, string[] requiredGroupNames)
         {
