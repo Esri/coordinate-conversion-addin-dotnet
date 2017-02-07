@@ -2,7 +2,7 @@
   <Name>Coordinate Conversion</Name>
   <AddInID>{19b92973-746a-4114-9232-3467ca1fc631}</AddInID>
   <Description>Quickly convert coordinate between several formats</Description>
-  <Version>1.0.2</Version>
+  <Version>2.0</Version>
   <Image>Images\ArcMapAddinCoordinateConversion.png</Image>
   <Author>Esri</Author>
   <Company>Esri</Company>
