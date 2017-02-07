@@ -236,6 +236,7 @@ namespace ProAppCoordConversionModule
                     case CoordinateTypes.USNG:
                         tgparam = new ToGeoCoordinateParameter(GeoCoordinateType.USNG);
                         tgparam.NumDigits = 5;
+                        tgparam.AddSpaces = false;
                         result = Point.ToGeoCoordinateString(tgparam);
                         break;
                     case CoordinateTypes.UTM:

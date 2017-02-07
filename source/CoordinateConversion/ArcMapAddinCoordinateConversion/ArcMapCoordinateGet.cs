@@ -262,7 +262,7 @@ namespace ArcMapAddinCoordinateConversion
                         result = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                         break;
                     case CoordinateTypes.USNG:
-                        result = cn.GetUSNGFromCoords(5, true, true);
+                        result = cn.GetUSNGFromCoords(5, true, false);
                         break;
                     case CoordinateTypes.UTM:
                         result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
