@@ -3,8 +3,8 @@
     <Name>Coordinate Conversion</Name>
     <Description>Quickly convert coordinate between several formats</Description>
     <Image>Images\AddinDesktop32.png</Image>
-    <Author>ESRI</Author>
-    <Company>ESRI</Company>
+    <Author>Esri</Author>
+    <Company>Esri</Company>
     <Date>01/20/2017</Date>
     <Subject>Framework</Subject>
     <!-- Note subject can be one or more of these topics:
