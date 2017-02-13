@@ -11,7 +11,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMap 10.3.1 and ArcGIS Pro 1.2
-	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
+	* Works with DD, DDM, DMS, MGRS, USNG and UTM
 
 ## Sections
 
@@ -131,12 +131,6 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "A0° B0' C0.0\"N X0° Y0' Z0.0E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
 				* Note : escape " like \" to get double quotes in the output
-		* **GARS**
-			* "X" = Longitude Band
-			* "Y" = Latitude Band
-			* "Q" = Quadrant
-			* "K" = Key
-			* Example : "X#YQK" will output "221LW37"
 		* **MGRS/USNG**
 			* "Z" = Grid Zone
 			* "S" = Grid Segment
