@@ -55,7 +55,7 @@ namespace CoordinateConversionLibrary.Models
             if (string.IsNullOrWhiteSpace(input))
                 return false;
             
-            input = input.Trim();
+            input = input.Trim().ToUpper();
 
             Regex regexMGRS = new Regex(@"^\s*(?<gzd>\d{1,2}[C-HJ-NP-X])[-,;:\s]*(?<gs1>[A-HJ-NP-Z]{1})(?<gs2>[A-HJ-NP-V]{1})[-,;:\s]*(?<numlocation>\d{0,10})[-,;:\s]*(?<numlocation2>\d{0,10})\s*");
 
