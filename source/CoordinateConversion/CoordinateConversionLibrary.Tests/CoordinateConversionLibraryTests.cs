@@ -23,6 +23,13 @@ namespace CoordinateConversionLibrary.Tests
     [TestClass]
     public class CoordinateConversionLibraryTests
     {
+        [ClassInitialize()]
+        public static void TestClassInitialize(TestContext testContext)
+        {
+            // disable this dialog for tests
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
+        }
+
         [TestMethod]
         public void ParseDD()
         {
@@ -658,7 +665,8 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateMGRS.TryParse("11SMT992", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("11SMT9", out coord));
 
-
+            // Test lowercase MGRS
+            Assert.IsTrue(CoordinateMGRS.TryParse("11smt8154368826", out coord));
         }
 
         [TestMethod]
