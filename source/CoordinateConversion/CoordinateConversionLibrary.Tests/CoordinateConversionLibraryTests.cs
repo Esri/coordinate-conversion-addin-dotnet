@@ -23,6 +23,13 @@ namespace CoordinateConversionLibrary.Tests
     [TestClass]
     public class CoordinateConversionLibraryTests
     {
+        [ClassInitialize()]
+        public static void TestClassInitialize(TestContext testContext)
+        {
+            // disable this dialog for tests
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
+        }
+
         [TestMethod]
         public void ParseDD()
         {
