@@ -658,7 +658,8 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateMGRS.TryParse("11SMT992", out coord));
             Assert.IsFalse(CoordinateMGRS.TryParse("11SMT9", out coord));
 
-
+            // Test lowercase MGRS
+            Assert.IsTrue(CoordinateMGRS.TryParse("11smt8154368826", out coord));
         }
 
         [TestMethod]
