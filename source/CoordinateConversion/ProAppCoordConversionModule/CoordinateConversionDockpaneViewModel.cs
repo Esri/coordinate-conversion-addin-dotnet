@@ -97,7 +97,7 @@ namespace ProAppCoordConversionModule
         private object _lock = new object();
         private async void OnSelectionChanged(MapSelectionChangedEventArgs obj)
         {
-            if (MapView.Active.Map != null && obj.Selection.Count == 1)
+            if (MapView.Active != null && MapView.Active.Map != null && obj.Selection.Count == 1)
             {
                 var fl = obj.Selection.FirstOrDefault().Key as FeatureLayer;
                 if (fl == null || fl.SelectionCount != 1 || fl.ShapeType != esriGeometryType.esriGeometryPoint)
