@@ -194,4 +194,4 @@ limitations under the License.
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
 [](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Military-Tools-for-ArcGIS)
-[](Esri Language: C#) 
+[](Esri Language: C-Sharp) 
