@@ -151,6 +151,33 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please add a basemap or layer to the map..
+        /// </summary>
+        public static string CoordsOutOfBoundsAddlMsg {
+            get {
+                return ResourceManager.GetString("CoordsOutOfBoundsAddlMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates out of Bounds.
+        /// </summary>
+        public static string CoordsoutOfBoundsCaption {
+            get {
+                return ResourceManager.GetString("CoordsoutOfBoundsCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinates or measures are out of bounds..
+        /// </summary>
+        public static string CoordsOutOfBoundsMsg {
+            get {
+                return ResourceManager.GetString("CoordsOutOfBoundsMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom.
         /// </summary>
         public static string CustomString {
@@ -462,6 +489,24 @@ namespace CoordinateConversionLibrary.Properties {
         public static string MsgOverwrite {
             get {
                 return ResourceManager.GetString("MsgOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatial Reference for the map has not been set. Please set it or add a layer to the map..
+        /// </summary>
+        public static string SpatialRefMsg {
+            get {
+                return ResourceManager.GetString("SpatialRefMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Spatial Reference.
+        /// </summary>
+        public static string SpatialRefNullCap {
+            get {
+                return ResourceManager.GetString("SpatialRefNullCap", resourceCulture);
             }
         }
         

@@ -79,7 +79,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
+            if (ArcMap.Document.FocusMap.SpatialReference != null)
+            {
+                SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.SpatialRefMsg,
+                    CoordinateConversionLibrary.Properties.Resources.SpatialRefNullCap);
+            }            
         }
  
 
