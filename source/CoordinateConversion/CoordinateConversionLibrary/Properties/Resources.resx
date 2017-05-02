@@ -318,4 +318,19 @@
   <data name="LabelFieldCombined" xml:space="preserve">
     <value>X/Y</value>
   </data>
+  <data name="CoordsOutOfBoundsAddlMsg" xml:space="preserve">
+    <value>Please add a basemap or layer to the map.</value>
+  </data>
+  <data name="CoordsoutOfBoundsCaption" xml:space="preserve">
+    <value>Coordinates out of Bounds</value>
+  </data>
+  <data name="CoordsOutOfBoundsMsg" xml:space="preserve">
+    <value>The coordinates or measures are out of bounds.</value>
+  </data>
+  <data name="SpatialRefMsg" xml:space="preserve">
+    <value>Spatial Reference for the map has not been set. Please set it or add a layer to the map.</value>
+  </data>
+  <data name="SpatialRefNullCap" xml:space="preserve">
+    <value>Map Spatial Reference</value>
+  </data>
 </root>

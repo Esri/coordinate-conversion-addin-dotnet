@@ -20,6 +20,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -128,13 +129,29 @@ namespace CoordinateConversionLibrary.ViewModels
         public void OnEditPropertiesDialogCommand(object obj)
         {
             var dlg = new EditPropertiesView();
-
-            dlg.ShowDialog();
+            try
+            {
+                dlg.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg, 
+                        CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message);
+                }
+                
+            }
+            
         }
 
         private void OnImportCSVFileCommand(object obj)
         {
-            var fileDialog = new OpenFileDialog();
+            var fileDialog = new Microsoft.Win32.OpenFileDialog();
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
             fileDialog.Filter = "csv files|*.csv";
