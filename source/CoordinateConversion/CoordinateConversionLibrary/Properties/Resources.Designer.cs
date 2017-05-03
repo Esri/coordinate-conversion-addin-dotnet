@@ -376,6 +376,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Coordinate.
+        /// </summary>
+        public static string InvalidCoordCap {
+            get {
+                return ResourceManager.GetString("InvalidCoordCap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid coordinate.
+        /// </summary>
+        public static string InvalidCoordMsg {
+            get {
+                return ResourceManager.GetString("InvalidCoordMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string LabelCategory {

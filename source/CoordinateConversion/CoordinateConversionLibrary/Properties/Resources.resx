@@ -333,4 +333,10 @@
   <data name="AddLayerCap" xml:space="preserve">
     <value>Missing Layer</value>
   </data>
+  <data name="InvalidCoordCap" xml:space="preserve">
+    <value>Invalid Coordinate</value>
+  </data>
+  <data name="InvalidCoordMsg" xml:space="preserve">
+    <value>Please enter a valid coordinate</value>
+  </data>
 </root>
