@@ -212,6 +212,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.InvalidCoordMsg,
+                    CoordinateConversionLibrary.Properties.Resources.InvalidCoordCap);
             }
             else
             {
@@ -564,28 +566,28 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            //Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
 
-            var matchMercator = regexMercator.Match(input);
+            //var matchMercator = regexMercator.Match(input);
 
-            if (matchMercator.Success && matchMercator.Length == input.Length)
-            {
-                try
-                {
-                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-                    IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
-                    var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
-                    point.X = Lon;
-                    point.Y = Lat;
-                    point.SpatialReference = sr;
-                    return CoordinateType.DD;
-                }
-                catch (Exception ex)
-                {
-                    // do nothing
-                }
-            }
+            //if (matchMercator.Success && matchMercator.Length == input.Length)
+            //{
+            //    try
+            //    {
+            //        var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+            //        var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+            //        IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
+            //        var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
+            //        point.X = Lon;
+            //        point.Y = Lat;
+            //        point.SpatialReference = sr;
+            //        return CoordinateType.DD;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // do nothing
+            //    }
+            //}
 
             return CoordinateType.Unknown;
         }

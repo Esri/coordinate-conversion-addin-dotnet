@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
@@ -159,6 +160,8 @@ namespace ProAppCoordConversionModule.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.InvalidCoordMsg,
+                    CoordinateConversionLibrary.Properties.Resources.InvalidCoordCap);
             }
             else
             {

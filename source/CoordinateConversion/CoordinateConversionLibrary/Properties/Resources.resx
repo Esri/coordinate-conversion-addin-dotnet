@@ -333,4 +333,10 @@
   <data name="SpatialRefNullCap" xml:space="preserve">
     <value>Map Spatial Reference</value>
   </data>
+  <data name="InvalidCoordCap" xml:space="preserve">
+    <value>Invalid Coordinate</value>
+  </data>
+  <data name="InvalidCoordMsg" xml:space="preserve">
+    <value>Please enter a valid coordinate</value>
+  </data>
 </root>
