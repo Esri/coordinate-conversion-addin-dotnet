@@ -327,10 +327,10 @@
   <data name="CoordsOutOfBoundsMsg" xml:space="preserve">
     <value>The coordinates or measures are out of bounds.</value>
   </data>
-  <data name="SpatialRefMsg" xml:space="preserve">
-    <value>Spatial Reference for the map has not been set. Please set it or add a layer to the map.</value>
+  <data name="AddLayerMsg" xml:space="preserve">
+    <value>Please add a basemap or a layer to the map.</value>
   </data>
-  <data name="SpatialRefNullCap" xml:space="preserve">
-    <value>Map Spatial Reference</value>
+  <data name="AddLayerCap" xml:space="preserve">
+    <value>Missing Layer</value>
   </data>
 </root>
