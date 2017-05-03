@@ -61,6 +61,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing Layer.
+        /// </summary>
+        public static string AddLayerCap {
+            get {
+                return ResourceManager.GetString("AddLayerCap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add a basemap or a layer to the map..
+        /// </summary>
+        public static string AddLayerMsg {
+            get {
+                return ResourceManager.GetString("AddLayerMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string ButtonCancel {
@@ -489,24 +507,6 @@ namespace CoordinateConversionLibrary.Properties {
         public static string MsgOverwrite {
             get {
                 return ResourceManager.GetString("MsgOverwrite", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Spatial Reference for the map has not been set. Please set it or add a layer to the map..
-        /// </summary>
-        public static string SpatialRefMsg {
-            get {
-                return ResourceManager.GetString("SpatialRefMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Map Spatial Reference.
-        /// </summary>
-        public static string SpatialRefNullCap {
-            get {
-                return ResourceManager.GetString("SpatialRefNullCap", resourceCulture);
             }
         }
         

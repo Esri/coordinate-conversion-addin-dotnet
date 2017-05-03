@@ -79,14 +79,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
-            if (ArcMap.Document.FocusMap.SpatialReference != null)
+            if (ArcMap.LayerCount > 0)
             {
                 SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.SpatialRefMsg,
-                    CoordinateConversionLibrary.Properties.Resources.SpatialRefNullCap);
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.AddLayerMsg,
+                    CoordinateConversionLibrary.Properties.Resources.AddLayerCap);
             }            
         }
  
