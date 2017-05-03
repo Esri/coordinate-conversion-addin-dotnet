@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:u="clr-namespace:CoordinateConversionLibrary.Behaviors"
+             u:WindowBehavior.HideCloseButton="True"
              mc:Ignorable="d" Height="208.921" Width="279.87" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow" Title="Ambiguous Coordinates" Cursor="Arrow">
     <Grid Margin="0,0,0,-5">
         <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="176,91,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.131,-6.576" Click="OkButton_Click"/>

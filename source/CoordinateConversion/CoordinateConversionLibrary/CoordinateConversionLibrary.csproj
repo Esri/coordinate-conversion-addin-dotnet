@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\LocalizableDescriptionAttribute.cs" />
+    <Compile Include="Behaviors\WindowBehavior.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\ImportCSV.cs" />
