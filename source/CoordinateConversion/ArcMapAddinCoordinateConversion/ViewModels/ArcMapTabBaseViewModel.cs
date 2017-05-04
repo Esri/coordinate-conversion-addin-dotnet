@@ -566,6 +566,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
+            /*
+             * Commented out this section of code since it does not capture invalid coordinates
+             * like 00, 45, or 456987. 
+             * 
+             * TODO: update RegEx to accommodate for lack of delimeter
+             */
             //Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
 
             //var matchMercator = regexMercator.Match(input);
