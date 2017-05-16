@@ -32,10 +32,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
-            // commands
-            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
-            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
-
             IsActiveTab = true;
         }
 
@@ -43,21 +39,6 @@ namespace ProAppCoordConversionModule.ViewModels
         public OutputCoordinateView OutputCCView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
-
-        public RelayCommand AddNewOCCommand { get; set; }
-        public RelayCommand CopyAllCommand { get; set; }
-
-        private void OnAddNewOCCommand(object obj)
-        {
-            // Get name from user
-            string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#####N X0.0#####E" });
-        }
-
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
-        }
 
         #region overrides
 

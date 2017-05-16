@@ -34,12 +34,16 @@ namespace CoordinateConversionLibrary.ViewModels
             ExpandCommand = new RelayCommand(OnExpandCommand);
             DeleteCommand = new RelayCommand(OnDeleteCommand);
             CopyCommand = new RelayCommand(OnCopyCommand);
+            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
 
             // set default CoordinateGetter
             coordinateGetter = new CoordinateGetBase();
 
-            Mediator.Register(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate);
+            /* KG - Commented since add new output coordinate and copy all coordinate outputs buttons are now in the OutputCoordinateView.xaml
+            Mediator.Register(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate); 
             Mediator.Register(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
+             * */
             Mediator.Register(CoordinateConversionLibrary.Constants.SetCoordinateGetter, OnSetCoordinateGetter);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestOutputUpdate, OnOutputUpdate);
             Mediator.Register(CoordinateConversionLibrary.Constants.ClearOutputCoordinates, OnClearOutputs);
@@ -87,7 +91,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 sb.AppendLine(output.OutputCoordinate);
             }
 
-            if(sb.Length > 0)
+            if (sb.Length > 0)
             {
                 // copy to clipboard
                 System.Windows.Clipboard.SetText(sb.ToString());
@@ -158,6 +162,27 @@ namespace CoordinateConversionLibrary.ViewModels
         public RelayCommand ExpandCommand { get; set; }
         [XmlIgnore]
         public RelayCommand CopyCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand AddNewOCCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand CopyAllCommand { get; set; }
+
+        // Call AddNewOutputCoordinate event
+        private void OnAddNewOCCommand(object obj)
+        {
+            // Get name from user
+            this.OnAddNewOutputCoordinate(new OutputCoordinateModel() {
+                Name = CoordinateType.DD.ToString(), 
+                CType = CoordinateType.DD, 
+                Format = "Y0.0#####N X0.0#####E" 
+            });
+        }
+
+        // Call CopyAllCoordinateOutputs event
+        private void OnCopyAllCommand(object obj)
+        {
+            this.OnCopyAllCoordinateOutputs(obj);
+        }
 
         // copy parameter to clipboard
         private void OnCopyCommand(object obj)

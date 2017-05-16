@@ -32,19 +32,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             OutputCCView.DataContext = new OutputCoordinateViewModel();
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
-
-            // commands
-            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
-            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
         public OutputCoordinateView OutputCCView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
-
-        public RelayCommand AddNewOCCommand { get; set; }
-        public RelayCommand CopyAllCommand { get; set; }
 
         public bool IsToolActive
         {
@@ -88,19 +81,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.AddLayerMsg,
                     CoordinateConversionLibrary.Properties.Resources.AddLayerCap);
             }            
-        }
- 
-
-        private void OnAddNewOCCommand(object obj)
-        {
-            // Get name from user
-            string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#####N X0.0#####E" });
-        }
-
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
         }
 
         #region overrides
