@@ -30,6 +30,9 @@ namespace ProAppCoordConversionModule.ViewModels
             OutputCCView = new OutputCoordinateView();
             OutputCCView.DataContext = new OutputCoordinateViewModel();
 
+            CollectTabView = new CCCollectTabView();
+            CollectTabView.DataContext = new ProCollectTabViewModel();
+
             InputCoordinateHistoryList = new ObservableCollection<string>();
 
             IsActiveTab = true;
@@ -37,6 +40,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public InputCoordinateConversionView InputCCView { get; set; }
         public OutputCoordinateView OutputCCView { get; set; }
+        public CCCollectTabView CollectTabView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
@@ -56,7 +60,7 @@ namespace ProAppCoordConversionModule.ViewModels
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool
-            IsToolActive = false;
+            //IsToolActive = false;
 
             return true;
         }

@@ -26,6 +26,7 @@ using ProAppCoordConversionModule.Views;
 using ProAppCoordConversionModule.ViewModels;
 using CoordinateConversionLibrary;
 using System;
+using System.Text;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -42,6 +43,8 @@ namespace ProAppCoordConversionModule.ViewModels
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
+            CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
+            CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
@@ -117,6 +120,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
         public RelayCommand SaveAsCommand { get; set; }
+        public RelayCommand CopyCoordinateCommand { get; set; }
+        public RelayCommand CopyAllCoordinatesCommand { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -136,7 +141,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnClearGraphicsCommand(object obj)
         {
-            //TODO update this to Pro
+            DeletePoints(CoordinateAddInPoints.ToList());
         }
 
         private void OnEnterKeyCommand(object obj)
@@ -144,6 +149,43 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!HasInputError && InputCoordinate.Length > 0)
             {
                 AddCollectionPoint(proCoordGetter.Point);
+            }
+        }
+
+        // Call CopyAllCoordinateOutputs event
+        private void OnCopyAllCommand(object obj)
+        {
+            OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
+        }
+
+        // copy parameter to clipboard
+        private void OnCopyCommand(object obj)
+        {
+            var items = obj as IList;
+            var objects = items.Cast<AddInPoint>().ToList();
+
+            if (objects == null)
+                return;
+
+            if (objects == null || !objects.Any())
+                return;
+
+            var sb = new StringBuilder();
+            foreach (var point in objects)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
+
+            foreach (var point in objects)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(point.Text);
             }
         }
 
@@ -183,6 +225,29 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Copies all coordinates to the clipboard
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnCopyAllCoordinateOutputs(List<AddInPoint> aiPoints)
+        {
+            var sb = new StringBuilder();
+
+            if (aiPoints == null || !aiPoints.Any())
+                return;
+
+            foreach (var point in aiPoints)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
             }
         }
         

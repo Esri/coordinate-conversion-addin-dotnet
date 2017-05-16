@@ -22,7 +22,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid MinHeight="20">
+                <!--<Grid MinHeight="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -62,7 +62,7 @@
                                Height="16"
                                Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
                     </ToggleButton>
-                </Grid>
+                </Grid>-->
                 <ListBox x:Name="listBoxCoordinates"
                          Grid.Row="1"
                          MinHeight="40"
@@ -92,6 +92,13 @@
                                       CommandParameter="{Binding}"
                                       Header="{x:Static prop:Resources.HeaderFlash}"
                                       IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
+                            <MenuItem Command="{Binding DataContext.CopyCoordinateCommand}"
+                                      CommandParameter="{Binding Path=SelectedItems}"
+                                      Header="{x:Static prop:Resources.MenuLabelCopy}"
+                                      IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
+                            <MenuItem Command="{Binding DataContext.CopyAllCoordinatesCommand}"
+                                      Header="{x:Static prop:Resources.MenuLabelCopyAll}"
+                                      IsEnabled="{Binding HasItems}" />                                         
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.InputBindings>
@@ -126,15 +133,9 @@
                     <Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
-                            Command="{Binding ImportCSVFileCommand}"
-                            Content="{x:Static prop:Resources.LabelImport}"
-                            ToolTip="{x:Static prop:Resources.LabelImport}" />
-                    <!--<Button Width="Auto"
-                            Height="Auto"
-                            Margin="3,3,0,0"
                             Command="{Binding ClearGraphicsCommand}"
-                            Content="{x:Static prop:Resources.LabelClearGraphics}"
-                            ToolTip="{x:Static prop:Resources.LabelClearGraphics}">
+                            Content="{x:Static prop:Resources.LabelClearAll}"
+                            ToolTip="{x:Static prop:Resources.LabelClearAllCap}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
@@ -145,13 +146,19 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                    </Button>-->
+                    </Button>                    
+                    <Button Width="Auto"
+                            Height="Auto"
+                            Margin="3,3,0,0"
+                            Command="{Binding ImportCSVFileCommand}"
+                            Content="{x:Static prop:Resources.LabelImport}"
+                            ToolTip="{x:Static prop:Resources.LabelImportCap}" />
                     <Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
                             Command="{Binding SaveAsCommand}"
-                            Content="{x:Static prop:Resources.LabelSaveAs}"
-                            ToolTip="{x:Static prop:Resources.LabelSaveAs}">
+                            Content="{x:Static prop:Resources.LabelExport}"
+                            ToolTip="{x:Static prop:Resources.LabelExportCap}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
