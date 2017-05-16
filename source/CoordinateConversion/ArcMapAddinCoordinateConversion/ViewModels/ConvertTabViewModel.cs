@@ -31,11 +31,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             OutputCCView = new OutputCoordinateView();
             OutputCCView.DataContext = new OutputCoordinateViewModel();
 
+            CollectTabView = new CCCollectTabView();
+            CollectTabView.DataContext = new CollectTabViewModel();
+
             InputCoordinateHistoryList = new ObservableCollection<string>();
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
         public OutputCoordinateView OutputCCView { get; set; }
+        public CCCollectTabView CollectTabView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
@@ -99,7 +103,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool
-            IsToolActive = false;
+            //IsToolActive = false;
 
             return true;
         }

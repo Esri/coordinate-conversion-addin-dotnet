@@ -72,7 +72,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public MapPointToolMode ToolMode { get; set; }
 
-        private bool isActiveTab = false;
+        private bool isActiveTab = true;
         /// <summary>
         /// Property to keep track of which tab/viewmodel is the active item
         /// </summary>

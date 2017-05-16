@@ -339,4 +339,28 @@
   <data name="InvalidCoordMsg" xml:space="preserve">
     <value>Please enter a valid coordinate</value>
   </data>
+  <data name="HeaderList" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="LabelClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="LabelClearAllCap" xml:space="preserve">
+    <value>Clear All Coordinates</value>
+  </data>
+  <data name="LabelExport" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="LabelExportCap" xml:space="preserve">
+    <value>Export Coordinates</value>
+  </data>
+  <data name="LabelImportCap" xml:space="preserve">
+    <value>Import Coordinates</value>
+  </data>
+  <data name="MenuLabelCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="MenuLabelCopyAll" xml:space="preserve">
+    <value>Copy All</value>
+  </data>
 </root>

@@ -27,6 +27,8 @@ using ArcMapAddinCoordinateConversion.Views;
 using ESRI.ArcGIS.Geodatabase;
 using CoordinateConversionLibrary;
 using System.Windows.Forms;
+using System.Text;
+using CoordinateConversionLibrary.Models;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -43,6 +45,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
+            CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
+            CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
@@ -102,6 +106,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
         public RelayCommand SaveAsCommand { get; set; }
+        public RelayCommand CopyCoordinateCommand { get; set; }
+        public RelayCommand CopyAllCoordinatesCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
         private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -124,6 +130,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void OnClearGraphicsCommand(object obj)
         {
+            /* KG - Use DeletePoints() to Clrea All button
             var mxdoc = ArcMap.Application.Document as IMxDocument;
             if (mxdoc == null)
                 return;
@@ -139,6 +146,45 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             //av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             av.Refresh(); // sometimes a partial refresh is not working
+            */
+            DeletePoints(CoordinateAddInPoints.ToList());
+        }
+
+        // Call CopyAllCoordinateOutputs event
+        private void OnCopyAllCommand(object obj)
+        {
+            OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
+        }
+
+        // copy parameter to clipboard
+        private void OnCopyCommand(object obj)
+        {
+            var items = obj as IList;
+            var objects = items.Cast<AddInPoint>().ToList();
+
+            if (objects == null)
+                return;            
+
+            if (objects == null || !objects.Any())
+                return;
+
+            var sb = new StringBuilder();
+            foreach (var point in objects)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
+
+            foreach (var point in objects)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(point.Text);
+            }
         }
 
         private void OnEnterKeyCommand(object obj)
@@ -202,6 +248,30 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// Copies all coordinates to the clipboard
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnCopyAllCoordinateOutputs(List<AddInPoint> aiPoints)
+        {
+            var sb = new StringBuilder();
+
+            if (aiPoints == null || !aiPoints.Any())
+                return;
+
+            foreach (var point in aiPoints)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
+        }
+
         /// <summary>
         /// Add the feature layer to the map 
         /// </summary>
