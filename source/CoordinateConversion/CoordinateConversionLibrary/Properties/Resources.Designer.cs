@@ -196,6 +196,33 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Successful.
+        /// </summary>
+        public static string CSVExportSuccessfulCaption {
+            get {
+                return ResourceManager.GetString("CSVExportSuccessfulCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully exported to .
+        /// </summary>
+        public static string CSVExportSuccessfulMessage {
+            get {
+                return ResourceManager.GetString("CSVExportSuccessfulMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose location to create CSV file.
+        /// </summary>
+        public static string CSVLocationMessage {
+            get {
+                return ResourceManager.GetString("CSVLocationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom.
         /// </summary>
         public static string CustomString {
@@ -399,6 +426,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string InvalidCoordMsg {
             get {
                 return ResourceManager.GetString("InvalidCoordMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose location to create KMZ file.
+        /// </summary>
+        public static string KMLLocationMessage {
+            get {
+                return ResourceManager.GetString("KMLLocationMessage", resourceCulture);
             }
         }
         
