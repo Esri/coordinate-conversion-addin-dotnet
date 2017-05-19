@@ -250,7 +250,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {                        
                         string csvName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
-                        string tempFile = folderName + csvName;
+                        string tempFile = System.IO.Path.Combine(folderName, csvName);
 
                         var aiPoints = CoordinateAddInPoints.ToList();
 
@@ -261,7 +261,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         foreach (var point in aiPoints)
                         {
                             csvExport.AddRow();
-                            csvExport["Coordinate"] = point.Text;
+                            csvExport["Coordinates"] = point.Text;
                         }
                         csvExport.ExportToFile(tempFile);
 
