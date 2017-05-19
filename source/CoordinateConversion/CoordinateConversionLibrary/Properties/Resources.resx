@@ -363,4 +363,16 @@
   <data name="MenuLabelCopyAll" xml:space="preserve">
     <value>Copy All</value>
   </data>
+  <data name="CSVExportSuccessfulCaption" xml:space="preserve">
+    <value>Export Successful</value>
+  </data>
+  <data name="CSVExportSuccessfulMessage" xml:space="preserve">
+    <value>Successfully exported to </value>
+  </data>
+  <data name="CSVLocationMessage" xml:space="preserve">
+    <value>Choose location to create CSV file</value>
+  </data>
+  <data name="KMLLocationMessage" xml:space="preserve">
+    <value>Choose location to create KMZ file</value>
+  </data>
 </root>

@@ -27,6 +27,7 @@ using ProAppCoordConversionModule.ViewModels;
 using CoordinateConversionLibrary;
 using System;
 using System.Text;
+using Jitbit.Utils;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -199,7 +200,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 var fcUtils = new FeatureClassUtils();
 
-                string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked);
+                string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked, vm.CSVIsChecked);
                 if (path != null)
                 {
                     try
@@ -218,6 +219,24 @@ namespace ProAppCoordConversionModule.ViewModels
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
                             await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, mapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                        }
+                        else if (vm.CSVIsChecked)
+                        {
+                            var aiPoints = CoordinateAddInPoints.ToList();
+
+                            if (aiPoints == null || !aiPoints.Any())
+                                return;
+
+                            var csvExport = new CsvExport();
+                            foreach (var point in aiPoints)
+                            {
+                                csvExport.AddRow();
+                                csvExport["Coordinate"] = point.Text;
+                            }
+                            csvExport.ExportToFile(path);
+
+                            System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
+                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption); 
                         }
                     }
                     catch (Exception ex)

@@ -45,7 +45,7 @@ namespace ProAppCoordConversionModule.Models
         /// 
         /// </summary>
         /// <returns>The path to selected output (fgdb/shapefile)</returns>
-        public string PromptUserWithSaveDialog(bool featureChecked, bool shapeChecked, bool kmlChecked)
+        public string PromptUserWithSaveDialog(bool featureChecked, bool shapeChecked, bool kmlChecked, bool csvChecked)
         {
             //Prep the dialog
             SaveItemDialog saveItemDlg = new SaveItemDialog();
@@ -69,6 +69,11 @@ namespace ProAppCoordConversionModule.Models
             {
                 saveItemDlg.Filter = ItemFilters.kml;
                 saveItemDlg.DefaultExt = "kmz";
+            }
+            else if (csvChecked)
+            {
+                saveItemDlg.Filter = ItemFilters.textFiles;
+                saveItemDlg.DefaultExt = "csv";
             }
 
             bool? ok = saveItemDlg.ShowDialog();

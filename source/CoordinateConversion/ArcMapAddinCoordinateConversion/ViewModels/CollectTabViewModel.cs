@@ -29,6 +29,7 @@ using CoordinateConversionLibrary;
 using System.Windows.Forms;
 using System.Text;
 using CoordinateConversionLibrary.Models;
+using Jitbit.Utils;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -221,9 +222,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         }
                     }
                 }
-                else
+                else if (vm.KmlIsChecked)
                 {
-                    path = PromptSaveFileDialog();
+                    path = PromptSaveFileDialog("kmz", "KMZ File (*.kmz)|*.kmz", CoordinateConversionLibrary.Properties.Resources.KMLLocationMessage);
                     if (path != null)
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
@@ -239,6 +240,33 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             // delete the temporary shapefile
                             fcUtils.DeleteShapeFile(tempShapeFile);
                         }
+                    }
+                }
+                else
+                {
+                    //Export to CSV
+                    path = PromptSaveFileDialog("csv", "CSV File (*.csv)|*.csv", CoordinateConversionLibrary.Properties.Resources.CSVLocationMessage);
+                    if (path != null)
+                    {                        
+                        string csvName = System.IO.Path.GetFileName(path);
+                        string folderName = System.IO.Path.GetDirectoryName(path);
+                        string tempFile = System.IO.Path.Combine(folderName, csvName);
+
+                        var aiPoints = CoordinateAddInPoints.ToList();
+
+                        if (aiPoints == null || !aiPoints.Any())
+                            return;
+
+                        var csvExport = new CsvExport();
+                        foreach (var point in aiPoints)
+                        {
+                            csvExport.AddRow();
+                            csvExport["Coordinates"] = point.Text;
+                        }
+                        csvExport.ExportToFile(tempFile);
+
+                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + tempFile,
+                            CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);                        
                     }
                 }
 
@@ -318,17 +346,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         private SaveFileDialog sfDlg = null;
-        private string PromptSaveFileDialog()
+        private string PromptSaveFileDialog(string ext, string filter, string title)
         {
             if (sfDlg == null)
             {
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = "kmz";
-                sfDlg.Filter = "KMZ File (*.kmz)|*.kmz";
+                sfDlg.DefaultExt = ext; // "kmz";
+                sfDlg.Filter = filter; // "KMZ File (*.kmz)|*.kmz";
                 sfDlg.OverwritePrompt = true;
-                sfDlg.Title = "Choose location to create KMZ file";
+                sfDlg.Title = title; // "Choose location to create KMZ file";
 
             }
             sfDlg.FileName = "";
