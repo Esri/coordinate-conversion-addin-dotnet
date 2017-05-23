@@ -136,6 +136,8 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public override void ProcessInput(string input)
         {
+            if (input == "NA") return;
+
             string result = string.Empty;
             //MapPoint point;
             HasInputError = false;

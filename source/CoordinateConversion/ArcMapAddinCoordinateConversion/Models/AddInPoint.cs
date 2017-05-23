@@ -44,7 +44,18 @@ namespace ArcMapAddinCoordinateConversion.Models
         }
         public string Text
         {
-            get { return pointConverter.Convert(point as object, typeof(string), null, null) as string; }
+            get 
+            {   
+                try
+                {
+                    return pointConverter.Convert(point as object, typeof(string), null, null) as string; 
+                }
+                catch
+                {
+                    return "NA";
+                }
+                
+            }
         }
 
         private string guid = string.Empty;
