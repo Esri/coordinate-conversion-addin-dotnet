@@ -250,7 +250,7 @@ namespace ProAppCoordConversionModule
             }
             catch(Exception ex)
             {
-                // do nothing
+                return "NA";
             }
             return result;
         }

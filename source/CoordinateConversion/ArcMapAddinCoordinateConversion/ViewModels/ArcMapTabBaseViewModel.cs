@@ -191,6 +191,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public override void ProcessInput(string input)
         {
+            if (input == "NA") return;
+
             base.ProcessInput(input);
 
             string result = string.Empty;
@@ -567,33 +569,30 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
 
             /*
-             * Commented out this section of code since it does not capture invalid coordinates
-             * like 00, 45, or 456987. 
-             * 
-             * TODO: update RegEx to accommodate for lack of delimeter
+             * Updated RegEx to capture invalid coordinates like 00, 45, or 456987. 
              */
-            //Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]{1,}(?<longitude>\-?\d+[.,]?\d*)");
 
-            //var matchMercator = regexMercator.Match(input);
+            var matchMercator = regexMercator.Match(input);
 
-            //if (matchMercator.Success && matchMercator.Length == input.Length)
-            //{
-            //    try
-            //    {
-            //        var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-            //        var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-            //        IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
-            //        var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
-            //        point.X = Lon;
-            //        point.Y = Lat;
-            //        point.SpatialReference = sr;
-            //        return CoordinateType.DD;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        // do nothing
-            //    }
-            //}
+            if (matchMercator.Success && matchMercator.Length == input.Length)
+            {
+                try
+                {
+                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    IMap map = ((IMxDocument)ArcMap.Application.Document).FocusMap;
+                    var sr = map.SpatialReference != null ? map.SpatialReference : ArcMapHelpers.GetSR((int)esriSRProjCS3Type.esriSRProjCS_WGS1984WebMercatorMajorAuxSphere);
+                    point.X = Lon;
+                    point.Y = Lat;
+                    point.SpatialReference = sr;
+                    return CoordinateType.DD;
+                }
+                catch (Exception ex)
+                {
+                    // do nothing
+                }
+            }
 
             return CoordinateType.Unknown;
         }

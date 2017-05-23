@@ -47,7 +47,17 @@ namespace ProAppCoordConversionModule.Models
         }
         public string Text
         {
-            get { return MapPointHelper.GetMapPointAsDisplayString(Point); }
+            get 
+            {
+                try
+                {
+                    return MapPointHelper.GetMapPointAsDisplayString(Point); 
+                }
+                catch
+                {
+                    return "NA";
+                }
+            }
         }
 
         private string guid = string.Empty;

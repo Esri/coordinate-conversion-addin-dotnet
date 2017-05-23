@@ -353,10 +353,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = ext; // "kmz";
-                sfDlg.Filter = filter; // "KMZ File (*.kmz)|*.kmz";
+                sfDlg.DefaultExt = ext; 
+                sfDlg.Filter = filter;
                 sfDlg.OverwritePrompt = true;
-                sfDlg.Title = title; // "Choose location to create KMZ file";
+                sfDlg.Title = title;
 
             }
             sfDlg.FileName = "";
@@ -470,12 +470,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void AddCollectionPoint(IPoint point)
         {
-            var color = new RgbColorClass() { Red = 255 } as IColor;
-            var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
-            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
-            CoordinateAddInPoints.Add(addInPoint);
+            if (!point.IsEmpty)
+            {
+                var color = new RgbColorClass() { Red = 255 } as IColor;
+                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+                var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+                CoordinateAddInPoints.Add(addInPoint);
 
-            GraphicsList.Add(new AMGraphic(guid, point, true));
+                GraphicsList.Add(new AMGraphic(guid, point, true));
+            }
         }
 
         private void RemoveGraphics(List<string> guidList)
