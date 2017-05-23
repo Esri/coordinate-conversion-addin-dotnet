@@ -533,6 +533,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             foreach (var coordinate in coordinates)
             {
+                this.ProcessInput(coordinate);
                 InputCoordinate = coordinate;
                 if (!HasInputError)
                     OnNewMapPoint(amCoordGetter.Point);

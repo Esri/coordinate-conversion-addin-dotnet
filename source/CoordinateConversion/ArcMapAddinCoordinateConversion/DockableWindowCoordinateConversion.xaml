@@ -11,15 +11,9 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <Grid>
-        <!--<TabControl SelectedItem="{Binding SelectedTab, Mode=OneWayToSource}">
-            <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
-                <UserControl Content="{Binding ConvertTabView}" />
-            </TabItem>
-            <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
-                <UserControl Content="{Binding CollectTabView}" />
-            </TabItem>
-        </TabControl>-->
-        <UserControl Content="{Binding ConvertTabView}" />
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid ScrollViewer.CanContentScroll="True">
+            <UserControl Content="{Binding ConvertTabView}" />
+        </Grid>
+    </ScrollViewer>
 </UserControl>
