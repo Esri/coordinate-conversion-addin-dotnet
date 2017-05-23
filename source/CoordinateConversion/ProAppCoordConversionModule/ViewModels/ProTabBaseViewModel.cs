@@ -560,33 +560,30 @@ namespace ProAppCoordConversionModule.ViewModels
             }
 
             /*
-             * Commented out this section of code since it does not capture invalid coordinates
-             * like 00, 45, or 456987. 
-             * 
-             * TODO: update RegEx to accommodate for lack of delimeter
+             * Updated RegEx to capture invalid coordinates like 00, 45, or 456987. 
              */
-            //Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]{1,}(?<longitude>\-?\d+[.,]?\d*)");
 
-            //var matchMercator = regexMercator.Match(input);
+            var matchMercator = regexMercator.Match(input);
 
-            //if (matchMercator.Success && matchMercator.Length == input.Length)
-            //{
-            //    try
-            //    {
-            //        var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-            //        var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
-            //        var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
-            //        point = await QueuedTask.Run(() =>
-            //        {
-            //            return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
-            //        });//.Result;
-            //        return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-            //    }
-            //}
+            if (matchMercator.Success && matchMercator.Length == input.Length)
+            {
+                try
+                {
+                    var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
+                    var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
+                    point = await QueuedTask.Run(() =>
+                    {
+                        return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
+                    });//.Result;
+                    return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
+                }
+                catch (Exception ex)
+                {
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
+                }
+            }
 
             return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
         }
