@@ -470,7 +470,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void AddCollectionPoint(IPoint point)
         {
-            if (!point.IsEmpty)
+            if (!point.IsEmpty && point != null)
             {
                 var color = new RgbColorClass() { Red = 255 } as IColor;
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
