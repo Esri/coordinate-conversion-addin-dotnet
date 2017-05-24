@@ -10,7 +10,7 @@
         Title="{x:Static prop:Resources.TitleSelectCoordinateFields}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        d:DesignHeight="210"
+        d:DesignHeight="160"
         d:DesignWidth="300"
         ResizeMode="NoResize"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
@@ -20,7 +20,7 @@
             <TextBlock Margin="3,5,20,0" Text="{x:Static prop:Resources.LabelField1}" />
             <ComboBox Height="Auto"
                       MinWidth="200"
-                      Width="Auto"
+                      Width="253"
                       Margin="3,3,3,0"
                       ItemsSource="{Binding AvailableFields}"
                       SelectedItem="{Binding SelectedField1}">
@@ -31,7 +31,7 @@
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
         </StackPanel>
-        <CheckBox x:Name="useTwoFields" Height="Auto" Margin="3,15,10,3" HorizontalAlignment="Left" Content="{x:Static prop:Resources.UseTwoFields}" IsChecked="{Binding UseTwoFields}"/>
+        <CheckBox x:Name="useTwoFields" Height="Auto" Margin="33,15,0,3" HorizontalAlignment="Left" Content="{x:Static prop:Resources.UseTwoFields}" IsChecked="{Binding UseTwoFields}"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,3,0,0">
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
@@ -46,7 +46,7 @@
             <TextBlock Margin="3,5,20,0" Text="{x:Static prop:Resources.LabelField2}" />
             <ComboBox Height="Auto"
                       MinWidth="200"
-                      Width="Auto"
+                      Width="253"
                       Margin="3,3,3,0"
                       ItemsSource="{Binding AvailableFields}"
                       SelectedItem="{Binding SelectedField2}">

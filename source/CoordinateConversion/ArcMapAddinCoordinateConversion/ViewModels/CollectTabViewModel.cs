@@ -258,11 +258,23 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             return;
 
                         var csvExport = new CsvExport();
+
+                        //CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
                         foreach (var point in aiPoints)
                         {
                             csvExport.AddRow();
                             csvExport["Coordinates"] = point.Text;
+
+                            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                            {
+                                csvExport[output.Name] = output.OutputCoordinate;
+                                foreach (KeyValuePair<string, string> entry in output.Props)
+                                {                                    
+                                    csvExport[output.Name + "_" + entry.Key] = entry.Value;
+                                }
+                            }
                         }
+
                         csvExport.ExportToFile(tempFile);
 
                         System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + tempFile,
