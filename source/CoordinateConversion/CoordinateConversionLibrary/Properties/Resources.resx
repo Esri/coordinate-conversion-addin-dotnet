@@ -286,10 +286,10 @@
     <value>Select Fields</value>
   </data>
   <data name="LabelField1" xml:space="preserve">
-    <value>X</value>
+    <value>X Field (Longitude)</value>
   </data>
   <data name="LabelField2" xml:space="preserve">
-    <value>Y</value>
+    <value>Y Field (Latitude)</value>
   </data>
   <data name="LabelInputType" xml:space="preserve">
     <value>Input Type</value>

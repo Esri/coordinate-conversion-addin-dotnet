@@ -511,7 +511,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X.
+        ///   Looks up a localized string similar to X Field (Longitude).
         /// </summary>
         public static string LabelField1 {
             get {
@@ -520,7 +520,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y.
+        ///   Looks up a localized string similar to Y Field (Latitude).
         /// </summary>
         public static string LabelField2 {
             get {
