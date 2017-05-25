@@ -212,14 +212,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     path = fcUtils.PromptUserWithGxDialog(ArcMap.Application.hWnd);
                     if (path != null)
                     {
-                        if (System.IO.Path.GetExtension(path).Equals(".shp"))
-                        {
-                            fc = fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
-                        }
-                        else
-                        {
-                            fc = fcUtils.CreateFCOutput(path, SaveAsType.FileGDB, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
-                        }
+                        SaveAsType saveType = System.IO.Path.GetExtension(path).Equals(".shp") ? SaveAsType.Shapefile : SaveAsType.FileGDB;
+                        fc = fcUtils.CreateFCOutput(path, saveType, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
                     }
                 }
                 else if (vm.KmlIsChecked)
@@ -247,7 +241,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     //Export to CSV
                     path = PromptSaveFileDialog("csv", "CSV File (*.csv)|*.csv", CoordinateConversionLibrary.Properties.Resources.CSVLocationMessage);
                     if (path != null)
-                    {                        
+                    {
                         string csvName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         string tempFile = System.IO.Path.Combine(folderName, csvName);
@@ -258,27 +252,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             return;
 
                         var csvExport = new CsvExport();
-
-                        //CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
                         foreach (var point in aiPoints)
                         {
                             csvExport.AddRow();
                             csvExport["Coordinates"] = point.Text;
-
-                            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
-                            {
-                                csvExport[output.Name] = output.OutputCoordinate;
-                                foreach (KeyValuePair<string, string> entry in output.Props)
-                                {                                    
-                                    csvExport[output.Name + "_" + entry.Key] = entry.Value;
-                                }
-                            }
                         }
-
                         csvExport.ExportToFile(tempFile);
 
                         System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + tempFile,
-                            CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);                        
+                            CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
                     }
                 }
 
