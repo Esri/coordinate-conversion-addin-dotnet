@@ -183,12 +183,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 // copy to clipboard
                 System.Windows.Clipboard.SetText(sb.ToString());
             }
-
-            foreach (var point in objects)
-            {
-                // copy to clipboard
-                System.Windows.Clipboard.SetText(point.Text);
-            }
         }
 
         private async void OnSaveAsCommand(object obj)
