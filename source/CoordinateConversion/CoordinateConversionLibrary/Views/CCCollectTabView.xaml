@@ -30,7 +30,7 @@
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                          SelectedIndex="{Binding ListBoxSelectedIndex}"
                          SelectedItem="{Binding ListBoxSelectedItem}"
-                         SelectionMode="Multiple">
+                         SelectionMode="Extended">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

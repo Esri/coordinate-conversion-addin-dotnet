@@ -29,7 +29,7 @@
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
         </StackPanel>
-        <CheckBox x:Name="useTwoFields" Height="Auto" Margin="117,15,0,3" HorizontalAlignment="Left" Content="{x:Static prop:Resources.UseTwoFields}" IsChecked="{Binding UseTwoFields}"/>
+        <CheckBox x:Name="useTwoFields" Height="Auto" Margin="120,15,0,3" HorizontalAlignment="Left" Content="{x:Static prop:Resources.UseTwoFields}" IsChecked="{Binding UseTwoFields}"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,3,0,0">
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
