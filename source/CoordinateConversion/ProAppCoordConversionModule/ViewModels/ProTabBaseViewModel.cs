@@ -31,8 +31,8 @@ namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProTabBaseViewModel : TabBaseViewModel
     {
-        // This name should correlate to the name specified in Config.esriaddinx - Tool id="Esri_ArcMapAddinCoordinateConversion_MapPointTool"
-        internal const string MapPointToolName = "Esri_ArcMapAddinCoordinateConversion_MapPointTool";
+        // This name should correlate to the name specified in Config.esriaddinx - Tool id="ProAppCoordConversionModule_CoordinateMapTool"
+        internal const string MapPointToolName = "ProAppCoordConversionModule_CoordinateMapTool";
 
         public ProTabBaseViewModel()
         {
