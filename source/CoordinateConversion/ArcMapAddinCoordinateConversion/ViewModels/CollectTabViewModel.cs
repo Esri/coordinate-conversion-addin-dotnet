@@ -49,8 +49,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
 
+            // Listen to collection changed event and notify colleagues
+            CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
+
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
+        }
+
+        /// <summary>
+        /// Notify if collection list has any items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
         public bool HasListBoxRightClickSelectedItem
@@ -463,7 +476,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 var color = new RgbColorClass() { Red = 255 } as IColor;
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
-                CoordinateAddInPoints.Add(addInPoint);
+
+                //Add point to the top of the list
+                CoordinateAddInPoints.Insert(0, addInPoint);
 
                 GraphicsList.Add(new AMGraphic(guid, point, true));
             }
