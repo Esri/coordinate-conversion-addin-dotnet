@@ -336,8 +336,16 @@ namespace ProAppCoordConversionModule.Models
                 arguments.Add("DISABLED");
                 arguments.Add(spatialRef);
 
+                var env = Geoprocessing.MakeEnvironmentArray(overwriteoutput: true);
+
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
-                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", valueArray);
+
+                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", 
+                    valueArray,
+                    env,
+                    null,
+                    null,
+                    GPExecuteToolFlags.Default);
 
                 await CreateFeatures(mapPointList);
 
