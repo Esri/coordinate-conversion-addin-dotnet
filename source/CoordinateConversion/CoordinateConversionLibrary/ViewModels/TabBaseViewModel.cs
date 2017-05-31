@@ -72,7 +72,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public MapPointToolMode ToolMode { get; set; }
 
-        private bool isActiveTab = false;
+        private bool isActiveTab = true;
         /// <summary>
         /// Property to keep track of which tab/viewmodel is the active item
         /// </summary>
@@ -151,6 +151,8 @@ namespace CoordinateConversionLibrary.ViewModels
 
         private void OnImportCSVFileCommand(object obj)
         {
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false; 
+
             var fileDialog = new Microsoft.Win32.OpenFileDialog();
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
@@ -190,6 +192,8 @@ namespace CoordinateConversionLibrary.ViewModels
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
                 }
             }
+
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true; 
         }
 
         private void OnNewMapPointInternal(object obj)

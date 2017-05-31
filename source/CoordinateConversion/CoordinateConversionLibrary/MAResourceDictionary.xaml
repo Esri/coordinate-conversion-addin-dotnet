@@ -110,4 +110,8 @@
         <Setter Property="Command" Value="{Binding EditPropertiesDialogCommand}" />
         <Setter Property="ToolTip" Value="{x:Static prop:Resources.TooltipEditProperties}" />
     </Style>
+    <Style x:Key="comboBoxItemStyle" TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Background" Value="White" />
+    </Style>    
 </ResourceDictionary>

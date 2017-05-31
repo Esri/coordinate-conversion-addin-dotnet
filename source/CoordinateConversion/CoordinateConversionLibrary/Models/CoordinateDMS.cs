@@ -113,7 +113,7 @@ namespace CoordinateConversionLibrary.Models
                 if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
                     ambiguousCoordsViewDlg.ShowDialog();
 
-                blnMatchDMSLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
+                blnMatchDMSLat = ambiguousCoordsViewDlg.CheckedLatLon;
             }
 
             // Lat/Lon

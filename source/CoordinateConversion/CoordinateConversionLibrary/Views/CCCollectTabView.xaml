@@ -18,60 +18,19 @@
         <ScrollViewer Padding="0,0,3,0" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid MinHeight="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="input"
-                             Margin="3,3,0,0"
-                             HorizontalAlignment="Stretch"
-                             Text="{Binding InputCoordinate,
-                                            UpdateSourceTrigger=PropertyChanged}">
-                        <TextBox.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                        <Setter Property="TextBox.Background" Value="LightPink" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                        <Setter Property="TextBox.Background" Value="White" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                        <TextBox.InputBindings>
-                            <KeyBinding Key="Enter" Command="{Binding EnterKeyCommand}" />
-                        </TextBox.InputBindings>
-                    </TextBox>
-                    <Button Grid.Column="1"
-                            Margin="3,3,0,0"
-                            Style="{StaticResource buttonProperties}"
-                            ToolTip="{x:Static prop:Resources.TitleEditProperties}" />
-                    <ToggleButton Grid.Column="2"
-                                  Margin="3,3,0,0"
-                                  IsChecked="{Binding IsToolActive}"
-                                  Style="{StaticResource BorderedTButtonStyle}"
-                                  ToolTip="{x:Static prop:Resources.TooltipMapPointTool}">
-                        <Image Width="16"
-                               Height="16"
-                               Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
-                    </ToggleButton>
-                </Grid>
                 <ListBox x:Name="listBoxCoordinates"
-                         Grid.Row="1"
+                         Grid.Row="0"
                          MinHeight="40"
+                         MaxHeight="300"
                          Margin="3,3,0,0"
                          ItemsSource="{Binding CoordinateAddInPoints}"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                          SelectedIndex="{Binding ListBoxSelectedIndex}"
                          SelectedItem="{Binding ListBoxSelectedItem}"
-                         SelectionMode="Multiple">
+                         SelectionMode="Extended">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -92,6 +51,13 @@
                                       CommandParameter="{Binding}"
                                       Header="{x:Static prop:Resources.HeaderFlash}"
                                       IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
+                            <MenuItem Command="{Binding DataContext.CopyCoordinateCommand}"
+                                      CommandParameter="{Binding Path=SelectedItems}"
+                                      Header="{x:Static prop:Resources.MenuLabelCopy}"
+                                      IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
+                            <MenuItem Command="{Binding DataContext.CopyAllCoordinatesCommand}"
+                                      Header="{x:Static prop:Resources.MenuLabelCopyAll}"
+                                      IsEnabled="{Binding HasItems}" />                                         
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.InputBindings>
@@ -118,7 +84,7 @@
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>
-                <StackPanel Grid.Row="2"
+                <StackPanel Grid.Row="1"
                             MinHeight="20"
                             Margin="3,3,0,0"
                             HorizontalAlignment="Right"
@@ -126,15 +92,9 @@
                     <Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
-                            Command="{Binding ImportCSVFileCommand}"
-                            Content="{x:Static prop:Resources.LabelImport}"
-                            ToolTip="{x:Static prop:Resources.LabelImport}" />
-                    <!--<Button Width="Auto"
-                            Height="Auto"
-                            Margin="3,3,0,0"
                             Command="{Binding ClearGraphicsCommand}"
-                            Content="{x:Static prop:Resources.LabelClearGraphics}"
-                            ToolTip="{x:Static prop:Resources.LabelClearGraphics}">
+                            Content="{x:Static prop:Resources.LabelClearAll}"
+                            ToolTip="{x:Static prop:Resources.LabelClearAllCap}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
@@ -145,13 +105,19 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                    </Button>-->
+                    </Button>                    
+                    <Button Width="Auto"
+                            Height="Auto"
+                            Margin="3,3,0,0"
+                            Command="{Binding ImportCSVFileCommand}"
+                            Content="{x:Static prop:Resources.LabelImport}"
+                            ToolTip="{x:Static prop:Resources.LabelImportCap}" />
                     <Button Width="Auto"
                             Height="Auto"
                             Margin="3,3,0,0"
                             Command="{Binding SaveAsCommand}"
-                            Content="{x:Static prop:Resources.LabelSaveAs}"
-                            ToolTip="{x:Static prop:Resources.LabelSaveAs}">
+                            Content="{x:Static prop:Resources.LabelExport}"
+                            ToolTip="{x:Static prop:Resources.LabelExportCap}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />

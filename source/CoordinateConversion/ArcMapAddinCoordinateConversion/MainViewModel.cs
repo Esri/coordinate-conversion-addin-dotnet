@@ -30,13 +30,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             ConvertTabView = new CCConvertTabView();
             ConvertTabView.DataContext = new ConvertTabViewModel();
-
-            CollectTabView = new CCCollectTabView();
-            CollectTabView.DataContext = new CollectTabViewModel();
         }
 
         public CCConvertTabView ConvertTabView { get; set; }
-        public CCCollectTabView CollectTabView { get; set; }
 
         object selectedTab = null;
         public object SelectedTab

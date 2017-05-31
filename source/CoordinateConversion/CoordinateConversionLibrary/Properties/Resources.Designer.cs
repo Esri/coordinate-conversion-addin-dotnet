@@ -196,6 +196,33 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Successful.
+        /// </summary>
+        public static string CSVExportSuccessfulCaption {
+            get {
+                return ResourceManager.GetString("CSVExportSuccessfulCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully exported to .
+        /// </summary>
+        public static string CSVExportSuccessfulMessage {
+            get {
+                return ResourceManager.GetString("CSVExportSuccessfulMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose location to create CSV file.
+        /// </summary>
+        public static string CSVLocationMessage {
+            get {
+                return ResourceManager.GetString("CSVLocationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom.
         /// </summary>
         public static string CustomString {
@@ -358,6 +385,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List.
+        /// </summary>
+        public static string HeaderList {
+            get {
+                return ResourceManager.GetString("HeaderList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string HeaderName {
@@ -394,11 +430,38 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose location to create KMZ file.
+        /// </summary>
+        public static string KMLLocationMessage {
+            get {
+                return ResourceManager.GetString("KMLLocationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string LabelCategory {
             get {
                 return ResourceManager.GetString("LabelCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All.
+        /// </summary>
+        public static string LabelClearAll {
+            get {
+                return ResourceManager.GetString("LabelClearAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All Coordinates.
+        /// </summary>
+        public static string LabelClearAllCap {
+            get {
+                return ResourceManager.GetString("LabelClearAllCap", resourceCulture);
             }
         }
         
@@ -430,7 +493,25 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X.
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string LabelExport {
+            get {
+                return ResourceManager.GetString("LabelExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Coordinates.
+        /// </summary>
+        public static string LabelExportCap {
+            get {
+                return ResourceManager.GetString("LabelExportCap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X Field (Longitude).
         /// </summary>
         public static string LabelField1 {
             get {
@@ -439,7 +520,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y.
+        ///   Looks up a localized string similar to Y Field (Latitude).
         /// </summary>
         public static string LabelField2 {
             get {
@@ -475,6 +556,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import Coordinates.
+        /// </summary>
+        public static string LabelImportCap {
+            get {
+                return ResourceManager.GetString("LabelImportCap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input Type.
         /// </summary>
         public static string LabelInputType {
@@ -498,6 +588,24 @@ namespace CoordinateConversionLibrary.Properties {
         public static string LabelSaveAs {
             get {
                 return ResourceManager.GetString("LabelSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string MenuLabelCopy {
+            get {
+                return ResourceManager.GetString("MenuLabelCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy All.
+        /// </summary>
+        public static string MenuLabelCopyAll {
+            get {
+                return ResourceManager.GetString("MenuLabelCopyAll", resourceCulture);
             }
         }
         

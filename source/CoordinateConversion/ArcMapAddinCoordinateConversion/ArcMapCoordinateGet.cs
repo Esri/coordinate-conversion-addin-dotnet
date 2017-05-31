@@ -233,43 +233,50 @@ namespace ArcMapAddinCoordinateConversion
         public string GetInputDisplayString()
         {
             string result = "NA";
-            if (Point == null || Point.IsEmpty)
-                return result;
-
-            result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
-
-            if (Point.SpatialReference == null)
-                return result;
-
-            var cn = Point as IConversionNotation;
-            if (cn != null)
+            try
             {
-                switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
+                if (Point == null || Point.IsEmpty)
+                    return result;
+
+                result = string.Format("{0:0.0#####} {1:0.0#####}", Point.Y, Point.X);
+
+                if (Point.SpatialReference == null)
+                    return result;
+
+                var cn = Point as IConversionNotation;
+                if (cn != null)
                 {
-                    case CoordinateTypes.DD:
-                        result = cn.GetDDFromCoords(6);
-                        break;
-                    case CoordinateTypes.DDM:
-                        result = cn.GetDDMFromCoords(4);
-                        break;
-                    case CoordinateTypes.DMS:
-                        result = cn.GetDMSFromCoords(2);
-                        break;
-                    //case CoordinateTypes.GARS:
-                    //    result = cn.GetGARSFromCoords();
-                    //    break;
-                    case CoordinateTypes.MGRS:
-                        result = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
-                        break;
-                    case CoordinateTypes.USNG:
-                        result = cn.GetUSNGFromCoords(5, true, false);
-                        break;
-                    case CoordinateTypes.UTM:
-                        result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
-                        break;
-                    default:
-                        break;
+                    switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)
+                    {
+                        case CoordinateTypes.DD:
+                            result = cn.GetDDFromCoords(6);
+                            break;
+                        case CoordinateTypes.DDM:
+                            result = cn.GetDDMFromCoords(4);
+                            break;
+                        case CoordinateTypes.DMS:
+                            result = cn.GetDMSFromCoords(2);
+                            break;
+                        //case CoordinateTypes.GARS:
+                        //    result = cn.GetGARSFromCoords();
+                        //    break;
+                        case CoordinateTypes.MGRS:
+                            result = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
+                            break;
+                        case CoordinateTypes.USNG:
+                            result = cn.GetUSNGFromCoords(5, true, false);
+                            break;
+                        case CoordinateTypes.UTM:
+                            result = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            }
+            catch 
+            {
+                return "NA";
             }
             return result;
         }

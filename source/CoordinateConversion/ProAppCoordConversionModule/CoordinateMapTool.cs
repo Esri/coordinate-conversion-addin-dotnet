@@ -37,7 +37,11 @@ namespace ProAppCoordConversionModule
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
+
+            Mediator.Register(CoordinateConversionLibrary.Constants.CollectListHasItems, onCollectCoordinatesHasItems);
         }
+
+        public bool ListHasItems { get; set; }
 
         protected override Task OnToolActivateAsync(bool active)
         {
@@ -65,6 +69,11 @@ namespace ProAppCoordConversionModule
 
             if (mp != null)
                 UpdateFlash(mp);
+        }
+
+        private void onCollectCoordinatesHasItems(object obj)
+        {
+            ListHasItems = (bool)obj;
         }
 
         private void UpdateFlash(MapPoint mp)
@@ -156,7 +165,8 @@ namespace ProAppCoordConversionModule
                 if (mp != null)
                 {
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                    if (!ListHasItems)
+                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
                 }
             } 
         }

@@ -81,7 +81,7 @@ namespace CoordinateConversionLibrary.Models
                 if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
                     ambiguousCoordsViewDlg.ShowDialog();
 
-                blnMatchDDMLat = ambiguousCoordsViewDlg.rbLatLon.IsChecked.Value;
+                blnMatchDDMLat = ambiguousCoordsViewDlg.CheckedLatLon;
             }
 
             // Lat/Lon
