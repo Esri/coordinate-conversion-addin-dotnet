@@ -7,12 +7,15 @@
              u:WindowBehavior.HideCloseButton="True"
              mc:Ignorable="d" Height="208.921" Width="279.87" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow" Title="Ambiguous Coordinates" Cursor="Arrow">
     <Grid Margin="0,0,0,-5">
-        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="176,91,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.131,-6.576" Click="OkButton_Click"/>
-        <TextBox x:Name="txtAmbCoords" HorizontalAlignment="Left" Height="41" Margin="10,6,0,0" TextWrapping="Wrap" Text="Ambiguous coordinates have been entered.  Please choose from the following:" VerticalAlignment="Top" Width="241" IsEnabled="False" BorderThickness="0"/>
-        <RadioButton x:Name="rbLatLon" Content="Lat / Lon" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <RadioButton x:Name="rbLonLat" Content="Lon / Lat" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnOk" Foreground="Black" Content="OK" HorizontalAlignment="Left" Margin="176,91,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.131,-6.576" Click="OkButton_Click"/>
+        <TextBox x:Name="txtAmbCoords" HorizontalAlignment="Left" Height="41" Margin="10,6,0,0" TextWrapping="Wrap" 
+                 Foreground="Black" Background="White"
+                 Text="Ambiguous coordinates have been entered.  Please choose from the following:" 
+                 VerticalAlignment="Top" Width="241" IsEnabled="False" BorderThickness="0"/>
+        <RadioButton x:Name="rbLatLon" Foreground="Black" Content="Lat / Lon" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="rbLonLat" Foreground="Black" Content="Lon / Lat" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
         <Separator HorizontalAlignment="Left" Height="9" Margin="0,122,0,0" VerticalAlignment="Top" Width="274" RenderTransformOrigin="0.215,-1.033"/>
-        <CheckBox x:Name="cbDontShowAgain" Content="Don't show me this message again" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.471,1.312" Click="OnDontShowAgainClick" IsChecked="{Binding CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg}"/>
+        <CheckBox x:Name="cbDontShowAgain" Foreground="Black" Content="Don't show me this message again" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.471,1.312" Click="OnDontShowAgainClick" IsChecked="{Binding CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg}"/>
 
     </Grid>
 </Window>
