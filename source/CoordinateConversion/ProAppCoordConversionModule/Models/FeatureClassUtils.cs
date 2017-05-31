@@ -219,7 +219,10 @@ namespace ProAppCoordConversionModule.Models
                             {
                                 rowBuffer = table.CreateRowBuffer();
 
-                                rowBuffer[shapeIndex] = new MapPointBuilder(point).ToGeometry();
+                                var geom = !point.HasZ ?
+                                    new MapPointBuilder(point).ToGeometry() :
+                                    MapPointBuilder.CreateMapPoint(point.X, point.Y, point.SpatialReference);
+                                rowBuffer[shapeIndex] = geom;
 
                                 Row row = table.CreateRow(rowBuffer);
                             }
@@ -330,7 +333,7 @@ namespace ProAppCoordConversionModule.Models
                 // m values
                 arguments.Add("DISABLED");
                 // no z values
-                arguments.Add("ENABLED");
+                arguments.Add("DISABLED");
                 arguments.Add(spatialRef);
 
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
