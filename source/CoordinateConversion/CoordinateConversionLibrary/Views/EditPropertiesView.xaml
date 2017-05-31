@@ -61,7 +61,7 @@
             </ComboBox.ItemContainerStyle>
         </ComboBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-            <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates dialog" 
+            <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
                     Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
