@@ -103,7 +103,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool
+            // KG - Commented out so user can continously capture coordinates
             //IsToolActive = false;
+
+            // KG - Added so output component will updated when user clicks on the map 
+            //      not when mouse move event is fired.
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
             return true;
         }
