@@ -330,7 +330,7 @@ namespace ProAppCoordConversionModule.Models
                 // m values
                 arguments.Add("DISABLED");
                 // no z values
-                arguments.Add("DISABLED");
+                arguments.Add("ENABLED");
                 arguments.Add(spatialRef);
 
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
