@@ -46,7 +46,7 @@
                 </Style>
             </ComboBox.Style>
             <ComboBox.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" /> 
+                <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
             </ComboBox.InputBindings>
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="ComboBoxItem">
@@ -58,15 +58,6 @@
                 Margin="3,3,0,0"
                 Style="{StaticResource buttonProperties}"
                 ToolTip="{x:Static libprop:Resources.TooltipEditProperties}" />
-        <Button Grid.Column="2"
-                Margin="3,3,0,0"
-                Command="{Binding AddNewOCCommand}"
-                Style="{StaticResource BorderedButtonStyle}"
-                ToolTip="{x:Static libprop:Resources.TooltipAdd}">
-            <Image Width="18"
-                   Height="18"
-                   Source="/CoordinateConversionLibrary;component/Images/hand.png" />
-        </Button>
         <ToggleButton Grid.Column="3"
                       Margin="3,3,0,0"
                       IsChecked="{Binding IsToolActive}"
@@ -76,14 +67,5 @@
                    Height="18"
                    Source="/CoordinateConversionLibrary;component/Images/Add_Point.png" />
         </ToggleButton>
-        <Button Grid.Column="4"
-                Margin="3,3,0,0"
-                Command="{Binding CopyAllCommand}"
-                Style="{StaticResource BorderedButtonStyle}"
-                ToolTip="{x:Static libprop:Resources.TooltipCopyAll}">
-            <Image Width="18"
-                   Height="18"
-                   Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
-        </Button>
     </Grid>
 </UserControl>

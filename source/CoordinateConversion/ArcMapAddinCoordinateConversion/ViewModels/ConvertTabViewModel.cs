@@ -31,20 +31,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             OutputCCView = new OutputCoordinateView();
             OutputCCView.DataContext = new OutputCoordinateViewModel();
 
-            InputCoordinateHistoryList = new ObservableCollection<string>();
+            CollectTabView = new CCCollectTabView();
+            CollectTabView.DataContext = new CollectTabViewModel();
 
-            // commands
-            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
-            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+            InputCoordinateHistoryList = new ObservableCollection<string>();
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
         public OutputCoordinateView OutputCCView { get; set; }
+        public CCCollectTabView CollectTabView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
-
-        public RelayCommand AddNewOCCommand { get; set; }
-        public RelayCommand CopyAllCommand { get; set; }
 
         public bool IsToolActive
         {
@@ -79,20 +76,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
-            SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
-        }
- 
-
-        private void OnAddNewOCCommand(object obj)
-        {
-            // Get name from user
-            string name = CoordinateType.DD.ToString();
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.AddNewOutputCoordinate, new OutputCoordinateModel() { Name = name, CType = CoordinateType.DD, Format = "Y0.0#####N X0.0#####E" });
-        }
-
-        private void OnCopyAllCommand(object obj)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CopyAllCoordinateOutputs, InputCoordinate);
+            if (ArcMap.LayerCount > 0)
+            {
+                SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.AddLayerMsg,
+                    CoordinateConversionLibrary.Properties.Resources.AddLayerCap);
+            }            
         }
 
         #region overrides
@@ -111,7 +103,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             UIHelpers.UpdateHistory(formattedInputCoordinate, InputCoordinateHistoryList);
 
             // deactivate map point tool
-            IsToolActive = false;
+            // KG - Commented out so user can continously capture coordinates
+            //IsToolActive = false;
+
+            // KG - Added so output component will updated when user clicks on the map 
+            //      not when mouse move event is fired.
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
             return true;
         }

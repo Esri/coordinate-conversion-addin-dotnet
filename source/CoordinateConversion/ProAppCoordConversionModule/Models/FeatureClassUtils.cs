@@ -45,7 +45,7 @@ namespace ProAppCoordConversionModule.Models
         /// 
         /// </summary>
         /// <returns>The path to selected output (fgdb/shapefile)</returns>
-        public string PromptUserWithSaveDialog(bool featureChecked, bool shapeChecked, bool kmlChecked)
+        public string PromptUserWithSaveDialog(bool featureChecked, bool shapeChecked, bool kmlChecked, bool csvChecked)
         {
             //Prep the dialog
             SaveItemDialog saveItemDlg = new SaveItemDialog();
@@ -69,6 +69,11 @@ namespace ProAppCoordConversionModule.Models
             {
                 saveItemDlg.Filter = ItemFilters.kml;
                 saveItemDlg.DefaultExt = "kmz";
+            }
+            else if (csvChecked)
+            {
+                saveItemDlg.Filter = ItemFilters.textFiles;
+                saveItemDlg.DefaultExt = "csv";
             }
 
             bool? ok = saveItemDlg.ShowDialog();
@@ -214,7 +219,10 @@ namespace ProAppCoordConversionModule.Models
                             {
                                 rowBuffer = table.CreateRowBuffer();
 
-                                rowBuffer[shapeIndex] = new MapPointBuilder(point).ToGeometry();
+                                var geom = !point.HasZ ?
+                                    new MapPointBuilder(point).ToGeometry() :
+                                    MapPointBuilder.CreateMapPoint(point.X, point.Y, point.SpatialReference);
+                                rowBuffer[shapeIndex] = geom;
 
                                 Row row = table.CreateRow(rowBuffer);
                             }
@@ -328,8 +336,16 @@ namespace ProAppCoordConversionModule.Models
                 arguments.Add("DISABLED");
                 arguments.Add(spatialRef);
 
+                var env = Geoprocessing.MakeEnvironmentArray(overwriteoutput: true);
+
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
-                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", valueArray);
+
+                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", 
+                    valueArray,
+                    env,
+                    null,
+                    null,
+                    GPExecuteToolFlags.Default);
 
                 await CreateFeatures(mapPointList);
 

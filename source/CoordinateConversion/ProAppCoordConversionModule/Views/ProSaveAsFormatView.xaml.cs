@@ -22,7 +22,7 @@ namespace ProAppCoordConversionModule.Views
     /// <summary>
     /// Interaction logic for SaveAsFormatView.xaml 
     /// </summary>
-    public partial class ProSaveAsFormatView : Window
+    public partial class ProSaveAsFormatView : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
         public ProSaveAsFormatView()
         {

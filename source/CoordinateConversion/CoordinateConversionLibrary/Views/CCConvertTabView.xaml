@@ -13,6 +13,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <GroupBox Header="{x:Static libprop:Resources.HeaderInput}">
                     <UserControl Content="{Binding InputCCView}" />
@@ -20,6 +21,11 @@
                 <GroupBox Grid.Row="1" Header="{x:Static libprop:Resources.HeaderOutput}">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <UserControl Content="{Binding OutputCCView}" />
+                    </ScrollViewer>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="{x:Static libprop:Resources.HeaderList}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <UserControl Content="{Binding CollectTabView}" />
                     </ScrollViewer>
                 </GroupBox>
             </Grid>

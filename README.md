@@ -11,7 +11,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
 * Addin for ArcMap 10.3.1 and ArcGIS Pro 1.2
-	* Works with DD, DDM, DMS, GARS, MGRS, USNG and UTM
+	* Works with DD, DDM, DMS, MGRS, USNG and UTM
 
 ## Sections
 
@@ -98,7 +98,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 	* Configuration properties can be accessed by right clicking in the **Output** section on the row of the coordinate format to be customized.
 	* Formatting numbers
 		* Numbers found in DD, DDM and DMS can be formatted using the first three ("0" Zero placeholder, "#" digit placeholder and "." decimal point) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
-		* Numbers found in GARS, MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
+		* Numbers found in MGRS, USNG and UTM can be formatted using the first two ("0" Zero placeholder and "#" digit placeholder) characters found here [Custom Numeric Format Strings](https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
 	* Formatting string output for each coordinate type
 		* **DD** Decimal Degrees
 			* "X" = Longitude
@@ -131,12 +131,6 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* "E" or "W" = add "E" or "W" direction based on longitude
 			* Example : "A0° B0' C0.0\"N X0° Y0' Z0.0E\"" will output "41° 22' 15.1"N 78° 36' 29.2"W"
 				* Note : escape " like \" to get double quotes in the output
-		* **GARS**
-			* "X" = Longitude Band
-			* "Y" = Latitude Band
-			* "Q" = Quadrant
-			* "K" = Key
-			* Example : "X#YQK" will output "221LW37"
 		* **MGRS/USNG**
 			* "Z" = Grid Zone
 			* "S" = Grid Segment
@@ -199,5 +193,5 @@ limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
-[](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In)
-[](Esri Language: C#) 
+[](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Military-Tools-for-ArcGIS)
+[](Esri Language: C-Sharp) 

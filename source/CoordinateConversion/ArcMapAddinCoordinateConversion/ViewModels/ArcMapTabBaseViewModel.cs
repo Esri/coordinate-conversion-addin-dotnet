@@ -191,6 +191,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public override void ProcessInput(string input)
         {
+            if (input == "NA") return;
+
             base.ProcessInput(input);
 
             string result = string.Empty;
@@ -212,6 +214,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.InvalidCoordMsg,
+                    CoordinateConversionLibrary.Properties.Resources.InvalidCoordCap);
             }
             else
             {
@@ -564,7 +568,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 catch { }
             }
 
-            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
+            /*
+             * Updated RegEx to capture invalid coordinates like 00, 45, or 456987. 
+             */
+            Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]{1,}(?<longitude>\-?\d+[.,]?\d*)");
 
             var matchMercator = regexMercator.Match(input);
 

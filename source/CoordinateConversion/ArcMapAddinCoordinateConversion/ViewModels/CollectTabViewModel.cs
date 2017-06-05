@@ -27,6 +27,9 @@ using ArcMapAddinCoordinateConversion.Views;
 using ESRI.ArcGIS.Geodatabase;
 using CoordinateConversionLibrary;
 using System.Windows.Forms;
+using System.Text;
+using CoordinateConversionLibrary.Models;
+using Jitbit.Utils;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -43,9 +46,24 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
+            CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
+            CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
+
+            // Listen to collection changed event and notify colleagues
+            CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
+        }
+
+        /// <summary>
+        /// Notify if collection list has any items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
         public bool HasListBoxRightClickSelectedItem
@@ -102,6 +120,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
         public RelayCommand SaveAsCommand { get; set; }
+        public RelayCommand CopyCoordinateCommand { get; set; }
+        public RelayCommand CopyAllCoordinatesCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
         private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -124,6 +144,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void OnClearGraphicsCommand(object obj)
         {
+            /* KG - Use DeletePoints() to Clrea All button
             var mxdoc = ArcMap.Application.Document as IMxDocument;
             if (mxdoc == null)
                 return;
@@ -139,6 +160,39 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             //av.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             av.Refresh(); // sometimes a partial refresh is not working
+            */
+            DeletePoints(CoordinateAddInPoints.ToList());
+        }
+
+        // Call CopyAllCoordinateOutputs event
+        private void OnCopyAllCommand(object obj)
+        {
+            OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
+        }
+
+        // copy parameter to clipboard
+        private void OnCopyCommand(object obj)
+        {
+            var items = obj as IList;
+            var objects = items.Cast<AddInPoint>().ToList();
+
+            if (objects == null)
+                return;            
+
+            if (objects == null || !objects.Any())
+                return;
+
+            var sb = new StringBuilder();
+            foreach (var point in objects)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
         }
 
         private void OnEnterKeyCommand(object obj)
@@ -165,19 +219,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     path = fcUtils.PromptUserWithGxDialog(ArcMap.Application.hWnd);
                     if (path != null)
                     {
-                        if (System.IO.Path.GetExtension(path).Equals(".shp"))
-                        {
-                            fc = fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
-                        }
-                        else
-                        {
-                            fc = fcUtils.CreateFCOutput(path, SaveAsType.FileGDB, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
-                        }
+                        SaveAsType saveType = System.IO.Path.GetExtension(path).Equals(".shp") ? SaveAsType.Shapefile : SaveAsType.FileGDB;
+                        fc = fcUtils.CreateFCOutput(path, saveType, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
                     }
                 }
-                else
+                else if (vm.KmlIsChecked)
                 {
-                    path = PromptSaveFileDialog();
+                    path = PromptSaveFileDialog("kmz", "KMZ File (*.kmz)|*.kmz", CoordinateConversionLibrary.Properties.Resources.KMLLocationMessage);
                     if (path != null)
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
@@ -195,6 +243,33 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         }
                     }
                 }
+                else
+                {
+                    //Export to CSV
+                    path = PromptSaveFileDialog("csv", "CSV File (*.csv)|*.csv", CoordinateConversionLibrary.Properties.Resources.CSVLocationMessage);
+                    if (path != null)
+                    {
+                        string csvName = System.IO.Path.GetFileName(path);
+                        string folderName = System.IO.Path.GetDirectoryName(path);
+                        string tempFile = System.IO.Path.Combine(folderName, csvName);
+
+                        var aiPoints = CoordinateAddInPoints.ToList();
+
+                        if (aiPoints == null || !aiPoints.Any())
+                            return;
+
+                        var csvExport = new CsvExport();
+                        foreach (var point in aiPoints)
+                        {
+                            csvExport.AddRow();
+                            csvExport["Coordinates"] = point.Text;
+                        }
+                        csvExport.ExportToFile(tempFile);
+
+                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + tempFile,
+                            CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
+                    }
+                }
 
                 if (fc != null)
                 {
@@ -202,6 +277,30 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// Copies all coordinates to the clipboard
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnCopyAllCoordinateOutputs(List<AddInPoint> aiPoints)
+        {
+            var sb = new StringBuilder();
+
+            if (aiPoints == null || !aiPoints.Any())
+                return;
+
+            foreach (var point in aiPoints)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
+        }
+
         /// <summary>
         /// Add the feature layer to the map 
         /// </summary>
@@ -248,17 +347,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         private SaveFileDialog sfDlg = null;
-        private string PromptSaveFileDialog()
+        private string PromptSaveFileDialog(string ext, string filter, string title)
         {
             if (sfDlg == null)
             {
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = "kmz";
-                sfDlg.Filter = "KMZ File (*.kmz)|*.kmz";
+                sfDlg.DefaultExt = ext; 
+                sfDlg.Filter = filter;
                 sfDlg.OverwritePrompt = true;
-                sfDlg.Title = "Choose location to create KMZ file";
+                sfDlg.Title = title;
 
             }
             sfDlg.FileName = "";
@@ -372,12 +471,17 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void AddCollectionPoint(IPoint point)
         {
-            var color = new RgbColorClass() { Red = 255 } as IColor;
-            var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
-            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
-            CoordinateAddInPoints.Add(addInPoint);
+            if (!point.IsEmpty && point != null)
+            {
+                var color = new RgbColorClass() { Red = 255 } as IColor;
+                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+                var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
-            GraphicsList.Add(new AMGraphic(guid, point, true));
+                //Add point to the top of the list
+                CoordinateAddInPoints.Insert(0, addInPoint);
+
+                GraphicsList.Add(new AMGraphic(guid, point, true));
+            }
         }
 
         private void RemoveGraphics(List<string> guidList)
@@ -432,6 +536,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             foreach (var coordinate in coordinates)
             {
+                this.ProcessInput(coordinate);
                 InputCoordinate = coordinate;
                 if (!HasInputError)
                     OnNewMapPoint(amCoordGetter.Point);

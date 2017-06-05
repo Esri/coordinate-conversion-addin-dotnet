@@ -64,5 +64,20 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => KmlIsChecked);
             }
         }
+
+        private bool csvIsChecked = false;
+        public bool CSVIsChecked
+        {
+            get
+            {
+                return csvIsChecked;
+            }
+
+            set
+            {
+                csvIsChecked = value;
+                RaisePropertyChanged(() => CSVIsChecked);
+            }
+        }
     }  
 }

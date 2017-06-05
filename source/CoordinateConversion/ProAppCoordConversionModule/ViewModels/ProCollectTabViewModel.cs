@@ -26,6 +26,8 @@ using ProAppCoordConversionModule.Views;
 using ProAppCoordConversionModule.ViewModels;
 using CoordinateConversionLibrary;
 using System;
+using System.Text;
+using Jitbit.Utils;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -42,9 +44,24 @@ namespace ProAppCoordConversionModule.ViewModels
             ClearGraphicsCommand = new RelayCommand(OnClearGraphicsCommand);
             EnterKeyCommand = new RelayCommand(OnEnterKeyCommand);
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
+            CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
+            CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
+
+            // Listen to collection changed event and notify colleagues
+            CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
 
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
+        }
+
+        /// <summary>
+        /// Notify if collection list has any items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
         private void OnImportCoordinates(object obj)
@@ -56,6 +73,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             foreach (var coordinate in coordinates)
             {
+                this.ProcessInput(coordinate);
                 InputCoordinate = coordinate;
                 if (!HasInputError)
                     OnNewMapPoint(proCoordGetter.Point);
@@ -117,6 +135,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand ClearGraphicsCommand { get; set; }
         public RelayCommand EnterKeyCommand { get; set; }
         public RelayCommand SaveAsCommand { get; set; }
+        public RelayCommand CopyCoordinateCommand { get; set; }
+        public RelayCommand CopyAllCoordinatesCommand { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -136,7 +156,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnClearGraphicsCommand(object obj)
         {
-            //TODO update this to Pro
+            DeletePoints(CoordinateAddInPoints.ToList());
         }
 
         private void OnEnterKeyCommand(object obj)
@@ -144,6 +164,37 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!HasInputError && InputCoordinate.Length > 0)
             {
                 AddCollectionPoint(proCoordGetter.Point);
+            }
+        }
+
+        // Call CopyAllCoordinateOutputs event
+        private void OnCopyAllCommand(object obj)
+        {
+            OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
+        }
+
+        // copy parameter to clipboard
+        private void OnCopyCommand(object obj)
+        {
+            var items = obj as IList;
+            var objects = items.Cast<AddInPoint>().ToList();
+
+            if (objects == null)
+                return;
+
+            if (objects == null || !objects.Any())
+                return;
+
+            var sb = new StringBuilder();
+            foreach (var point in objects)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
             }
         }
 
@@ -157,7 +208,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 var fcUtils = new FeatureClassUtils();
 
-                string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked);
+                string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked, vm.CSVIsChecked);
                 if (path != null)
                 {
                     try
@@ -177,12 +228,53 @@ namespace ProAppCoordConversionModule.ViewModels
                         {
                             await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, mapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
                         }
+                        else if (vm.CSVIsChecked)
+                        {
+                            var aiPoints = CoordinateAddInPoints.ToList();
+
+                            if (aiPoints == null || !aiPoints.Any())
+                                return;
+
+                            var csvExport = new CsvExport();
+                            foreach (var point in aiPoints)
+                            {
+                                csvExport.AddRow();
+                                csvExport["Coordinate"] = point.Text;
+                            }
+                            csvExport.ExportToFile(path);
+
+                            System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
+                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption); 
+                        }
                     }
                     catch (Exception ex)
                     {
 
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Copies all coordinates to the clipboard
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnCopyAllCoordinateOutputs(List<AddInPoint> aiPoints)
+        {
+            var sb = new StringBuilder();
+
+            if (aiPoints == null || !aiPoints.Any())
+                return;
+
+            foreach (var point in aiPoints)
+            {
+                sb.AppendLine(point.Text);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
             }
         }
         
@@ -217,7 +309,9 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var guid = await AddGraphicToMap(point, ColorFactory.RedRGB, true, 7);
             var addInPoint = new AddInPoint() { Point = point, GUID = guid };
-            CoordinateAddInPoints.Add(addInPoint);
+
+            //Add point to the top of the list
+            CoordinateAddInPoints.Insert(0, addInPoint);
         }
 
         private void RemoveGraphics(List<string> guidList)

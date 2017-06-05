@@ -34,6 +34,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,8 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\LocalizableDescriptionAttribute.cs" />
+    <Compile Include="Behaviors\WindowBehavior.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\ExportCSV.cs" />
     <Compile Include="Helpers\ImportCSV.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
@@ -103,6 +106,9 @@
     <Compile Include="Views\SelectCoordinateFieldsView.xaml.cs">
       <DependentUpon>SelectCoordinateFieldsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AmbiguousCoordsView.xaml.cs">
+      <DependentUpon>AmbiguousCoordsView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\pointtool.png" />
@@ -139,6 +145,10 @@
     <Page Include="Views\SelectCoordinateFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AmbiguousCoordsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

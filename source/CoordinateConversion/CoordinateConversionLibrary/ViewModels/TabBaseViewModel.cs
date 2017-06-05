@@ -20,6 +20,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -71,7 +72,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public MapPointToolMode ToolMode { get; set; }
 
-        private bool isActiveTab = false;
+        private bool isActiveTab = true;
         /// <summary>
         /// Property to keep track of which tab/viewmodel is the active item
         /// </summary>
@@ -128,13 +129,31 @@ namespace CoordinateConversionLibrary.ViewModels
         public void OnEditPropertiesDialogCommand(object obj)
         {
             var dlg = new EditPropertiesView();
-
-            dlg.ShowDialog();
+            try
+            {
+                dlg.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg, 
+                        CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message);
+                }
+                
+            }
+            
         }
 
         private void OnImportCSVFileCommand(object obj)
         {
-            var fileDialog = new OpenFileDialog();
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false; 
+
+            var fileDialog = new Microsoft.Win32.OpenFileDialog();
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
             fileDialog.Filter = "csv files|*.csv";
@@ -173,6 +192,8 @@ namespace CoordinateConversionLibrary.ViewModels
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
                 }
             }
+
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true; 
         }
 
         private void OnNewMapPointInternal(object obj)

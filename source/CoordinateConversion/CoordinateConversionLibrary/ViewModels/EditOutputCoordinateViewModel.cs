@@ -88,7 +88,8 @@ namespace CoordinateConversionLibrary.ViewModels
             {
                 _format = value;
                 RaisePropertyChanged(() => Format);
-                UpdateSample();
+                // KG - Commented out due to issues 380 and 381
+                //UpdateSample();
                 if (DefaultFormats != null)
                 {
                     var temp = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
@@ -209,7 +210,8 @@ namespace CoordinateConversionLibrary.ViewModels
 
                 Format = GetFormatFromDefaults();
 
-                UpdateSample();
+                // KG - Commented out due to issues 380 and 381
+                //UpdateSample();
             }
             else
             {

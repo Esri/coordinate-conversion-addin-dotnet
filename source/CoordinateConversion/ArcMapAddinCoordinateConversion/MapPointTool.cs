@@ -32,7 +32,10 @@ namespace ArcMapAddinCoordinateConversion
 
         public MapPointTool()
         {
+            Mediator.Register(CoordinateConversionLibrary.Constants.CollectListHasItems, onCollectCoordinatesHasItems);
         }
+
+        public bool ListHasItems { get; set; }
 
         protected override void OnUpdate()
         {
@@ -84,9 +87,15 @@ namespace ArcMapAddinCoordinateConversion
                     point = snapResult.Location;
 
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, point);
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                if (!ListHasItems)
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
             catch { }
+        }
+
+        private void onCollectCoordinatesHasItems(object obj)
+        {
+            ListHasItems = (bool)obj;
         }
 
         private IPoint GetMapPoint(int X, int Y)

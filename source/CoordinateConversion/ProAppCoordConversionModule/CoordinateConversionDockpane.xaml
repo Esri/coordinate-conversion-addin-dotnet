@@ -15,16 +15,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <TabControl SelectedItem="{Binding SelectedTab, Mode=OneWayToSource}">
-            <TabItem Header="{x:Static libprop:Resources.HeaderConvert}">
-                <UserControl Content="{Binding ConvertTabView}" />
-            </TabItem>
-            <!--
-            <TabItem Header="{x:Static libprop:Resources.HeaderCollect}">
-                <UserControl Content="{Binding CollectTabView}" />
-            </TabItem>
-            -->
-        </TabControl>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid ScrollViewer.CanContentScroll="True">
+            <UserControl Content="{Binding ConvertTabView}" />
+        </Grid>
+    </ScrollViewer>       
 </UserControl>
