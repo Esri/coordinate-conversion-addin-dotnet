@@ -92,6 +92,8 @@
     <AddInContent Include="Config.daml" />
     <AddInContent Include="Images\AddInDesktop16.png" />
     <AddInContent Include="Images\AddInDesktop32.png" />
+    <AddInContent Include="DarkImages\AddInDesktop16.png" />
+    <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ValueConverters.cs" />
@@ -197,6 +199,8 @@
   <ItemGroup>
     <AddInContent Include="Images\coordinate-conversion-16.png" />
     <AddInContent Include="Images\coordinate-conversion-32.png" />
+    <AddInContent Include="DarkImages\coordinate-conversion-16.png" />
+    <AddInContent Include="DarkImages\coordinate-conversion-32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
