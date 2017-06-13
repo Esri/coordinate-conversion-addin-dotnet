@@ -27,8 +27,8 @@ namespace ProAppCoordConversionModule.UI
     /// </summary>
     internal class FlashEmbeddedControlViewModel : EmbeddableControl
     {
-        public FlashEmbeddedControlViewModel(XElement options)
-            : base(options, false)
+        public FlashEmbeddedControlViewModel(XElement options, bool canChangeOptions)
+            : base(options, canChangeOptions)
         {
             FlashAnimationCompletedCommand = new RelayCommand(OnFlashAnimationCompletedCommand);
         }
