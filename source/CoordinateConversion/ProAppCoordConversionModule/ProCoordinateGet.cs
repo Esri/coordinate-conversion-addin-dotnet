@@ -186,7 +186,7 @@ namespace ProAppCoordConversionModule
             {
                 ArcGIS.Core.Geometry.SpatialReference spatialReference = SpatialReferenceBuilder.CreateSpatialReference(factoryCode);
 
-                Point = (MapPoint)GeometryEngine.Project(Point, spatialReference);
+                Point = (MapPoint)GeometryEngine.Instance.Project(Point, spatialReference);
 
                 return true;
             }).Result;

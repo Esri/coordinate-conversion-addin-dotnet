@@ -307,7 +307,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private async void AddCollectionPoint(MapPoint point)
         {
-            var guid = await AddGraphicToMap(point, ColorFactory.RedRGB, true, 7);
+            var guid = await AddGraphicToMap(point, ColorFactory.Instance.RedRGB, true, 7);
             var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
             //Add point to the top of the list
