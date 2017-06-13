@@ -225,9 +225,9 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await QueuedTask.Run(() =>
                 {
-                    var s = SymbolFactory.ConstructPointSymbol(color, size, markerStyle);
-                    var haloSymbol = SymbolFactory.ConstructPolygonSymbol(ColorFactory.GreenRGB);
-                    haloSymbol.SetOutlineColor(ColorFactory.GreenRGB);
+                    var s = SymbolFactory.Instance.ConstructPointSymbol(color, size, markerStyle);
+                    var haloSymbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.GreenRGB);
+                    haloSymbol.SetOutlineColor(ColorFactory.Instance.GreenRGB);
                     s.HaloSymbol = haloSymbol;
                     s.HaloSize = 0;
                     symbol = new CIMSymbolReference() { Symbol = s };
@@ -237,7 +237,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await QueuedTask.Run(() =>
                 {
-                    var s = SymbolFactory.ConstructLineSymbol(color, size);
+                    var s = SymbolFactory.Instance.ConstructLineSymbol(color, size);
                     symbol = new CIMSymbolReference() { Symbol = s };
                 });
             }
@@ -245,8 +245,8 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 await QueuedTask.Run(() =>
                 {
-                    var outline = SymbolFactory.ConstructStroke(ColorFactory.BlackRGB, 1.0, SimpleLineStyle.Solid);
-                    var s = SymbolFactory.ConstructPolygonSymbol(color, SimpleFillStyle.Solid, outline);
+                    var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlackRGB, 1.0, SimpleLineStyle.Solid);
+                    var s = SymbolFactory.Instance.ConstructPolygonSymbol(color, SimpleFillStyle.Solid, outline);
                     symbol = new CIMSymbolReference() { Symbol = s };
                 });
             }
@@ -278,8 +278,8 @@ namespace ProAppCoordConversionModule.ViewModels
             await QueuedTask.Run(() =>
             {
                 // is point within current map extent
-                var projectedPoint = GeometryEngine.Project(point, MapView.Active.Extent.SpatialReference);
-                if (!GeometryEngine.Contains(MapView.Active.Extent, projectedPoint))
+                var projectedPoint = GeometryEngine.Instance.Project(point, MapView.Active.Extent.SpatialReference);
+                if (!GeometryEngine.Instance.Contains(MapView.Active.Extent, projectedPoint))
                 {
                     MapView.Active.PanTo(point);
                 }

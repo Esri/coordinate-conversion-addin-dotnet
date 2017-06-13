@@ -126,7 +126,7 @@ namespace ProAppCoordConversionModule
                 if (mp != null)
                 {
                     if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
-                        mp = GeometryEngine.Project(mp, SpatialReferences.WGS84) as MapPoint;
+                        mp = GeometryEngine.Instance.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
                 }
@@ -152,7 +152,7 @@ namespace ProAppCoordConversionModule
                         {
                             // for now we will always project to WGS84
                             if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
-                                temp = GeometryEngine.Project(temp, SpatialReferences.WGS84) as MapPoint;
+                                temp = GeometryEngine.Instance.Project(temp, SpatialReferences.WGS84) as MapPoint;
 
                             return temp;
                         }
