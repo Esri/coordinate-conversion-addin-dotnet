@@ -72,7 +72,7 @@ namespace ProAppCoordConversionModule.Models
             }
             else if (csvChecked)
             {
-                saveItemDlg.Filter = ItemFilters.textFiles;
+                saveItemDlg.Filter = "";
                 saveItemDlg.DefaultExt = "csv";
             }
 
