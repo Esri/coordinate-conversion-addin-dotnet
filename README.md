@@ -1,6 +1,6 @@
 # coordinate-conversion-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.4 that can be used for converting coordinates.
 
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
 
