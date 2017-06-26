@@ -44,6 +44,10 @@ namespace CoordinateConversionLibrary.Helpers
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
+                if (line.Contains("sep="))
+                {
+                    line = reader.ReadLine();
+                }
                 if (string.IsNullOrEmpty(line))
                     return null;
 
