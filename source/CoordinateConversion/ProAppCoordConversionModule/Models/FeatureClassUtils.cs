@@ -72,7 +72,7 @@ namespace ProAppCoordConversionModule.Models
             }
             else if (csvChecked)
             {
-                saveItemDlg.Filter = ItemFilters.textFiles;
+                saveItemDlg.Filter = "";
                 saveItemDlg.DefaultExt = "csv";
             }
 
@@ -175,8 +175,8 @@ namespace ProAppCoordConversionModule.Models
                         CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
                         CIMSymbolReference sybmol = currentRenderer.Symbol;
 
-                        var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
-                        var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
+                        var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.Solid);
+                        var s = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Null, outline);
                         CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
                         currentRenderer.Symbol = symbolRef;
 
@@ -234,7 +234,7 @@ namespace ProAppCoordConversionModule.Models
 
                         //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
                         //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
-                        var s = SymbolFactory.ConstructPointSymbol(ColorFactory.RedRGB, 3.0);
+                        var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
                         CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
                         currentRenderer.Symbol = symbolRef;
 

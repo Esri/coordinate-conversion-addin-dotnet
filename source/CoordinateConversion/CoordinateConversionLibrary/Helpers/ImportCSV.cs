@@ -29,6 +29,9 @@ namespace CoordinateConversionLibrary.Helpers
 
         public object Convert(List<string> row, string dateformat = "")
         {
+            if (index == -1)
+                return null;
+
             if (string.IsNullOrEmpty(row[index]))
                 return null;
 
@@ -44,6 +47,8 @@ namespace CoordinateConversionLibrary.Helpers
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
+                if (line.Contains("sep="))
+                    line = reader.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     return null;
 
@@ -73,6 +78,8 @@ namespace CoordinateConversionLibrary.Helpers
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
+                if (line.Contains("sep="))
+                    line = reader.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     return list;
 

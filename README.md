@@ -1,16 +1,14 @@
 # coordinate-conversion-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be used for converting coordinates.
+This is an Esri ArcGIS Prototype Addin for ArcMap and Pro that can be used for converting coordinates.
 
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
-
-
 
 ## Features
 
 * Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
 * Outputs can use pre-defined formats or can be customized to suit your needs
-* Addin for ArcMap 10.3.1 and ArcGIS Pro 1.2
+* Addin for ArcMap and ArcGIS Pro
 	* Works with DD, DDM, DMS, MGRS, USNG and UTM
 
 ## Sections
@@ -26,15 +24,15 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 
 ### Devs
 
-* Visual Studio 2013
-* ArcGIS Desktop SDK for .NET 10.3.1
+* Visual Studio 2015
+* ArcGIS Desktop SDK for .NET 10.3.1+
 	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
-* ArcGIS Pro 1.2 SDK
+* ArcGIS Pro 2.0+ SDK
 
 ### Users
 
 * ArcGIS Desktop 10.3.1
-* ArcGIS Pro 1.2
+* ArcGIS Pro 2.0+
 
 ## Instructions
 
@@ -50,11 +48,11 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 	* To Build Using Visual Studio
 		* Open and build solution file
 	* To use MSBuild to build the solution
-		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
+		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
 		* ` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion `
 		* ` msbuild CoordinateConversion.sln /property:Configuration=Release `
 	* To run Unit test from command prompt
-		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013 | Visual Studio Tools | Developer Command Prompt for VS2013
+		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
 		* ` cd coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary.Tests\bin\Release `
 		* ` MSTest /testcontainer:CoordinateConversionLibrary.Tests.dll `
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
@@ -73,7 +71,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 				* Open tool by clicking the "Show Coordinate Conversion" command you just added
 				* Dockable coordinate conversion tool appears
 			* Optional : if you want share output formats, copy the "CoordinateConversionLibrary.dll.config" file to/from the following directory
-				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
+				* ``` %USERPROFILE%\AppData\Local\ESRI\Desktop10.3\AssemblyCache\{19B92973-746A-4114-9232-3467CA1FC631} ```
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 		* Pro
@@ -81,7 +79,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			* The ADD-IN appears under the "ADD-IN" tab in Pro	
 			* Click the "Show Coordinate Conversion Tool Dockpane" button and the tool will appear
 			* Optional : if you want to share output formats, copy the "CoordinateConversionLibrary.dll.config" file to/from the following directory
-				* ``` C:\Users\YOURUSERNAME\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
+				* ``` %USERPROFILE%\AppData\Local\ESRI\ArcGISPro\AssemblyCache\{dfc85d8b-d2c1-405b-bd03-9a26740d842c} ```
 					* Note : Windows will sometimes hide the AssemblyCache folder, to workaround this, type the folder name and press the 'Enter' key
 				* A sample config file is provided in the application folder, otherwise a default config file will be automatically generated
 			
@@ -149,6 +147,11 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 			
 ## Resources
 
+* [ArcGIS for Defense Coordinate Conversion Component](http://solutions.arcgis.com/defense/help/coordinate-conversion/)
+* [Military Tools for ArcGIS](https://esri.github.io/military-tools-desktop-addins/)
+* [Military Tools for ArcGIS Solutions Pages](http://solutions.arcgis.com/defense/help/military-tools/)
+* [ArcGIS for Defense Solutions Website](http://solutions.arcgis.com/defense)
+* [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
 * [ArcGIS 10.3 Help](http://resources.arcgis.com/en/help/)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
@@ -156,7 +159,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap 10.3.1 and Pro 1.2 that can be
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/ArcGIS/coordinate-tool-addin-dotnet/issues).
+Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/Esri/coordinate-tool-addin-dotnet/issues).
 
 ## Contributing
 
@@ -164,7 +167,7 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 ### Repository Points of Contact
 
-#### Repository Owner: [Joe](https://github.com/jmccausland)
+#### Repository Owner: [Kevin](https://github.com/kgonzago)
 
 * Merge Pull Requests
 * Creates Releases and Tags
@@ -177,7 +180,7 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 ## Licensing
 
-Copyright 2015 Esri
+Copyright 2015-2017 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -192,6 +195,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
-
-[](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Military-Tools-for-ArcGIS)
-[](Esri Language: C-Sharp) 

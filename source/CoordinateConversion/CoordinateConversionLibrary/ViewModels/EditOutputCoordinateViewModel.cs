@@ -211,7 +211,9 @@ namespace CoordinateConversionLibrary.ViewModels
                 Format = GetFormatFromDefaults();
 
                 // KG - Commented out due to issues 380 and 381
-                //UpdateSample();
+                // KG - Uncommented since it doesn't affect issues 380 and 381.
+                //      Commented out did create issue 405.
+                UpdateSample();
             }
             else
             {
