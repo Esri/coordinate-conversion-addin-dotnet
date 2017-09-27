@@ -78,8 +78,8 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[NnSs\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[EeWw\+-])?)$");
-            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[NnSs\+-])?)$");
+            Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*\s]*)(?<firstSuffix>[NnSs\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*\s]*)(?<lastSuffix>[EeWw\+-])?)$");
+            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*\s]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*\s]*)(?<lastSuffix>[NnSs\+-])?)$");
 
             var matchDDLat = regexDDLat.Match(input);
             var matchDDLon = regexDDLon.Match(input);
