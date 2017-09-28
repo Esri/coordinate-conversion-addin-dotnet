@@ -78,6 +78,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters\EnumToFriendlyNameConverter.cs" />
+    <Compile Include="ValueConverters\MaxHeightConverter.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
