@@ -82,6 +82,9 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsTrue(CoordinateDD.TryParse("40.273048N\\78.847427W", out coord));
             Assert.AreEqual(40.273048, coord.Lat);
             Assert.AreEqual(-78.847427, coord.Lon);
+            Assert.IsTrue(CoordinateDD.TryParse("45.0° N 100.0° W", out coord));
+            Assert.AreEqual(45, coord.Lat);
+            Assert.AreEqual(-100, coord.Lon);
             Assert.IsTrue(CoordinateDD.TryParse("45.0°N 100.0°W", out coord));
             Assert.AreEqual(45, coord.Lat);
             Assert.AreEqual(-100, coord.Lon);
