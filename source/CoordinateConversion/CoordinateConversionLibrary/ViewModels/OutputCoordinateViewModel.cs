@@ -440,7 +440,8 @@ namespace CoordinateConversionLibrary.ViewModels
                             CoordinateUTM.TryParse(coord, out utm))
                         {
                             output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
-                            props.Add(Properties.Resources.StringZone, utm.Zone.ToString() + utm.Hemi);
+                            var usingBand = output.Format.Contains("B");
+                            props.Add(Properties.Resources.StringZone, utm.Zone.ToString() + (usingBand ? utm.Band : utm.Hemi));
                             props.Add(Properties.Resources.StringEasting, utm.Easting.ToString("000000"));
                             props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString("0000000"));
                             output.Props = props;
