@@ -29,7 +29,6 @@
                 Grid.Row="0"
                 MinHeight="40"
                 MaxHeight="{Binding ElementName=gridCollect, Path=ActualHeight, Converter={StaticResource maxHeightConverter}, ConverterParameter={StaticResource adjMaxHeightAmount}}"
-                Margin="3,3,0,0"
                 ItemsSource="{Binding CoordinateAddInPoints}"
                 SelectedIndex="{Binding ListBoxSelectedIndex}"
                 SelectedItem="{Binding ListBoxSelectedItem}"
