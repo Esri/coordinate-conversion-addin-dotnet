@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
-    xmlns:converters="clr-namespace:CoordinateConversionLibrary.ValueConverters"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     d:DesignHeight="300"
     d:DesignWidth="300"
@@ -15,87 +14,15 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:MaxHeightConverter x:Key="maxHeightConverter" />
             <system:Double x:Key="adjMaxHeightAmount">20</system:Double>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="gridCollect">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-            <ListBox
-                x:Name="listBoxCoordinates"
-                Grid.Row="0"
-                MinHeight="40"
-                MaxHeight="{Binding ElementName=gridCollect, Path=ActualHeight, Converter={StaticResource maxHeightConverter}, ConverterParameter={StaticResource adjMaxHeightAmount}}"
-                ItemsSource="{Binding CoordinateAddInPoints}"
-                SelectedIndex="{Binding ListBoxSelectedIndex}"
-                SelectedItem="{Binding ListBoxSelectedItem}"
-                SelectionMode="Extended">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Text}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ContextMenu>
-                    <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
-                        <MenuItem
-                            Command="{Binding DataContext.DeletePointCommand}"
-                            CommandParameter="{Binding Path=SelectedItems}"
-                            Header="{x:Static prop:Resources.MenuLabelDelete}"
-                            IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
-                        <MenuItem
-                            Command="{Binding DataContext.DeleteAllPointsCommand}"
-                            Header="{x:Static prop:Resources.MenuLabelDeleteAll}"
-                            IsEnabled="{Binding HasItems}" />
-                        <MenuItem
-                            Command="{Binding DataContext.FlashPointCommand}"
-                            CommandParameter="{Binding}"
-                            Header="{x:Static prop:Resources.HeaderFlash}"
-                            IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
-                        <MenuItem
-                            Command="{Binding DataContext.CopyCoordinateCommand}"
-                            CommandParameter="{Binding Path=SelectedItems}"
-                            Header="{x:Static prop:Resources.MenuLabelCopy}"
-                            IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
-                        <MenuItem
-                            Command="{Binding DataContext.CopyAllCoordinatesCommand}"
-                            Header="{x:Static prop:Resources.MenuLabelCopyAll}"
-                            IsEnabled="{Binding HasItems}" />
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-                <ListBox.InputBindings>
-                    <KeyBinding
-                        Key="Delete"
-                        Command="{Binding DeletePointCommand}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}" />
-                </ListBox.InputBindings>
-                <ListBox.Style>
-                    <Style TargetType="ListBox">
-                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
-                        <Setter Property="IsEnabled" Value="True" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
-                                <Setter Property="IsEnabled" Value="False" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.Style>
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
-                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+    <DockPanel LastChildFill="True">
         <StackPanel
-            Grid.Row="1"
             MinHeight="20"
             Margin="3,3,0,0"
             HorizontalAlignment="Right"
+            DockPanel.Dock="Bottom"
             Orientation="Horizontal">
             <Button
                 Width="Auto"
@@ -141,5 +68,70 @@
                 </Button.Style>
             </Button>
         </StackPanel>
-    </Grid>
+        <ListBox
+            x:Name="listBoxCoordinates"
+            MinHeight="40"
+            ItemsSource="{Binding CoordinateAddInPoints}"
+            SelectedIndex="{Binding ListBoxSelectedIndex}"
+            SelectedItem="{Binding ListBoxSelectedItem}"
+            SelectionMode="Extended">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Text}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+                    <MenuItem
+                        Command="{Binding DataContext.DeletePointCommand}"
+                        CommandParameter="{Binding Path=SelectedItems}"
+                        Header="{x:Static prop:Resources.MenuLabelDelete}"
+                        IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
+                    <MenuItem
+                        Command="{Binding DataContext.DeleteAllPointsCommand}"
+                        Header="{x:Static prop:Resources.MenuLabelDeleteAll}"
+                        IsEnabled="{Binding HasItems}" />
+                    <MenuItem
+                        Command="{Binding DataContext.FlashPointCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{x:Static prop:Resources.HeaderFlash}"
+                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
+                    <MenuItem
+                        Command="{Binding DataContext.CopyCoordinateCommand}"
+                        CommandParameter="{Binding Path=SelectedItems}"
+                        Header="{x:Static prop:Resources.MenuLabelCopy}"
+                        IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
+                    <MenuItem
+                        Command="{Binding DataContext.CopyAllCoordinatesCommand}"
+                        Header="{x:Static prop:Resources.MenuLabelCopyAll}"
+                        IsEnabled="{Binding HasItems}" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.InputBindings>
+                <KeyBinding
+                    Key="Delete"
+                    Command="{Binding DeletePointCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}" />
+            </ListBox.InputBindings>
+            <ListBox.Style>
+                <Style TargetType="ListBox">
+                    <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
+                    <Setter Property="IsEnabled" Value="True" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Style>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </DockPanel>
 </UserControl>
