@@ -14,7 +14,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <system:Double x:Key="adjMaxHeightAmount">20</system:Double>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
