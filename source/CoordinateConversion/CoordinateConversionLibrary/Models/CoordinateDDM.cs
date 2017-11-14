@@ -185,8 +185,8 @@ namespace CoordinateConversionLibrary.Models
             {
                 case "":
                 case "DDM":
-                    sb.AppendFormat(fi, "{0}° {1:0.0#####}\' {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatDegrees < 0 ? "S" : "N");
-                    sb.AppendFormat(fi, " {0}° {1:0.0#####}\' {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
+                    sb.AppendFormat(fi, "{0}° {1:0.0#####}\' {2}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatDegrees < 0 ? "S" : "N");
+                    sb.AppendFormat(fi, " {0}° {1:0.0#####}\' {2}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
                     throw new Exception("CoordinateDDM.ToString(): Invalid formatting string.");
