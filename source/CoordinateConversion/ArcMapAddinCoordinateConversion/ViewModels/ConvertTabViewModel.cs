@@ -47,7 +47,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             get
             {
-                if (ArcMap.Application.CurrentTool != null)
+                if ((ArcMap.Application != null) && (ArcMap.Application.CurrentTool != null))
                     return ArcMap.Application.CurrentTool.Name.ToLower() == MapPointToolName.ToLower();
 
                 return false;
