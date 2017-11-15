@@ -143,9 +143,6 @@ namespace ProAppCoordConversionModule.ViewModels
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
 
-            if (objects == null)
-                return;
-
             DeletePoints(objects);
         }
 
@@ -179,10 +176,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
 
-            if (objects == null)
-                return;
-
-            if (objects == null || !objects.Any())
+            if (!objects.Any())
                 return;
 
             var sb = new StringBuilder();
@@ -232,7 +226,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         {
                             var aiPoints = CoordinateAddInPoints.ToList();
 
-                            if (aiPoints == null || !aiPoints.Any())
+                            if (!aiPoints.Any())
                                 return;
 
                             var csvExport = new CsvExport();

@@ -131,9 +131,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
 
-            if (objects == null)
-                return;
-
             DeletePoints(objects);
         }
 
@@ -176,10 +173,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
 
-            if (objects == null)
-                return;            
-
-            if (objects == null || !objects.Any())
+            if (!objects.Any())
                 return;
 
             var sb = new StringBuilder();
@@ -255,7 +249,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                         var aiPoints = CoordinateAddInPoints.ToList();
 
-                        if (aiPoints == null || !aiPoints.Any())
+                        if (!aiPoints.Any())
                             return;
 
                         var csvExport = new CsvExport();
@@ -313,8 +307,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             IGeoFeatureLayer geoLayer = outputFeatureLayer as IGeoFeatureLayer;
             if(geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
             {
-                IFeatureRenderer pFeatureRender;
-                pFeatureRender = (IFeatureRenderer)new SimpleRenderer();
                 ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
                 pSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
                 pSimpleMarkerSymbol.Size = 3.0;
@@ -327,8 +319,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
             else if (geoLayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolyline)
             {
-                IFeatureRenderer pFeatureRender;
-                pFeatureRender = (IFeatureRenderer)new SimpleRenderer();
                 ISimpleFillSymbol pSimpleFillSymbol = new SimpleFillSymbolClass();
                 pSimpleFillSymbol.Style = esriSimpleFillStyle.esriSFSHollow;
                 pSimpleFillSymbol.Outline.Width = 0.4;
@@ -471,7 +461,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void AddCollectionPoint(IPoint point)
         {
-            if (!point.IsEmpty && point != null)
+            if (point != null && !point.IsEmpty)
             {
                 var color = new RgbColorClass() { Red = 255 } as IColor;
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);

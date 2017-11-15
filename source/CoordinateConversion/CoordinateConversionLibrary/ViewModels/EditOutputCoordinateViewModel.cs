@@ -37,16 +37,6 @@ namespace CoordinateConversionLibrary.ViewModels
                                                                     Properties.Resources.CategoryListUSNG,
                                                                     Properties.Resources.CategoryListUTM };
             }
-            else
-            {
-                CategoryList = new ObservableCollection<string>() { Properties.Resources.CategoryListDD,
-                                                                    Properties.Resources.CategoryListDDM,
-                                                                    Properties.Resources.CategoryListDMS,
-                                                                    //Properties.Resources.CategoryListGARS,
-                                                                    Properties.Resources.CategoryListMGRS,
-                                                                    Properties.Resources.CategoryListUSNG,
-                                                                    Properties.Resources.CategoryListUTM };
-            }
             FormatList = new ObservableCollection<string>() { "One",
                                                               "Two",
                                                               "Three",
