@@ -35,8 +35,11 @@ namespace ArcMapAddinCoordinateConversion
         {
             InitializeComponent();
 
-            ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
-            ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            if (ArcMap.Events != null)
+            {
+                ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
+                ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            }
         }
 
         IActiveViewEvents_Event avEvents = null;
