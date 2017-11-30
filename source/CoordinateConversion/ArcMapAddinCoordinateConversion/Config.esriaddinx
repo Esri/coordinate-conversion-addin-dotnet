@@ -2,11 +2,11 @@
   <Name>Coordinate Conversion</Name>
   <AddInID>{19b92973-746a-4114-9232-3467ca1fc631}</AddInID>
   <Description>Quickly convert coordinate between several formats</Description>
-  <Version>2.1.1</Version>
+  <Version>2.1.2</Version>
   <Image>Images\ArcMapAddinCoordinateConversion.png</Image>
   <Author>Esri</Author>
   <Company>Esri</Company>
-  <Date>6/1/2017</Date>
+  <Date>11/30/2017</Date>
   <Targets>
     <Target name="Desktop" version="10.3" />
   </Targets>
