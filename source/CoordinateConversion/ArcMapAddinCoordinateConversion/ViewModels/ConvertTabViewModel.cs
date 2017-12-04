@@ -57,7 +57,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 if (value)
                 {
-                    CurrentTool = ArcMap.Application.CurrentTool;
+                    if (ArcMap.Application != null)
+                        CurrentTool = ArcMap.Application.CurrentTool;
+
                     OnActivateTool(null);
                 }
                 else

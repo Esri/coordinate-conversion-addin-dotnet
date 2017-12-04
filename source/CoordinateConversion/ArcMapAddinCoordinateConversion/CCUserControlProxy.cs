@@ -14,24 +14,17 @@ namespace ArcMapAddinCoordinateConversion
         public CCUserControlProxy()
             : base()
         {
-            //InitializeComponent();
-        }
-
-        public IApplication ArcMapApplication
-        {
-            set
-            {
-                ArcMap.Application = value;
-                this.SyncEvents();
-            }
         }
 
         IActiveViewEvents_Event avEvents = null;
 
-        private void SyncEvents()
+        public void SyncDocEvents()
         {
-            ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
-            ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            if (ArcMap.Events != null)
+            {
+                ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
+                ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            }
         }
 
         private void ArcMap_NewOpenDocument()
