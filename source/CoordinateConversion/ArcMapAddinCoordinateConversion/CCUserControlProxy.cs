@@ -14,24 +14,30 @@ namespace ArcMapAddinCoordinateConversion
         public CCUserControlProxy()
             : base()
         {
-            //InitializeComponent();
         }
+
+        IActiveViewEvents_Event avEvents = null;
 
         public IApplication ArcMapApplication
         {
             set
             {
-                ArcMap.Application = value;
-                this.SyncEvents();
+                if (value != null)
+                {
+                    ArcMap.Application = value;
+                    this.SyncEvents();
+                }
             }
         }
 
-        IActiveViewEvents_Event avEvents = null;
-
-        private void SyncEvents()
+        public void SyncEvents()
         {
-            ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
-            ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            // TODO: this will not be called when CC DockWindow is open on ArcMap launch so should be moved
+            if (ArcMap.Events != null)
+            {
+                ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
+                ArcMap.Events.OpenDocument += ArcMap_NewOpenDocument;
+            }
         }
 
         private void ArcMap_NewOpenDocument()
