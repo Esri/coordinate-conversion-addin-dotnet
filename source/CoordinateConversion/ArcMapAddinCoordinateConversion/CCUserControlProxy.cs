@@ -18,8 +18,21 @@ namespace ArcMapAddinCoordinateConversion
 
         IActiveViewEvents_Event avEvents = null;
 
-        public void SyncDocEvents()
+        public IApplication ArcMapApplication
         {
+            set
+            {
+                if (value != null)
+                {
+                    ArcMap.Application = value;
+                    this.SyncEvents();
+                }
+            }
+        }
+
+        public void SyncEvents()
+        {
+            // TODO: this will not be called when CC DockWindow is open on ArcMap launch so should be moved
             if (ArcMap.Events != null)
             {
                 ArcMap.Events.NewDocument += ArcMap_NewOpenDocument;
