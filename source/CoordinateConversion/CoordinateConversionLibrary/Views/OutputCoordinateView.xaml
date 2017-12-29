@@ -119,7 +119,7 @@
                     IsReadOnly="True"
                     SortDirection="Ascending">
                     <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
@@ -130,7 +130,11 @@
                             <TextBox
                                 BorderThickness="0"
                                 IsReadOnly="True"
-                                Text="{Binding OutputCoordinate}" />
+                                Text="{Binding OutputCoordinate}">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
+                                </TextBox.Style>
+                            </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -178,7 +182,11 @@
                                         <TextBlock
                                             Margin="3,3,0,0"
                                             VerticalAlignment="Center"
-                                            Text="{Binding Key, Mode=OneWay}" />
+                                            Text="{Binding Key, Mode=OneWay}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}" />
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                         <TextBox
                                             Grid.Column="1"
                                             Margin="3,3,0,0"
@@ -234,7 +242,11 @@
                         VerticalAlignment="Center"
                         FontSize="14"
                         FontWeight="Bold"
-                        Text="{Binding ElementName=ocView, Path=DraggedItem.Name}" />
+                        Text="{Binding ElementName=ocView, Path=DraggedItem.Name}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}" />
+                        </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </Border>
         </Popup>
