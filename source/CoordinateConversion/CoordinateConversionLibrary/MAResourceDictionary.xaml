@@ -5,7 +5,7 @@
                     xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties">
     <Style x:Key="BorderedButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="Background" Value="#ffffff"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="#9FCDE8"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -49,7 +49,7 @@
     </Style>
     <Style x:Key="BorderedTButtonStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="Background" Value="#ffffff"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="#9FCDE8"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -110,8 +110,6 @@
         <Setter Property="Command" Value="{Binding EditPropertiesDialogCommand}" />
         <Setter Property="ToolTip" Value="{x:Static prop:Resources.TooltipEditProperties}" />
     </Style>
-    <Style x:Key="comboBoxItemStyle" TargetType="ComboBoxItem">
-        <Setter Property="Foreground" Value="Black" />
-        <Setter Property="Background" Value="White" />
-    </Style>    
+    <Style x:Key="comboBoxItemStyle" TargetType="ComboBoxItem" 
+           BasedOn="{StaticResource {x:Type ComboBoxItem}}" />
 </ResourceDictionary>

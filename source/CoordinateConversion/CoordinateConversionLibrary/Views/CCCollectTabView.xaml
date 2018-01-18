@@ -115,7 +115,7 @@
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}" />
             </ListBox.InputBindings>
             <ListBox.Style>
-                <Style TargetType="ListBox">
+                <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
                     <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
                     <Setter Property="IsEnabled" Value="True" />
                     <Style.Triggers>
@@ -126,7 +126,7 @@
                 </Style>
             </ListBox.Style>
             <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                 </Style>
