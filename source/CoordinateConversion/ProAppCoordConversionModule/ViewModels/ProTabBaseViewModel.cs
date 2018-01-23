@@ -43,6 +43,8 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
+
+            ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
@@ -51,16 +53,12 @@ namespace ProAppCoordConversionModule.ViewModels
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
 
+        private bool isToolActive = false;
         public bool IsToolActive
         {
             get
             {
-                bool active = false;
-
-                if (FrameworkApplication.CurrentTool != null)
-                    active = FrameworkApplication.CurrentTool.ToLower() == MapPointToolName.ToLower();
-
-                return active;
+                return isToolActive;
             }
             set
             {
@@ -70,6 +68,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 if (active)
                 {
+                    isToolActive = true;
                     string currentTool = FrameworkApplication.CurrentTool;
                     if (currentTool != MapPointToolName)
                     {
@@ -80,6 +79,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
+                    isToolActive = false;
+
                     // Handle case if no Previous Tool
                     if (string.IsNullOrEmpty(PreviousTool))
                         PreviousTool = "esri_mapping_exploreTool";
@@ -226,6 +227,15 @@ namespace ProAppCoordConversionModule.ViewModels
             SetAsCurrentToolAsync();
         }
 
+        private void OnActiveToolChanged(ArcGIS.Desktop.Framework.Events.ToolEventArgs args)
+        {
+            // Update active tool when tool changed so Map Point Tool button push state
+            // stays in sync with Pro UI
+            isToolActive = args.CurrentID == MapPointToolName;
+
+            RaisePropertyChanged(() => IsToolActive);
+        }
+
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
         {
             if (geom == null || MapView.Active == null)
@@ -281,7 +291,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             return result;
         }
-
 
         internal async virtual void OnFlashPointCommandAsync(object obj)
         {
