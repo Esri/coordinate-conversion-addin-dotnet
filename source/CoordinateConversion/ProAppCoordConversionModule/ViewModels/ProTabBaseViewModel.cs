@@ -43,6 +43,8 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
+
+            ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
@@ -51,24 +53,45 @@ namespace ProAppCoordConversionModule.ViewModels
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
 
+        private bool isToolActive = false;
         public bool IsToolActive
         {
             get
             {
-                if (FrameworkApplication.CurrentTool != null)
-                    return FrameworkApplication.CurrentTool.ToLower() == MapPointToolName.ToLower();
-
-                return false;
+                return isToolActive;
             }
             set
             {
-                if (value)
+                bool active = value;
+
+                string toolToActivate = string.Empty;
+
+                if (active)
                 {
-                    PreviousTool = FrameworkApplication.CurrentTool;
-                    OnMapToolCommand(null);
-                }     
+                    isToolActive = true;
+                    string currentTool = FrameworkApplication.CurrentTool;
+                    if (currentTool != MapPointToolName)
+                    {
+                        // Save previous tool to reactivate
+                        PreviousTool = currentTool;
+                        toolToActivate = MapPointToolName;
+                    }
+                }
                 else
-                    FrameworkApplication.SetCurrentToolAsync(PreviousTool);
+                {
+                    isToolActive = false;
+
+                    // Handle case if no Previous Tool
+                    if (string.IsNullOrEmpty(PreviousTool))
+                        PreviousTool = "esri_mapping_exploreTool";
+
+                    toolToActivate = PreviousTool;
+                }
+
+                if (!string.IsNullOrEmpty(toolToActivate))
+                {
+                    FrameworkApplication.SetCurrentToolAsync(toolToActivate);
+                }
 
                 RaisePropertyChanged(() => IsToolActive);
             }
@@ -194,16 +217,23 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #endregion Mediator handlers
 
-        private async Task SetAsCurrentToolAsync()
+        private void SetAsCurrentToolAsync()
         {	
-            await FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
-
-            RaisePropertyChanged(() => IsToolActive);
+            IsToolActive = true;
         }
 
-        private async void OnMapToolCommand(object obj)
+        private void OnMapToolCommand(object obj)
         {
-            await SetAsCurrentToolAsync();
+            SetAsCurrentToolAsync();
+        }
+
+        private void OnActiveToolChanged(ArcGIS.Desktop.Framework.Events.ToolEventArgs args)
+        {
+            // Update active tool when tool changed so Map Point Tool button push state
+            // stays in sync with Pro UI
+            isToolActive = args.CurrentID == MapPointToolName;
+
+            RaisePropertyChanged(() => IsToolActive);
         }
 
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
@@ -262,7 +292,6 @@ namespace ProAppCoordConversionModule.ViewModels
             return result;
         }
 
-
         internal async virtual void OnFlashPointCommandAsync(object obj)
         {
             var point = obj as MapPoint;
@@ -270,19 +299,17 @@ namespace ProAppCoordConversionModule.ViewModels
             if (point == null)
                 return;
 
-            if (!IsToolActive)
-            {
-                await SetAsCurrentToolAsync();
-            }
+            IsToolActive = true;
 
             await QueuedTask.Run(() =>
             {
-                // is point within current map extent
+                // zoom to point
                 var projectedPoint = GeometryEngine.Instance.Project(point, MapView.Active.Extent.SpatialReference);
-                if (!GeometryEngine.Instance.Contains(MapView.Active.Extent, projectedPoint))
-                {
-                    MapView.Active.PanTo(point);
-                }
+
+                // WORKAROUND: delay zoom by 1 sec to give Map Point Tool enough time to activate
+                // Note: The Map Point Tool is required to be active to enable flash overlay
+                MapView.Active.PanTo(projectedPoint, new TimeSpan(0,0,1));
+
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
         }
