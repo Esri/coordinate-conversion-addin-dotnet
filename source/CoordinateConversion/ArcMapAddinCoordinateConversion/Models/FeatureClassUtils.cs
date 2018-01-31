@@ -104,11 +104,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                             return null;
                         }
 
-                        if (ipSelectedObject != null && ipSelectedObject is IGxDataset)
-                        {
-                            ipGxDataset = (IGxDataset)ipSelectedObject;
-                            ipDataset = ipGxDataset.Dataset;
-                        }
+                        ipGxDataset = (IGxDataset)ipSelectedObject;
+                        ipDataset = ipGxDataset.Dataset;
                     }
 
                     return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
@@ -333,7 +330,6 @@ namespace ArcMapAddinCoordinateConversion.Models
             IFieldsEdit pFldsEdt = new FieldsClass();
             IFieldEdit pFldEdt = new FieldClass();
 
-            pFldEdt = new FieldClass();
             pFldEdt.Type_2 = esriFieldType.esriFieldTypeOID;
             pFldEdt.Name_2 = "OBJECTID";
             pFldEdt.AliasName_2 = "OBJECTID";

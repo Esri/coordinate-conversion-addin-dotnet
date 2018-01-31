@@ -111,12 +111,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 simpleMarkerSymbol.Size = 15;
                 simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
 
-                IElement element = null;
-
                 IMarkerElement markerElement = new MarkerElementClass();
 
                 markerElement.Symbol = simpleMarkerSymbol;
-                element = markerElement as IElement;
 
                 IPolygon poly = null;
                 if (InputCoordinateType == CoordinateType.MGRS || InputCoordinateType == CoordinateType.USNG)

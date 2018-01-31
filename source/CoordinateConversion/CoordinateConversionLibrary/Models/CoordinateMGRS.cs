@@ -217,7 +217,6 @@ namespace CoordinateConversionLibrary.Models
                     if (endIndexNeeded)
                     {
                         sb.Append("}");
-                        endIndexNeeded = false;
                     }
 
                     return String.Format(sb.ToString(), olist.ToArray());
