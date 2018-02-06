@@ -35,9 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -66,6 +72,25 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="json\fromGeo2DDM.json" />
+    <None Include="json\fromGeo2DMS.json" />
+    <None Include="json\fromGeo2GARS.json" />
+    <None Include="json\fromGeo2GEOREF.json" />
+    <None Include="json\fromGeo2MGRS.json" />
+    <None Include="json\fromGeo2UTMBand.json" />
+    <None Include="json\fromGeo2UTMHem.json" />
+    <None Include="json\mgrs2geo.json" />
+    <None Include="json\processCoordinateStrings.json" />
+    <None Include="json\toGeoFromDDM.json" />
+    <None Include="json\toGeoFromDMS.json" />
+    <None Include="json\toGeoFromGARS.json" />
+    <None Include="json\toGeoFromGEOREF.json" />
+    <None Include="json\toGeoFromMGRS.json" />
+    <None Include="json\toGeoFromUTMBand.json" />
+    <None Include="json\toGeoFromUTMHem.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
@@ -86,6 +111,9 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(ProjectDir)json\*.* $(ProjectDir)$(OutDir)json /i /s /q /y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
