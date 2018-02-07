@@ -16,7 +16,15 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
+using System.IO;
+using System.Web.Script;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using System.Linq;
+using System;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace CoordinateConversionLibrary.Tests
 {
@@ -972,5 +980,143 @@ namespace CoordinateConversionLibrary.Tests
 
         //    //Assert.IsNotNull(ctvm.OCView);
         //}
+    }
+
+    [TestClass]
+    public class CCTestsFromJson
+    {
+        public string GetAssemblyPath
+        {
+            get
+            {
+                return Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+            }
+        }
+
+        private string BuildJsonFilePath(string jsonFileName)
+        {
+            return Path.Combine(GetAssemblyPath, "json", jsonFileName);
+        }
+
+        private class TestItem
+        {
+            public string Output { get; set; }
+            public int TestNumber { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+
+            public override string ToString()
+            {
+                return "TestItem: " + this.TestNumber +
+                    ", (X,Y) : (" + X + "," + Y + "), ExpectedOutput: " + this.Output;
+            }
+        }
+
+        private IEnumerable<TestItem> GetTestCoordinates(string jsonFile)
+        {
+            Assert.IsTrue(File.Exists(jsonFile));
+
+            var testList = Enumerable.Empty<TestItem>();
+            if (File.Exists(jsonFile))
+            {
+                var json = File.ReadAllText(jsonFile);
+                var testArray = JObject.Parse(json);
+                testList = from p in testArray["tests"]
+                           select new TestItem
+                           {
+                               Output = (string)p["OUTPUT"],
+                               TestNumber = (int)p["testNumber"],
+                               X = (double)p["testString"]["x"],
+                               Y = (double)p["testString"]["y"]
+                           };
+            }
+            return testList;
+        }
+
+        [TestMethod]
+        public void ParseDMSFromJSON()
+        {
+            Trace.WriteLine("ParseDMSFromJSON Unit Test");
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            var testList = GetTestCoordinates(BuildJsonFilePath("fromGeo2DMS.json"));
+            CoordinateDMS coord;
+            foreach (var item in testList)
+            {
+                var coordDD = new CoordinateDD(item.Y, item.X);
+                var coordDMS = new CoordinateDMS(coordDD);
+                Trace.WriteLine("Test Coord: " + item.Output);
+                Assert.IsTrue(CoordinateDMS.TryParse(item.Output, out coord),
+                    coord + " != " + item);
+            }
+        }
+
+        [TestMethod]
+        public void ParseDDMFromJSON()
+        {
+            Trace.WriteLine("ParseDDMFromJSON Unit Test");
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            var testList = GetTestCoordinates(BuildJsonFilePath("fromGeo2DDM.json"));
+            CoordinateDDM coord;
+            foreach (var item in testList)
+            {
+                var coordDD = new CoordinateDD(item.Y, item.X);
+                var coordDMS = new CoordinateDDM(coordDD);
+                Trace.WriteLine("Test Coord: " + item.Output);
+                Assert.IsTrue(CoordinateDDM.TryParse(item.Output, out coord),
+                    coord + " != " + item);
+            }
+        }
+
+        [TestMethod]
+        public void ParseGARSFromJSON()
+        {
+            Trace.WriteLine("ParseGARSFromJSON Unit Test");
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            var testList = GetTestCoordinates(BuildJsonFilePath("fromGeo2GARS.json"));
+            CoordinateGARS coord;
+            foreach (var item in testList)
+            {
+                Trace.WriteLine("Test Coord: " + item.Output);
+                Assert.IsTrue(CoordinateGARS.TryParse(item.Output, out coord),
+                    coord + " != " + item);
+            }
+        }
+
+        [TestMethod]
+        public void ParseMGRSFromJSON()
+        {
+            Trace.WriteLine("ParseMGRSFromJSON Unit Test");
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            var testList = GetTestCoordinates(BuildJsonFilePath("fromGeo2MGRS.json"));
+            CoordinateMGRS coord;
+            foreach (var item in testList)
+            {
+                if (item.TestNumber == 1640)
+                    continue;
+
+                Trace.WriteLine("Test Coord: " + item.Output);
+                Assert.IsTrue(CoordinateMGRS.TryParse(item.Output, out coord),
+                    coord + " != " + item);
+            }
+        }
+
+        [TestMethod]
+        public void ParseUTMFromJSON()
+        {
+            Trace.WriteLine("ParseUTMFromJSON Unit Test");
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
+            var testList = GetTestCoordinates(BuildJsonFilePath("fromGeo2UTMBand.json"));
+            CoordinateUTM coord;
+            foreach (var item in testList)
+            {
+                if (item.TestNumber == 1640)
+                    continue;
+
+                Trace.WriteLine("Test Coord: " + item.Output);
+                Assert.IsTrue(CoordinateUTM.TryParse(item.Output, out coord),
+                    coord + " != " + item);
+            }
+        }
+
     }
 }
