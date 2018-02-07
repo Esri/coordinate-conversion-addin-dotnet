@@ -1,6 +1,6 @@
 {
   "_comment": "test to ensure inputed Lat/Long returns correct MGRS",
-  "MGRSTests": [
+  "tests": [
     {"testNumber": "1", "testString": {"x": "-174.64816","y": "-67.598509"}, "OUTPUT": "01DEE9999999999"},
     {"testNumber": "2", "testString": {"x": "-178.887036","y": "-62.908865"}, "OUTPUT": "01EDL0412923159"},
     {"testNumber": "3", "testString": {"x": "-176.155869","y": "-58.536789"}, "OUTPUT": "01EER4914611216"},
