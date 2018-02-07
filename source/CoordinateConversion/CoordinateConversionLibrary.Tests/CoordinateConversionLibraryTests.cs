@@ -435,29 +435,47 @@ namespace CoordinateConversionLibrary.Tests
             Assert.IsFalse(CoordinateDDM.TryParse("This is not a coordinate", out coord));
         }
 
+        private class TestItem
+        {
+            public string Output { get; set; }
+            public int TestNumber { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+        }
+        private IEnumerable<TestItem> GetTestCoordinates(string jsonFile)
+        {
+            var testList = Enumerable.Empty<TestItem>();
+            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "json", jsonFile)))
+            {
+                var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", jsonFile));
+                var testArray = JObject.Parse(json);
+                testList = from p in testArray["tests"]
+                               select new TestItem
+                               {
+                                   Output = (string)p["OUTPUT"],
+                                   TestNumber = (int)p["testNumber"],
+                                   X = (double)p["testString"]["x"],
+                                   Y = (double)p["testString"]["y"]
+                               };
+            }
+            return testList;
+        }
+
         [TestMethod]
         public void ParseDMSFromJSON()
         {             
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-            var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2DMS.json"));
-            var testArray = JObject.Parse(json);
-            var testList = from p in testArray["tests"]
-                           select new
-                           {
-                               output = (string)p["OUTPUT"],
-                               testnumber = (int)p["testNumber"],
-                               X = (double)p["testString"]["x"],
-                               Y = (double)p["testString"]["y"]
-                           };
+            var testList = GetTestCoordinates(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2DMS.json"));
             CoordinateDMS coord;
             foreach (var item in testList)
             {
                 var coordDD = new CoordinateDD(item.Y, item.X);
                 var coordDMS = new CoordinateDMS(coordDD);
-                Assert.IsTrue(CoordinateDMS.TryParse(item.output, out coord));
+                Assert.IsTrue(CoordinateDMS.TryParse(item.Output, out coord));
                 var coordDMSStr = coordDMS.ToString("A0 B0 C0.0##N X0 Y0 Z0.0##E", new CoordinateDMSFormatter());
-                if (coordDMSStr != item.output) {
-                    System.Diagnostics.Debug.WriteLine(coordDMSStr + " != " + item.output);
+                if (coordDMSStr != item.Output)
+                {
+                    System.Diagnostics.Debug.WriteLine(coordDMSStr + " != " + item.Output);
                 }
             }
         }
@@ -466,26 +484,17 @@ namespace CoordinateConversionLibrary.Tests
         public void ParseDDMFromJSON()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-            var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2DDM.json"));
-            var testArray = JObject.Parse(json);
-            var testList = from p in testArray["tests"]
-                           select new
-                           {
-                               output = (string)p["OUTPUT"],
-                               testnumber = (int)p["testNumber"],
-                               X = (double)p["testString"]["x"],
-                               Y = (double)p["testString"]["y"]
-                           };
+            var testList = GetTestCoordinates(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2DDM.json"));
             CoordinateDDM coord;
             foreach (var item in testList)
             {
                 var coordDD = new CoordinateDD(item.Y, item.X);
                 var coordDMS = new CoordinateDDM(coordDD);
-                Assert.IsTrue(CoordinateDDM.TryParse(item.output, out coord));
+                Assert.IsTrue(CoordinateDDM.TryParse(item.Output, out coord));
                 var coordDDMStr = coordDMS.ToString("A0 B0 C0.0##N X0 Y0 Z0.0##E", new CoordinateDDMFormatter());
-                if (coordDDMStr != item.output)
+                if (coordDDMStr != item.Output)
                 {
-                    System.Diagnostics.Debug.WriteLine(coordDDMStr + " != " + item.output);
+                    System.Diagnostics.Debug.WriteLine(coordDDMStr + " != " + item.Output);
                 }
             }
         }
@@ -494,20 +503,11 @@ namespace CoordinateConversionLibrary.Tests
         public void ParseGARSFromJSON()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-            var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2GARS.json"));
-            var testArray = JObject.Parse(json);
-            var testList = from p in testArray["tests"]
-                           select new
-                           {
-                               output = (string)p["OUTPUT"],
-                               testnumber = (int)p["testNumber"],
-                               X = (double)p["testString"]["x"],
-                               Y = (double)p["testString"]["y"]
-                           };
+            var testList = GetTestCoordinates(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2DGARS.json"));
             CoordinateGARS coord;
             foreach (var item in testList)
             {
-                Assert.IsTrue(CoordinateGARS.TryParse(item.output, out coord));
+                Assert.IsTrue(CoordinateGARS.TryParse(item.Output, out coord));
                 Assert.IsTrue(CoordinateGARS.Validate(coord));
             }
         }
@@ -516,43 +516,25 @@ namespace CoordinateConversionLibrary.Tests
         public void ParseMGRSFromJSON()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-            var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2MGRS.json"));
-            var testArray = JObject.Parse(json);
-            var testList = from p in testArray["tests"]
-                           select new
-                           {
-                               output = (string)p["OUTPUT"],
-                               testnumber = (int)p["testNumber"],
-                               X = (double)p["testString"]["x"],
-                               Y = (double)p["testString"]["y"]
-                           };
+            var testList = GetTestCoordinates(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2MGRS.json"));
             CoordinateMGRS coord;
             foreach (var item in testList)
             {
-                Assert.IsTrue(CoordinateMGRS.TryParse(item.output, out coord));
+                Assert.IsTrue(CoordinateMGRS.TryParse(item.Output, out coord));
                 Assert.IsTrue(CoordinateMGRS.Validate(coord));
             }
         }
 
         [TestMethod]
-        public void ParseGEOREFFromJSON()
+        public void ParseUTMFromJSON()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
-            var json = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2GEOREF.json"));
-            var testArray = JObject.Parse(json);
-            var testList = from p in testArray["tests"]
-                           select new
-                           {
-                               output = (string)p["OUTPUT"],
-                               testnumber = (int)p["testNumber"],
-                               X = (double)p["testString"]["x"],
-                               Y = (double)p["testString"]["y"]
-                           };
-            CoordinateMGRS coord;
+            var testList = GetTestCoordinates(Path.Combine(Directory.GetCurrentDirectory(), "json", "fromGeo2UTMBand.json"));
+            CoordinateUTM coord;
             foreach (var item in testList)
             {
-                Assert.IsTrue(CoordinateMGRS.TryParse(item.output, out coord));
-                Assert.IsTrue(CoordinateMGRS.Validate(coord));
+                Assert.IsTrue(CoordinateUTM.TryParse(item.Output, out coord));
+                Assert.IsTrue(CoordinateUTM.Validate(coord));
             }
         }
 
