@@ -29,7 +29,7 @@ namespace CoordinateConversionLibrary.Helpers
             formattedString = string.Empty;
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
+            if (CoordinateDD.TryParse(input, out dd) == true)
             {
                 formattedString = dd.ToString("Y0.0#N X0.0#E", new CoordinateDDFormatter());
                 return CoordinateType.DD;
@@ -37,7 +37,7 @@ namespace CoordinateConversionLibrary.Helpers
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
+            if (CoordinateDDM.TryParse(input, out ddm) == true)
             {
                 dd = new CoordinateDD(ddm);
                 formattedString = ddm.ToString("", new CoordinateDDMFormatter());
@@ -45,7 +45,7 @@ namespace CoordinateConversionLibrary.Helpers
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
+            if (CoordinateDMS.TryParse(input, out dms) == true)
             {
                 dd = new CoordinateDD(dms);
                 formattedString = dms.ToString("A0°B0'C0.0##\"N X0°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
@@ -53,28 +53,28 @@ namespace CoordinateConversionLibrary.Helpers
             }
 
             CoordinateGARS gars;
-            if (CoordinateGARS.TryParse(input, out gars))
+            if (CoordinateGARS.TryParse(input, out gars) == true)
             {
                 formattedString = gars.ToString("", new CoordinateGARSFormatter());
                 return CoordinateType.GARS;
             }
 
             CoordinateMGRS mgrs;
-            if (CoordinateMGRS.TryParse(input, out mgrs))
+            if (CoordinateMGRS.TryParse(input, out mgrs) == true)
             {
                 formattedString = mgrs.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
                 return CoordinateType.MGRS;
             }
 
             CoordinateUSNG usng;
-            if (CoordinateUSNG.TryParse(input, out usng))
+            if (CoordinateUSNG.TryParse(input, out usng) == true)
             {
                 formattedString = usng.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
                 return CoordinateType.USNG;
             }
 
             CoordinateUTM utm;
-            if (CoordinateUTM.TryParse(input, out utm))
+            if (CoordinateUTM.TryParse(input, out utm) == true)
             {
                 formattedString = utm.ToString("", new CoordinateUTMFormatter());
                 return CoordinateType.UTM;
