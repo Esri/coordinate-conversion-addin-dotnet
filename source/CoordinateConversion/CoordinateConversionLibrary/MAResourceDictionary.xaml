@@ -112,4 +112,34 @@
     </Style>
     <Style x:Key="comboBoxItemStyle" TargetType="ComboBoxItem" 
            BasedOn="{StaticResource {x:Type ComboBoxItem}}" />
+    <Style x:Key="TransparentButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource Esri_TextControlBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Opacity" Value="1.0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="1"
+                            SnapsToDevicePixels="true" 
+                            BorderThickness="1" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter Margin="2" 
+                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" 
+                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" 
+                            ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" 
+                            RecognizesAccessKey="True" 
+                            Content="{TemplateBinding ContentControl.Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
