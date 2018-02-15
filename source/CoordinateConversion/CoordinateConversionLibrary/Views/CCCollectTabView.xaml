@@ -31,7 +31,7 @@
                 Content="{x:Static prop:Resources.LabelClearAll}"
                 ToolTip="{x:Static prop:Resources.LabelClearAllCap}">
                 <Button.Style>
-                    <Style TargetType="Button">
+                    <Style TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
                         <Setter Property="IsEnabled" Value="False" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=listBoxCoordinates, Path=HasItems}" Value="True">
@@ -47,7 +47,8 @@
                 Margin="3,3,0,0"
                 Command="{Binding ImportCSVFileCommand}"
                 Content="{x:Static prop:Resources.LabelImport}"
-                ToolTip="{x:Static prop:Resources.LabelImportCap}" />
+                ToolTip="{x:Static prop:Resources.LabelImportCap}" 
+                Style="{StaticResource TransparentButtonStyle}"/>
             <Button
                 Width="Auto"
                 Height="Auto"
@@ -56,7 +57,7 @@
                 Content="{x:Static prop:Resources.LabelExport}"
                 ToolTip="{x:Static prop:Resources.LabelExportCap}">
                 <Button.Style>
-                    <Style TargetType="Button">
+                    <Style TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
                         <Setter Property="IsEnabled" Value="False" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=listBoxCoordinates, Path=HasItems}" Value="True">
