@@ -26,7 +26,7 @@ namespace CoordinateConversionLibrary.Helpers
     {
         public static CoordinateType GetCoordinateString(string input, out string formattedString)
         {
-            formattedString = string.Empty;
+            formattedString = input;
             // DD
             CoordinateDD dd;
             if (CoordinateDD.TryParse(input, out dd) == true)
