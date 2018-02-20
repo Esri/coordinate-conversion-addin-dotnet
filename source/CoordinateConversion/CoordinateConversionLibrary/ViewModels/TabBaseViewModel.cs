@@ -168,7 +168,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 foreach (var header in headers)
                 {
                     fieldVM.AvailableFields.Add(header);
-                    Console.WriteLine("header : {0}", header);
+                    System.Diagnostics.Debug.WriteLine("header : {0}", header);
                 }
 
                 var dlg = new SelectCoordinateFieldsView();
