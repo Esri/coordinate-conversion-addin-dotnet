@@ -44,6 +44,9 @@ namespace CoordinateConversionLibrary.Helpers
     {
         public static List<string> GetHeaders(Stream stream)
         {
+            if (stream == null)
+                return null;
+
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
@@ -54,8 +57,6 @@ namespace CoordinateConversionLibrary.Helpers
 
                 return line.Split(GetSeparator(line)).ToList();
             }
-
-            return null;
         }
 
         private static char GetSeparator(string line)

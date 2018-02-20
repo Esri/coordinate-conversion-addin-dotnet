@@ -76,7 +76,7 @@ namespace CoordinateConversionLibrary.Models
             }
             catch (Exception ex)
             {
-                // do nothing
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
 
@@ -106,7 +106,7 @@ namespace CoordinateConversionLibrary.Models
             }
             catch (Exception ex)
             {
-                // do nothing
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
 

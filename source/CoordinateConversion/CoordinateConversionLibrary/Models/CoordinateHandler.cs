@@ -94,7 +94,6 @@ namespace CoordinateConversionLibrary.Models
             if (outputCoordinate != null)
             {
                 format = outputCoordinate.Format;
-                //Console.WriteLine(tt.Format);
             }
 
             var formattedCoordinate = CoordinateHandler.GetFormattedCoord(cType, coord, format);
