@@ -24,8 +24,21 @@ namespace CoordinateConversionLibrary.Helpers
 {
     public class ConversionUtils
     {
+        /// <summary>
+        /// Returns a formatted coordinate string for an input coordinate string
+        /// IMPORTANT: if a coordinate format is not matched: 
+        /// Returns CoordinateType.Unknown, the input string as the formattedString 
+        /// </summary>
+        /// <param name="input">Input coord string</param>
+        /// <param name="formattedString">Formatted coord string</param>
+        /// <returns>CoordinateType of the format that matched, Unknown if unmatched</returns>
         public static CoordinateType GetCoordinateString(string input, out string formattedString)
         {
+            // We don't want the Ambiguous Coords Dialog to show during these calls
+            // But don't overwrite the setting in case user has set to prompt for this
+            bool savedAmbigCoordSetting = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
+
             formattedString = input;
             // DD
             CoordinateDD dd;
@@ -43,6 +56,7 @@ namespace CoordinateConversionLibrary.Helpers
                 formattedString = ddm.ToString("", new CoordinateDDMFormatter());
                 return CoordinateType.DDM;
             }
+
             // DMS
             CoordinateDMS dms;
             if (CoordinateDMS.TryParse(input, out dms) == true)
@@ -52,6 +66,10 @@ namespace CoordinateConversionLibrary.Helpers
                 return CoordinateType.DMS;
             }
 
+            // restore the setting (not needed for others, only DD/DMS
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = savedAmbigCoordSetting;
+
+            // GARS
             CoordinateGARS gars;
             if (CoordinateGARS.TryParse(input, out gars) == true)
             {
@@ -59,6 +77,7 @@ namespace CoordinateConversionLibrary.Helpers
                 return CoordinateType.GARS;
             }
 
+            // MGRS
             CoordinateMGRS mgrs;
             if (CoordinateMGRS.TryParse(input, out mgrs) == true)
             {
@@ -66,6 +85,7 @@ namespace CoordinateConversionLibrary.Helpers
                 return CoordinateType.MGRS;
             }
 
+            // USNG
             CoordinateUSNG usng;
             if (CoordinateUSNG.TryParse(input, out usng) == true)
             {
@@ -73,6 +93,7 @@ namespace CoordinateConversionLibrary.Helpers
                 return CoordinateType.USNG;
             }
 
+            // UTM
             CoordinateUTM utm;
             if (CoordinateUTM.TryParse(input, out utm) == true)
             {
