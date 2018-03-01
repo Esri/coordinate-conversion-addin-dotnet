@@ -1,7 +1,7 @@
 ﻿<ArcGIS defaultAssembly="CoordinateConversion.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="3.0" desktopVersion="2.0">
+  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="3.0" desktopVersion="2.1">
     <Name>Coordinate Conversion</Name>
-    <Description>Quickly convert coordinate between several formats</Description>
+    <Description>Quickly convert coordinates between several formats.</Description>
     <Image>Images\AddinDesktop32.png</Image>
     <Author>Esri</Author>
     <Company>Esri</Company>
