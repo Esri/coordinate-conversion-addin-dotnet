@@ -26,6 +26,7 @@ using CoordinateConversionLibrary.ViewModels;
 using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ProAppCoordConversionModule.Models;
+using CoordinateConversionLibrary.Views;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -197,6 +198,30 @@ namespace ProAppCoordConversionModule.ViewModels
             return;
         }
 
+        public override void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new ProEditPropertiesView();
+            dlg.DataContext = new EditPropertiesViewModel();
+            try
+            {
+                dlg.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                        CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message);
+                }
+
+            }
+
+        }
+
         #endregion overrides
 
         #region Mediator handlers
@@ -218,7 +243,7 @@ namespace ProAppCoordConversionModule.ViewModels
         #endregion Mediator handlers
 
         private void SetAsCurrentToolAsync()
-        {	
+        {
             IsToolActive = true;
         }
 
@@ -308,7 +333,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 // WORKAROUND: delay zoom by 1 sec to give Map Point Tool enough time to activate
                 // Note: The Map Point Tool is required to be active to enable flash overlay
-                MapView.Active.PanTo(projectedPoint, new TimeSpan(0,0,1));
+                MapView.Active.PanTo(projectedPoint, new TimeSpan(0, 0, 1));
 
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
@@ -461,7 +486,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 try
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);                 
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = QueuedTask.Run(() =>
                     {

@@ -83,7 +83,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
-        public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -124,7 +124,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
-        private static List<AMGraphic> GraphicsList = new List<AMGraphic>();
+        internal static List<AMGraphic> GraphicsList = new List<AMGraphic>();
 
         private void OnDeletePointCommand(object obj)
         {

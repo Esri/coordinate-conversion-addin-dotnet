@@ -318,7 +318,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
         }
 
-        private IPolygon GetMGRSPolygon(IPoint point)
+        internal IPolygon GetMGRSPolygon(IPoint point)
         {
             CoordinateMGRS mgrs;
 

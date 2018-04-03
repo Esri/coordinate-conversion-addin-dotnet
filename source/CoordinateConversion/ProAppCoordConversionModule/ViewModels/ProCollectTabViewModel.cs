@@ -98,7 +98,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
-        public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -271,10 +271,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 System.Windows.Clipboard.SetText(sb.ToString());
             }
         }
-        
+
         private async void UpdateHighlightedGraphics()
         {
-            foreach (var proGraphic in ProGraphicsList)
+            var list = ProGraphicsList.ToList();
+            foreach (var proGraphic in list)
             {
                 var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == proGraphic.GUID);
 
