@@ -48,7 +48,7 @@
                 Command="{Binding ImportCSVFileCommand}"
                 Content="{x:Static prop:Resources.LabelImport}"
                 ToolTip="{x:Static prop:Resources.LabelImportCap}" 
-                Style="{StaticResource TransparentButtonStyle}"/>
+                Style="{StaticResource TransparentButtonStyle}" Click="Import_Button_Click"/>
             <Button
                 Width="Auto"
                 Height="Auto"

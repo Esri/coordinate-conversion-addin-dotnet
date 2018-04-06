@@ -71,6 +71,8 @@ namespace ProAppCoordConversionModule.ViewModels
             if (coordinates == null)
                 return;
 
+            this.ClearListBoxSelection();
+
             foreach (var coordinate in coordinates)
             {
                 this.ProcessInput(coordinate);
@@ -81,9 +83,15 @@ namespace ProAppCoordConversionModule.ViewModels
             InputCoordinate = "";
         }
 
-        public bool HasListBoxRightClickSelectedItem 
+        private void ClearListBoxSelection()
         {
-            get 
+            this.UpdateHighlightedGraphics(true);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+        }
+
+        public bool HasListBoxRightClickSelectedItem
+        {
+            get
             {
                 return ListBoxItemAddInPoint != null;
             }
@@ -112,7 +120,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
-                UpdateHighlightedGraphics();
+                this.UpdateHighlightedGraphics(false);
             }
         }
 
@@ -126,7 +134,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
                 RaisePropertyChanged(() => ListBoxSelectedIndex);
-                UpdateHighlightedGraphics();
+
             }
         }
 
@@ -198,7 +206,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var vm = new ProSaveAsFormatViewModel();
             saveAsDialog.DataContext = vm;
 
-            if(saveAsDialog.ShowDialog() == true)
+            if (saveAsDialog.ShowDialog() == true)
             {
                 var fcUtils = new FeatureClassUtils();
 
@@ -211,11 +219,11 @@ namespace ProAppCoordConversionModule.ViewModels
                         var mapPointList = CoordinateAddInPoints.Select(i => i.Point).ToList();
                         if (vm.FeatureIsChecked)
                         {
-                            await fcUtils.CreateFCOutput(path, 
+                            await fcUtils.CreateFCOutput(path,
                                                          SaveAsType.FileGDB,
-                                                         mapPointList, 
-                                                         MapView.Active.Map.SpatialReference, 
-                                                         MapView.Active, 
+                                                         mapPointList,
+                                                         MapView.Active.Map.SpatialReference,
+                                                         MapView.Active,
                                                          CoordinateConversionLibrary.GeomType.Point);
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
@@ -238,7 +246,7 @@ namespace ProAppCoordConversionModule.ViewModels
                             csvExport.ExportToFile(path);
 
                             System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
-                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption); 
+                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
                         }
                     }
                     catch (Exception ex)
@@ -272,7 +280,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        private async void UpdateHighlightedGraphics()
+        private async void UpdateHighlightedGraphics(bool reset)
         {
             var list = ProGraphicsList.ToList();
             foreach (var proGraphic in list)
@@ -282,20 +290,36 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (aiPoint != null)
                 {
                     var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
+                    var doUpdate = false;
 
                     if (s == null)
                         continue;
 
                     if (aiPoint.IsSelected)
-                        s.HaloSize = 2;
-                    else
-                        s.HaloSize = 0;
-                    
-                    var result = await QueuedTask.Run(() =>
                     {
-                        var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
-                        return temp;
-                    });
+                        if (reset)
+                        {
+                            s.HaloSize = 0;
+                            aiPoint.IsSelected = false;
+                        }
+                        else
+                            s.HaloSize = 2;
+                        doUpdate = true;
+                    }
+                    else if (s.HaloSize > 0)
+                    {
+                        s.HaloSize = 0;
+                        doUpdate = true;
+                    }
+
+                    if (doUpdate)
+                    {
+                        var result = await QueuedTask.Run(() =>
+                        {
+                            var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
+                            return temp;
+                        });
+                    }
                 }
             }
         }

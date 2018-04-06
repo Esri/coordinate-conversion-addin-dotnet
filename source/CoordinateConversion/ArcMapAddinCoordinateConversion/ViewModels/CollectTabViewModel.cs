@@ -111,7 +111,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
                 RaisePropertyChanged(() => ListBoxSelectedIndex);
-                UpdateHighlightedGraphics();
+                //UpdateHighlightedGraphics();
             }
         }
 
@@ -191,7 +191,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void OnEnterKeyCommand(object obj)
         {
-            if(!HasInputError && InputCoordinate.Length > 0)
+            if (!HasInputError && InputCoordinate.Length > 0)
             {
                 AddCollectionPoint(amCoordGetter.Point);
             }
@@ -305,7 +305,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             outputFeatureLayer.FeatureClass = fc;
 
             IGeoFeatureLayer geoLayer = outputFeatureLayer as IGeoFeatureLayer;
-            if(geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            if (geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
             {
                 ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
                 pSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
@@ -344,7 +344,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = ext; 
+                sfDlg.DefaultExt = ext;
                 sfDlg.Filter = filter;
                 sfDlg.OverwritePrompt = true;
                 sfDlg.Title = title;
@@ -414,7 +414,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (eProp != null)
                 {
                     var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == eProp.Name);
-
+                    var doUpdate = false;
                     if (aiPoint != null)
                     {
                         // highlight
@@ -437,16 +437,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                                     // Marker symbols
                                     simpleMarkerSymbol.Outline = true;
                                     simpleMarkerSymbol.OutlineColor = color;
+                                    doUpdate = true;
                                 }
-                                else
+                                else if (markerElement.Symbol.Size > 0)
                                 {
                                     simpleMarkerSymbol.Outline = false;
+                                    doUpdate = true;
                                     //simpleMarkerSymbol.OutlineColor = sms.Color;
                                 }
 
-                                markerElement.Symbol = simpleMarkerSymbol;
-
-                                gc.UpdateElement(element);
+                                if (doUpdate)
+                                {
+                                    markerElement.Symbol = simpleMarkerSymbol;
+                                    gc.UpdateElement(element);
+                                }
                             }
                         }
                     }
