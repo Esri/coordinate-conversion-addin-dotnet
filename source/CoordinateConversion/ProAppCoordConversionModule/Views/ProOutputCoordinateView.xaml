@@ -149,9 +149,9 @@
                     <Setter Property="MinWidth" Value="20"/>
                     <Setter Property="MinHeight" Value="20"/>
                     <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Foreground" Value="{DynamicResource Esri_Gray160}"/>
-                    <Setter Property="Background" Value="{DynamicResource Esri_Gray120}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource Esri_Gray120}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Esri_TextStyleDefaultBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource Esri_BorderBrush}"/>
                     <Setter Property="BorderThickness" Value="1,1,1,1"/>
                     <!--<Setter Property="Background">
                         <Setter.Value>
