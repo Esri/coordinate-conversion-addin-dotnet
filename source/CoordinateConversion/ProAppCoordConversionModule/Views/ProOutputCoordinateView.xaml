@@ -375,8 +375,9 @@
 			Placement="RelativePoint"
 			PlacementTarget="{Binding ElementName=ocView}">
             <Border
-				Background="Transparent"
-                BorderBrush="{DynamicResource Esri_BorderSelectedBrush}"
+				Background="{DynamicResource Esri_ControlBackgroundBrush}"
+                Opacity="0.85"
+                BorderBrush="{DynamicResource Esri_BorderBrush}"
                 BorderThickness="2">
                 <StackPanel Margin="4,3,8,3" Orientation="Horizontal">
                     <Image
