@@ -30,8 +30,8 @@ namespace ProAppCoordConversionModule.ViewModels
             InputCCView = new InputCoordinateConversionView();
             InputCCView.DataContext = this;
 
-            OutputCCView = new OutputCoordinateView();
-            OutputCCView.DataContext = new OutputCoordinateViewModel();
+            OutputCCView = new ProOutputCoordinateView();
+            OutputCCView.DataContext = new ProOutputCoordinateViewModel();
 
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new ProCollectTabViewModel();
@@ -42,7 +42,7 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
-        public OutputCoordinateView OutputCCView { get; set; }
+        public ProOutputCoordinateView OutputCCView { get; set; }
         public CCCollectTabView CollectTabView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
