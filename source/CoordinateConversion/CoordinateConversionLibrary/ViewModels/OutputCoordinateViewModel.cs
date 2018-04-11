@@ -12,7 +12,7 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace CoordinateConversionLibrary.ViewModels
 {
     public class OutputCoordinateViewModel : BaseViewModel
     {
-        public OutputCoordinateViewModel() 
+        public OutputCoordinateViewModel()
         {
             ConfigCommand = new RelayCommand(OnConfigCommand);
             ExpandCommand = new RelayCommand(OnExpandCommand);
@@ -65,7 +65,7 @@ namespace CoordinateConversionLibrary.ViewModels
             //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y0.0#N X0.0#E" }, { "70.49N,40.32W", "Y0.0#N,X0.0#E" } } });
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
-            .RegisterHandler(n => n.OutputCoordinateList, n=> RaisePropertyChanged(()=> OutputCoordinateList));
+            .RegisterHandler(n => n.OutputCoordinateList, n => RaisePropertyChanged(() => OutputCoordinateList));
         }
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
@@ -98,7 +98,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void OnAddNewOutputCoordinate(object obj)
+        public virtual void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
 
@@ -109,7 +109,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = Properties.Resources.TitleAddNewOutputCoordinate;
-            
+
             if (dlg.ShowDialog() == true)
             {
                 outputCoordItem.Format = vm.Format;
@@ -140,7 +140,7 @@ namespace CoordinateConversionLibrary.ViewModels
             UpdateOutputs();
         }
 
-        private List<string> GetInUseNames()
+        public List<string> GetInUseNames()
         {
             return CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Select(oc => oc.Name).ToList();
         }
@@ -171,10 +171,11 @@ namespace CoordinateConversionLibrary.ViewModels
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
-            this.OnAddNewOutputCoordinate(new OutputCoordinateModel() {
-                Name = CoordinateType.DD.ToString(), 
-                CType = CoordinateType.DD, 
-                Format = "Y0.0#####N X0.0#####E" 
+            this.OnAddNewOutputCoordinate(new OutputCoordinateModel()
+            {
+                Name = CoordinateType.DD.ToString(),
+                CType = CoordinateType.DD,
+                Format = "Y0.0#####N X0.0#####E"
             });
         }
 
@@ -189,7 +190,7 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             var coord = obj as string;
 
-            if(!string.IsNullOrWhiteSpace(coord))
+            if (!string.IsNullOrWhiteSpace(coord))
             {
                 // copy to clipboard
                 System.Windows.Clipboard.SetText(coord);
@@ -222,11 +223,11 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             var name = obj as string;
 
-            if(!string.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(name))
             {
                 foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
-                    if(item.Name == name)
+                    if (item.Name == name)
                     {
                         item.ToggleVisibility();
                         return;
@@ -235,7 +236,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void OnConfigCommand(object obj)
+        public virtual void OnConfigCommand(object obj)
         {
             if (obj == null || string.IsNullOrWhiteSpace(obj as string))
                 return;
@@ -243,12 +244,15 @@ namespace CoordinateConversionLibrary.ViewModels
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
-            var dlg = new EditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames, 
-                new OutputCoordinateModel() { CType = outputCoordItem.CType, 
-                    Format = outputCoordItem.Format, 
+            var dlg = new EditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames,
+                new OutputCoordinateModel()
+                {
+                    CType = outputCoordItem.CType,
+                    Format = outputCoordItem.Format,
                     Name = outputCoordItem.Name,
                     SRName = outputCoordItem.SRName,
-                    SRFactoryCode = outputCoordItem.SRFactoryCode});
+                    SRFactoryCode = outputCoordItem.SRFactoryCode
+                });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
@@ -274,7 +278,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         #endregion
 
-        private OutputCoordinateModel GetOCMByName(string name)
+        public OutputCoordinateModel GetOCMByName(string name)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -299,7 +303,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void UpdateOutputs()
+        public void UpdateOutputs()
         {
             foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
             {

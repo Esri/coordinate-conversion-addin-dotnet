@@ -69,7 +69,7 @@ namespace Jitbit.Utils
         /// By default this is <c>true</c> so that Excel can open the generated CSV
         /// without asking the user to specify the delimiter used in the file.
         /// </param>
-        public CsvExport(string columnSeparator = ",", bool includeColumnSeparatorDefinitionPreamble = true)
+        public CsvExport(string columnSeparator = ",", bool includeColumnSeparatorDefinitionPreamble = false)
         {
             _columnSeparator = columnSeparator;
             _includeColumnSeparatorDefinitionPreamble = includeColumnSeparatorDefinitionPreamble;
