@@ -28,6 +28,9 @@ using CoordinateConversionLibrary;
 using System;
 using System.Text;
 using Jitbit.Utils;
+using System.Windows;
+using System.IO;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -46,6 +49,7 @@ namespace ProAppCoordConversionModule.ViewModels
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
+            PasteCoordinatesCommand = new RelayCommand(OnPasteCommand);
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
@@ -145,6 +149,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand SaveAsCommand { get; set; }
         public RelayCommand CopyCoordinateCommand { get; set; }
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
+        public RelayCommand PasteCoordinatesCommand { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -366,6 +371,21 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
             RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
+        }
+
+        private void OnPasteCommand(object obj)
+        {
+            var input = Clipboard.GetText().Trim();
+            string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var coordinates = new List<string>();
+            foreach (var item in lines)
+            {
+                var sb = new StringBuilder();
+                sb.Append(item.Trim());
+                coordinates.Add(sb.ToString());
+            }
+
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
         }
 
         #region overrides
