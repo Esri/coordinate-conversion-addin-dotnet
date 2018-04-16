@@ -85,7 +85,7 @@ namespace CoordinateConversionLibrary.Models
 
         #endregion Properties
 
-        public static bool TryParse(string input, out CoordinateDMS dms)
+        public static bool TryParse(string input, bool displayAmbiguousCoordsDlg, out CoordinateDMS dms)
         {
             dms = new CoordinateDMS();
 
@@ -110,8 +110,31 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDMSLat.Success && matchDMSLat.Length == input.Length && matchDMSLon.Success && matchDMSLon.Length == input.Length)
             {
-                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
-                    ambiguousCoordsViewDlg.ShowDialog();
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg && displayAmbiguousCoordsDlg)
+                {
+                    double latValue = -1, longValue = -1;
+                    if (matchDMSLat.Success && matchDMSLat.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDMSLat, new string[] { "latitudeD", "latitudeM", "latitudeS", "longitudeD", "longitudeM", "longitudeS" }))
+                        {
+                            latValue = Double.Parse(matchDMSLat.Groups["latitudeD"].Value);
+                            longValue = Double.Parse(matchDMSLat.Groups["longitudeD"].Value);
+                        }
+                    }
+                    else if (matchDMSLon.Success && matchDMSLon.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDMSLon, new string[] { "latitudeD", "latitudeM", "latitudeS", "longitudeD", "longitudeM", "longitudeS" }))
+                        {
+                            latValue = Double.Parse(matchDMSLon.Groups["latitudeD"].Value);
+                            longValue = Double.Parse(matchDMSLon.Groups["longitudeD"].Value);
+                        }
+                    }
+                    else
+                        return false;
+
+                    if (latValue < 90 && longValue < 90)
+                        ambiguousCoordsViewDlg.ShowDialog();
+                }
 
                 blnMatchDMSLat = ambiguousCoordsViewDlg.CheckedLatLon;
             }

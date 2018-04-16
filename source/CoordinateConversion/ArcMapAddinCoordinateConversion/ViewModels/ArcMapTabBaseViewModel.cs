@@ -402,7 +402,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDD dd;
-                if (CoordinateDD.TryParse(input, out dd))
+                if (CoordinateDD.TryParse(input, true, out dd))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -418,7 +418,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDDM ddm;
-                if (CoordinateDDM.TryParse(input, out ddm))
+                if (CoordinateDDM.TryParse(input, true, out ddm))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -434,7 +434,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDMS dms;
-                if (CoordinateDMS.TryParse(input, out dms))
+                if (CoordinateDMS.TryParse(input, true, out dms))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point

@@ -42,7 +42,7 @@ namespace CoordinateConversionLibrary.Helpers
             formattedString = input;
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd) == true)
+            if (CoordinateDD.TryParse(input, true, out dd) == true)
             {
                 formattedString = dd.ToString("Y0.0#N X0.0#E", new CoordinateDDFormatter());
                 return CoordinateType.DD;
@@ -50,7 +50,7 @@ namespace CoordinateConversionLibrary.Helpers
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm) == true)
+            if (CoordinateDDM.TryParse(input, true, out ddm) == true)
             {
                 dd = new CoordinateDD(ddm);
                 formattedString = ddm.ToString("", new CoordinateDDMFormatter());
@@ -59,7 +59,7 @@ namespace CoordinateConversionLibrary.Helpers
 
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms) == true)
+            if (CoordinateDMS.TryParse(input, true, out dms) == true)
             {
                 dd = new CoordinateDD(dms);
                 formattedString = dms.ToString("A0°B0'C0.0##\"N X0°Y0'Z0.0##\"E", new CoordinateDMSFormatter());
