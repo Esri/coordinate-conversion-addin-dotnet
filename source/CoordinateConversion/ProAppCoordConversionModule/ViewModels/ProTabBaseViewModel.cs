@@ -374,7 +374,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
+            if (CoordinateDD.TryParse(input, true, out dd))
             {
                 point = QueuedTask.Run(() =>
                 {
@@ -386,7 +386,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
+            if (CoordinateDDM.TryParse(input, true, out ddm))
             {
                 dd = new CoordinateDD(ddm);
                 point = QueuedTask.Run(() =>
@@ -398,7 +398,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
+            if (CoordinateDMS.TryParse(input, true, out dms))
             {
                 dd = new CoordinateDD(dms);
                 point = QueuedTask.Run(() =>
@@ -508,8 +508,10 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
+            if (CoordinateDD.TryParse(input, true, out dd))
             {
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -520,9 +522,11 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
+            if (CoordinateDDM.TryParse(input, true, out ddm))
             {
                 dd = new CoordinateDD(ddm);
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -532,9 +536,11 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
+            if (CoordinateDMS.TryParse(input, true, out dms))
             {
                 dd = new CoordinateDD(dms);
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);

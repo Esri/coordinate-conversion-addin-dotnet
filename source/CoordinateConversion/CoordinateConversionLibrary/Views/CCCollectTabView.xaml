@@ -107,6 +107,9 @@
                         Command="{Binding DataContext.CopyAllCoordinatesCommand}"
                         Header="{x:Static prop:Resources.MenuLabelCopyAll}"
                         IsEnabled="{Binding HasItems}" />
+                    <MenuItem
+                        Command="{Binding DataContext.PasteCoordinatesCommand}"
+                        Header="Paste"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.InputBindings>

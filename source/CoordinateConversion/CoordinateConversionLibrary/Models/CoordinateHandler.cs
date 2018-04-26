@@ -29,7 +29,7 @@ namespace CoordinateConversionLibrary.Models
             if (cType == CoordinateType.DD)
             {
                 CoordinateDD dd;
-                if (CoordinateDD.TryParse(coord, out dd))
+                if (CoordinateDD.TryParse(coord, true, out dd))
                 {
                     return dd.ToString(format, new CoordinateDDFormatter());
                 }
@@ -37,7 +37,7 @@ namespace CoordinateConversionLibrary.Models
             if (cType == CoordinateType.DDM)
             {
                 CoordinateDDM ddm;
-                if (CoordinateDDM.TryParse(coord, out ddm))
+                if (CoordinateDDM.TryParse(coord, true, out ddm))
                 {
                     return ddm.ToString(format, new CoordinateDDMFormatter());
                 }
@@ -45,7 +45,7 @@ namespace CoordinateConversionLibrary.Models
             if (cType == CoordinateType.DMS)
             {
                 CoordinateDMS dms;
-                if (CoordinateDMS.TryParse(coord, out dms))
+                if (CoordinateDMS.TryParse(coord, true, out dms))
                 {
                     return dms.ToString(format, new CoordinateDMSFormatter());
                 }

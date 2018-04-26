@@ -30,7 +30,7 @@ namespace CoordinateConversionLibrary.Models
         public virtual bool CanGetDD(int srFactoryCode, out string coord)
         {
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(InputCoordinate, out dd))
+            if (CoordinateDD.TryParse(InputCoordinate, true, out dd))
             {
                 Project(srFactoryCode);
                 coord = dd.ToString("", new CoordinateDDFormatter());
@@ -46,7 +46,7 @@ namespace CoordinateConversionLibrary.Models
         public virtual bool CanGetDDM(int srFactoryCode, out string coord)
         {
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(InputCoordinate, out ddm))
+            if (CoordinateDDM.TryParse(InputCoordinate, true, out ddm))
             {
                 coord = ddm.ToString("", new CoordinateDDMFormatter());
                 return true;
@@ -61,7 +61,7 @@ namespace CoordinateConversionLibrary.Models
         public virtual bool CanGetDMS(int srFactoryCode, out string coord)
         {
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(InputCoordinate, out dms))
+            if (CoordinateDMS.TryParse(InputCoordinate, true, out dms))
             {
                 coord = dms.ToString("", new CoordinateDMSFormatter());
                 return true;

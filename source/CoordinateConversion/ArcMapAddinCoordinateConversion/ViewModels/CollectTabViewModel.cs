@@ -30,6 +30,7 @@ using System.Windows.Forms;
 using System.Text;
 using CoordinateConversionLibrary.Models;
 using Jitbit.Utils;
+using System;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -48,6 +49,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
+            PasteCoordinatesCommand = new RelayCommand(OnPasteCommand);
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
@@ -122,6 +124,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public RelayCommand SaveAsCommand { get; set; }
         public RelayCommand CopyCoordinateCommand { get; set; }
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
+        public RelayCommand PasteCoordinatesCommand { get; set; }
 
         // lists to store GUIDs of graphics, temp feedback and map graphics
         internal static List<AMGraphic> GraphicsList = new List<AMGraphic>();
@@ -555,6 +558,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+        private void OnPasteCommand(object obj)
+        {
+            var input = Clipboard.GetText().Trim();
+            string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var coordinates = new List<string>();
+            foreach (var item in lines)
+            {
+                var sb = new StringBuilder();
+                sb.Append(item.Trim());
+                coordinates.Add(sb.ToString());
+            }
+
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+        }
 
         #region overrides
 
