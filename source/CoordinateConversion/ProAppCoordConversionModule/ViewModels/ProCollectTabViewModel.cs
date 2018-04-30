@@ -31,6 +31,7 @@ using Jitbit.Utils;
 using System.Windows;
 using System.IO;
 using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -245,8 +246,14 @@ namespace ProAppCoordConversionModule.ViewModels
                             var csvExport = new CsvExport();
                             foreach (var point in aiPoints)
                             {
+                                var results = GetOutputFormats(point);
                                 csvExport.AddRow();
                                 csvExport["Coordinate"] = point.Text;
+                                foreach (KeyValuePair<string, string> format in results)
+                                {
+                                    csvExport[format.Key] = format.Value;
+                                }
+
                             }
                             csvExport.ExportToFile(path);
 

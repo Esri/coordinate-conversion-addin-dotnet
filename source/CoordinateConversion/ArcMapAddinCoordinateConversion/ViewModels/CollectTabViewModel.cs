@@ -258,8 +258,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         var csvExport = new CsvExport();
                         foreach (var point in aiPoints)
                         {
+                            var results = GetOutputFormats(point);
                             csvExport.AddRow();
                             csvExport["Coordinates"] = point.Text;
+                            foreach (KeyValuePair<string, string> format in results)
+                            {
+                                csvExport[format.Key] = format.Value;
+                            }
                         }
                         csvExport.ExportToFile(tempFile);
 
