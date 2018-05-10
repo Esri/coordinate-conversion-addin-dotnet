@@ -16,7 +16,7 @@
              SizeToContent="WidthAndHeight"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
                           d:DesignHeight="300" d:DesignWidth="300">
-    <Window.Resources>
+    <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
@@ -51,15 +51,15 @@
                 <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"/>
             </Style>-->
         </ResourceDictionary>
-    </Window.Resources>
-    <Window.DataContext>
+    </controls:ProWindow.Resources>
+    <controls:ProWindow.DataContext>
         <StaticResourceExtension ResourceKey="editPropertiesVM" />
-    </Window.DataContext>
-    <Window.Style>
+    </controls:ProWindow.DataContext>
+    <controls:ProWindow.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}">
             <Setter Property="Background" Value="{DynamicResource Esri_DialogFrameBackgroundBrush}"/>
         </Style>
-    </Window.Style>
+    </controls:ProWindow.Style>
     <StackPanel Margin="10">
         <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
                    Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />

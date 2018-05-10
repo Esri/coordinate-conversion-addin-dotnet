@@ -1,0 +1,79 @@
+<controls:ProWindow  x:Class="CoordinateConversionLibrary.Views.ProSelectCoordinateFieldsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
+             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
+             xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
+             xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
+             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
+             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             WindowStartupLocation="CenterScreen"
+             Title="{x:Static prop:Resources.TitleSelectCoordinateFields}"
+             SizeToContent="WidthAndHeight"
+             helpers:DialogCloser.DialogResult="{Binding DialogResult}"
+                     d:DesignHeight="200" d:DesignWidth="420">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}">
+            <Setter Property="Background" Value="{DynamicResource Esri_DialogFrameBackgroundBrush}"/>
+        </Style>
+    </Window.Style>
+    <StackPanel Margin="20">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+            <TextBlock Margin="0,0,10,0" Text="{x:Static prop:Resources.LabelField1}" Style="{DynamicResource Esri_TextBlockRegular}" VerticalAlignment="Center" />
+            <ComboBox Height="Auto"
+                      Width="253"
+                      Margin="3,0,0,0"
+                      ItemsSource="{Binding AvailableFields}"
+                      SelectedItem="{Binding SelectedField1}"
+                      ItemContainerStyle="{StaticResource comboBoxItemStyle}">
+            </ComboBox>
+        </StackPanel>
+        <CheckBox x:Name="useTwoFields" Height="Auto" Margin="120,15,0,3" HorizontalAlignment="Left" IsChecked="{Binding UseTwoFields}">
+            <CheckBox.Content>
+                <TextBlock Text="{x:Static prop:Resources.UseTwoFields}" Style="{DynamicResource Esri_TextBlockRegular}" />
+            </CheckBox.Content>
+        </CheckBox>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,5">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=useTwoFields, Path=IsChecked}" Value="True">
+                            <Setter Property="IsEnabled" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <TextBlock Margin="0,0,10,0" Text="{x:Static prop:Resources.LabelField2}" Style="{DynamicResource Esri_TextBlockRegular}"  VerticalAlignment="Center"/>
+            <ComboBox Height="Auto"
+                      Width="253"
+                      Margin="15,0,0,0"
+                      ItemsSource="{Binding AvailableFields}"
+                      SelectedItem="{Binding SelectedField2}"
+                      ItemContainerStyle="{StaticResource comboBoxItemStyle}">
+            </ComboBox>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <Button Command="{Binding OKButtonPressedCommand}"
+                    Content="{x:Static prop:Resources.ButtonOK}"
+                    IsCancel="False"
+                    IsEnabled="{Binding IsDialogComplete}" 
+                    Style="{DynamicResource Esri_Button}" />
+            <Button Content="{x:Static prop:Resources.ButtonCancel}"
+                    IsCancel="True" 
+                    Style="{DynamicResource Esri_Button}" />
+        </StackPanel>
+    </StackPanel>
+</controls:ProWindow>

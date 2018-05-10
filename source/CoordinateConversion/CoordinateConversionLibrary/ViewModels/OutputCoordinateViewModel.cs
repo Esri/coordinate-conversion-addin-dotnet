@@ -315,7 +315,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     case CoordinateType.DD:
                         CoordinateDD cdd;
                         if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
-                            CoordinateDD.TryParse(coord, true, out cdd))
+                            CoordinateDD.TryParse(coord, out cdd, true))
                         {
                             output.OutputCoordinate = cdd.ToString(output.Format, new CoordinateDDFormatter());
                             var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
@@ -344,7 +344,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     case CoordinateType.DMS:
                         CoordinateDMS cdms;
                         if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
-                            CoordinateDMS.TryParse(coord, true, out cdms))
+                            CoordinateDMS.TryParse(coord, out cdms, true))
                         {
                             output.OutputCoordinate = cdms.ToString(output.Format, new CoordinateDMSFormatter());
                             var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
@@ -373,7 +373,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     case CoordinateType.DDM:
                         CoordinateDDM ddm;
                         if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
-                            CoordinateDDM.TryParse(coord, true, out ddm))
+                            CoordinateDDM.TryParse(coord, out ddm, true))
                         {
                             output.OutputCoordinate = ddm.ToString(output.Format, new CoordinateDDMFormatter());
                             var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);

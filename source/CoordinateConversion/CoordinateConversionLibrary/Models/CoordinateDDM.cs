@@ -53,7 +53,7 @@ namespace CoordinateConversionLibrary.Models
 
         #endregion Properties
 
-        public static bool TryParse(string input, bool displayAmbiguousCoordsDlg, out CoordinateDDM ddm)
+        public static bool TryParse(string input, out CoordinateDDM ddm, bool displayAmbiguousCoordsDlg = false)
         {
             ddm = new CoordinateDDM();
 

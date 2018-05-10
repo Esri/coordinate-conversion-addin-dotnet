@@ -153,6 +153,9 @@
     <Compile Include="Views\ProSaveAsFormatView.xaml.cs">
       <DependentUpon>ProSaveAsFormatView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProSelectCoordinateFieldsView.xaml.cs">
+      <DependentUpon>ProSelectCoordinateFieldsView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoordinateConversionDockpane.xaml">
@@ -184,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProSaveAsFormatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProSelectCoordinateFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

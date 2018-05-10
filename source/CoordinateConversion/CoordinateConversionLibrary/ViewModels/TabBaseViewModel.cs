@@ -149,7 +149,7 @@ namespace CoordinateConversionLibrary.ViewModels
             
         }
 
-        private void OnImportCSVFileCommand(object obj)
+        public virtual void OnImportCSVFileCommand(object obj)
         {
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
 

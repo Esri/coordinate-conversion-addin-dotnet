@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Windows.Input;
 using ESRI.ArcGIS.Framework;
 using System.Windows.Forms;
+using ArcMapAddinCoordinateConversion.Models;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -235,6 +236,87 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             return;
         }
 
+        public Dictionary<string, string> GetOutputFormats(AddInPoint input)
+        {
+            var results = new Dictionary<string, string>();
+            IPoint point;
+            var ctype = GetCoordinateType(input.Text, out point);
+            if (point != null)
+            {
+                ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
+                arcMapCoordinateGetter.Point = point;
+                CoordinateGetBase coordinateGetter = arcMapCoordinateGetter as CoordinateGetBase;
+                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    var props = new Dictionary<string, string>();
+                    string coord = string.Empty;
+
+                    switch (output.CType)
+                    {
+                        case CoordinateType.DD:
+                            CoordinateDD cdd;
+                            if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
+                                CoordinateDD.TryParse(coord, out cdd, true))
+                            {
+                                results.Add(output.Name, cdd.ToString(output.Format, new CoordinateDDFormatter()));
+                            }
+                            break;
+                        case CoordinateType.DMS:
+                            CoordinateDMS cdms;
+                            if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
+                                CoordinateDMS.TryParse(coord, out cdms, true))
+                            {
+                                results.Add(output.Name, cdms.ToString(output.Format, new CoordinateDMSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.DDM:
+                            CoordinateDDM ddm;
+                            if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
+                                CoordinateDDM.TryParse(coord, out ddm, true))
+                            {
+                                results.Add(output.Name, ddm.ToString(output.Format, new CoordinateDDMFormatter()));
+                            }
+                            break;
+                        case CoordinateType.GARS:
+                            CoordinateGARS gars;
+                            if (coordinateGetter.CanGetGARS(output.SRFactoryCode, out coord) &&
+                                CoordinateGARS.TryParse(coord, out gars))
+                            {
+                                results.Add(output.Name, gars.ToString(output.Format, new CoordinateGARSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.MGRS:
+                            CoordinateMGRS mgrs;
+                            if (coordinateGetter.CanGetMGRS(output.SRFactoryCode, out coord) &&
+                                CoordinateMGRS.TryParse(coord, out mgrs))
+                            {
+                                results.Add(output.Name, mgrs.ToString(output.Format, new CoordinateMGRSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.USNG:
+                            CoordinateUSNG usng;
+                            if (coordinateGetter.CanGetUSNG(output.SRFactoryCode, out coord) &&
+                                CoordinateUSNG.TryParse(coord, out usng))
+                            {
+                                results.Add(output.Name, usng.ToString(output.Format, new CoordinateMGRSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.UTM:
+                            CoordinateUTM utm;
+                            if (coordinateGetter.CanGetUTM(output.SRFactoryCode, out coord) &&
+                                CoordinateUTM.TryParse(coord, out utm))
+                            {
+                                results.Add(output.Name, utm.ToString(output.Format, new CoordinateUTMFormatter()));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return results;
+        }
+
         private void OnNewMapPointSelection(object obj)
         {
             var point = obj as IPoint;
@@ -402,7 +484,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDD dd;
-                if (CoordinateDD.TryParse(input, true, out dd))
+                if (CoordinateDD.TryParse(input, out dd, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -418,7 +500,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDDM ddm;
-                if (CoordinateDDM.TryParse(input, true, out ddm))
+                if (CoordinateDDM.TryParse(input, out ddm, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -434,7 +516,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDMS dms;
-                if (CoordinateDMS.TryParse(input, true, out dms))
+                if (CoordinateDMS.TryParse(input, out dms, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
