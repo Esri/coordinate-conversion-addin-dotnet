@@ -67,7 +67,7 @@ namespace CoordinateConversionLibrary.Models
 
         #region Methods
 
-        public static bool TryParse(string input, bool displayAmbiguousCoordsDlg, out CoordinateDD coord)
+        public static bool TryParse(string input, out CoordinateDD coord, bool displayAmbiguousCoordsDlg = false)
         {
             coord = new CoordinateDD();
 

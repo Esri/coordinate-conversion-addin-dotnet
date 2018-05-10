@@ -85,7 +85,7 @@ namespace CoordinateConversionLibrary.Models
 
         #endregion Properties
 
-        public static bool TryParse(string input, bool displayAmbiguousCoordsDlg, out CoordinateDMS dms)
+        public static bool TryParse(string input, out CoordinateDMS dms, bool displayAmbiguousCoordsDlg = false)
         {
             dms = new CoordinateDMS();
 

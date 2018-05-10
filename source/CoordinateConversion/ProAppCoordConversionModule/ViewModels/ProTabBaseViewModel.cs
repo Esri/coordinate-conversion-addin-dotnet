@@ -224,7 +224,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         case CoordinateType.DD:
                             CoordinateDD cdd;
                             if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
-                                CoordinateDD.TryParse(coord, true, out cdd))
+                                CoordinateDD.TryParse(coord, out cdd, true))
                             {
                                 results.Add(output.Name, cdd.ToString(output.Format, new CoordinateDDFormatter()));
                             }
@@ -232,7 +232,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         case CoordinateType.DMS:
                             CoordinateDMS cdms;
                             if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
-                                CoordinateDMS.TryParse(coord, true, out cdms))
+                                CoordinateDMS.TryParse(coord, out cdms, true))
                             {
                                 results.Add(output.Name, cdms.ToString(output.Format, new CoordinateDMSFormatter()));
                             }
@@ -240,7 +240,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         case CoordinateType.DDM:
                             CoordinateDDM ddm;
                             if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
-                                CoordinateDDM.TryParse(coord, true, out ddm))
+                                CoordinateDDM.TryParse(coord, out ddm, true))
                             {
                                 results.Add(output.Name, ddm.ToString(output.Format, new CoordinateDDMFormatter()));
                             }
@@ -510,7 +510,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, true, out dd))
+            if (CoordinateDD.TryParse(input, out dd, true))
             {
                 point = QueuedTask.Run(() =>
                 {
@@ -522,7 +522,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, true, out ddm))
+            if (CoordinateDDM.TryParse(input, out ddm, true))
             {
                 dd = new CoordinateDD(ddm);
                 point = QueuedTask.Run(() =>
@@ -534,7 +534,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, true, out dms))
+            if (CoordinateDMS.TryParse(input, out dms, true))
             {
                 dd = new CoordinateDD(dms);
                 point = QueuedTask.Run(() =>
@@ -644,7 +644,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, true, out dd))
+            if (CoordinateDD.TryParse(input, out dd, true))
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
@@ -658,7 +658,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, true, out ddm))
+            if (CoordinateDDM.TryParse(input, out ddm, true))
             {
                 dd = new CoordinateDD(ddm);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
@@ -672,7 +672,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, true, out dms))
+            if (CoordinateDMS.TryParse(input, out dms, true))
             {
                 dd = new CoordinateDD(dms);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)

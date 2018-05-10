@@ -241,7 +241,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var results = new Dictionary<string, string>();
             IPoint point;
             var ctype = GetCoordinateType(input.Text, out point);
-            if (ctype != null && point != null)
+            if (point != null)
             {
                 ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
                 arcMapCoordinateGetter.Point = point;
@@ -256,7 +256,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         case CoordinateType.DD:
                             CoordinateDD cdd;
                             if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
-                                CoordinateDD.TryParse(coord, true, out cdd))
+                                CoordinateDD.TryParse(coord, out cdd, true))
                             {
                                 results.Add(output.Name, cdd.ToString(output.Format, new CoordinateDDFormatter()));
                             }
@@ -264,7 +264,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         case CoordinateType.DMS:
                             CoordinateDMS cdms;
                             if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
-                                CoordinateDMS.TryParse(coord, true, out cdms))
+                                CoordinateDMS.TryParse(coord, out cdms, true))
                             {
                                 results.Add(output.Name, cdms.ToString(output.Format, new CoordinateDMSFormatter()));
                             }
@@ -272,7 +272,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         case CoordinateType.DDM:
                             CoordinateDDM ddm;
                             if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
-                                CoordinateDDM.TryParse(coord, true, out ddm))
+                                CoordinateDDM.TryParse(coord, out ddm, true))
                             {
                                 results.Add(output.Name, ddm.ToString(output.Format, new CoordinateDDMFormatter()));
                             }
@@ -484,7 +484,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDD dd;
-                if (CoordinateDD.TryParse(input, true, out dd))
+                if (CoordinateDD.TryParse(input, out dd, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -500,7 +500,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDDM ddm;
-                if (CoordinateDDM.TryParse(input, true, out ddm))
+                if (CoordinateDDM.TryParse(input, out ddm, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point
@@ -516,7 +516,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             try
             {
                 CoordinateDMS dms;
-                if (CoordinateDMS.TryParse(input, true, out dms))
+                if (CoordinateDMS.TryParse(input, out dms, true))
                 {
                     // Reformat the string for cases where lat/lon have been switched
                     // PutCoords calls fail if the double uses decimal separator other than a decimal point

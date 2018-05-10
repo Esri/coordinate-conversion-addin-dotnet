@@ -231,7 +231,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
                     if (ctdict.ContainsKey(CoordinateType.DD))
                     {
-                        CoordinateDD.TryParse(ctdict[type], false, out dd);
+                        CoordinateDD.TryParse(ctdict[type], out dd);
                     }
 
                     Sample = dd.ToString(Format, new CoordinateDDFormatter());
@@ -242,7 +242,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     
                     if(ctdict.ContainsKey(type))
                     {
-                        CoordinateDDM.TryParse(ctdict[type], false, out ddm);
+                        CoordinateDDM.TryParse(ctdict[type], out ddm);
                     }
 
                     Sample = ddm.ToString(Format, new CoordinateDDMFormatter());
@@ -252,7 +252,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
                     if(ctdict.ContainsKey(type))
                     {
-                        CoordinateDMS.TryParse(ctdict[type], false, out dms);
+                        CoordinateDMS.TryParse(ctdict[type], out dms);
                     }
                     Sample = dms.ToString(Format, new CoordinateDMSFormatter());
                     break;
