@@ -204,6 +204,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
         {
             var results = new Dictionary<string, string>();
+            results.Add("Coordinate", point.Text);
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(point.Text);

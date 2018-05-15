@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ESRI.ArcGIS.ADF.Connection.Local, Version=10.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86"> 
+    <Reference Include="ESRI.ArcGIS.ADF.Connection.Local, Version=10.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="ESRI.ArcGIS.ADF.Local, Version=10.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
@@ -129,6 +129,7 @@
     <Compile Include="MapPointTool.cs" />
     <Compile Include="Models\AddInPoint.cs" />
     <Compile Include="Models\AMGraphic.cs" />
+    <Compile Include="Models\CCAMGraphic.cs" />
     <Compile Include="Models\FeatureClassUtils.cs" />
     <Compile Include="Models\KMLUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

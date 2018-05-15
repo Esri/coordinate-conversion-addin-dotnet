@@ -246,6 +246,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
                 arcMapCoordinateGetter.Point = point;
                 CoordinateGetBase coordinateGetter = arcMapCoordinateGetter as CoordinateGetBase;
+                results.Add("Coordinate", input.Text);
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();

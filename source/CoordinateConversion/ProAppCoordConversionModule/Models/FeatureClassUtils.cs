@@ -84,7 +84,7 @@ namespace ProAppCoordConversionModule.Models
                 string folderName = System.IO.Path.GetDirectoryName(saveItemDlg.FilePath);
                 previousLocation = folderName;
 
-                return saveItemDlg.FilePath; 
+                return saveItemDlg.FilePath;
             }
             return null;
         }
@@ -114,7 +114,7 @@ namespace ProAppCoordConversionModule.Models
 
             }
         }
-        public async Task CreateFCOutput(string outputPath, SaveAsType saveAsType, List<MapPoint> mapPointList, SpatialReference spatialRef, MapView mapview, GeomType geomType, bool isKML = false)
+        public async Task CreateFCOutput(string outputPath, SaveAsType saveAsType, List<CCProGraphic> mapPointList, SpatialReference spatialRef, MapView mapview, GeomType geomType, bool isKML = false)
         {
             string dataset = System.IO.Path.GetFileName(outputPath);
             string connection = System.IO.Path.GetDirectoryName(outputPath);
@@ -197,7 +197,7 @@ namespace ProAppCoordConversionModule.Models
                     rowBuffer.Dispose();
             }
         }
-        private static async Task CreateFeatures(List<MapPoint> mapPointList)
+        private static async Task CreateFeatures(List<CCProGraphic> mapPointList)
         {
             RowBuffer rowBuffer = null;
 
@@ -219,11 +219,16 @@ namespace ProAppCoordConversionModule.Models
                             {
                                 rowBuffer = table.CreateRowBuffer();
 
-                                var geom = !point.HasZ ?
-                                    new MapPointBuilder(point).ToGeometry() :
-                                    MapPointBuilder.CreateMapPoint(point.X, point.Y, point.SpatialReference);
+                                var geom = !point.MapPoint.HasZ ?
+                                    new MapPointBuilder(point.MapPoint).ToGeometry() :
+                                    MapPointBuilder.CreateMapPoint(point.MapPoint.X, point.MapPoint.Y, point.MapPoint.SpatialReference);
                                 rowBuffer[shapeIndex] = geom;
-
+                                foreach (var item in point.Attributes)
+                                {
+                                    int idx = definition.FindField(item.Key);
+                                    if (idx > -1)
+                                        rowBuffer[idx] = item.Value;
+                                }
                                 Row row = table.CreateRow(rowBuffer);
                             }
                         }
@@ -254,6 +259,15 @@ namespace ProAppCoordConversionModule.Models
                 if (rowBuffer != null)
                     rowBuffer.Dispose();
             }
+        }
+
+        private static IReadOnlyList<string> makeValueArray(string featureClass, string fieldName, string fieldType)
+        {
+            List<object> arguments = new List<object>();
+            arguments.Add(featureClass);
+            arguments.Add(fieldName);
+            arguments.Add(fieldType);
+            return Geoprocessing.MakeValueArray(arguments.ToArray());
         }
 
         /// <summary>
@@ -317,7 +331,7 @@ namespace ProAppCoordConversionModule.Models
                 MessageBox.Show(ex.ToString());
             }
         }
-        private static async Task CreateFeatureClass(string dataset, string connection, SpatialReference spatialRef, List<MapPoint> mapPointList, MapView mapview, bool isKML = false)
+        private static async Task CreateFeatureClass(string dataset, string connection, SpatialReference spatialRef, List<CCProGraphic> mapPointList, MapView mapview, bool isKML = false)
         {
             try
             {
@@ -340,12 +354,32 @@ namespace ProAppCoordConversionModule.Models
 
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
 
-                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", 
+                IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management",
                     valueArray,
                     env,
                     null,
                     null,
                     GPExecuteToolFlags.Default);
+
+                // Add additional fields based on type of graphic
+                string nameNoExtension = Path.GetFileNameWithoutExtension(dataset);
+                string featureClass = "";
+                if (isKML)
+                {
+                    featureClass = connection + "/" + nameNoExtension + ".shp";
+                }
+                else
+                {
+                    featureClass = connection + "/" + dataset;
+                }
+
+                if (mapPointList.Count > 0 && mapPointList[0].Attributes != null && mapPointList[0].Attributes.Count > 0)
+                {
+                    foreach (var field in mapPointList[0].Attributes)
+                    {
+                        IGPResult addFieldResult = await Geoprocessing.ExecuteToolAsync("AddField_management", makeValueArray(featureClass, field.Key, "TEXT"));
+                    }
+                }
 
                 await CreateFeatures(mapPointList);
 
