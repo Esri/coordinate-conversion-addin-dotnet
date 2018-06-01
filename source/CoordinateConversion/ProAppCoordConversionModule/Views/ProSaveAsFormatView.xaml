@@ -22,7 +22,7 @@
         <StackPanel>
             <RadioButton IsChecked="{Binding FeatureIsChecked}" x:Name="rbFeature" Content="Feature class" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
             <RadioButton IsChecked="{Binding ShapeIsChecked}" x:Name="rbShape" Content="Shapefile" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
-            <RadioButton IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KML" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
+            <RadioButton IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KMZ" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
             <RadioButton IsChecked="{Binding CSVIsChecked}" x:Name="rbCSV" Content="CSV" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
         </StackPanel>
         <StackPanel Height="35" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
