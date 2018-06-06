@@ -216,8 +216,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     path = fcUtils.PromptUserWithGxDialog(ArcMap.Application.hWnd);
                     if (path != null)
                     {
+                        var grpList = GetMapPointExportFormat(GraphicsList);
                         SaveAsType saveType = System.IO.Path.GetExtension(path).Equals(".shp") ? SaveAsType.Shapefile : SaveAsType.FileGDB;
-                        fc = fcUtils.CreateFCOutput(path, saveType, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
+                        fc = fcUtils.CreateFCOutput(path, saveType, grpList, ArcMap.Document.FocusMap.SpatialReference);
                     }
                 }
                 else if (vm.KmlIsChecked)
@@ -228,7 +229,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         string kmlName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         string tempShapeFile = folderName + "\\tmpShapefile.shp";
-                        IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, GraphicsList, ArcMap.Document.FocusMap.SpatialReference);
+                        var grpList = GetMapPointExportFormat(GraphicsList);
+                        IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, grpList, ArcMap.Document.FocusMap.SpatialReference);
 
                         if (tempFc != null)
                         {
@@ -260,7 +262,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         {
                             var results = GetOutputFormats(point);
                             csvExport.AddRow();
-                            csvExport["Coordinates"] = point.Text;
                             foreach (KeyValuePair<string, string> format in results)
                             {
                                 csvExport[format.Key] = format.Value;
@@ -278,6 +279,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     AddFeatureLayerToMap(fc);
                 }
             }
+        }
+
+        private List<CCAMGraphic> GetMapPointExportFormat(List<AMGraphic> mapPointList)
+        {
+            List<CCAMGraphic> results = new List<CCAMGraphic>();
+            foreach (var point in mapPointList)
+            {
+                var pt = point.Geometry as IPoint;
+                var attributes = GetOutputFormats(new AddInPoint() { Point= pt});
+                CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
+                results.Add(ccMapPoint);
+            }
+
+            return results;
         }
 
         /// <summary>

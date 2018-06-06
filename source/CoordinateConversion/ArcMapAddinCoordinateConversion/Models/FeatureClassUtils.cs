@@ -34,7 +34,7 @@ namespace ArcMapAddinCoordinateConversion.Models
 {
     class FeatureClassUtils
     {
-        private IGxDialog m_ipSaveAsGxDialog = null; 
+        private IGxDialog m_ipSaveAsGxDialog = null;
 
         /// <summary>
         /// Prompts the user to save features
@@ -85,7 +85,7 @@ namespace ArcMapAddinCoordinateConversion.Models
                     IDataset ipDataset = ipGxDataset.Dataset;
 
                     // User will be prompted if they select an existing shapefile
-                    if ( ipDataset.Category.Equals("Shapefile Feature Class"))
+                    if (ipDataset.Category.Equals("Shapefile Feature Class"))
                     {
                         return path;
                     }
@@ -93,7 +93,7 @@ namespace ArcMapAddinCoordinateConversion.Models
                     while (DoesFeatureClassExist(ipDataset.Workspace.PathName, m_ipSaveAsGxDialog.Name))
                     {
                         if (System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgOverwrite,
-                                                                 CoordinateConversionLibrary.Properties.Resources.CaptionOverwrite, 
+                                                                 CoordinateConversionLibrary.Properties.Resources.CaptionOverwrite,
                                                                  System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                         {
                             return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
@@ -123,7 +123,7 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <param name="graphicsList">List of graphics for selected tab</param>
         /// <param name="ipSpatialRef">Spatial Reference being used</param>
         /// <returns>Output featureclass</returns>
-        public IFeatureClass CreateFCOutput(string outputPath, SaveAsType saveAsType, List<AMGraphic> graphicsList, ISpatialReference ipSpatialRef)
+        public IFeatureClass CreateFCOutput(string outputPath, SaveAsType saveAsType, List<CCAMGraphic> graphicsList, ISpatialReference ipSpatialRef)
         {
             string fcName = System.IO.Path.GetFileName(outputPath);
             string folderName = System.IO.Path.GetDirectoryName(outputPath);
@@ -143,15 +143,27 @@ namespace ArcMapAddinCoordinateConversion.Models
                         DeleteFeatureClass(fWorkspace, fcName);
                     }
 
-                    fc = CreateFeatureClass(fWorkspace, fcName);
 
-                    foreach (var graphic in graphicsList)
+                    if (graphicsList.Count > 0 && graphicsList[0].Attributes != null && graphicsList[0].Attributes.Keys != null)
                     {
-                        IFeature feature = fc.CreateFeature();
+                        var fieldKeys = graphicsList[0].Attributes.Keys;
 
-                        feature.Shape = graphic.Geometry;
+                        fc = CreateFeatureClass(fWorkspace, fieldKeys, fcName);
 
-                        feature.Store();
+                        foreach (var graphic in graphicsList)
+                        {
+                            IFeature feature = fc.CreateFeature();
+
+                            feature.Shape = graphic.MapPoint.Geometry;
+                            foreach (var item in graphic.Attributes)
+                            {
+                                int idx = feature.Fields.FindField(item.Key);
+                                if (idx > -1)
+                                    feature.set_Value(idx, item.Value);
+                            }
+
+                            feature.Store();
+                        }
                     }
                 }
                 else if (saveAsType == SaveAsType.Shapefile)
@@ -194,9 +206,9 @@ namespace ArcMapAddinCoordinateConversion.Models
                 fWorkspace = null;
                 ipDs = null;
             }
- 
+
             GC.Collect();
-            
+
         }
 
         /// <summary>
@@ -206,7 +218,7 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <param name="graphicsList">List of graphics for selected tab</param>
         /// <param name="ipSpatialRef">Spatial Reference being used</param>
         /// <returns>Created featureclass</returns>
-        private IFeatureClass ExportToShapefile(string fileNamePath, List<AMGraphic> graphicsList, ISpatialReference ipSpatialRef)
+        private IFeatureClass ExportToShapefile(string fileNamePath, List<CCAMGraphic> graphicsList, ISpatialReference ipSpatialRef)
         {
             int index = fileNamePath.LastIndexOf('\\');
             string folder = fileNamePath.Substring(0, index);
@@ -238,11 +250,27 @@ namespace ArcMapAddinCoordinateConversion.Models
                     geomDefEdit = (IGeometryDefEdit)geomDef;
 
                     geomDefEdit.GeometryType_2 = esriGeometryType.esriGeometryPoint;
-                    
+
                     geomDefEdit.SpatialReference_2 = ipSpatialRef;
 
                     fieldEdit.GeometryDef_2 = geomDef;
                     fieldsEdit.AddField(field);
+
+                    if (graphicsList.Count > 0)
+                    {
+                        if (graphicsList[0].Attributes != null && graphicsList[0].Attributes.Count > 0)
+                        {
+                            foreach (var fieldName in graphicsList[0].Attributes.Keys)
+                            {
+                                field = new FieldClass();
+                                fieldEdit = (IFieldEdit)field;
+                                fieldEdit.Name_2 = fieldName;
+                                fieldEdit.AliasName_2 = fieldName;
+                                fieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
+                                fieldsEdit.AddField(field);
+                            }
+                        }
+                    }
 
                     featClass = featureWorkspace.CreateFeatureClass(nameOfShapeFile, fields, null, null, esriFeatureType.esriFTSimple, shapeFieldName, "");
 
@@ -250,8 +278,13 @@ namespace ArcMapAddinCoordinateConversion.Models
                     {
                         IFeature feature = featClass.CreateFeature();
 
-                        feature.Shape = graphic.Geometry;
-
+                        feature.Shape = graphic.MapPoint.Geometry;
+                        foreach (var item in graphic.Attributes)
+                        {
+                            int idx = feature.Fields.FindField(item.Key);
+                            if (idx > -1)
+                                feature.set_Value(idx, item.Value);
+                        }
                         feature.Store();
                     }
 
@@ -297,11 +330,11 @@ namespace ArcMapAddinCoordinateConversion.Models
         private List<string> GetAllDatasetNames(string gdbFilePath)
         {
             IWorkspaceFactory workspaceFactory = new FileGDBWorkspaceFactory();
-            IWorkspace workspace = workspaceFactory.OpenFromFile (gdbFilePath, 0);
+            IWorkspace workspace = workspaceFactory.OpenFromFile(gdbFilePath, 0);
             IEnumDataset enumDataset = workspace.get_Datasets(esriDatasetType.esriDTAny);
             List<string> names = new List<string>();
             IDataset dataset = null;
-            while((dataset = enumDataset.Next())!= null)
+            while ((dataset = enumDataset.Next()) != null)
             {
                 names.Add(dataset.Name);
             }
@@ -325,7 +358,7 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <param name="featWorkspace">IFeatureWorkspace</param> 
         /// <param name="name">Name of the featureclass</param> 
         /// <returns>IFeatureClass</returns> 
-        private IFeatureClass CreateFeatureClass(IFeatureWorkspace featWorkspace, string name)
+        private IFeatureClass CreateFeatureClass(IFeatureWorkspace featWorkspace, Dictionary<string, string>.KeyCollection fieldNames, string name)
         {
             IFieldsEdit pFldsEdt = new FieldsClass();
             IFieldEdit pFldEdt = new FieldClass();
@@ -347,6 +380,17 @@ namespace ArcMapAddinCoordinateConversion.Models
             pFldEdt.Type_2 = esriFieldType.esriFieldTypeGeometry;
             pFldEdt.GeometryDef_2 = pGeoDef;
             pFldsEdt.AddField(pFldEdt);
+            if (fieldNames != null && fieldNames.Count > 0)
+            {
+                foreach (var field in fieldNames)
+                {
+                    pFldEdt = new FieldClass();
+                    pFldEdt.Name_2 = field;
+                    pFldEdt.AliasName_2 = field;
+                    pFldEdt.Type_2 = esriFieldType.esriFieldTypeString;
+                    pFldsEdt.AddField(pFldEdt);
+                }
+            }
 
             IFeatureClass pFClass = featWorkspace.CreateFeatureClass(name, pFldsEdt, null, null, esriFeatureType.esriFTSimple, "SHAPE", "");
 
@@ -378,5 +422,5 @@ namespace ArcMapAddinCoordinateConversion.Models
             return polygon;
 
         }
-    } 
+    }
 }

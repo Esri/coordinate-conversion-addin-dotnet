@@ -212,6 +212,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var vm = new ProSaveAsFormatViewModel();
             saveAsDialog.DataContext = vm;
 
+
             if (saveAsDialog.ShowDialog() == true)
             {
                 var fcUtils = new FeatureClassUtils();
@@ -223,18 +224,19 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         var mapPointList = CoordinateAddInPoints.Select(i => i.Point).ToList();
+                        var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
                         if (vm.FeatureIsChecked)
                         {
                             await fcUtils.CreateFCOutput(path,
                                                          SaveAsType.FileGDB,
-                                                         mapPointList,
+                                                         ccMapPointList,
                                                          MapView.Active.Map.SpatialReference,
                                                          MapView.Active,
                                                          CoordinateConversionLibrary.GeomType.Point);
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
-                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, mapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
                         }
                         else if (vm.CSVIsChecked)
                         {
@@ -248,7 +250,6 @@ namespace ProAppCoordConversionModule.ViewModels
                             {
                                 var results = GetOutputFormats(point);
                                 csvExport.AddRow();
-                                csvExport["Coordinate"] = point.Text;
                                 foreach (KeyValuePair<string, string> format in results)
                                 {
                                     csvExport[format.Key] = format.Value;
@@ -267,6 +268,19 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                 }
             }
+        }
+
+        private List<CCProGraphic> GetMapPointExportFormat(ObservableCollection<AddInPoint> mapPointList)
+        {
+            List<CCProGraphic> results = new List<CCProGraphic>();
+            foreach (var point in mapPointList)
+            {
+                var attributes = GetOutputFormats(point);
+                CCProGraphic ccMapPoint = new CCProGraphic() { Attributes = attributes, MapPoint = point.Point };
+                results.Add(ccMapPoint);
+            }
+
+            return results;
         }
 
         /// <summary>

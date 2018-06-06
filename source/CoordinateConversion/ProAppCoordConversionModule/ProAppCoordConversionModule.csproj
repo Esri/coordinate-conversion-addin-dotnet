@@ -111,6 +111,7 @@
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
     <Compile Include="Helpers\MapPointHelper.cs" />
     <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\CCProGraphic.cs" />
     <Compile Include="Models\FeatureClassUtils.cs" />
     <Compile Include="Models\KMLUtils.cs" />
     <Compile Include="Models\ProGraphic.cs" />
