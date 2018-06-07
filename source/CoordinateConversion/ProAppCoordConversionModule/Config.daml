@@ -37,7 +37,7 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Convert Coords" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Coordinate Conversion" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
           <tooltip heading="Coordinate Conversion">Convert coordinate notation from one notation format to another.<disabledText /></tooltip>
         </button>
         <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="DD" className="ContextCopyDD" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
