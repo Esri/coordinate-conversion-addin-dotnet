@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
-    <CurrentMonth>$([System.DateTime]::Now.Month)</CurrentMonth>
-    <CurrentDay>$([System.DateTime]::Now.Day)</CurrentDay>
-  </PropertyGroup>
-  <PropertyGroup>
-    <BUILD_MAJOR Condition="'$(BUILD_MAJOR)' == ''">4</BUILD_MAJOR>
-    <BUILD_MINOR Condition="'$(BUILD_MINOR)' == ''">0</BUILD_MINOR>
-    <BUILD_PATCH Condition="'$(BUILD_PATCH)' == ''">0</BUILD_PATCH>
-    <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">0</BUILD_NUMBER>
-    <BUILD_DATE Condition="'$(BUILD_DATE)' == ''">$(CurrentMonth)/$(CurrentDay)/$(CurrentYear)</BUILD_DATE>
-  </PropertyGroup>
-  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -247,21 +235,9 @@
   <Import Project="$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.11.targets" Condition="Exists('$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.11.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  -->
   <Target Name="BeforeBuild">
-    <!-- Set Version element in Config.esriaddinx -->
-    <XmlPeek XmlInputPath="Config.esriaddinx" Query="/x:ESRI.Configuration/x:Version/text()" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/Desktop/AddIns' /&gt;">
-      <Output TaskParameter="Result" ItemName="Peeked" />
-    </XmlPeek>
-    <Message Importance="High" Text="Old build number: @(Peeked) New build number: $(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
-    <XmlPoke XmlInputPath="Config.esriaddinx" Query="/x:ESRI.Configuration/x:Version" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/Desktop/AddIns' /&gt;" Value="$(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
-    <!-- Set Date element in Config.esriaddinx -->
-    <XmlPeek XmlInputPath="Config.esriaddinx" Query="/x:ESRI.Configuration/x:Date/text()" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/Desktop/AddIns' /&gt;">
-      <Output TaskParameter="Result" ItemName="Peeked_Date" />
-    </XmlPeek>
-    <Message Importance="High" Text="Old build date: @(Peeked_Date) New build date: $(BUILD_DATE)" />
-    <XmlPoke XmlInputPath="Config.esriaddinx" Query="/x:ESRI.Configuration/x:Date" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/Desktop/AddIns' /&gt;" Value="$(BUILD_DATE)" />
-  </Target>  
+  </Target>
+  -->
   <Target Name="AfterBuild">
     <!-- Gives build warning when add-in targets file is not found. -->
     <Warning Text="Unable to create .esriAddin; missing ESRI ArcGIS Add-in SDK component(s)." Condition="!Exists('$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.11.targets')" />
