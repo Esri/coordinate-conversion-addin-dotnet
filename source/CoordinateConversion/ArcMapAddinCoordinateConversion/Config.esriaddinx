@@ -1,8 +1,8 @@
-﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Coordinate Conversion</Name>
   <AddInID>{19b92973-746a-4114-9232-3467ca1fc631}</AddInID>
-  <Description>Quickly convert coordinate between several formats</Description>
-  <Version>2.1.2</Version>
+  <Description>Quickly convert coordinates between several formats</Description>
+  <Version>4.0.0.0</Version>
   <Image>Images\ArcMapAddinCoordinateConversion.png</Image>
   <Author>Esri</Author>
   <Company>Esri</Company>
