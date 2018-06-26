@@ -1,15 +1,16 @@
 # coordinate-conversion-addin-dotnet
 
-This is an Esri ArcGIS Prototype Addin for ArcMap and Pro that can be used for converting coordinates.
+Coordinate Conversion window in ArcGIS Pro
+Coordinate Conversion allows analysts to input and quickly convert coordinates between several common formats, including Universal Transverse Mercator (UTM) and Military Grid Reference System (MGRS). 
 
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
 
 ## Features
 
-* Parses WGS1984 input coordinates and outputs multiple formats of the input coordinate
-* Outputs can use pre-defined formats or can be customized to suit your needs
-* Addin for ArcMap and ArcGIS Pro
-	* Works with DD, DDM, DMS, MGRS, USNG and UTM
+* Convert several coordinate formats in one dialog
+* Copy coordinates to support other applications
+* Customize output format for converted coordinates
+* Import and export coordinate lists
 
 ## Sections
 
@@ -27,12 +28,12 @@ This is an Esri ArcGIS Prototype Addin for ArcMap and Pro that can be used for c
 * Visual Studio 2015
 * ArcGIS Desktop SDK for .NET 10.3.1+
 	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
-* ArcGIS Pro 2.0+ SDK
+* ArcGIS Pro 2.1+ SDK
 
 ### Users
 
-* ArcGIS Desktop 10.3.1
-* ArcGIS Pro 2.0+
+* ArcGIS Desktop 10.3.1 - 10.6.1
+* ArcGIS Pro 2.1 - 2.2
 
 ## Instructions
 
@@ -61,7 +62,7 @@ This is an Esri ArcGIS Prototype Addin for ArcMap and Pro that can be used for c
 * Running
 	* To run from a stand-alone deployment
 		* ArcMap
-			* Install the add-in from the latest Release (http://esriurl.com/coordconv)
+			* Install the add-in from the latest [release](http://esriurl.com/coordconv)
 			* Add the add-in command to a toolbar via menu option 
 				* "Customize -> Customize mode"
 				* Select "Commands" Tab
@@ -176,7 +177,7 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 #### Secondary: [Lyle](https://github.com/topowright)
 
-* Backup when the Owner is away
+* Backup when the owner is away
 
 ## Licensing
 
