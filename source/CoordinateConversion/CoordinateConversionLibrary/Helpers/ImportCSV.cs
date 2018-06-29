@@ -44,6 +44,9 @@ namespace CoordinateConversionLibrary.Helpers
     {
         public static List<string> GetHeaders(Stream stream)
         {
+            if (stream == null)
+                return null;
+
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
@@ -54,8 +57,6 @@ namespace CoordinateConversionLibrary.Helpers
 
                 return line.Split(GetSeparator(line)).ToList();
             }
-
-            return null;
         }
 
         private static char GetSeparator(string line)
@@ -74,7 +75,6 @@ namespace CoordinateConversionLibrary.Helpers
         public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames) where T : new()
         {
             List<T> list = new List<T>();
-            char sep = '\0';
             using (StreamReader reader = new StreamReader(stream))
             {
                 string line = reader.ReadLine();
@@ -83,7 +83,7 @@ namespace CoordinateConversionLibrary.Helpers
                 if (string.IsNullOrEmpty(line))
                     return list;
 
-                var charSep = sep != '\0' ? sep : GetSeparator(line);
+                var charSep = GetSeparator(line);
 
                 string[] row = line.Split(charSep);
                 List<ImportDescriptor> headers = ParseHeader<T>(row, fieldNames);

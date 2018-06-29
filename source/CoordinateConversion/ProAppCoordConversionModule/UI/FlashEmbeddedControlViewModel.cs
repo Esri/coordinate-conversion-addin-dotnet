@@ -111,12 +111,12 @@ namespace ProAppCoordConversionModule.UI
             var screenPoint = (System.Windows.Point)values[0];
             var c = values[1] as System.Windows.Controls.Canvas;
             if (c == null)
-                return -999;
+                return 0.0;
 
             var source = PresentationSource.FromVisual(c);
 
             if (source == null)
-                return 0;
+                return 0.0;
 
             c.Width = (double)values[2] * 2.0;
             c.Height = (double)values[3] * 2.0;
@@ -132,7 +132,7 @@ namespace ProAppCoordConversionModule.UI
             else if (ps == "NEGHALFHEIGHT")
                 return -1 * (c.ActualHeight / 2.0);
 
-            return 0;
+            return 0.0;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

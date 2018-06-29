@@ -69,7 +69,7 @@ namespace Jitbit.Utils
         /// By default this is <c>true</c> so that Excel can open the generated CSV
         /// without asking the user to specify the delimiter used in the file.
         /// </param>
-        public CsvExport(string columnSeparator = ",", bool includeColumnSeparatorDefinitionPreamble = true)
+        public CsvExport(string columnSeparator = ",", bool includeColumnSeparatorDefinitionPreamble = false)
         {
             _columnSeparator = columnSeparator;
             _includeColumnSeparatorDefinitionPreamble = includeColumnSeparatorDefinitionPreamble;
@@ -132,7 +132,7 @@ namespace Jitbit.Utils
             if (value is INullable && ((INullable)value).IsNull) return "";
             if (value is DateTime)
             {
-                if (((DateTime)value).TimeOfDay.TotalSeconds == 0)
+                if ((int)((DateTime)value).TimeOfDay.TotalSeconds == 0)
                     return ((DateTime)value).ToString("yyyy-MM-dd");
                 return ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
             }

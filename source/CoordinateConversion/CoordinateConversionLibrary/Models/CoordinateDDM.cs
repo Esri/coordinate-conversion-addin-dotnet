@@ -53,7 +53,7 @@ namespace CoordinateConversionLibrary.Models
 
         #endregion Properties
 
-        public static bool TryParse(string input, out CoordinateDDM ddm)
+        public static bool TryParse(string input, out CoordinateDDM ddm, bool displayAmbiguousCoordsDlg = false)
         {
             ddm = new CoordinateDDM();
 
@@ -78,8 +78,31 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDMLat.Success && matchDDMLat.Length == input.Length && matchDDMLon.Success && matchDDMLon.Length == input.Length)
             {
-                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
-                    ambiguousCoordsViewDlg.ShowDialog();
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg && displayAmbiguousCoordsDlg)
+                {
+                    double latValue = -1, longValue = -1;
+                    if (matchDDMLat.Success && matchDDMLat.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDDMLat, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" }))
+                        {
+                            latValue = Double.Parse(matchDDMLat.Groups["latitude"].Value);
+                            longValue = Double.Parse(matchDDMLat.Groups["longitude"].Value);
+                        }
+                    }
+                    else if (matchDDMLon.Success && matchDDMLon.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDDMLon, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" }))
+                        {
+                            latValue = Double.Parse(matchDDMLon.Groups["latitudeD"].Value);
+                            longValue = Double.Parse(matchDDMLon.Groups["longitudeD"].Value);
+                        }
+                    }
+                    else
+                        return false;
+
+                    if (latValue < 90 && longValue < 90)
+                        ambiguousCoordsViewDlg.ShowDialog();
+                }
 
                 blnMatchDDMLat = ambiguousCoordsViewDlg.CheckedLatLon;
             }
@@ -106,7 +129,7 @@ namespace CoordinateConversionLibrary.Models
             // Lon/Lat
             else if (matchDDMLon.Success && matchDDMLon.Length == input.Length)
             {
-                if (ValidateNumericCoordinateMatch(matchDDMLon, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" } ))
+                if (ValidateNumericCoordinateMatch(matchDDMLon, new string[] { "latitudeD", "latitudeM", "longitudeD", "longitudeM" }))
                 {
                     LatDegrees = int.Parse(matchDDMLon.Groups["latitudeD"].Value);
                     LatMinutes = double.Parse(matchDDMLon.Groups["latitudeM"].Value);
@@ -185,8 +208,8 @@ namespace CoordinateConversionLibrary.Models
             {
                 case "":
                 case "DDM":
-                    sb.AppendFormat(fi, "{0}° {1:0.0#####}\' {3}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatDegrees < 0 ? "S" : "N");
-                    sb.AppendFormat(fi, " {0}° {1:0.0#####}\' {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
+                    sb.AppendFormat(fi, "{0}° {1:0.0#####}\' {2}", Math.Abs(this.LatDegrees), this.LatMinutes, this.LatDegrees < 0 ? "S" : "N");
+                    sb.AppendFormat(fi, " {0}° {1:0.0#####}\' {2}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
                     throw new Exception("CoordinateDDM.ToString(): Invalid formatting string.");
@@ -285,7 +308,6 @@ namespace CoordinateConversionLibrary.Models
                     if (endIndexNeeded)
                     {
                         sb.Append("}");
-                        endIndexNeeded = false;
                     }
 
                     return String.Format(sb.ToString(), olist.ToArray());

@@ -62,12 +62,12 @@ namespace CoordinateConversionLibrary.Models
             get { return _lon; }
             set { _lon = value; }
         }
-        
+
         #endregion Properties
 
         #region Methods
 
-        public static bool TryParse(string input, out CoordinateDD coord)
+        public static bool TryParse(string input, out CoordinateDD coord, bool displayAmbiguousCoordsDlg = false)
         {
             coord = new CoordinateDD();
 
@@ -78,8 +78,8 @@ namespace CoordinateConversionLibrary.Models
             string numSep = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             input = numSep != "." ? input.Replace(".", numSep) : input;
 
-            Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[NnSs\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[EeWw\+-])?)$");
-            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*]*)(?<lastSuffix>[NnSs\+-])?)$");
+            Regex regexDDLat = new Regex(@"^((?<firstPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*\s]*)(?<firstSuffix>[NnSs\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*\s]*)(?<lastSuffix>[EeWw\+-])?)$");
+            Regex regexDDLon = new Regex(@"^((?<firstPrefix>[EeWw\+-])?(?<longitude>[0]?\d?\d([,.:]\d*)?|1[0-7]\d([,.:]\d*)?|180([,.:]0*)?)([°˚º^~*\s]*)(?<firstSuffix>[EeWw\+-])?)([,:;\s|\/\\]+)((?<lastPrefix>[NnSs\+-])?(?<latitude>[0-8]?\d?\d([,.:]\d*)?|90([,.:]0*)?)([°˚º^~*\s]*)(?<lastSuffix>[NnSs\+-])?)$");
 
             var matchDDLat = regexDDLat.Match(input);
             var matchDDLon = regexDDLon.Match(input);
@@ -91,8 +91,31 @@ namespace CoordinateConversionLibrary.Models
             // Ambiguous coordinate, could be both lat/lon && lon/lat
             if (matchDDLat.Success && matchDDLat.Length == input.Length && matchDDLon.Success && matchDDLon.Length == input.Length)
             {
-                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg)
-                    ambiguousCoordsViewDlg.ShowDialog();
+                if (CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg && displayAmbiguousCoordsDlg)
+                {
+                    double latValue = -1, longValue = -1;
+                    if (matchDDLat.Success && matchDDLat.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDDLat, new string[] { "latitude", "longitude" }))
+                        {
+                            latValue = Double.Parse(matchDDLat.Groups["latitude"].Value);
+                            longValue = Double.Parse(matchDDLat.Groups["longitude"].Value);
+                        }
+                    }
+                    else if (matchDDLon.Success && matchDDLon.Length == input.Length)
+                    {
+                        if (ValidateNumericCoordinateMatch(matchDDLon, new string[] { "latitude", "longitude" }))
+                        {
+                            latValue = Double.Parse(matchDDLon.Groups["latitude"].Value);
+                            longValue = Double.Parse(matchDDLon.Groups["longitude"].Value);
+                        }
+                    }
+                    else
+                        return false;
+
+                    if (latValue < 90 && longValue < 90)
+                        ambiguousCoordsViewDlg.ShowDialog();
+                }
 
                 blnMatchDDLat = ambiguousCoordsViewDlg.CheckedLatLon;
             }
@@ -129,7 +152,7 @@ namespace CoordinateConversionLibrary.Models
             coord.Lat = latitude;
             coord.Lon = longitude;
 
-            
+
             try
             {
                 //// Don't allow both prefix and suffix for lat or lon
@@ -294,7 +317,6 @@ namespace CoordinateConversionLibrary.Models
                     if (endIndexNeeded)
                     {
                         sb.Append("}");
-                        endIndexNeeded = false;
                     }
 
                     return String.Format(sb.ToString(), olist.ToArray());

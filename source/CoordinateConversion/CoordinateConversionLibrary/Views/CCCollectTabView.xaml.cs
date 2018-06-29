@@ -37,5 +37,10 @@ namespace CoordinateConversionLibrary.Views
         {
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, null);
         }
+
+        private void Import_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.listBoxCoordinates.UnselectAll();
+        }
     }
 }

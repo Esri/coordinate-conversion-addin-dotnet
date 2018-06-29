@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
+    <CurrentMonth>$([System.DateTime]::Now.Month)</CurrentMonth>
+    <CurrentDay>$([System.DateTime]::Now.Day)</CurrentDay>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BUILD_MAJOR Condition="'$(BUILD_MAJOR)' == ''">4</BUILD_MAJOR>
+    <BUILD_MINOR Condition="'$(BUILD_MINOR)' == ''">0</BUILD_MINOR>
+    <BUILD_PATCH Condition="'$(BUILD_PATCH)' == ''">0</BUILD_PATCH>
+    <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">0</BUILD_NUMBER>
+    <BUILD_DATE Condition="'$(BUILD_DATE)' == ''">$(CurrentMonth)/$(CurrentDay)/$(CurrentYear)</BUILD_DATE>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -105,6 +117,7 @@
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
     <Compile Include="Helpers\MapPointHelper.cs" />
     <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\CCProGraphic.cs" />
     <Compile Include="Models\FeatureClassUtils.cs" />
     <Compile Include="Models\KMLUtils.cs" />
     <Compile Include="Models\ProGraphic.cs" />
@@ -132,10 +145,23 @@
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
     <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
     <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
+    <Compile Include="Views\ProEditOutputCoordinateView.xaml.cs">
+      <DependentUpon>ProEditOutputCoordinateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProEditPropertiesView.xaml.cs">
+      <DependentUpon>ProEditPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProOutputCoordinateView.xaml.cs">
+      <DependentUpon>ProOutputCoordinateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProSaveAsFormatView.xaml.cs">
       <DependentUpon>ProSaveAsFormatView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProSelectCoordinateFieldsView.xaml.cs">
+      <DependentUpon>ProSelectCoordinateFieldsView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +181,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ProEditOutputCoordinateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProEditPropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProOutputCoordinateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProSaveAsFormatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProSelectCoordinateFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -216,5 +258,16 @@
   -->
   <Target Name="BeforeBuild">
     <Error Text="C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets not found." Condition="!Exists('C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets')" />
+    <XmlPeek XmlInputPath="Config.daml" Query="//@version[1]">
+      <Output TaskParameter="Result" ItemName="Peeked" />
+    </XmlPeek>
+    <Message Importance="High" Text="old build number @(Peeked) new build number $(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
+    <XmlPoke XmlInputPath="Config.daml" Query="//@version[1]" Value="$(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
+    <!-- Set Date element in Config.daml -->
+    <XmlPeek XmlInputPath="Config.daml" Query="/x:ArcGIS/x:AddInInfo/x:Date/text()" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/DADF/Registry' /&gt;">
+      <Output TaskParameter="Result" ItemName="Peeked_Date" />
+    </XmlPeek>
+    <Message Importance="High" Text="Old build date @(Peeked_Date) New build date $(BUILD_DATE)" />
+    <XmlPoke XmlInputPath="Config.daml" Query="/x:ArcGIS/x:AddInInfo/x:Date" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/DADF/Registry' /&gt;" Value="$(BUILD_DATE)" />
   </Target>
 </Project>

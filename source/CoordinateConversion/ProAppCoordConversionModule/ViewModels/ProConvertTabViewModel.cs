@@ -17,6 +17,9 @@ using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
+using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Mapping;
+using ProAppCoordConversionModule.Models;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -27,8 +30,8 @@ namespace ProAppCoordConversionModule.ViewModels
             InputCCView = new InputCoordinateConversionView();
             InputCCView.DataContext = this;
 
-            OutputCCView = new OutputCoordinateView();
-            OutputCCView.DataContext = new OutputCoordinateViewModel();
+            OutputCCView = new ProOutputCoordinateView();
+            OutputCCView.DataContext = new ProOutputCoordinateViewModel();
 
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new ProCollectTabViewModel();
@@ -39,7 +42,7 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
-        public OutputCoordinateView OutputCCView { get; set; }
+        public ProOutputCoordinateView OutputCCView { get; set; }
         public CCCollectTabView CollectTabView { get; set; }
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
@@ -79,11 +82,29 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
             if (obj == null)
+            {
                 base.OnFlashPointCommandAsync(proCoordGetter.Point);
+                AddCollectionPoint(proCoordGetter.Point as MapPoint);
+            }
             else
+            {
                 base.OnFlashPointCommandAsync(obj);
+                AddCollectionPoint(obj as MapPoint);
+            }
         }
 
         #endregion overrides
+
+        private async void AddCollectionPoint(MapPoint point)
+        {
+            if (point != null)
+            {
+                var guid = await AddGraphicToMap(point, ColorFactory.Instance.RedRGB, true, 7);
+                var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+
+                //Add point to the top of the list
+                ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint);
+            }
+        }
     }
 }

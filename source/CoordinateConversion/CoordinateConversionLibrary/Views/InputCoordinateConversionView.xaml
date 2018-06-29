@@ -34,14 +34,16 @@
                   Text="{Binding InputCoordinate,
                                  UpdateSourceTrigger=PropertyChanged}">
             <ComboBox.Style>
-                <Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                            <Setter Property="TextBox.Background" Value="LightPink" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                    <!-- Remove Triggers that don't work as expected in Pro dark mode 
+                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                        <Setter Property="TextBox.Background" Value="LightPink" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
                             <Setter Property="TextBox.Background" Value="White" />
                         </DataTrigger>
+                    -->
                     </Style.Triggers>
                 </Style>
             </ComboBox.Style>
@@ -49,9 +51,7 @@
                 <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
             </ComboBox.InputBindings>
             <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="Black" />
-                </Style>
+                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}"/>
             </ComboBox.ItemContainerStyle>
         </ComboBox>
         <Button Grid.Column="1"

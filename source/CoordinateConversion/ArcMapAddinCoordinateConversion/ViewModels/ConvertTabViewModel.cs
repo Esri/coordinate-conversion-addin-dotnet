@@ -18,6 +18,13 @@ using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.Views;
 using CoordinateConversionLibrary.ViewModels;
 using System.Windows.Forms;
+using ESRI.ArcGIS.Geometry;
+using ESRI.ArcGIS.ArcMapUI;
+using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Display;
+using System;
+using ArcMapAddinCoordinateConversion.Helpers;
+using ArcMapAddinCoordinateConversion.Models;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -47,7 +54,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             get
             {
-                if (ArcMap.Application.CurrentTool != null)
+                if ((ArcMap.Application != null) && (ArcMap.Application.CurrentTool != null))
                     return ArcMap.Application.CurrentTool.Name.ToLower() == MapPointToolName.ToLower();
 
                 return false;
@@ -57,7 +64,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 if (value)
                 {
-                    CurrentTool = ArcMap.Application.CurrentTool;
+                    if (ArcMap.Application != null)
+                        CurrentTool = ArcMap.Application.CurrentTool;
+
                     OnActivateTool(null);
                 }
                 else
@@ -69,7 +78,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 Mediator.NotifyColleagues("IsMapPointToolActive", value);
             }
         }
- 
+
         /// <summary>
         /// Activates the map tool to get map points from mouse clicks/movement
         /// </summary>
@@ -84,7 +93,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.AddLayerMsg,
                     CoordinateConversionLibrary.Properties.Resources.AddLayerCap);
-            }            
+            }
         }
 
         #region overrides
@@ -113,6 +122,94 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             return true;
         }
 
+        internal override void OnFlashPointCommand(object obj)
+        {
+            ProcessInput(InputCoordinate);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
+
+            IGeometry address = obj as IGeometry;
+
+            if (address == null && amCoordGetter != null && amCoordGetter.Point != null)
+            {
+                address = amCoordGetter.Point;
+                AddCollectionPoint(amCoordGetter.Point);
+            }
+
+            if (address != null)
+            {
+                // Map und View
+                IMxDocument mxdoc = ArcMap.Application.Document as IMxDocument;
+                IActiveView activeView = mxdoc.ActivatedView;
+                IMap map = mxdoc.FocusMap;
+                IEnvelope envelope = activeView.Extent;
+
+                //ClearGraphicsContainer(map);
+
+                IScreenDisplay screenDisplay = activeView.ScreenDisplay;
+                short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
+
+                ISpatialReference outgoingCoordSystem = map.SpatialReference;
+                address.Project(outgoingCoordSystem);
+
+                // is point within current extent
+                // if so, pan to point
+                var relationOp = envelope as IRelationalOperator;
+                if (relationOp != null && activeView is IMap)
+                {
+                    if (!relationOp.Contains(address))
+                    {
+                        // pan to
+                        envelope.CenterAt(address as IPoint);
+                        activeView.Extent = envelope;
+                        activeView.Refresh();
+                    }
+                }
+
+                IRgbColor color = new RgbColorClass();
+                color.Green = 80;
+                color.Red = 22;
+                color.Blue = 68;
+
+                ISimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol();
+                simpleMarkerSymbol.Color = color;
+                simpleMarkerSymbol.Size = 15;
+                simpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSDiamond;
+
+                IMarkerElement markerElement = new MarkerElementClass();
+
+                markerElement.Symbol = simpleMarkerSymbol;
+
+                IPolygon poly = null;
+                if (InputCoordinateType == CoordinateType.MGRS || InputCoordinateType == CoordinateType.USNG)
+                {
+                    poly = GetMGRSPolygon(address as IPoint);
+                }
+
+                if (poly != null)
+                {
+                    address = poly;
+                }
+                var av = mxdoc.FocusMap as IActiveView;
+                ArcMapHelpers.FlashGeometry(address, color, av.ScreenDisplay, 500, av.Extent);
+            }
+        }
+
         #endregion overrides
+
+        private void AddCollectionPoint(IPoint point)
+        {
+            if (point != null && !point.IsEmpty)
+            {
+                var color = new RgbColorClass() { Red = 255 } as IColor;
+                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+                var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+
+                //Add point to the top of the list
+                CollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint);
+
+                CollectTabViewModel.GraphicsList.Add(new AMGraphic(guid, point, true));
+            }
+        }
     }
 }

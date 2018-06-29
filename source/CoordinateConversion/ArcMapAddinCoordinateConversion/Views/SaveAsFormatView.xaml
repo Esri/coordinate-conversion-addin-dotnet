@@ -7,7 +7,7 @@
     <StackPanel>
         <StackPanel>
             <RadioButton Foreground="Black" IsChecked="{Binding FeatureShapeIsChecked}" x:Name="rbFeatureShape" Content="Feature class / Shapefile" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
-            <RadioButton Foreground="Black" IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KML" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
+            <RadioButton Foreground="Black" IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KMZ" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
             <RadioButton Foreground="Black" IsChecked="{Binding CSVIsChecked}" x:Name="rbCSV" Content="CSV" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
         </StackPanel>
         <StackPanel Height="35" Orientation="Horizontal" HorizontalAlignment="Right">

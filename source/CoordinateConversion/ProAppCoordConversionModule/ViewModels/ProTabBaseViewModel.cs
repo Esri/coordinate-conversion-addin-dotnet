@@ -26,6 +26,10 @@ using CoordinateConversionLibrary.ViewModels;
 using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ProAppCoordConversionModule.Models;
+using CoordinateConversionLibrary.Views;
+using System.IO;
+using System.Text;
+using System.Linq;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -43,6 +47,8 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
+
+            ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
@@ -51,24 +57,45 @@ namespace ProAppCoordConversionModule.ViewModels
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
 
+        private bool isToolActive = false;
         public bool IsToolActive
         {
             get
             {
-                if (FrameworkApplication.CurrentTool != null)
-                    return FrameworkApplication.CurrentTool.ToLower() == MapPointToolName.ToLower();
-
-                return false;
+                return isToolActive;
             }
             set
             {
-                if (value)
+                bool active = value;
+
+                string toolToActivate = string.Empty;
+
+                if (active)
                 {
-                    PreviousTool = FrameworkApplication.CurrentTool;
-                    OnMapToolCommand(null);
-                }     
+                    isToolActive = true;
+                    string currentTool = FrameworkApplication.CurrentTool;
+                    if (currentTool != MapPointToolName)
+                    {
+                        // Save previous tool to reactivate
+                        PreviousTool = currentTool;
+                        toolToActivate = MapPointToolName;
+                    }
+                }
                 else
-                    FrameworkApplication.SetCurrentToolAsync(PreviousTool);
+                {
+                    isToolActive = false;
+
+                    // Handle case if no Previous Tool
+                    if (string.IsNullOrEmpty(PreviousTool))
+                        PreviousTool = "esri_mapping_exploreTool";
+
+                    toolToActivate = PreviousTool;
+                }
+
+                if (!string.IsNullOrEmpty(toolToActivate))
+                {
+                    FrameworkApplication.SetCurrentToolAsync(toolToActivate);
+                }
 
                 RaisePropertyChanged(() => IsToolActive);
             }
@@ -174,6 +201,164 @@ namespace ProAppCoordConversionModule.ViewModels
             return;
         }
 
+        public Dictionary<string, string> GetOutputFormats(AddInPoint point)
+        {
+            var results = new Dictionary<string, string>();
+            results.Add("Coordinate", point.Text);
+            var ccc = QueuedTask.Run(() =>
+            {
+                return GetCoordinateType(point.Text);
+            }).Result;
+            if (ccc != null && ccc.Point != null)
+            {
+                ProCoordinateGet procoordinateGetter = new ProCoordinateGet();
+                procoordinateGetter.Point = ccc.Point;
+                CoordinateGetBase coordinateGetter = procoordinateGetter as CoordinateGetBase;
+
+                foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    var props = new Dictionary<string, string>();
+                    string coord = string.Empty;
+
+                    switch (output.CType)
+                    {
+                        case CoordinateType.DD:
+                            CoordinateDD cdd;
+                            if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
+                                CoordinateDD.TryParse(coord, out cdd, true))
+                            {
+                                results.Add(output.Name, cdd.ToString(output.Format, new CoordinateDDFormatter()));
+                            }
+                            break;
+                        case CoordinateType.DMS:
+                            CoordinateDMS cdms;
+                            if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
+                                CoordinateDMS.TryParse(coord, out cdms, true))
+                            {
+                                results.Add(output.Name, cdms.ToString(output.Format, new CoordinateDMSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.DDM:
+                            CoordinateDDM ddm;
+                            if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
+                                CoordinateDDM.TryParse(coord, out ddm, true))
+                            {
+                                results.Add(output.Name, ddm.ToString(output.Format, new CoordinateDDMFormatter()));
+                            }
+                            break;
+                        case CoordinateType.GARS:
+                            CoordinateGARS gars;
+                            if (coordinateGetter.CanGetGARS(output.SRFactoryCode, out coord) &&
+                                CoordinateGARS.TryParse(coord, out gars))
+                            {
+                                results.Add(output.Name, gars.ToString(output.Format, new CoordinateGARSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.MGRS:
+                            CoordinateMGRS mgrs;
+                            if (coordinateGetter.CanGetMGRS(output.SRFactoryCode, out coord) &&
+                                CoordinateMGRS.TryParse(coord, out mgrs))
+                            {
+                                results.Add(output.Name, mgrs.ToString(output.Format, new CoordinateMGRSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.USNG:
+                            CoordinateUSNG usng;
+                            if (coordinateGetter.CanGetUSNG(output.SRFactoryCode, out coord) &&
+                                CoordinateUSNG.TryParse(coord, out usng))
+                            {
+                                results.Add(output.Name, usng.ToString(output.Format, new CoordinateMGRSFormatter()));
+                            }
+                            break;
+                        case CoordinateType.UTM:
+                            CoordinateUTM utm;
+                            if (coordinateGetter.CanGetUTM(output.SRFactoryCode, out coord) &&
+                                CoordinateUTM.TryParse(coord, out utm))
+                            {
+                                results.Add(output.Name, utm.ToString(output.Format, new CoordinateUTMFormatter()));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return results;
+        }
+
+        public override void OnEditPropertiesDialogCommand(object obj)
+        {
+            var dlg = new ProEditPropertiesView();
+            dlg.DataContext = new EditPropertiesViewModel();
+            try
+            {
+                dlg.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                        CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message);
+                }
+            }
+        }
+
+        public override void OnImportCSVFileCommand(object obj)
+        {
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
+
+            var fileDialog = new Microsoft.Win32.OpenFileDialog();
+            fileDialog.CheckFileExists = true;
+            fileDialog.CheckPathExists = true;
+            fileDialog.Filter = "csv files|*.csv";
+
+            // attemp to import
+            var fieldVM = new SelectCoordinateFieldsViewModel();
+            var result = fileDialog.ShowDialog();
+            if (result.HasValue && result.Value == true)
+            {
+                var dlg = new ProSelectCoordinateFieldsView();
+                using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var headers = ImportCSV.GetHeaders(s);
+                    foreach (var header in headers)
+                    {
+                        fieldVM.AvailableFields.Add(header);
+                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                    }
+
+                    dlg.DataContext = fieldVM;
+                }
+                if (dlg.ShowDialog() == true)
+                {
+                    using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        var lists = ImportCSV.Import<ImportCoordinatesList>(s, fieldVM.SelectedFields.ToArray());
+                        var coordinates = new List<string>();
+
+                        foreach (var item in lists)
+                        {
+                            var sb = new StringBuilder();
+                            sb.Append(item.lat.Trim());
+                            if (fieldVM.UseTwoFields)
+                                sb.Append(string.Format(" {0}", item.lon.Trim()));
+
+                            coordinates.Add(sb.ToString());
+                        }
+
+                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+                    }
+                }
+            }
+
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
+        }
+
         #endregion overrides
 
         #region Mediator handlers
@@ -194,16 +379,23 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #endregion Mediator handlers
 
-        private async Task SetAsCurrentToolAsync()
-        {	
-            await FrameworkApplication.SetCurrentToolAsync("ProAppCoordConversionModule_CoordinateMapTool");
-
-            RaisePropertyChanged(() => IsToolActive);
+        private void SetAsCurrentToolAsync()
+        {
+            IsToolActive = true;
         }
 
-        private async void OnMapToolCommand(object obj)
+        private void OnMapToolCommand(object obj)
         {
-            await SetAsCurrentToolAsync();
+            SetAsCurrentToolAsync();
+        }
+
+        private void OnActiveToolChanged(ArcGIS.Desktop.Framework.Events.ToolEventArgs args)
+        {
+            // Update active tool when tool changed so Map Point Tool button push state
+            // stays in sync with Pro UI
+            isToolActive = args.CurrentID == MapPointToolName;
+
+            RaisePropertyChanged(() => IsToolActive);
         }
 
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
@@ -262,7 +454,6 @@ namespace ProAppCoordConversionModule.ViewModels
             return result;
         }
 
-
         internal async virtual void OnFlashPointCommandAsync(object obj)
         {
             var point = obj as MapPoint;
@@ -270,19 +461,17 @@ namespace ProAppCoordConversionModule.ViewModels
             if (point == null)
                 return;
 
-            if (!IsToolActive)
-            {
-                await SetAsCurrentToolAsync();
-            }
+            IsToolActive = true;
 
             await QueuedTask.Run(() =>
             {
-                // is point within current map extent
+                // zoom to point
                 var projectedPoint = GeometryEngine.Instance.Project(point, MapView.Active.Extent.SpatialReference);
-                if (!GeometryEngine.Instance.Contains(MapView.Active.Extent, projectedPoint))
-                {
-                    MapView.Active.PanTo(point);
-                }
+
+                // WORKAROUND: delay zoom by 1 sec to give Map Point Tool enough time to activate
+                // Note: The Map Point Tool is required to be active to enable flash overlay
+                MapView.Active.PanTo(projectedPoint, new TimeSpan(0, 0, 1));
+
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
         }
@@ -322,7 +511,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
+            if (CoordinateDD.TryParse(input, out dd, true))
             {
                 point = QueuedTask.Run(() =>
                 {
@@ -334,7 +523,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
+            if (CoordinateDDM.TryParse(input, out ddm, true))
             {
                 dd = new CoordinateDD(ddm);
                 point = QueuedTask.Run(() =>
@@ -346,7 +535,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
+            if (CoordinateDMS.TryParse(input, out dms, true))
             {
                 dd = new CoordinateDD(dms);
                 point = QueuedTask.Run(() =>
@@ -434,7 +623,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 try
                 {
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
-                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);                 
+                    var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
                     point = QueuedTask.Run(() =>
                     {
@@ -456,8 +645,10 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
+            if (CoordinateDD.TryParse(input, out dd, true))
             {
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -468,9 +659,11 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DDM
             CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
+            if (CoordinateDDM.TryParse(input, out ddm, true))
             {
                 dd = new CoordinateDD(ddm);
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -480,9 +673,11 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             // DMS
             CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
+            if (CoordinateDMS.TryParse(input, out dms, true))
             {
                 dd = new CoordinateDD(dms);
+                if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
+                    return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 point = await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);

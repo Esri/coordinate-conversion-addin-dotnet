@@ -28,6 +28,10 @@ using CoordinateConversionLibrary;
 using System;
 using System.Text;
 using Jitbit.Utils;
+using System.Windows;
+using System.IO;
+using CoordinateConversionLibrary.ViewModels;
+using CoordinateConversionLibrary.Models;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -46,6 +50,7 @@ namespace ProAppCoordConversionModule.ViewModels
             SaveAsCommand = new RelayCommand(OnSaveAsCommand);
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
+            PasteCoordinatesCommand = new RelayCommand(OnPasteCommand);
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
@@ -71,6 +76,8 @@ namespace ProAppCoordConversionModule.ViewModels
             if (coordinates == null)
                 return;
 
+            this.ClearListBoxSelection();
+
             foreach (var coordinate in coordinates)
             {
                 this.ProcessInput(coordinate);
@@ -81,9 +88,15 @@ namespace ProAppCoordConversionModule.ViewModels
             InputCoordinate = "";
         }
 
-        public bool HasListBoxRightClickSelectedItem 
+        private void ClearListBoxSelection()
         {
-            get 
+            this.UpdateHighlightedGraphics(true);
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+        }
+
+        public bool HasListBoxRightClickSelectedItem
+        {
+            get
             {
                 return ListBoxItemAddInPoint != null;
             }
@@ -98,7 +111,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
-        public ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -112,7 +125,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
-                UpdateHighlightedGraphics();
+                this.UpdateHighlightedGraphics(false);
             }
         }
 
@@ -126,7 +139,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
                 RaisePropertyChanged(() => ListBoxSelectedIndex);
-                UpdateHighlightedGraphics();
+
             }
         }
 
@@ -137,14 +150,12 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand SaveAsCommand { get; set; }
         public RelayCommand CopyCoordinateCommand { get; set; }
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
+        public RelayCommand PasteCoordinatesCommand { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
-
-            if (objects == null)
-                return;
 
             DeletePoints(objects);
         }
@@ -179,10 +190,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var items = obj as IList;
             var objects = items.Cast<AddInPoint>().ToList();
 
-            if (objects == null)
-                return;
-
-            if (objects == null || !objects.Any())
+            if (!objects.Any())
                 return;
 
             var sb = new StringBuilder();
@@ -204,7 +212,8 @@ namespace ProAppCoordConversionModule.ViewModels
             var vm = new ProSaveAsFormatViewModel();
             saveAsDialog.DataContext = vm;
 
-            if(saveAsDialog.ShowDialog() == true)
+
+            if (saveAsDialog.ShowDialog() == true)
             {
                 var fcUtils = new FeatureClassUtils();
 
@@ -215,36 +224,42 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         var mapPointList = CoordinateAddInPoints.Select(i => i.Point).ToList();
+                        var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
                         if (vm.FeatureIsChecked)
                         {
-                            await fcUtils.CreateFCOutput(path, 
+                            await fcUtils.CreateFCOutput(path,
                                                          SaveAsType.FileGDB,
-                                                         mapPointList, 
-                                                         MapView.Active.Map.SpatialReference, 
-                                                         MapView.Active, 
+                                                         ccMapPointList,
+                                                         MapView.Active.Map.SpatialReference,
+                                                         MapView.Active,
                                                          CoordinateConversionLibrary.GeomType.Point);
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
-                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, mapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
                         }
                         else if (vm.CSVIsChecked)
                         {
                             var aiPoints = CoordinateAddInPoints.ToList();
 
-                            if (aiPoints == null || !aiPoints.Any())
+                            if (!aiPoints.Any())
                                 return;
 
                             var csvExport = new CsvExport();
                             foreach (var point in aiPoints)
                             {
+                                var results = GetOutputFormats(point);
                                 csvExport.AddRow();
-                                csvExport["Coordinate"] = point.Text;
+                                foreach (KeyValuePair<string, string> format in results)
+                                {
+                                    csvExport[format.Key] = format.Value;
+                                }
+
                             }
                             csvExport.ExportToFile(path);
 
                             System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
-                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption); 
+                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
                         }
                     }
                     catch (Exception ex)
@@ -253,6 +268,19 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                 }
             }
+        }
+
+        private List<CCProGraphic> GetMapPointExportFormat(ObservableCollection<AddInPoint> mapPointList)
+        {
+            List<CCProGraphic> results = new List<CCProGraphic>();
+            foreach (var point in mapPointList)
+            {
+                var attributes = GetOutputFormats(point);
+                CCProGraphic ccMapPoint = new CCProGraphic() { Attributes = attributes, MapPoint = point.Point };
+                results.Add(ccMapPoint);
+            }
+
+            return results;
         }
 
         /// <summary>
@@ -277,30 +305,47 @@ namespace ProAppCoordConversionModule.ViewModels
                 System.Windows.Clipboard.SetText(sb.ToString());
             }
         }
-        
-        private async void UpdateHighlightedGraphics()
+
+        private async void UpdateHighlightedGraphics(bool reset)
         {
-            foreach (var proGraphic in ProGraphicsList)
+            var list = ProGraphicsList.ToList();
+            foreach (var proGraphic in list)
             {
                 var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == proGraphic.GUID);
 
                 if (aiPoint != null)
                 {
                     var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
+                    var doUpdate = false;
 
                     if (s == null)
                         continue;
 
                     if (aiPoint.IsSelected)
-                        s.HaloSize = 2;
-                    else
-                        s.HaloSize = 0;
-                    
-                    var result = await QueuedTask.Run(() =>
                     {
-                        var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
-                        return temp;
-                    });
+                        if (reset)
+                        {
+                            s.HaloSize = 0;
+                            aiPoint.IsSelected = false;
+                        }
+                        else
+                            s.HaloSize = 2;
+                        doUpdate = true;
+                    }
+                    else if (s.HaloSize > 0)
+                    {
+                        s.HaloSize = 0;
+                        doUpdate = true;
+                    }
+
+                    if (doUpdate)
+                    {
+                        var result = await QueuedTask.Run(() =>
+                        {
+                            var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
+                            return temp;
+                        });
+                    }
                 }
             }
         }
@@ -347,6 +392,21 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
             RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
+        }
+
+        private void OnPasteCommand(object obj)
+        {
+            var input = Clipboard.GetText().Trim();
+            string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var coordinates = new List<string>();
+            foreach (var item in lines)
+            {
+                var sb = new StringBuilder();
+                sb.Append(item.Trim());
+                coordinates.Add(sb.ToString());
+            }
+
+            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
         }
 
         #region overrides

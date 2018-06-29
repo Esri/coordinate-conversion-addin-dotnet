@@ -126,7 +126,7 @@ namespace CoordinateConversionLibrary.ViewModels
             return;
         }
 
-        public void OnEditPropertiesDialogCommand(object obj)
+        public virtual void OnEditPropertiesDialogCommand(object obj)
         {
             var dlg = new EditPropertiesView();
             try
@@ -149,51 +149,55 @@ namespace CoordinateConversionLibrary.ViewModels
             
         }
 
-        private void OnImportCSVFileCommand(object obj)
+        public virtual void OnImportCSVFileCommand(object obj)
         {
-            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false; 
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
 
             var fileDialog = new Microsoft.Win32.OpenFileDialog();
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
             fileDialog.Filter = "csv files|*.csv";
 
+            // attemp to import
+            var fieldVM = new SelectCoordinateFieldsViewModel();
             var result = fileDialog.ShowDialog();
-            if(result.HasValue && result.Value == true)
+            if (result.HasValue && result.Value == true)
             {
-                // attemp to import
-                var fieldVM = new SelectCoordinateFieldsViewModel();
-
-                var headers = ImportCSV.GetHeaders(File.OpenRead(fileDialog.FileName));
-                foreach (var header in headers)
-                {
-                    fieldVM.AvailableFields.Add(header);
-                    Console.WriteLine("header : {0}", header);
-                }
-
                 var dlg = new SelectCoordinateFieldsView();
-                dlg.DataContext = fieldVM;
-                if (dlg.ShowDialog() == true)
+                using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    var lists = ImportCSV.Import<ImportCoordinatesList>(File.OpenRead(fileDialog.FileName), fieldVM.SelectedFields.ToArray());
-
-                    var coordinates = new List<string>();
-
-                    foreach(var item in lists)
+                    var headers = ImportCSV.GetHeaders(s);
+                    foreach (var header in headers)
                     {
-                        var sb = new StringBuilder();
-                        sb.Append(item.lat.Trim());
-                        if (fieldVM.UseTwoFields)
-                            sb.Append(string.Format(" {0}", item.lon.Trim()));
-
-                        coordinates.Add(sb.ToString());
+                        fieldVM.AvailableFields.Add(header);
+                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
                     }
 
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+                    dlg.DataContext = fieldVM;
+                }
+                if (dlg.ShowDialog() == true)
+                {
+                    using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        var lists = ImportCSV.Import<ImportCoordinatesList>(s, fieldVM.SelectedFields.ToArray());
+                        var coordinates = new List<string>();
+
+                        foreach (var item in lists)
+                        {
+                            var sb = new StringBuilder();
+                            sb.Append(item.lat.Trim());
+                            if (fieldVM.UseTwoFields)
+                                sb.Append(string.Format(" {0}", item.lon.Trim()));
+
+                            coordinates.Add(sb.ToString());
+                        }
+
+                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+                    }
                 }
             }
 
-            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true; 
+            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
         }
 
         private void OnNewMapPointInternal(object obj)
