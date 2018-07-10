@@ -229,7 +229,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    // do nothing
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
 
@@ -670,7 +670,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    // do nothing
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
 

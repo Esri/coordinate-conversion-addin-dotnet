@@ -633,6 +633,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
                     return CoordinateType.Unknown;
                 }
             }
@@ -776,6 +777,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 }
             }

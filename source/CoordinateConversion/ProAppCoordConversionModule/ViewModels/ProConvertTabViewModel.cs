@@ -20,6 +20,7 @@ using CoordinateConversionLibrary.Models;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
 using ProAppCoordConversionModule.Models;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -80,17 +81,19 @@ namespace ProAppCoordConversionModule.ViewModels
 
             ProcessInput(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
-            if (obj == null)
+            await QueuedTask.Run(() =>
             {
-                base.OnFlashPointCommandAsync(proCoordGetter.Point);
-                AddCollectionPoint(proCoordGetter.Point as MapPoint);
-            }
-            else
-            {
-                base.OnFlashPointCommandAsync(obj);
-                AddCollectionPoint(obj as MapPoint);
-            }
+                if (obj == null)
+                {
+                    base.OnFlashPointCommandAsync(proCoordGetter.Point);
+                    AddCollectionPoint(proCoordGetter.Point as MapPoint);
+                }
+                else
+                {
+                    base.OnFlashPointCommandAsync(obj);
+                    AddCollectionPoint(obj as MapPoint);
+                }
+            });
         }
 
         #endregion overrides

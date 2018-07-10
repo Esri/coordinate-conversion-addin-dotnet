@@ -180,7 +180,7 @@ namespace ArcMapAddinCoordinateConversion.Models
             }
             catch (Exception ex)
             {
-                return fc;
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 
             return fc;
@@ -301,8 +301,10 @@ namespace ArcMapAddinCoordinateConversion.Models
                 }
                 catch (Exception ex)
                 {
-                    return featClass;
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
+
+                return featClass;
             }
         }
 

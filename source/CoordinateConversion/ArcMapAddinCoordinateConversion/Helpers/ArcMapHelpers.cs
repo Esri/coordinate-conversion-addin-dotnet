@@ -51,7 +51,7 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             }
             catch (Exception ex)
             {
-                // do nothing
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 
 
@@ -63,7 +63,7 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             }
             catch (Exception ex)
             {
-                // do nothing
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 
             return null;
@@ -318,7 +318,7 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             }
             catch(Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
 

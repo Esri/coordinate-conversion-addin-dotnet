@@ -111,7 +111,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
         public async Task CreateFCOutput(string outputPath, SaveAsType saveAsType, List<CCProGraphic> mapPointList, SpatialReference spatialRef, MapView mapview, GeomType geomType, bool isKML = false)
@@ -128,7 +128,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
 

@@ -62,8 +62,10 @@ namespace ArcMapAddinCoordinateConversion.Models
             }
             catch(Exception ex)
             {
-                return false;
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
+
+            return false;
         }
     }
 
