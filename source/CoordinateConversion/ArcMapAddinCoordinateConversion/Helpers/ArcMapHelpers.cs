@@ -75,7 +75,8 @@ namespace ArcMapAddinCoordinateConversion.Helpers
         /// <param name="geom">IGeometry</param>
         public static string AddGraphicToMap(IGeometry geom, IColor color, bool IsTempGraphic = false, esriSimpleMarkerStyle markerStyle = esriSimpleMarkerStyle.esriSMSCircle, int size = 5)
         {
-            if (geom == null || ArcMap.Document == null || ArcMap.Document.FocusMap == null)
+            if ((geom == null) || (ArcMap.Document == null) || (ArcMap.Document.FocusMap == null) 
+                || (ArcMap.Document.FocusMap.SpatialReference == null))
                 return string.Empty;
 
             IElement element = null;
@@ -86,22 +87,22 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             if (geom.GeometryType == esriGeometryType.esriGeometryPoint)
             {
                 // Marker symbols
-                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
+                var simpleMarkerSymbol = (ISimpleMarkerSymbol)new SimpleMarkerSymbol();
                 simpleMarkerSymbol.Color = color;
                 simpleMarkerSymbol.Outline = false;
                 simpleMarkerSymbol.OutlineColor = color;
                 simpleMarkerSymbol.Size = size;
                 simpleMarkerSymbol.Style = markerStyle;
 
-                var markerElement = new MarkerElement() as IMarkerElement;
+                var markerElement = (IMarkerElement)new MarkerElement();
                 markerElement.Symbol = simpleMarkerSymbol;
-                element = markerElement as IElement;
+                element = (IElement)markerElement;
             }
             else if (geom.GeometryType == esriGeometryType.esriGeometryPolyline)
             {
                 // create graphic then add to map
-                var le = new LineElementClass() as ILineElement;
-                element = le as IElement;
+                var le = (ILineElement)new LineElementClass();
+                element = (IElement)le;
 
                 var lineSymbol = new SimpleLineSymbolClass();
                 lineSymbol.Color = color;
@@ -112,9 +113,9 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             else if (geom.GeometryType == esriGeometryType.esriGeometryPolygon)
             {
                 // create graphic then add to map
-                IPolygonElement pe = new PolygonElementClass() as IPolygonElement;
-                element = pe as IElement;
-                IFillShapeElement fe = pe as IFillShapeElement;
+                IPolygonElement pe = (IPolygonElement)new PolygonElementClass();
+                element = (IElement)pe;
+                IFillShapeElement fe = (IFillShapeElement)pe;
 
                 var fillSymbol = new SimpleFillSymbolClass();
                 RgbColor selectedColor = new RgbColorClass();
@@ -134,11 +135,14 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             element.Geometry = geom;
 
             var mxdoc = ArcMap.Application.Document as IMxDocument;
-            var av = mxdoc.FocusMap as IActiveView;
-            var gc = av as IGraphicsContainer;
+            if (mxdoc == null)
+                return string.Empty;
+
+            var av = (IActiveView)mxdoc.FocusMap;
+            var gc = (IGraphicsContainer)av;
 
             // store guid
-            var eprop = element as IElementProperties;
+            var eprop = (IElementProperties)element;
             eprop.Name = Guid.NewGuid().ToString();
 
             gc.AddElement(element, 0);
@@ -257,6 +261,11 @@ namespace ArcMapAddinCoordinateConversion.Helpers
             try
             {
                 var point = geometry as IPoint;
+
+                if ((point == null) || (display == null) || (extent == null) || (markerSymbol == null) || 
+                    (lineSymbol == null) || (ArcMap.Application == null))
+                    return;
+
                 var numSegments = 10;
 
                 var latitudeMid = point.Y;//envelope.YMin + ((envelope.YMax - envelope.YMin) / 2);
@@ -270,6 +279,8 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 var fromTopLat = extent.YMax;
                 var fromBottomLat = extent.YMin;
                 var av = (ArcMap.Application.Document as IMxDocument).ActiveView;
+                if (av == null)
+                    return;
 
                 var leftPolyline = new PolylineClass();
                 var rightPolyline = new PolylineClass();
@@ -281,10 +292,10 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 topPolyline.SpatialReference = geometry.SpatialReference;
                 bottomPolyline.SpatialReference = geometry.SpatialReference;
 
-                var leftPC = leftPolyline as IPointCollection;
-                var rightPC = rightPolyline as IPointCollection;
-                var topPC = topPolyline as IPointCollection;
-                var bottomPC = bottomPolyline as IPointCollection;
+                var leftPC = (IPointCollection)leftPolyline;
+                var rightPC = (IPointCollection)rightPolyline;
+                var topPC = (IPointCollection)topPolyline;
+                var bottomPC = (IPointCollection)bottomPolyline;
 
                 leftPC.AddPoint(new PointClass() { X = fromLeftLong, Y = latitudeMid });
                 rightPC.AddPoint(new PointClass() { X = fromRightLong, Y = latitudeMid });
@@ -311,7 +322,6 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                     System.Threading.Thread.Sleep(15);
                     display.FinishDrawing();
                     av.PartialRefresh(esriViewDrawPhase.esriViewForeground, null, null);
-                    //av.Refresh();
                     System.Windows.Forms.Application.DoEvents();
                     display.StartDrawing(display.hDC, (System.Int16)ESRI.ArcGIS.Display.esriScreenCache.esriNoScreenCache); // Explicit Cast
                 }

@@ -26,9 +26,9 @@ namespace ArcMapAddinCoordinateConversion
 {
     public class MapPointTool : ESRI.ArcGIS.Desktop.AddIns.Tool
     {
-        ISnappingEnvironment m_SnappingEnv;
-        IPointSnapper m_Snapper;
-        ISnappingFeedback m_SnappingFeedback;
+        ISnappingEnvironment m_SnappingEnv = null;
+        IPointSnapper m_Snapper = null;
+        ISnappingFeedback m_SnappingFeedback = null;
 
         public MapPointTool()
         {
@@ -48,10 +48,18 @@ namespace ArcMapAddinCoordinateConversion
             UID snapUID = new UID();
             this.Cursor = Cursors.Cross;
             snapUID.Value = "{E07B4C52-C894-4558-B8D4-D4050018D1DA}";
-            m_SnappingEnv = ArcMap.Application.FindExtensionByCLSID(snapUID) as ISnappingEnvironment;
-            m_Snapper = m_SnappingEnv.PointSnapper;
-            m_SnappingFeedback = new SnappingFeedbackClass();
-            m_SnappingFeedback.Initialize(ArcMap.Application, m_SnappingEnv, true);
+
+            if (ArcMap.Application != null)
+                m_SnappingEnv = ArcMap.Application.FindExtensionByCLSID(snapUID) as ISnappingEnvironment;
+
+            if (m_SnappingEnv != null)
+                m_Snapper = m_SnappingEnv.PointSnapper;
+
+            if (m_SnappingEnv != null)
+            {
+                m_SnappingFeedback = new SnappingFeedbackClass();
+                m_SnappingFeedback.Initialize(ArcMap.Application, m_SnappingEnv, true);
+            }
         }
 
         protected override void OnMouseDown(ESRI.ArcGIS.Desktop.AddIns.Tool.MouseEventArgs arg)
@@ -62,10 +70,17 @@ namespace ArcMapAddinCoordinateConversion
             try
             {
                 var point = GetMapPoint(arg.X, arg.Y);
+                if (point == null)
+                    return;
+
                 ISnappingResult snapResult = null;
                 //Try to snap the current position
-                snapResult = m_Snapper.Snap(point);
-                m_SnappingFeedback.Update(null, 0);
+                if (m_Snapper != null)
+                    snapResult = m_Snapper.Snap(point);
+
+                if (m_SnappingFeedback != null)
+                    m_SnappingFeedback.Update(null, 0);
+
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
@@ -79,6 +94,9 @@ namespace ArcMapAddinCoordinateConversion
             try
             {
                 var point = GetMapPoint(arg.X, arg.Y);
+                if (point == null)
+                    return;
+
                 ISnappingResult snapResult = null;
                 //Try to snap the current position
                 snapResult = m_Snapper.Snap(point);
@@ -100,8 +118,11 @@ namespace ArcMapAddinCoordinateConversion
 
         private IPoint GetMapPoint(int X, int Y)
         {
+            if ((ArcMap.Document == null) || (ArcMap.Document.FocusMap == null))
+                return null;
+
             //Get the active view from the ArcMap static class.
-            IActiveView activeView = ArcMap.Document.FocusMap as IActiveView;
+            IActiveView activeView = (IActiveView)ArcMap.Document.FocusMap;
 
             var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
 

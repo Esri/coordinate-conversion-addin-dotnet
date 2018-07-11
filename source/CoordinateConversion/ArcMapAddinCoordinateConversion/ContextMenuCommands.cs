@@ -41,7 +41,7 @@ namespace ArcMapAddinCoordinateConversion
 
             try
             {
-                var cn = point as IConversionNotation;
+                var cn = (IConversionNotation)point;
 
                 switch(ctype)
                 {

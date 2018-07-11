@@ -73,7 +73,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDMSFromCoords(6);
                     return true;
                 }
@@ -162,7 +162,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                     return true;
                 }

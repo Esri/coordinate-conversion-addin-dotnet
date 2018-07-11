@@ -423,16 +423,18 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void UpdateHighlightedGraphics()
         {
-            var mxdoc = ArcMap.Application.Document as IMxDocument;
-            var av = mxdoc.FocusMap as IActiveView;
-            var gc = av as IGraphicsContainer;
+            if ((ArcMap.Document == null) && (ArcMap.Document.FocusMap == null))
+                return;
+
+            var av = (IActiveView)ArcMap.Document.FocusMap;
+            var gc = (IGraphicsContainer)av;
 
             gc.Reset();
             var element = gc.Next();
 
             while (element != null)
             {
-                var eProp = element as IElementProperties;
+                var eProp = (IElementProperties)element;
 
                 if (eProp != null)
                 {
@@ -447,7 +449,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             var sms = markerElement.Symbol as ISimpleMarkerSymbol;
                             if (sms != null)
                             {
-                                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
+                                var simpleMarkerSymbol = (ISimpleMarkerSymbol)new SimpleMarkerSymbol();
 
                                 simpleMarkerSymbol.Color = sms.Color;
                                 simpleMarkerSymbol.Size = sms.Size;
@@ -456,7 +458,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                                 if (aiPoint.IsSelected)
                                 {
-                                    var color = new RgbColorClass() { Green = 255 } as IColor;
+                                    var color = (IColor)new RgbColorClass() { Green = 255 };
                                     // Marker symbols
                                     simpleMarkerSymbol.Outline = true;
                                     simpleMarkerSymbol.OutlineColor = color;

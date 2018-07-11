@@ -233,20 +233,20 @@ namespace ArcMapAddinCoordinateConversion.Models
                     IWorkspaceFactory workspaceFactory = null;
                     workspaceFactory = new ShapefileWorkspaceFactoryClass();
                     IWorkspace workspace = workspaceFactory.OpenFromFile(folder, 0);
-                    IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
+                    IFeatureWorkspace featureWorkspace = (IFeatureWorkspace)workspace;
                     IFields fields = null;
                     IFieldsEdit fieldsEdit = null;
                     fields = new Fields();
                     fieldsEdit = (IFieldsEdit)fields;
                     IField field = null;
                     IFieldEdit fieldEdit = null;
-                    field = new FieldClass();///###########
+                    field = new FieldClass();
                     fieldEdit = (IFieldEdit)field;
                     fieldEdit.Name_2 = "Shape";
                     fieldEdit.Type_2 = (esriFieldType.esriFieldTypeGeometry);
                     IGeometryDef geomDef = null;
                     IGeometryDefEdit geomDefEdit = null;
-                    geomDef = new GeometryDefClass();///#########
+                    geomDef = new GeometryDefClass();
                     geomDefEdit = (IGeometryDefEdit)geomDef;
 
                     geomDefEdit.GeometryType_2 = esriGeometryType.esriGeometryPoint;
@@ -399,30 +399,5 @@ namespace ArcMapAddinCoordinateConversion.Models
             return pFClass;
         }
 
-        /// <summary>
-        /// Convert a polyline feature to a polygon
-        /// </summary>
-        /// <param name="geom">IGeometry</param>
-        /// <returns>IPolygon</returns>
-        private IPolygon PolylineToPolygon(IGeometry geom)
-        {
-            //Build a polygon segment-by-segment.
-            IPolygon polygon = new PolygonClass();
-            Polyline polyLine = geom as Polyline;
-
-            ISegmentCollection polygonSegs = polygon as ISegmentCollection;
-            ISegmentCollection polylineSegs = polyLine as ISegmentCollection;
-
-            for (int i = 0; i < polylineSegs.SegmentCount; i++)
-            {
-                ISegment seg = polylineSegs.Segment[i];
-                polygonSegs.AddSegment(seg);
-            }
-
-            polygon.SimplifyPreserveFromTo();
-
-            return polygon;
-
-        }
     }
 }

@@ -410,12 +410,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             // bottom left
             CoordinateMGRS.TryParse(InputCoordinate, out mgrs);
 
+            if (mgrs == null)
+                return null;
+
             // don't create a polygon for 1m resolution
             if (mgrs.Easting.ToString().Length > 4 && mgrs.Northing.ToString().Length > 4)
                 return null;
 
-            var tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();//GetSR();
+            var tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             var anotherMGRSstring = mgrs.ToString("", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -427,8 +430,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var tempNorthing = mgrs.Northing.ToString().PadRight(5, '9');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0', '9'));
 
-            tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
+            tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             anotherMGRSstring = tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -439,8 +442,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             tempNorthing = mgrs.Northing.ToString().PadRight(5, '9');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0', '9'));
 
-            tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
+            tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
 
