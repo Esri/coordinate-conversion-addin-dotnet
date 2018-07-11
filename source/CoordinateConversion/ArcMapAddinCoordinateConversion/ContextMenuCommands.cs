@@ -32,13 +32,15 @@ namespace ArcMapAddinCoordinateConversion
 
         protected override void OnClick()
         {
-            if (ArcMap.Document == null || ArcMap.Document.CurrentLocation == null || ctype == CoordinateConversionLibrary.Models.CoordinateType.Unknown)
+            if (ArcMap.Document == null || ArcMap.Document.CurrentLocation == null 
+                || ctype == CoordinateConversionLibrary.Models.CoordinateType.Unknown)
                 return;
 
             var point = ArcMap.Document.CurrentLocation;
+            if (point == null)
+                return;
 
             string coord = string.Empty;
-
             try
             {
                 var cn = (IConversionNotation)point;

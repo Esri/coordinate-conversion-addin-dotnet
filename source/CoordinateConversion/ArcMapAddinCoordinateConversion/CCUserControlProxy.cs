@@ -42,17 +42,24 @@ namespace ArcMapAddinCoordinateConversion
 
         private void ArcMap_NewOpenDocument()
         {
+            if ((ArcMap.Document == null) || (ArcMap.Document.ActiveView == null))
+                return;
+
             if (avEvents != null)
             {
                 avEvents.SelectionChanged -= OnSelectionChanged;
                 avEvents = null;
             }
-            avEvents = ArcMap.Document.ActiveView as IActiveViewEvents_Event;
+
+            avEvents = (IActiveViewEvents_Event)ArcMap.Document.ActiveView;
             avEvents.SelectionChanged += OnSelectionChanged;
         }
 
         private void OnSelectionChanged()
         {
+            if ((ArcMap.Document == null) || (ArcMap.Document.FocusMap == null))
+                return;
+
             if (ArcMap.Document.FocusMap.SelectionCount > 0)
             {
                 for (int i = 0; i < ArcMap.Document.FocusMap.LayerCount; i++)

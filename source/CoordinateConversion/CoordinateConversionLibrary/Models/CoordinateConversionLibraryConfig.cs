@@ -91,7 +91,19 @@ namespace CoordinateConversionLibrary.Models
 
                 XmlSerializer x = new XmlSerializer(GetType());
                 TextReader tr = new StreamReader(filename);
-                var temp = x.Deserialize(tr) as CoordinateConversionLibraryConfig;
+
+                CoordinateConversionLibraryConfig temp = null;
+                try
+                {
+                    temp = x.Deserialize(tr) as CoordinateConversionLibraryConfig;
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    tr.Close();
+                }
 
                 if (temp == null)
                     return;

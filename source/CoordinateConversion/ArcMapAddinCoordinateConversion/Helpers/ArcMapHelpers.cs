@@ -25,11 +25,18 @@ namespace ArcMapAddinCoordinateConversion.Helpers
         public static ISpatialReference GetGCS_WGS_1984_SR()
         {
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return null;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return null;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return null;
 
             // Use the enumeration to create an instance of the predefined object.
-
             IGeographicCoordinateSystem geographicCS =
                 srFact.CreateGeographicCoordinateSystem((int)
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);
@@ -39,8 +46,16 @@ namespace ArcMapAddinCoordinateConversion.Helpers
         public static ISpatialReference GetSR(int type)
         {
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return null;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return null;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return null;
 
             // Use the enumeration to create an instance of the predefined object.
             try
@@ -160,9 +175,12 @@ namespace ArcMapAddinCoordinateConversion.Helpers
         ///<param name="delay">A System.Int32 that is the time im milliseconds to wait.</param>
         /// 
         ///<remarks></remarks>
-        public static void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, System.Int32 delay, IEnvelope envelope)
+        public static void FlashGeometry(ESRI.ArcGIS.Geometry.IGeometry geometry, 
+            ESRI.ArcGIS.Display.IRgbColor color, ESRI.ArcGIS.Display.IDisplay display, 
+            System.Int32 delay, IEnvelope envelope)
         {
-            if (geometry == null || color == null || display == null)
+            if ((geometry == null) || (color == null) || (display == null) || (envelope == null) 
+                || (delay < 0))
             {
                 return;
             }
@@ -174,9 +192,10 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolygon:
                     {
                         //Set the flash geometry's symbol.
-                        ESRI.ArcGIS.Display.ISimpleFillSymbol simpleFillSymbol = new ESRI.ArcGIS.Display.SimpleFillSymbolClass();
+                        ESRI.ArcGIS.Display.ISimpleFillSymbol simpleFillSymbol = 
+                            new ESRI.ArcGIS.Display.SimpleFillSymbolClass();
                         simpleFillSymbol.Color = color;
-                        ESRI.ArcGIS.Display.ISymbol symbol = simpleFillSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        ESRI.ArcGIS.Display.ISymbol symbol = (ESRI.ArcGIS.Display.ISymbol)simpleFillSymbol; 
                         symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
 
                         //Flash the input polygon geometry.
@@ -193,7 +212,7 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                         ESRI.ArcGIS.Display.ISimpleLineSymbol simpleLineSymbol = new ESRI.ArcGIS.Display.SimpleLineSymbolClass();
                         simpleLineSymbol.Width = 4;
                         simpleLineSymbol.Color = color;
-                        ESRI.ArcGIS.Display.ISymbol symbol = simpleLineSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        ESRI.ArcGIS.Display.ISymbol symbol = (ESRI.ArcGIS.Display.ISymbol)simpleLineSymbol;
                         symbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
 
                         //Flash the input polyline geometry.
@@ -211,13 +230,13 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                         simpleMarkerSymbol.Style = ESRI.ArcGIS.Display.esriSimpleMarkerStyle.esriSMSCircle;
                         simpleMarkerSymbol.Size = 12;
                         simpleMarkerSymbol.Color = color;
-                        ESRI.ArcGIS.Display.ISymbol markerSymbol = simpleMarkerSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        ESRI.ArcGIS.Display.ISymbol markerSymbol = (ESRI.ArcGIS.Display.ISymbol)simpleMarkerSymbol;
                         markerSymbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
 
                         ESRI.ArcGIS.Display.ISimpleLineSymbol simpleLineSymbol = new ESRI.ArcGIS.Display.SimpleLineSymbolClass();
                         simpleLineSymbol.Width = 1;
                         simpleLineSymbol.Color = color;
-                        ESRI.ArcGIS.Display.ISymbol lineSymbol = simpleLineSymbol as ESRI.ArcGIS.Display.ISymbol; // Dynamic Cast
+                        ESRI.ArcGIS.Display.ISymbol lineSymbol = (ESRI.ArcGIS.Display.ISymbol)simpleLineSymbol;
                         lineSymbol.ROP2 = ESRI.ArcGIS.Display.esriRasterOpCode.esriROPNotXOrPen;
 
                         //Flash the input polygon geometry.

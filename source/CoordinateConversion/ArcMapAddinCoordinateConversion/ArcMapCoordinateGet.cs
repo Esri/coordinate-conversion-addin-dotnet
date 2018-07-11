@@ -39,7 +39,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDDFromCoords(6);
                     return true;
                 }
@@ -56,7 +56,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDDMFromCoords(6);
                     return true;
                 }
@@ -95,7 +95,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetGARSFromCoords();
                     return true;
                 }
@@ -118,7 +118,7 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     Project(srFactoryCode);
                     // 5 numeric units in MGRS is 1m resolution
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
@@ -140,7 +140,7 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetUSNGFromCoords(5, true, false);
                     return true;
                 }
@@ -196,11 +196,18 @@ namespace ArcMapAddinCoordinateConversion
             ISpatialReference sr = null;
 
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return;
 
             // Use the enumeration to create an instance of the predefined object.
-
             try
             {
                 var geographicCS = srFact.CreateGeographicCoordinateSystem(srfactoryCode);

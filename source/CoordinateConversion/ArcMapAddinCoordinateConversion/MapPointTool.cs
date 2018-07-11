@@ -125,6 +125,8 @@ namespace ArcMapAddinCoordinateConversion
             IActiveView activeView = (IActiveView)ArcMap.Document.FocusMap;
 
             var point = activeView.ScreenDisplay.DisplayTransformation.ToMapPoint(X, Y) as IPoint;
+            if (point == null)
+                return null;
 
             if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
             {

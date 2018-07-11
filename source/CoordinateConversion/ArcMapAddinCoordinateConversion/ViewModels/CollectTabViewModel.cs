@@ -228,7 +228,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
-                        string tempShapeFile = folderName + "\\tmpShapefile.shp";
+                        string tempShapeFile = folderName + System.IO.Path.DirectorySeparatorChar + 
+                            "tmpShapefile.shp";
                         var grpList = GetMapPointExportFormat(GraphicsList);
                         IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, grpList, ArcMap.Document.FocusMap.SpatialReference);
 

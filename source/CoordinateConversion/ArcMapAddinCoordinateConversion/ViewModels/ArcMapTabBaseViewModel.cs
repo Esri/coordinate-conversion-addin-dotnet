@@ -358,7 +358,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 return;
 
             var cn = point as IConversionNotation;
-
             if (cn == null)
                 return;
 
@@ -453,7 +452,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             tempNorthing = mgrs.Northing.ToString().PadRight(5, '0');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing);
 
-            tempPoint = new PointClass() as IConversionNotation;
+            tempPoint = (IConversionNotation)new PointClass();
             (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -470,13 +469,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         {
             point = new PointClass();
-            var cn = point as IConversionNotation;
+            var cn = (IConversionNotation)point;
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return CoordinateType.Unknown;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return CoordinateType.Unknown;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return CoordinateType.Unknown;
 
             // Use the enumeration to create an instance of the predefined object.
-
             IGeographicCoordinateSystem geographicCS =
                 srFact.CreateGeographicCoordinateSystem((int)
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);

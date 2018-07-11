@@ -124,12 +124,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         internal override void OnFlashPointCommand(object obj)
         {
+            if ((ArcMap.Document == null) || (ArcMap.Document.ActiveView == null) ||
+                (ArcMap.Document.FocusMap == null))
+                return;
+
             ProcessInput(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
-
             IGeometry address = obj as IGeometry;
-
             if (address == null && amCoordGetter != null && amCoordGetter.Point != null)
             {
                 address = amCoordGetter.Point;
@@ -138,13 +140,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             if (address != null)
             {
-                // Map und View
-                IMxDocument mxdoc = ArcMap.Application.Document as IMxDocument;
-                IActiveView activeView = mxdoc.ActivatedView;
-                IMap map = mxdoc.FocusMap;
+                IActiveView activeView = ArcMap.Document.ActiveView;
+                IMap map = ArcMap.Document.FocusMap;
                 IEnvelope envelope = activeView.Extent;
-
-                //ClearGraphicsContainer(map);
 
                 IScreenDisplay screenDisplay = activeView.ScreenDisplay;
                 short screenCache = Convert.ToInt16(esriScreenCache.esriNoScreenCache);
@@ -190,8 +188,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     address = poly;
                 }
-                var av = mxdoc.FocusMap as IActiveView;
-                ArcMapHelpers.FlashGeometry(address, color, av.ScreenDisplay, 500, av.Extent);
+                ArcMapHelpers.FlashGeometry(address, color, activeView.ScreenDisplay, 500, activeView.Extent);
             }
         }
 

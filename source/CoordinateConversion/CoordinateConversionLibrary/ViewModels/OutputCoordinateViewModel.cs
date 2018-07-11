@@ -255,6 +255,9 @@ namespace CoordinateConversionLibrary.ViewModels
                 });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
+            if (vm == null)
+                return;
+
             vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
 
             if (dlg.ShowDialog() == true)

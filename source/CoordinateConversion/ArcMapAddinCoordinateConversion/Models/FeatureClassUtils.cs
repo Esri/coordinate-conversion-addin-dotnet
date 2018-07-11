@@ -75,7 +75,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                 IGxObject ipGxObject = m_ipSaveAsGxDialog.FinalLocation;
                 string nameString = m_ipSaveAsGxDialog.Name;
                 bool replacingObject = m_ipSaveAsGxDialog.ReplacingObject;
-                string path = m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                string path = m_ipSaveAsGxDialog.FinalLocation.FullName + 
+                    System.IO.Path.DirectorySeparatorChar + m_ipSaveAsGxDialog.Name;
                 IGxObject ipSelectedObject = m_ipSaveAsGxDialog.InternalCatalog.SelectedObject;
 
                 // user selected an existing featureclass
@@ -96,7 +97,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                                                                  CoordinateConversionLibrary.Properties.Resources.CaptionOverwrite,
                                                                  System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                         {
-                            return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                            return m_ipSaveAsGxDialog.FinalLocation.FullName +
+                                System.IO.Path.DirectorySeparatorChar + m_ipSaveAsGxDialog.Name;
                         }
 
                         if (m_ipSaveAsGxDialog.DoModalSave(iParentWindow) == false)
@@ -108,7 +110,9 @@ namespace ArcMapAddinCoordinateConversion.Models
                         ipDataset = ipGxDataset.Dataset;
                     }
 
-                    return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                    return m_ipSaveAsGxDialog.FinalLocation.FullName 
+                        + System.IO.Path.DirectorySeparatorChar
+                        + m_ipSaveAsGxDialog.Name;
                 }
                 else
                     return path;
@@ -220,7 +224,7 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <returns>Created featureclass</returns>
         private IFeatureClass ExportToShapefile(string fileNamePath, List<CCAMGraphic> graphicsList, ISpatialReference ipSpatialRef)
         {
-            int index = fileNamePath.LastIndexOf('\\');
+            int index = fileNamePath.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
             string folder = fileNamePath.Substring(0, index);
             string nameOfShapeFile = fileNamePath.Substring(index + 1);
             string shapeFieldName = "Shape";
