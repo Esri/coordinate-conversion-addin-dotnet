@@ -148,7 +148,7 @@ namespace ProAppCoordConversionModule.Models
                     var layer = MapView.Active.GetSelectedLayers()[0];
                     if (layer is FeatureLayer)
                     {
-                        var featureLayer = layer as FeatureLayer;
+                        var featureLayer = (FeatureLayer)layer;
 
                         using (var table = featureLayer.GetTable())
                         {
@@ -173,15 +173,17 @@ namespace ProAppCoordConversionModule.Models
 
                         //Get simple renderer from feature layer 
                         CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
-                        CIMSymbolReference sybmol = currentRenderer.Symbol;
+                        if (currentRenderer != null)
+                        {
+                            CIMSymbolReference sybmol = currentRenderer.Symbol;
 
-                        var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.Solid);
-                        var s = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Null, outline);
-                        CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
-                        currentRenderer.Symbol = symbolRef;
+                            var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.Solid);
+                            var s = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Null, outline);
+                            CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
+                            currentRenderer.Symbol = symbolRef;
 
-                        featureLayer.SetRenderer(currentRenderer);
-
+                            featureLayer.SetRenderer(currentRenderer);
+                        }
                     }
                 });
 
@@ -208,7 +210,7 @@ namespace ProAppCoordConversionModule.Models
                     var layer = MapView.Active.GetSelectedLayers()[0];
                     if (layer is FeatureLayer)
                     {
-                        var featureLayer = layer as FeatureLayer;
+                        var featureLayer = (FeatureLayer)layer;
 
                         using (var table = featureLayer.GetTable())
                         {
@@ -235,16 +237,18 @@ namespace ProAppCoordConversionModule.Models
 
                         //Get simple renderer from feature layer 
                         CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
-                        CIMSymbolReference sybmol = currentRenderer.Symbol;
+                        if (currentRenderer != null)
+                        {
+                            CIMSymbolReference sybmol = currentRenderer.Symbol;
 
-                        //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
-                        //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
-                        var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
-                        CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
-                        currentRenderer.Symbol = symbolRef;
+                            //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
+                            //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
+                            var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
+                            CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
+                            currentRenderer.Symbol = symbolRef;
 
-                        featureLayer.SetRenderer(currentRenderer);
-
+                            featureLayer.SetRenderer(currentRenderer);
+                        }
                     }
                 });
 

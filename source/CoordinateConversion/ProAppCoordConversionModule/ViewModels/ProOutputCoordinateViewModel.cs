@@ -16,13 +16,15 @@ namespace ProAppCoordConversionModule.ViewModels
         public override void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
-
             if (outputCoordItem == null)
                 return;
 
             var dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, this.GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
+            if (vm == null)
+                return;
+
             vm.WindowTitle = CoordinateConversionLibrary.Properties.Resources.TitleAddNewOutputCoordinate;
 
             if (dlg.ShowDialog() == true)

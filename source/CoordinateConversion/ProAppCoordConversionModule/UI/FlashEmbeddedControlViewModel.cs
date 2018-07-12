@@ -108,6 +108,9 @@ namespace ProAppCoordConversionModule.UI
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if ((values == null) || (values.Length < 2))
+                return 0;
+
             var screenPoint = (System.Windows.Point)values[0];
             var c = values[1] as System.Windows.Controls.Canvas;
             if (c == null)
@@ -144,6 +147,9 @@ namespace ProAppCoordConversionModule.UI
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if ((values == null) || (values.Length < 2))
+                return 0;
+
             var screenPoint = (System.Windows.Point)values[0];
             var c = values[1] as System.Windows.Controls.Canvas;
             if (c == null)
