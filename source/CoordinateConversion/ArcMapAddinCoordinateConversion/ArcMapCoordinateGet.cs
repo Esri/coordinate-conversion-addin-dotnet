@@ -250,7 +250,7 @@ namespace ArcMapAddinCoordinateConversion
                 if (Point.SpatialReference == null)
                     return result;
 
-                var cn = Point as IConversionNotation;
+                var cn = (IConversionNotation)Point;
                 if (cn != null)
                 {
                     switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)

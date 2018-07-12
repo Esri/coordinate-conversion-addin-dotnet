@@ -201,7 +201,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                 IWorkspace workspace = workspaceFactory.OpenFromFile(folderName, 0);
                 IFeatureWorkspace fWorkspace = (IFeatureWorkspace)workspace;
                 IDataset ipDs = fWorkspace.OpenFeatureClass(fcName) as IDataset;
-                ipDs.Delete();
+                if (ipDs != null)
+                    ipDs.Delete();
 
                 File.Delete(shapeFilePath);
 
@@ -355,6 +356,9 @@ namespace ArcMapAddinCoordinateConversion.Models
         private void DeleteFeatureClass(IFeatureWorkspace fWorkspace, string fcName)
         {
             IDataset ipDs = fWorkspace.OpenFeatureClass(fcName) as IDataset;
+            if (ipDs == null)
+                return;
+
             ipDs.Delete();
         }
 

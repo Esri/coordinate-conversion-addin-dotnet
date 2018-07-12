@@ -46,12 +46,15 @@ namespace ArcMapAddinCoordinateConversion
         
         private void ArcMap_NewOpenDocument()
         {
-            if(avEvents != null)
+            if ((ArcMap.Document == null) || (ArcMap.Document.ActiveView == null))
+                return;
+
+            if (avEvents != null)
             {
                 avEvents.SelectionChanged -= OnSelectionChanged;
                 avEvents = null;
             }
-            avEvents = ArcMap.Document.ActiveView as IActiveViewEvents_Event;
+            avEvents = (IActiveViewEvents_Event)ArcMap.Document.ActiveView;
             avEvents.SelectionChanged += OnSelectionChanged;
         }
 
@@ -74,7 +77,7 @@ namespace ArcMapAddinCoordinateConversion
                             ICursor cursor;
                             fselection.SelectionSet.Search(null, false, out cursor);
 
-                            var fc = cursor as IFeatureCursor;
+                            var fc = (IFeatureCursor)cursor;
                             var f = fc.NextFeature();
 
                             if(f != null)

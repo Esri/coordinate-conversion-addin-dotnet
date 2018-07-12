@@ -132,6 +132,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnDeletePointCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             DeletePoints(objects);
@@ -174,6 +177,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnCopyCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             if (!objects.Any())
@@ -288,6 +294,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             foreach (var point in mapPointList)
             {
                 var pt = point.Geometry as IPoint;
+                if (pt == null)
+                    continue;
+
                 var attributes = GetOutputFormats(new AddInPoint() { Point= pt});
                 CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
                 results.Add(ccMapPoint);
@@ -328,7 +337,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             IFeatureLayer outputFeatureLayer = new FeatureLayerClass();
             outputFeatureLayer.FeatureClass = fc;
 
-            IGeoFeatureLayer geoLayer = outputFeatureLayer as IGeoFeatureLayer;
+            IGeoFeatureLayer geoLayer = (IGeoFeatureLayer)outputFeatureLayer;
             if (geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
             {
                 ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
@@ -400,7 +409,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var element = gc.Next();
             while (element != null)
             {
-                var eleProps = element as IElementProperties;
+                var eleProps = (IElementProperties)element;
                 if (list.Any(g => g.UniqueId == eleProps.Name))
                 {
                     elementList.Add(element);
@@ -493,7 +502,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             if (point != null && !point.IsEmpty)
             {
-                var color = new RgbColorClass() { Red = 255 } as IColor;
+                var color = (IColor)new RgbColorClass() { Red = 255 };
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
@@ -550,7 +559,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnImportCoordinates(object obj)
         {
             var coordinates = obj as List<string>;
-
             if (coordinates == null)
                 return;
 

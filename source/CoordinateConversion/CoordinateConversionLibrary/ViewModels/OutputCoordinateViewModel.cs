@@ -101,7 +101,6 @@ namespace CoordinateConversionLibrary.ViewModels
         public virtual void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
-
             if (outputCoordItem == null)
                 return;
 

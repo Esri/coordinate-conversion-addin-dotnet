@@ -78,19 +78,22 @@ namespace ArcMapAddinCoordinateConversion
                             fselection.SelectionSet.Search(null, false, out cursor);
 
                             var fc = cursor as IFeatureCursor;
-                            var f = fc.NextFeature();
-
-                            if (f != null)
+                            if (fc != null)
                             {
-                                if (f.Shape is IPoint)
-                                {
-                                    var point = f.Shape as IPoint;
-                                    if (point != null)
-                                    {
-                                        var tempX = point.X;
-                                        var tempY = point.Y;
+                                var f = fc.NextFeature();
 
-                                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, point);
+                                if (f != null)
+                                {
+                                    if (f.Shape is IPoint)
+                                    {
+                                        var point = f.Shape as IPoint;
+                                        if (point != null)
+                                        {
+                                            var tempX = point.X;
+                                            var tempY = point.Y;
+
+                                            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, point);
+                                        }
                                     }
                                 }
                             }
