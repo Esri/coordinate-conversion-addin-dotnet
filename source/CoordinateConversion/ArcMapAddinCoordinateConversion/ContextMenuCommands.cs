@@ -76,7 +76,7 @@ namespace ArcMapAddinCoordinateConversion
                 
                 System.Windows.Clipboard.SetText(coord);
             }
-            catch { }
+            catch { /* Conversion Failed */ }
         }
 
         protected override void OnUpdate()

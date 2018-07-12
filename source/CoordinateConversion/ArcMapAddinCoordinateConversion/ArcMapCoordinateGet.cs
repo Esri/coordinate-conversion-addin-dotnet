@@ -43,7 +43,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetDDFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -60,7 +60,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetDDMFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -77,7 +77,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetDMSFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -99,7 +99,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetGARSFromCoords();
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -122,7 +122,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -144,7 +144,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetUSNGFromCoords(5, true, false);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -166,7 +166,7 @@ namespace ArcMapAddinCoordinateConversion
                     coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -214,9 +214,9 @@ namespace ArcMapAddinCoordinateConversion
 
                 sr = geographicCS as ISpatialReference;
             }
-            catch { }
+            catch { /* Creation Failed */ }
 
-            if(sr == null)
+            if (sr == null)
             {
                 try
                 {
@@ -224,7 +224,7 @@ namespace ArcMapAddinCoordinateConversion
 
                     sr = projectedCS as ISpatialReference;
                 }
-                catch { }
+                catch { /* Creation Failed */ }
             }
             
             if (sr == null)
@@ -234,7 +234,7 @@ namespace ArcMapAddinCoordinateConversion
             {
                 Point.Project(sr);
             }
-            catch { }
+            catch { /* Projection Failed */ }
         }
 
         public string GetInputDisplayString()

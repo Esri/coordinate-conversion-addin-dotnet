@@ -86,7 +86,10 @@ namespace ArcMapAddinCoordinateConversion
 
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, point);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         protected override void OnMouseMove(MouseEventArgs arg)
@@ -108,7 +111,10 @@ namespace ArcMapAddinCoordinateConversion
                 if (!ListHasItems)
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         private void onCollectCoordinatesHasItems(object obj)

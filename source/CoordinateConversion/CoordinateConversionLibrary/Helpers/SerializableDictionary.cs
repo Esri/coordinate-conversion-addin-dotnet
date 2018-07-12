@@ -19,6 +19,7 @@ using System.Xml.Serialization;
 
 namespace CoordinateConversionLibrary.Helpers
 {
+    [System.Serializable]
     [XmlRoot("dictionary")]
     public class SerializableDictionary<TKey, TValue>
         : Dictionary<TKey, TValue>, IXmlSerializable

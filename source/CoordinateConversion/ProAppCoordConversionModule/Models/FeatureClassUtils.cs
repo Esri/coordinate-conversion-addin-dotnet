@@ -190,7 +190,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (GeodatabaseException exObj)
             {
-                Console.WriteLine(exObj);
+                System.Diagnostics.Debug.WriteLine(exObj);
                 throw;
             }
             finally
@@ -255,7 +255,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (GeodatabaseException exObj)
             {
-                Console.WriteLine(exObj);
+                System.Diagnostics.Debug.WriteLine(exObj);
                 throw;
             }
             finally
