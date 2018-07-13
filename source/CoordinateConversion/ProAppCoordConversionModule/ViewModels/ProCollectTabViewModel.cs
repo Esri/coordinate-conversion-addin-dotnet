@@ -72,7 +72,6 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnImportCoordinates(object obj)
         {
             var coordinates = obj as List<string>;
-
             if (coordinates == null)
                 return;
 
@@ -155,6 +154,9 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnDeletePointCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             DeletePoints(objects);
@@ -188,6 +190,9 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnCopyCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             if (!objects.Any())
@@ -264,7 +269,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                     catch (Exception ex)
                     {
-
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
                     }
                 }
             }
@@ -316,6 +321,9 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (aiPoint != null)
                 {
                     var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
+                    if (s == null)
+                        return;
+
                     var doUpdate = false;
 
                     if (s == null)

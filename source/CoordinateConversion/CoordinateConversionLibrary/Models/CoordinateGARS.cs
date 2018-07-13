@@ -74,6 +74,7 @@ namespace CoordinateConversionLibrary.Models
                     }
                     catch
                     {
+                        /* Conversion Failed */
                         return false;
                     }
 

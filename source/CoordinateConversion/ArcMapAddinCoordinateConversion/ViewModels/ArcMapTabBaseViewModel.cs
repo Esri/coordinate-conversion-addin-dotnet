@@ -229,7 +229,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    // do nothing
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
 
@@ -358,7 +358,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 return;
 
             var cn = point as IConversionNotation;
-
             if (cn == null)
                 return;
 
@@ -366,37 +365,37 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 dict.Add(CoordinateType.DD, cn.GetDDFromCoords(6));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.DDM, cn.GetDDMFromCoords(6));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.DMS, cn.GetDMSFromCoords(6));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.GARS, cn.GetGARSFromCoords());
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.MGRS, cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.USNG, cn.GetUSNGFromCoords(5, true, false));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.UTM, cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces | esriUTMConversionOptionsEnum.esriUTMUseNS));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
         }
@@ -410,12 +409,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             // bottom left
             CoordinateMGRS.TryParse(InputCoordinate, out mgrs);
 
+            if (mgrs == null)
+                return null;
+
             // don't create a polygon for 1m resolution
             if (mgrs.Easting.ToString().Length > 4 && mgrs.Northing.ToString().Length > 4)
                 return null;
 
-            var tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();//GetSR();
+            var tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             var anotherMGRSstring = mgrs.ToString("", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -427,8 +429,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var tempNorthing = mgrs.Northing.ToString().PadRight(5, '9');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0', '9'));
 
-            tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
+            tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             anotherMGRSstring = tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -439,8 +441,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             tempNorthing = mgrs.Northing.ToString().PadRight(5, '9');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing.Replace('0', '9'));
 
-            tempPoint = new PointClass() as IConversionNotation;
-            (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
+            tempPoint = (IConversionNotation)new PointClass();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
 
@@ -450,7 +452,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             tempNorthing = mgrs.Northing.ToString().PadRight(5, '0');
             tempMGRS.Northing = Convert.ToInt32(tempNorthing);
 
-            tempPoint = new PointClass() as IConversionNotation;
+            tempPoint = (IConversionNotation)new PointClass();
             (tempPoint as IPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             tempPoint.PutCoordsFromMGRS(tempMGRS.ToString("ZSX00000Y00000", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -467,13 +469,20 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private CoordinateType GetCoordinateType(string input, out ESRI.ArcGIS.Geometry.IPoint point)
         {
             point = new PointClass();
-            var cn = point as IConversionNotation;
+            var cn = (IConversionNotation)point;
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return CoordinateType.Unknown;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return CoordinateType.Unknown;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return CoordinateType.Unknown;
 
             // Use the enumeration to create an instance of the predefined object.
-
             IGeographicCoordinateSystem geographicCS =
                 srFact.CreateGeographicCoordinateSystem((int)
                 esriSRGeoCSType.esriSRGeoCS_WGS1984);
@@ -496,7 +505,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     return CoordinateType.DD;
                 }
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
@@ -512,7 +521,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     return CoordinateType.DDM;
                 }
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
@@ -528,21 +537,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     return CoordinateType.DMS;
                 }
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
                 cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, input);
                 return CoordinateType.GARS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
                 cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeLL, input);
                 return CoordinateType.GARS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             CoordinateGARS gars;
             if (CoordinateGARS.TryParse(input, out gars))
@@ -552,7 +561,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     cn.PutCoordsFromGARS(esriGARSModeEnum.esriGARSModeCENTER, gars.ToString("", new CoordinateGARSFormatter()));
                     return CoordinateType.GARS;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             try
@@ -560,31 +569,31 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_Automatic);
                 return CoordinateType.MGRS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_NewStyle);
                 return CoordinateType.MGRS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_NewWith180InZone01);
                 return CoordinateType.MGRS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_OldStyle);
                 return CoordinateType.MGRS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 cn.PutCoordsFromMGRS(input, esriMGRSModeEnum.esriMGRSMode_OldWith180InZone01);
                 return CoordinateType.MGRS;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             // mgrs try parse
             CoordinateMGRS mgrs;
@@ -595,7 +604,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     cn.PutCoordsFromMGRS(mgrs.ToString("", new CoordinateMGRSFormatter()), esriMGRSModeEnum.esriMGRSMode_NewStyle);
                     return CoordinateType.MGRS;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             try
@@ -603,7 +612,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 cn.PutCoordsFromUSNG(input);
                 return CoordinateType.USNG;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             CoordinateUSNG usng;
             if (CoordinateUSNG.TryParse(input, out usng))
@@ -613,7 +622,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     cn.PutCoordsFromUSNG(usng.ToString("", new CoordinateMGRSFormatter()));
                     return CoordinateType.USNG;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             try
@@ -621,21 +630,21 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMAddSpaces, input);
                 return CoordinateType.UTM;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
                 cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, input);
                 return CoordinateType.UTM;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             try
             {
                 cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMUseNS, input);
                 return CoordinateType.UTM;
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             CoordinateUTM utm;
             if (CoordinateUTM.TryParse(input, out utm))
@@ -645,7 +654,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     cn.PutCoordsFromUTM(esriUTMConversionOptionsEnum.esriUTMNoOptions, utm.ToString("", new CoordinateUTMFormatter()));
                     return CoordinateType.UTM;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             /*
@@ -670,7 +679,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    // do nothing
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
 

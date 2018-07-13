@@ -75,7 +75,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                 IGxObject ipGxObject = m_ipSaveAsGxDialog.FinalLocation;
                 string nameString = m_ipSaveAsGxDialog.Name;
                 bool replacingObject = m_ipSaveAsGxDialog.ReplacingObject;
-                string path = m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                string path = m_ipSaveAsGxDialog.FinalLocation.FullName + 
+                    System.IO.Path.DirectorySeparatorChar + m_ipSaveAsGxDialog.Name;
                 IGxObject ipSelectedObject = m_ipSaveAsGxDialog.InternalCatalog.SelectedObject;
 
                 // user selected an existing featureclass
@@ -96,7 +97,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                                                                  CoordinateConversionLibrary.Properties.Resources.CaptionOverwrite,
                                                                  System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                         {
-                            return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                            return m_ipSaveAsGxDialog.FinalLocation.FullName +
+                                System.IO.Path.DirectorySeparatorChar + m_ipSaveAsGxDialog.Name;
                         }
 
                         if (m_ipSaveAsGxDialog.DoModalSave(iParentWindow) == false)
@@ -108,7 +110,9 @@ namespace ArcMapAddinCoordinateConversion.Models
                         ipDataset = ipGxDataset.Dataset;
                     }
 
-                    return m_ipSaveAsGxDialog.FinalLocation.FullName + "\\" + m_ipSaveAsGxDialog.Name;
+                    return m_ipSaveAsGxDialog.FinalLocation.FullName 
+                        + System.IO.Path.DirectorySeparatorChar
+                        + m_ipSaveAsGxDialog.Name;
                 }
                 else
                     return path;
@@ -180,7 +184,7 @@ namespace ArcMapAddinCoordinateConversion.Models
             }
             catch (Exception ex)
             {
-                return fc;
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 
             return fc;
@@ -197,7 +201,8 @@ namespace ArcMapAddinCoordinateConversion.Models
                 IWorkspace workspace = workspaceFactory.OpenFromFile(folderName, 0);
                 IFeatureWorkspace fWorkspace = (IFeatureWorkspace)workspace;
                 IDataset ipDs = fWorkspace.OpenFeatureClass(fcName) as IDataset;
-                ipDs.Delete();
+                if (ipDs != null)
+                    ipDs.Delete();
 
                 File.Delete(shapeFilePath);
 
@@ -220,7 +225,7 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <returns>Created featureclass</returns>
         private IFeatureClass ExportToShapefile(string fileNamePath, List<CCAMGraphic> graphicsList, ISpatialReference ipSpatialRef)
         {
-            int index = fileNamePath.LastIndexOf('\\');
+            int index = fileNamePath.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
             string folder = fileNamePath.Substring(0, index);
             string nameOfShapeFile = fileNamePath.Substring(index + 1);
             string shapeFieldName = "Shape";
@@ -233,20 +238,20 @@ namespace ArcMapAddinCoordinateConversion.Models
                     IWorkspaceFactory workspaceFactory = null;
                     workspaceFactory = new ShapefileWorkspaceFactoryClass();
                     IWorkspace workspace = workspaceFactory.OpenFromFile(folder, 0);
-                    IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
+                    IFeatureWorkspace featureWorkspace = (IFeatureWorkspace)workspace;
                     IFields fields = null;
                     IFieldsEdit fieldsEdit = null;
                     fields = new Fields();
                     fieldsEdit = (IFieldsEdit)fields;
                     IField field = null;
                     IFieldEdit fieldEdit = null;
-                    field = new FieldClass();///###########
+                    field = new FieldClass();
                     fieldEdit = (IFieldEdit)field;
                     fieldEdit.Name_2 = "Shape";
                     fieldEdit.Type_2 = (esriFieldType.esriFieldTypeGeometry);
                     IGeometryDef geomDef = null;
                     IGeometryDefEdit geomDefEdit = null;
-                    geomDef = new GeometryDefClass();///#########
+                    geomDef = new GeometryDefClass();
                     geomDefEdit = (IGeometryDefEdit)geomDef;
 
                     geomDefEdit.GeometryType_2 = esriGeometryType.esriGeometryPoint;
@@ -301,8 +306,10 @@ namespace ArcMapAddinCoordinateConversion.Models
                 }
                 catch (Exception ex)
                 {
-                    return featClass;
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
+
+                return featClass;
             }
         }
 
@@ -349,6 +356,9 @@ namespace ArcMapAddinCoordinateConversion.Models
         private void DeleteFeatureClass(IFeatureWorkspace fWorkspace, string fcName)
         {
             IDataset ipDs = fWorkspace.OpenFeatureClass(fcName) as IDataset;
+            if (ipDs == null)
+                return;
+
             ipDs.Delete();
         }
 
@@ -397,30 +407,5 @@ namespace ArcMapAddinCoordinateConversion.Models
             return pFClass;
         }
 
-        /// <summary>
-        /// Convert a polyline feature to a polygon
-        /// </summary>
-        /// <param name="geom">IGeometry</param>
-        /// <returns>IPolygon</returns>
-        private IPolygon PolylineToPolygon(IGeometry geom)
-        {
-            //Build a polygon segment-by-segment.
-            IPolygon polygon = new PolygonClass();
-            Polyline polyLine = geom as Polyline;
-
-            ISegmentCollection polygonSegs = polygon as ISegmentCollection;
-            ISegmentCollection polylineSegs = polyLine as ISegmentCollection;
-
-            for (int i = 0; i < polylineSegs.SegmentCount; i++)
-            {
-                ISegment seg = polylineSegs.Segment[i];
-                polygonSegs.AddSegment(seg);
-            }
-
-            polygon.SimplifyPreserveFromTo();
-
-            return polygon;
-
-        }
     }
 }

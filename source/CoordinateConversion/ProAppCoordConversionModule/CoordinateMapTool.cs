@@ -156,7 +156,7 @@ namespace ProAppCoordConversionModule
 
                             return temp;
                         }
-                        catch { }
+                        catch { /* Projection Failed */ }
                     }
 
                     return temp;
