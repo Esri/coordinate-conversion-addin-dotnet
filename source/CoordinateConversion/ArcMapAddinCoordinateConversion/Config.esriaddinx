@@ -10,7 +10,7 @@
   <Targets>
     <Target name="Desktop" version="10.3" />
   </Targets>
-  <AddIn language="CLR" library="CoordinateConversion.dll" namespace="ArcMapAddinCoordinateConversion">
+  <AddIn language="CLR4.5" library="CoordinateConversion.dll" namespace="ArcMapAddinCoordinateConversion">
     <ArcMap>
       <Commands>
         <Button id="Esri_ArcMapAddinCoordinateConversion_ContextCopyDD" class="ContextCopyDD" message="Add-in command to copy map point to clipboard." caption="Copy DD Coordinate" tip="Copy DD to clipboard" category="Add-In Controls" image="Images\coordinate-conversion-16.png" />
