@@ -105,8 +105,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 var guid = await AddGraphicToMap(point, ColorFactory.Instance.RedRGB, true, 7);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
-                //Add point to the top of the list
-                ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint);
+                //Add point to the top of the list (using main thread)
+                ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
+                    ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint) );
+
             }
         }
     }
