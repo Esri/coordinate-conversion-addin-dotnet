@@ -47,7 +47,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -63,7 +63,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -79,7 +79,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -95,7 +95,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -113,7 +113,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -131,7 +131,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -148,7 +148,7 @@ namespace ProAppCoordConversionModule
                     coord = Point.ToGeoCoordinateString(tgparam);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -250,8 +250,10 @@ namespace ProAppCoordConversionModule
             }
             catch(Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return "NA";
             }
+
             return result;
         }
 

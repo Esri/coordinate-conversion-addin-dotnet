@@ -20,6 +20,7 @@ using CoordinateConversionLibrary.Models;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
 using ProAppCoordConversionModule.Models;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -80,17 +81,19 @@ namespace ProAppCoordConversionModule.ViewModels
 
             ProcessInput(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
-
-            if (obj == null)
+            await QueuedTask.Run(() =>
             {
-                base.OnFlashPointCommandAsync(proCoordGetter.Point);
-                AddCollectionPoint(proCoordGetter.Point as MapPoint);
-            }
-            else
-            {
-                base.OnFlashPointCommandAsync(obj);
-                AddCollectionPoint(obj as MapPoint);
-            }
+                if (obj == null)
+                {
+                    base.OnFlashPointCommandAsync(proCoordGetter.Point);
+                    AddCollectionPoint(proCoordGetter.Point as MapPoint);
+                }
+                else
+                {
+                    base.OnFlashPointCommandAsync(obj);
+                    AddCollectionPoint(obj as MapPoint);
+                }
+            });
         }
 
         #endregion overrides
@@ -102,8 +105,10 @@ namespace ProAppCoordConversionModule.ViewModels
                 var guid = await AddGraphicToMap(point, ColorFactory.Instance.RedRGB, true, 7);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
-                //Add point to the top of the list
-                ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint);
+                //Add point to the top of the list (using main thread)
+                ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
+                    ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint) );
+
             }
         }
     }

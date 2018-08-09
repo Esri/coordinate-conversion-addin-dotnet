@@ -88,7 +88,9 @@ namespace ProAppCoordConversionModule.Helpers
             catch (Exception ex)
             {
                 // do nothing
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
+
             return result;
         }
     }

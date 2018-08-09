@@ -102,7 +102,7 @@ namespace ProAppCoordConversionModule
 
                 System.Windows.Clipboard.SetText(coord);
             }
-            catch {}
+            catch { /* Conversion Failed */ }
 
         }
     }

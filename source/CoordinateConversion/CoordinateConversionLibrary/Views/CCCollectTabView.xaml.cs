@@ -29,6 +29,9 @@ namespace CoordinateConversionLibrary.Views
         private void listBoxItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListBoxItem;
+            if (item == null)
+                return;
+
             object obj = item.Content;
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, obj);
             e.Handled = true;

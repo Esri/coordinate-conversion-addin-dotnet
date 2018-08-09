@@ -101,7 +101,6 @@ namespace CoordinateConversionLibrary.ViewModels
         public virtual void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
-
             if (outputCoordItem == null)
                 return;
 
@@ -255,6 +254,9 @@ namespace CoordinateConversionLibrary.ViewModels
                 });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
+            if (vm == null)
+                return;
+
             vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
 
             if (dlg.ShowDialog() == true)

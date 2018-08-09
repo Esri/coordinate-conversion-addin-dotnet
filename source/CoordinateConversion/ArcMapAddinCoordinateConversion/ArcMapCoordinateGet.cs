@@ -39,11 +39,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDDFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -56,11 +56,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDDMFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -73,11 +73,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetDMSFromCoords(6);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -95,11 +95,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetGARSFromCoords();
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -118,11 +118,11 @@ namespace ArcMapAddinCoordinateConversion
                 {
                     Project(srFactoryCode);
                     // 5 numeric units in MGRS is 1m resolution
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.CreateMGRS(5, true, esriMGRSModeEnum.esriMGRSMode_Automatic);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -140,11 +140,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetUSNGFromCoords(5, true, false);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -162,11 +162,11 @@ namespace ArcMapAddinCoordinateConversion
                 try
                 {
                     Project(srFactoryCode);
-                    var cn = Point as IConversionNotation;
+                    var cn = (IConversionNotation)Point;
                     coord = cn.GetUTMFromCoords(esriUTMConversionOptionsEnum.esriUTMAddSpaces);
                     return true;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
             return false;
         }
@@ -196,20 +196,27 @@ namespace ArcMapAddinCoordinateConversion
             ISpatialReference sr = null;
 
             Type t = Type.GetTypeFromProgID("esriGeometry.SpatialReferenceEnvironment");
+            if (t == null)
+                return;
+
             System.Object obj = Activator.CreateInstance(t);
+            if (obj == null)
+                return;
+
             ISpatialReferenceFactory srFact = obj as ISpatialReferenceFactory;
+            if (srFact == null)
+                return;
 
             // Use the enumeration to create an instance of the predefined object.
-
             try
             {
                 var geographicCS = srFact.CreateGeographicCoordinateSystem(srfactoryCode);
 
                 sr = geographicCS as ISpatialReference;
             }
-            catch { }
+            catch { /* Creation Failed */ }
 
-            if(sr == null)
+            if (sr == null)
             {
                 try
                 {
@@ -217,7 +224,7 @@ namespace ArcMapAddinCoordinateConversion
 
                     sr = projectedCS as ISpatialReference;
                 }
-                catch { }
+                catch { /* Creation Failed */ }
             }
             
             if (sr == null)
@@ -227,7 +234,7 @@ namespace ArcMapAddinCoordinateConversion
             {
                 Point.Project(sr);
             }
-            catch { }
+            catch { /* Projection Failed */ }
         }
 
         public string GetInputDisplayString()
@@ -243,7 +250,7 @@ namespace ArcMapAddinCoordinateConversion
                 if (Point.SpatialReference == null)
                     return result;
 
-                var cn = Point as IConversionNotation;
+                var cn = (IConversionNotation)Point;
                 if (cn != null)
                 {
                     switch (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType)

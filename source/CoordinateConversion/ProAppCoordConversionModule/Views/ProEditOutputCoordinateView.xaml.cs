@@ -44,12 +44,12 @@ namespace CoordinateConversionLibrary.Views
         {
             var vm = this.DataContext as EditOutputCoordinateViewModel;
 
+            if (vm == null)
+                return;
+
             Regex alphanumericRegex = new Regex("^[a-zA-Z0-9]*$");
             Regex nonNumericStartRegex = new Regex("^(?![0-9])");
             Regex characterLimitRegex = new Regex("^[a-zA-Z0-9]{0,10}?$");
-
-            if (vm == null)
-                return;
 
             if (vm.Names.Contains(vm.OutputCoordItem.Name))
             {

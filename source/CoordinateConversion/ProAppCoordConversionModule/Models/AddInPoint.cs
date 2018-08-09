@@ -55,6 +55,7 @@ namespace ProAppCoordConversionModule.Models
                 }
                 catch
                 {
+                    /* Conversion Failed */
                     return "NA";
                 }
             }

@@ -191,6 +191,9 @@ namespace CoordinateConversionLibrary.Helpers
         static string GetPropertyName(Expression<Func<TPropertySource, object>> expression)
         {
             var lambda = expression as LambdaExpression;
+            if (lambda == null)
+                return null;
+
             MemberExpression memberExpression;
             if (lambda.Body is UnaryExpression)
             {
@@ -207,8 +210,8 @@ namespace CoordinateConversionLibrary.Helpers
             if (memberExpression != null)
             {
                 var propertyInfo = memberExpression.Member as PropertyInfo;
-
-                return propertyInfo.Name;
+                if (propertyInfo != null)
+                    return propertyInfo.Name;
             }
 
             return null;

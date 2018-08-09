@@ -53,7 +53,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -62,6 +63,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.ADF.Connection.Local, Version=10.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
@@ -132,7 +135,9 @@
     <Compile Include="ArcMapCoordinateGet.cs" />
     <Compile Include="CCUserControlProxy.cs" />
     <Compile Include="Config.Designer.cs">
-      <AutoGen>True</AutoGen>
+      <!-- IMPORTANT: this file has been manually changed so is no longer autogened -->
+      <!-- These manual changes were required to support accessing this addin from the external Tab/Toolbar -->
+      <!-- <AutoGen>True</AutoGen> -->
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
     <Compile Include="ContextMenuCommands.cs" />
@@ -261,7 +266,7 @@
     </XmlPeek>
     <Message Importance="High" Text="Old build date: @(Peeked_Date) New build date: $(BUILD_DATE)" />
     <XmlPoke XmlInputPath="Config.esriaddinx" Query="/x:ESRI.Configuration/x:Date" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/Desktop/AddIns' /&gt;" Value="$(BUILD_DATE)" />
-  </Target>  
+  </Target>
   <Target Name="AfterBuild">
     <!-- Gives build warning when add-in targets file is not found. -->
     <Warning Text="Unable to create .esriAddin; missing ESRI ArcGIS Add-in SDK component(s)." Condition="!Exists('$(MSBuildExtensionsPath)\ESRI\ESRI.ArcGIS.AddIns.11.targets')" />

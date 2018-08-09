@@ -132,6 +132,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnDeletePointCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             DeletePoints(objects);
@@ -174,6 +177,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnCopyCommand(object obj)
         {
             var items = obj as IList;
+            if (items == null)
+                return;
+
             var objects = items.Cast<AddInPoint>().ToList();
 
             if (!objects.Any())
@@ -228,7 +234,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
-                        string tempShapeFile = folderName + "\\tmpShapefile.shp";
+                        string tempShapeFile = folderName + System.IO.Path.DirectorySeparatorChar + 
+                            "tmpShapefile.shp";
                         var grpList = GetMapPointExportFormat(GraphicsList);
                         IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, grpList, ArcMap.Document.FocusMap.SpatialReference);
 
@@ -287,6 +294,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             foreach (var point in mapPointList)
             {
                 var pt = point.Geometry as IPoint;
+                if (pt == null)
+                    continue;
+
                 var attributes = GetOutputFormats(new AddInPoint() { Point= pt});
                 CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
                 results.Add(ccMapPoint);
@@ -327,7 +337,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             IFeatureLayer outputFeatureLayer = new FeatureLayerClass();
             outputFeatureLayer.FeatureClass = fc;
 
-            IGeoFeatureLayer geoLayer = outputFeatureLayer as IGeoFeatureLayer;
+            IGeoFeatureLayer geoLayer = (IGeoFeatureLayer)outputFeatureLayer;
             if (geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
             {
                 ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
@@ -399,7 +409,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var element = gc.Next();
             while (element != null)
             {
-                var eleProps = element as IElementProperties;
+                var eleProps = (IElementProperties)element;
                 if (list.Any(g => g.UniqueId == eleProps.Name))
                 {
                     elementList.Add(element);
@@ -423,16 +433,18 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void UpdateHighlightedGraphics()
         {
-            var mxdoc = ArcMap.Application.Document as IMxDocument;
-            var av = mxdoc.FocusMap as IActiveView;
-            var gc = av as IGraphicsContainer;
+            if ((ArcMap.Document == null) && (ArcMap.Document.FocusMap == null))
+                return;
+
+            var av = (IActiveView)ArcMap.Document.FocusMap;
+            var gc = (IGraphicsContainer)av;
 
             gc.Reset();
             var element = gc.Next();
 
             while (element != null)
             {
-                var eProp = element as IElementProperties;
+                var eProp = (IElementProperties)element;
 
                 if (eProp != null)
                 {
@@ -447,7 +459,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             var sms = markerElement.Symbol as ISimpleMarkerSymbol;
                             if (sms != null)
                             {
-                                var simpleMarkerSymbol = new SimpleMarkerSymbol() as ISimpleMarkerSymbol;
+                                var simpleMarkerSymbol = (ISimpleMarkerSymbol)new SimpleMarkerSymbol();
 
                                 simpleMarkerSymbol.Color = sms.Color;
                                 simpleMarkerSymbol.Size = sms.Size;
@@ -456,7 +468,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                                 if (aiPoint.IsSelected)
                                 {
-                                    var color = new RgbColorClass() { Green = 255 } as IColor;
+                                    var color = (IColor)new RgbColorClass() { Green = 255 };
                                     // Marker symbols
                                     simpleMarkerSymbol.Outline = true;
                                     simpleMarkerSymbol.OutlineColor = color;
@@ -490,7 +502,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             if (point != null && !point.IsEmpty)
             {
-                var color = new RgbColorClass() { Red = 255 } as IColor;
+                var color = (IColor)new RgbColorClass() { Red = 255 };
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
@@ -547,7 +559,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private void OnImportCoordinates(object obj)
         {
             var coordinates = obj as List<string>;
-
             if (coordinates == null)
                 return;
 

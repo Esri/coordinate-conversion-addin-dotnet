@@ -45,6 +45,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 selectedTab = value;
                 var tabItem = selectedTab as TabItem;
+                if ((tabItem == null) || ((tabItem.Content == null) ||
+                    (tabItem.Content as UserControl).Content == null))
+                    return;
+
                 Mediator.NotifyColleagues(Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
                 //TODO let the other viewmodels determine what to do when tab selection changes
                 if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)

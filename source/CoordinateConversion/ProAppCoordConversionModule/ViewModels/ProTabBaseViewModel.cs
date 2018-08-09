@@ -490,17 +490,17 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 dict.Add(CoordinateType.DD, dd.ToString("", new CoordinateDDFormatter()));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.DDM, new CoordinateDDM(dd).ToString("", new CoordinateDDMFormatter()));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
             try
             {
                 dict.Add(CoordinateType.DMS, new CoordinateDMS(dd).ToString("", new CoordinateDMSFormatter()));
             }
-            catch { }
+            catch { /* Conversion Failed */ }
 
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
         }
@@ -560,7 +560,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return CoordinateType.GARS;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateMGRS mgrs;
@@ -577,7 +577,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return CoordinateType.MGRS;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateUSNG usng;
@@ -594,7 +594,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return CoordinateType.USNG;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateUTM utm;
@@ -611,7 +611,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return CoordinateType.UTM;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             Regex regexMercator = new Regex(@"^(?<latitude>\-?\d+[.,]?\d*)[+,;:\s]*(?<longitude>\-?\d+[.,]?\d*)");
@@ -633,6 +633,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
                     return CoordinateType.Unknown;
                 }
             }
@@ -700,7 +701,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateMGRS mgrs;
@@ -717,7 +718,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return new CCCoordinate() { Type = CoordinateType.MGRS, Point = point };
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateUSNG usng;
@@ -734,7 +735,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return new CCCoordinate() { Type = CoordinateType.USNG, Point = point }; ;
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             CoordinateUTM utm;
@@ -751,7 +752,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                     return new CCCoordinate() { Type = CoordinateType.UTM, Point = point };
                 }
-                catch { }
+                catch { /* Conversion Failed */ }
             }
 
             /*
@@ -776,6 +777,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 }
             }

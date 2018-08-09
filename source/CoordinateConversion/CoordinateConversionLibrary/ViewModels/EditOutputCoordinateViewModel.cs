@@ -395,7 +395,6 @@ namespace CoordinateConversionLibrary.ViewModels
         private void OnSpatialReferenceSelected(object obj)
         {
             var data = obj as string;
-
             if (string.IsNullOrWhiteSpace(data))
                 return;
 
