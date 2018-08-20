@@ -31,7 +31,6 @@ namespace CoordinateConversionLibrary.ViewModels
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
-            ToolMode = MapPointToolMode.Unknown;
 
             // commands
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
@@ -39,13 +38,6 @@ namespace CoordinateConversionLibrary.ViewModels
 
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPointInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
-            Mediator.Register(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, OnTabItemSelected);
-            Mediator.Register(CoordinateConversionLibrary.Constants.SetToolMode, (mode) =>
-            {
-                MapPointToolMode eMode = MapPointToolMode.Unknown;
-                Enum.TryParse<MapPointToolMode>(mode.ToString(), out eMode);
-                ToolMode = eMode;
-            });
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
@@ -70,26 +62,6 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        public MapPointToolMode ToolMode { get; set; }
-
-        private bool isActiveTab = true;
-        /// <summary>
-        /// Property to keep track of which tab/viewmodel is the active item
-        /// </summary>
-        public bool IsActiveTab
-        {
-            get
-            {
-                return isActiveTab;
-            }
-            set
-            {
-                //TODO do we need a reset?
-                //Reset(true);
-                isActiveTab = value;
-                RaisePropertyChanged(() => IsActiveTab);
-            }
-        }
         private string _inputCoordinate;
         public string InputCoordinate
         {
@@ -137,16 +109,16 @@ namespace CoordinateConversionLibrary.ViewModels
             {
                 if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg, 
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg,
                         CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
                     System.Windows.Forms.MessageBox.Show(e.Message);
                 }
-                
+
             }
-            
+
         }
 
         public virtual void OnImportCSVFileCommand(object obj)
@@ -167,13 +139,21 @@ namespace CoordinateConversionLibrary.ViewModels
                 using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     var headers = ImportCSV.GetHeaders(s);
-                    foreach (var header in headers)
+                    if (headers != null)
                     {
-                        fieldVM.AvailableFields.Add(header);
-                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
-                    }
+                        foreach (var header in headers)
+                        {
+                            fieldVM.AvailableFields.Add(header);
+                            System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                        }
 
-                    dlg.DataContext = fieldVM;
+                        dlg.DataContext = fieldVM;
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                        return;
+                    }
                 }
                 if (dlg.ShowDialog() == true)
                 {
@@ -207,7 +187,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public virtual bool OnNewMapPoint(object obj)
         {
-            return IsActiveTab;
+            return true;
         }
 
         private void OnMouseMoveInternal(object obj)
@@ -217,21 +197,9 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public virtual bool OnMouseMove(object obj)
         {
-            return IsActiveTab;
+            return true;
         }
 
-        /// <summary>
-        /// Handler for the tab item selected event
-        /// Helps keep track of which tab item/viewmodel is active
-        /// </summary>
-        /// <param name="obj">bool if selected or not</param>
-        private void OnTabItemSelected(object obj)
-        {
-            if (obj == null)
-                return;
-
-            IsActiveTab = (obj == this);
-        }
     }
 
     public class ImportCoordinatesList

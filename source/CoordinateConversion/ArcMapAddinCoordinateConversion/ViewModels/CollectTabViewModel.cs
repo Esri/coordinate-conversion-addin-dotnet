@@ -596,6 +596,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var coordinates = new List<string>();
             foreach (var item in lines)
             {
+                if (item.Trim() == "")
+                    continue;
                 var sb = new StringBuilder();
                 sb.Append(item.Trim());
                 coordinates.Add(sb.ToString());

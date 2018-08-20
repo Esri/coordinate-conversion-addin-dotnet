@@ -326,13 +326,21 @@ namespace ProAppCoordConversionModule.ViewModels
                 using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     var headers = ImportCSV.GetHeaders(s);
-                    foreach (var header in headers)
+                    if (headers != null)
                     {
-                        fieldVM.AvailableFields.Add(header);
-                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
-                    }
+                        foreach (var header in headers)
+                        {
+                            fieldVM.AvailableFields.Add(header);
+                            System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                        }
 
-                    dlg.DataContext = fieldVM;
+                        dlg.DataContext = fieldVM;
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                        return;
+                    }
                 }
                 if (dlg.ShowDialog() == true)
                 {

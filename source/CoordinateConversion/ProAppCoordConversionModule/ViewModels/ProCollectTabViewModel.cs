@@ -409,6 +409,8 @@ namespace ProAppCoordConversionModule.ViewModels
             var coordinates = new List<string>();
             foreach (var item in lines)
             {
+                if (item.Trim() == "")
+                    continue;
                 var sb = new StringBuilder();
                 sb.Append(item.Trim());
                 coordinates.Add(sb.ToString());
@@ -421,6 +423,12 @@ namespace ProAppCoordConversionModule.ViewModels
 
         internal override void OnFlashPointCommandAsync(object obj)
         {
+            if (MapView.Active == null)
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                return;
+            }
+
             if (ListBoxItemAddInPoint != null)
             {
                 var geometry = ListBoxItemAddInPoint.Point;
