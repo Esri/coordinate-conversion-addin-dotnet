@@ -133,7 +133,7 @@ namespace CoordinateConversionLibrary.Models
                         return false;
 
                     if (latValue < 90 && longValue < 90)
-                        ambiguousCoordsViewDlg.ShowDialog();
+                        ShowAmbiguousDialog();
                 }
 
                 blnMatchDMSLat = ambiguousCoordsViewDlg.CheckedLatLon;
@@ -261,7 +261,7 @@ namespace CoordinateConversionLibrary.Models
         public override string Format(string format, object arg, IFormatProvider formatProvider)
         {
             if (arg is CoordinateDMS)
-            {       
+            {
                 if (string.IsNullOrWhiteSpace(format))
                 {
                     return this.Format("A0°B0'C0.00\"N X0°Y0'Z0.00\"E", arg, this);
