@@ -377,13 +377,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = ext;
-                sfDlg.Filter = filter;
                 sfDlg.OverwritePrompt = true;
-                sfDlg.Title = title;
-
             }
+
             sfDlg.FileName = "";
+            sfDlg.DefaultExt = ext;
+            sfDlg.Filter = filter;
+            sfDlg.Title = title;
 
             if (sfDlg.ShowDialog() == DialogResult.OK)
             {
