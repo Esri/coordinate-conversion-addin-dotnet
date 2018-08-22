@@ -592,6 +592,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please wait while map loads....
+        /// </summary>
+        public static string LoadMapMsg {
+            get {
+                return ResourceManager.GetString("LoadMapMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         public static string MenuLabelCopy {
@@ -624,6 +633,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string MenuLabelDeleteAll {
             get {
                 return ResourceManager.GetString("MenuLabelDeleteAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data found..
+        /// </summary>
+        public static string MsgNoDataFound {
+            get {
+                return ResourceManager.GetString("MsgNoDataFound", resourceCulture);
             }
         }
         

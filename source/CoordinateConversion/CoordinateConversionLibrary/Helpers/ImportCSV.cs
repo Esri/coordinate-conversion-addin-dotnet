@@ -77,7 +77,7 @@ namespace CoordinateConversionLibrary.Helpers
             List<T> list = new List<T>();
             using (StreamReader reader = new StreamReader(stream))
             {
-                string line = reader.ReadLine();
+                string line = reader.ReadLine().Trim();
                 if (line.Contains("sep="))
                     line = reader.ReadLine();
                 if (string.IsNullOrEmpty(line))

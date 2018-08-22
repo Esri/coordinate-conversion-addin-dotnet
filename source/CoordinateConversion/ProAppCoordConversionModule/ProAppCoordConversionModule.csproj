@@ -145,11 +145,15 @@
       <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
+    <Compile Include="ViewModels\ProAmbiguousCoordsViewModel.cs" />
     <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
     <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
     <Compile Include="ViewModels\ProOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
+    <Compile Include="Views\ProAmbiguousCoordsView.xaml.cs">
+      <DependentUpon>ProAmbiguousCoordsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProEditOutputCoordinateView.xaml.cs">
       <DependentUpon>ProEditOutputCoordinateView.xaml</DependentUpon>
     </Compile>
@@ -182,6 +186,10 @@
     <Page Include="UI\FlashEmbeddedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProAmbiguousCoordsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ProEditOutputCoordinateView.xaml">
       <SubType>Designer</SubType>

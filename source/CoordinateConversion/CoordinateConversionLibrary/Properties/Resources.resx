@@ -375,4 +375,10 @@
   <data name="KMLLocationMessage" xml:space="preserve">
     <value>Choose location to create KMZ file</value>
   </data>
+  <data name="LoadMapMsg" xml:space="preserve">
+    <value>Please wait while map loads...</value>
+  </data>
+  <data name="MsgNoDataFound" xml:space="preserve">
+    <value>No data found.</value>
+  </data>
 </root>

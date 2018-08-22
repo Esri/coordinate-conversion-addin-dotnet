@@ -38,8 +38,6 @@ namespace ProAppCoordConversionModule.ViewModels
             CollectTabView.DataContext = new ProCollectTabViewModel();
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
-
-            IsActiveTab = true;
         }
 
         public InputCoordinateConversionView InputCCView { get; set; }
@@ -76,6 +74,12 @@ namespace ProAppCoordConversionModule.ViewModels
 
         internal override async void OnFlashPointCommandAsync(object obj)
         {
+            if (MapView.Active == null)
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                return;
+            }
+
             // Don't allow updating of the inputs or outputs while flashpoint is happening
             CoordinateMapTool.AllowUpdates = false;
 

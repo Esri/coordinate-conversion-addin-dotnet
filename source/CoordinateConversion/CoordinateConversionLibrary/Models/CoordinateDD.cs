@@ -114,10 +114,9 @@ namespace CoordinateConversionLibrary.Models
                         return false;
 
                     if (latValue < 90 && longValue < 90)
-                        ambiguousCoordsViewDlg.ShowDialog();
+                        ShowAmbiguousDialog();
                 }
-
-                blnMatchDDLat = ambiguousCoordsViewDlg.CheckedLatLon;
+                blnMatchDDLat = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             }
 
             // Lat/Lon
