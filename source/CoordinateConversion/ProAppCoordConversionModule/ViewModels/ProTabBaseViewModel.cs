@@ -801,6 +801,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
+            CoordinateDD.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             if (CoordinateDD.TryParse(input, out dd, true))
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
@@ -940,6 +941,16 @@ namespace ProAppCoordConversionModule.ViewModels
             return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
         }
 
+        public static void ShowAmbiguousEventHandler(object sender, AmbiguousEventArgs e)
+        {
+            if (e.IsEventHandled)
+            {
+                var ambiguous = new ProAmbiguousCoordsView();
+                ambiguous.DataContext = new ProAmbiguousCoordsViewModel();
+                ambiguous.ShowDialog();
+                e.IsEventHandled = false;
+            }
+        }
         #endregion Private Methods
 
     }

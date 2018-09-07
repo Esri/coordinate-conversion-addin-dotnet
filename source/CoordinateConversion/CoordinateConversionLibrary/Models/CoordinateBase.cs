@@ -12,7 +12,7 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
 using CoordinateConversionLibrary.Views;
 using System;
@@ -90,6 +90,43 @@ namespace CoordinateConversionLibrary.Models
             }
 
             return string.Empty;
+        }
+
+        public delegate void delShowAmbiguousEventHandler(object sender, AmbiguousEventArgs e);
+        public static event delShowAmbiguousEventHandler ShowAmbiguousEventHandler;
+        public static bool IsEventAttached { get; set; }
+
+        public static void ShowAmbiguousEvent()
+        {
+            var handler = ShowAmbiguousEventHandler;
+            if (handler != null)
+            {
+                var eventArgs = new AmbiguousEventArgs() { IsEventHandled = true };
+                handler(typeof(CoordinateBase), eventArgs);
+                IsEventAttached = true;
+            }
+            else
+            {
+                IsEventAttached = false;
+            }
+        }
+
+        public static void ShowAmbiguousDialog()
+        {
+            CoordinateDD.ShowAmbiguousEvent();
+            if (!CoordinateDD.IsEventAttached)
+                ambiguousCoordsViewDlg.ShowDialog();
+        }
+
+    }
+    public class AmbiguousEventArgs : EventArgs
+    {
+        private bool _isEventHandled;
+
+        public bool IsEventHandled
+        {
+            get { return _isEventHandled; }
+            set { _isEventHandled = value; }
         }
     }
 }
