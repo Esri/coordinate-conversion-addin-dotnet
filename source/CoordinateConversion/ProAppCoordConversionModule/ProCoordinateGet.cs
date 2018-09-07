@@ -12,7 +12,7 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
@@ -22,6 +22,7 @@ using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary;
 using System;
+using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule
 {
@@ -247,8 +248,13 @@ namespace ProAppCoordConversionModule
                     default:
                         break;
                 }
+                if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
+                {
+                    ProcessData processData = new ProcessData();
+                    result = processData.ProcessInput(result);
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return "NA";

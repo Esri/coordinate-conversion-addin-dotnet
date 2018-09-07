@@ -120,9 +120,11 @@
     <Compile Include="Helpers\MapPointHelper.cs" />
     <Compile Include="Models\AddInPoint.cs" />
     <Compile Include="Models\CCProGraphic.cs" />
+    <Compile Include="Models\ColorCollection.cs" />
     <Compile Include="Models\FeatureClassUtils.cs" />
     <Compile Include="Models\KMLUtils.cs" />
     <Compile Include="Models\ProGraphic.cs" />
+    <Compile Include="Models\Symbol.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="PropertiesButton.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
     <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
     <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
+    <Compile Include="ViewModels\ProEditPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ProOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />

@@ -1,44 +1,47 @@
-﻿// Copyright 2016 Esri 
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+﻿
+using ArcGIS.Core.CIM;
+using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
-using System;
-using System.Collections.Generic;
+using ProAppCoordConversionModule.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
-
-namespace CoordinateConversionLibrary.ViewModels
+using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Core;
+using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Threading.Tasks;
+using System;
+namespace ProAppCoordConversionModule.ViewModels
 {
-    public class EditPropertiesViewModel : BaseViewModel
+    class ProEditPropertiesViewModel : ProTabBaseViewModel
     {
-        public EditPropertiesViewModel()
+        public ProEditPropertiesViewModel()
         {
             IsInitialCall = true;
-            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
-            OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
-            CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
+
             FormatList = new ObservableCollection<string>() { "One", "Two", "Three", "Four", "Five", "Six", "Custom" };
             Sample = "Sample";
             var removedType = new string[] { "Custom", "None" };
             IsEnableExpander = false;
             var coordinateCollections = Enum.GetValues(typeof(CoordinateTypes)).Cast<CoordinateTypes>().Where(x => !removedType.Contains(x.ToString()));
             CoordinateTypeCollections = new ObservableCollection<CoordinateTypes>(coordinateCollections);
-
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
+
+            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+            OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
+            CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
+            SearchResultCommand = new RelayCommand(OnSearchResultCommand);
+            SelectedButtonCommand = new RelayCommand(OnSelectedButtonCommand);
+            CancelButtonCommand = new RelayCommand(OnCancelButtonCommand);
+            ApplyButtonCommand = new RelayCommand(OnApplyButtonCommand);
             FormatSelection = CoordinateConversionLibraryConfig.AddInConfig.FormatSelection;
             if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
             {
@@ -53,11 +56,151 @@ namespace CoordinateConversionLibrary.ViewModels
                 FormatExpanded = false;
                 IsEnableExpander = false;
             }
+            var symbolCollections = GetSymbolCollection();
+            SymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
+            AllSymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
+            SelectedStyleItem = (SelectedSymbolObject == null) ? SymbolCollections.FirstOrDefault() : SelectedSymbolObject;
+            SelectedSymbolText = SelectedStyleItem.SymbolText;
+            ColorPickerCollection = new ObservableCollection<PropertyInfo>(typeof(System.Windows.Media.Brushes).GetProperties());
+            SelectedColor = (SelectedColorObject == null) ? ColorPickerCollection.Where(x => x.Name == "Red").FirstOrDefault() : SelectedColorObject;
+            SelectedBrush = (System.Windows.Media.Brush)SelectedColor.GetValue(null, null);
             IsInitialCall = false;
         }
 
+
         public bool IsInitialCall { get; set; }
+
+        private bool _isPopUpOpen;
+        public bool IsPopUpOpen
+        {
+            get { return _isPopUpOpen; }
+            set
+            {
+                _isPopUpOpen = value;
+                RaisePropertyChanged(() => IsPopUpOpen);
+            }
+        }
+
+        private ObservableCollection<PropertyInfo> _colorPickerCollection { get; set; }
+        public ObservableCollection<PropertyInfo> ColorPickerCollection
+        {
+            get
+            {
+                return _colorPickerCollection;
+            }
+            set
+            {
+                _colorPickerCollection = value;
+                RaisePropertyChanged(() => ColorPickerCollection);
+            }
+        }
+
+        private PropertyInfo _selectedColor { get; set; }
+        public PropertyInfo SelectedColor
+        {
+            get
+            {
+                return _selectedColor;
+            }
+            set
+            {
+                _selectedColor = value;
+                if (SelectedStyleItem != null)
+                {
+                    QueuedTask.Run(() =>
+                    {
+                        SelectedBrush = (System.Windows.Media.Brush)SelectedColor.GetValue(null, null);
+                        var sym = ((ArcGIS.Core.CIM.CIMPointSymbol)(SelectedStyleItem.SymbolItem.Symbol));
+                        var _color = ((System.Windows.Media.SolidColorBrush)(SelectedBrush)).Color;
+                        sym.SetColor(CIMColor.CreateRGBColor(_color.R, _color.G, _color.B));
+                        SelectedStyleItem.SymbolItem.Symbol = sym;
+                        var image = SelectedStyleItem.SymbolItem.PreviewImage;
+                        SelectedSymbolImage = SelectedStyleItem.SymbolItem.PreviewImage as BitmapImage;
+                        SelectedSymbolText = SelectedStyleItem.SymbolText;
+                    });
+                }
+                IsPopUpOpen = false;
+                RaisePropertyChanged(() => SelectedColor);
+            }
+        }
+        private System.Windows.Media.Brush _selectedBrush;
+        public System.Windows.Media.Brush SelectedBrush
+        {
+            get { return _selectedBrush; }
+            set
+            {
+                _selectedBrush = value;
+                RaisePropertyChanged(() => SelectedBrush);
+            }
+        }
+
+        private BitmapImage _selectedSymbolImage { get; set; }
+        public BitmapImage SelectedSymbolImage
+        {
+            get
+            {
+                return _selectedSymbolImage;
+            }
+            set
+            {
+                _selectedSymbolImage = value;
+                RaisePropertyChanged(() => SelectedSymbolImage);
+            }
+        }
+        private string _selectedSymbolText { get; set; }
+        public string SelectedSymbolText
+        {
+            get
+            {
+                return _selectedSymbolText;
+            }
+            set
+            {
+                _selectedSymbolText = value;
+                RaisePropertyChanged(() => SelectedSymbolText);
+            }
+        }
+
+        private Symbol _selectedStyleItem { get; set; }
+        public Symbol SelectedStyleItem
+        {
+            get
+            {
+                return _selectedStyleItem;
+            }
+            set
+            {
+                _selectedStyleItem = value;
+                QueuedTask.Run(() =>
+                {
+                    var sym = ((ArcGIS.Core.CIM.CIMPointSymbol)(value.SymbolItem.Symbol));
+                    var _color = ((System.Windows.Media.SolidColorBrush)(SelectedBrush)).Color;
+                    sym.SetColor(CIMColor.CreateRGBColor(_color.R, _color.G, _color.B));
+                    value.SymbolItem.Symbol = sym;
+                    SelectedSymbolImage = value.SymbolItem.PreviewImage as BitmapImage;
+                    SelectedSymbolText = value.SymbolText;
+                });
+            }
+        }
+
+        public ObservableCollection<Symbol> AllSymbolCollections;
+
+        private ObservableCollection<Symbol> _symbolCollections;
+        public ObservableCollection<Symbol> SymbolCollections
+        {
+            get { return _symbolCollections; }
+            set
+            {
+                _symbolCollections = value;
+                RaisePropertyChanged(() => SymbolCollections);
+            }
+        }
+
+        public RelayCommand SelectedButtonCommand { get; set; }
+        public RelayCommand SearchResultCommand { get; set; }
         public RelayCommand OKButtonPressedCommand { get; set; }
+        public RelayCommand CancelButtonCommand { get; set; }
+        public RelayCommand ApplyButtonCommand { get; set; }
         public RelayCommand CancelButtonPressedCommand { get; set; }
         private ObservableCollection<CoordinateTypes> _coordinateTypeCollections;
         public ObservableCollection<CoordinateTypes> CoordinateTypeCollections
@@ -72,7 +215,6 @@ namespace CoordinateConversionLibrary.ViewModels
                 RaisePropertyChanged(() => CoordinateTypeCollections);
             }
         }
-
 
         private CoordinateTypes _selectedCoordinateType { get; set; }
         public CoordinateTypes SelectedCoordinateType
@@ -91,7 +233,6 @@ namespace CoordinateConversionLibrary.ViewModels
                 RaisePropertyChanged(() => SelectedCoordinateType);
             }
         }
-
         private string _format = string.Empty;
         public string Format
         {
@@ -172,8 +313,10 @@ namespace CoordinateConversionLibrary.ViewModels
                 RaisePropertyChanged(() => IsEnableExpander);
             }
         }
-        public bool DisplayAmbiguousCoordsDlg { get; set; }
+
         public ObservableCollection<DefaultFormatModel> DefaultFormats { get; set; }
+
+        public bool DisplayAmbiguousCoordsDlg { get; set; }
 
         private bool? dialogResult = null;
         public bool? DialogResult
@@ -186,6 +329,35 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
+        private ObservableCollection<Symbol> _symbols;
+        public ObservableCollection<Symbol> Symbols
+        {
+            get
+            {
+                return _symbols;
+            }
+            set
+            {
+                _symbols = value;
+                RaisePropertyChanged(() => Symbols);
+            }
+        }
+
+        private ObservableCollection<ColorCollection> _popupDataCollections;
+
+        public ObservableCollection<ColorCollection> PopupDataCollections
+        {
+            get { return _popupDataCollections; }
+            set
+            {
+                _popupDataCollections = value;
+                RaisePropertyChanged(() => PopupDataCollections);
+            }
+        }
+
+
+        public string SearchString { get; set; }
+
         /// <summary>
         /// Handler for when someone closes the dialog with the OK button
         /// </summary>
@@ -193,7 +365,6 @@ namespace CoordinateConversionLibrary.ViewModels
         private void OnOkButtonPressedCommand(object obj)
         {
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
-
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
             if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
@@ -222,9 +393,68 @@ namespace CoordinateConversionLibrary.ViewModels
             DialogResult = true;
         }
 
+        private void OnSelectedButtonCommand(object obj)
+        {
+            IsPopUpOpen = !IsPopUpOpen;
+        }
+
+        private void OnSearchResultCommand(object obj)
+        {
+            if (SearchString != "")
+                SymbolCollections = new ObservableCollection<Symbol>(SymbolCollections.Where(x => x.SymbolText.ToLower().Contains(SearchString.ToLower())));
+            else
+                SymbolCollections = new ObservableCollection<Symbol>(AllSymbolCollections);
+        }
+
+        private void OnCancelButtonCommand(object obj)
+        {
+            DialogResult = true;
+        }
+
+        private void OnApplyButtonCommand(object obj)
+        {
+            SelectedSymbolObject = SelectedStyleItem;
+            SelectedColorObject = SelectedColor;
+            DialogResult = true;
+            SelectedSymbol = SelectedStyleItem;
+            UpdateHighlightedGraphics(true, true);
+        }
+
+        private ObservableCollection<Symbol> GetSymbolCollection()
+        {
+            QueuedTask.Run(() =>
+            {
+                Is3DMap = IsView3D();
+                var mapType = Is3DMap ? "ArcGIS 3D" : "ArcGIS 2D";
+                SymbolCollections = new ObservableCollection<Symbol>();
+                var container = Project.Current.GetItems<StyleProjectItem>();
+                var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
+                var itemList = styleProjectItems.GetItems();
+                var symbolNames = itemList.Select(x => x.Name);
+                var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
+                foreach (var name in symbolNames)
+                {
+                    var symbolQuery = lstSymbols.Select(x => styleProjectItems.SearchSymbols(x, name));
+                    var listCollection = symbolQuery.SelectMany(x => x.Select(y => y));
+                    foreach (var listItem in listCollection)
+                    {
+                        var image = listItem.PreviewImage;
+                        var symbolImage = image as BitmapImage;
+                        var wSource = symbolImage;
+                        var wImage = new System.Windows.Controls.Image { Source = wSource };
+                        Canvas.SetLeft(wImage, 20);
+                        Canvas.SetTop(wImage, 20);
+                        var variable = new Symbol() { SymbolImage = symbolImage, SymbolText = listItem.Name, SymbolItem = listItem };
+                        SymbolCollections.Add(variable);
+                    }
+                }
+            }).Wait();
+            return SymbolCollections;
+        }
+
         private void OnFormatSelectionChanged()
         {
-            if (FormatSelection != Properties.Resources.CustomString)
+            if (FormatSelection != CoordinateConversionLibrary.Properties.Resources.CustomString)
             {
                 _format = GetFormatFromDefaults();
                 UpdateSample();
@@ -244,7 +474,7 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
             if (item == null)
-                return Properties.Resources.StringNoFormatFound;
+                return CoordinateConversionLibrary.Properties.Resources.StringNoFormatFound;
             return item.DefaultNameFormatDictionary.Select(x => x.Value).FirstOrDefault();
         }
         private CoordinateType GetCoordinateType()
@@ -351,12 +581,13 @@ namespace CoordinateConversionLibrary.ViewModels
 
             if (list == null)
                 return;
+
             if (selectedCoordinateType != CoordinateType.Default.ToString())
-                list.Add(Properties.Resources.CustomString);
+                list.Add(CoordinateConversionLibrary.Properties.Resources.CustomString);
 
             FormatList = list;
             if ((
-                (!FormatList.Contains(FormatSelection) || FormatSelection == Properties.Resources.CustomString)
+                (!FormatList.Contains(FormatSelection) || FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
                 && !CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                 )
             {
@@ -427,7 +658,8 @@ namespace CoordinateConversionLibrary.ViewModels
                 }
             }
 
-            return Properties.Resources.CustomString;
+            return CoordinateConversionLibrary.Properties.Resources.CustomString;
         }
     }
 }
+

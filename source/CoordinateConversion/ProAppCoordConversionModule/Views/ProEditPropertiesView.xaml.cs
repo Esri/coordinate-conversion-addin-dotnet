@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ProAppCoordConversionModule.Helpers;
+using System.Windows.Controls;
 
 namespace CoordinateConversionLibrary.Views
 {
@@ -10,6 +11,10 @@ namespace CoordinateConversionLibrary.Views
         public ProEditPropertiesView()
         {
             InitializeComponent();
+            /*
+             To avoid pro crash issue when you select custom format and select point from point tool
+             */
+            ProcessData processData = new ProcessData();
         }
     }
 }

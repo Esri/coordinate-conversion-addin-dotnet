@@ -32,6 +32,7 @@ using System.Windows;
 using System.IO;
 using CoordinateConversionLibrary.ViewModels;
 using CoordinateConversionLibrary.Models;
+using System.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -39,8 +40,8 @@ namespace ProAppCoordConversionModule.ViewModels
     {
         public ProCollectTabViewModel()
         {
-            ListBoxItemAddInPoint = null;
-
+            ListBoxItemAddInPoint = null; 
+            
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
@@ -89,7 +90,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void ClearListBoxSelection()
         {
-            this.UpdateHighlightedGraphics(true);
+            UpdateHighlightedGraphics(true);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
@@ -108,10 +109,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public AddInPoint ListBoxItemAddInPoint { get; set; }
-
-        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
-
+        public AddInPoint ListBoxItemAddInPoint { get; set; }        
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
         {
@@ -119,12 +117,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 // we are using this to know when the selection changes
-                // setting null will allow this setter to be called in multiple selection mode
+                // setting null will allow this setter to be called in multiple selection mode                
                 _ListBoxSelectedItem = null;
                 RaisePropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
-                this.UpdateHighlightedGraphics(false);
+                UpdateHighlightedGraphics(false);
             }
         }
 
@@ -309,54 +307,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // copy to clipboard
                 System.Windows.Clipboard.SetText(sb.ToString());
             }
-        }
-
-        private async void UpdateHighlightedGraphics(bool reset)
-        {
-            var list = ProGraphicsList.ToList();
-            foreach (var proGraphic in list)
-            {
-                var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == proGraphic.GUID);
-
-                if (aiPoint != null)
-                {
-                    var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
-                    if (s == null)
-                        return;
-
-                    var doUpdate = false;
-
-                    if (s == null)
-                        continue;
-
-                    if (aiPoint.IsSelected)
-                    {
-                        if (reset)
-                        {
-                            s.HaloSize = 0;
-                            aiPoint.IsSelected = false;
-                        }
-                        else
-                            s.HaloSize = 2;
-                        doUpdate = true;
-                    }
-                    else if (s.HaloSize > 0)
-                    {
-                        s.HaloSize = 0;
-                        doUpdate = true;
-                    }
-
-                    if (doUpdate)
-                    {
-                        var result = await QueuedTask.Run(() =>
-                        {
-                            var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
-                            return temp;
-                        });
-                    }
-                }
-            }
-        }
+        }        
 
         private async void AddCollectionPoint(MapPoint point)
         {
@@ -459,6 +410,47 @@ namespace ProAppCoordConversionModule.ViewModels
                 CoordinateAddInPoints.Add(item);
         }
 
+        public override async void OnMapPointSelection(object obj)
+        {         
+            var mp = obj as MapPoint;
+            var poly = GeometryEngine.Instance.Buffer(mp, 20000);
+            AddInPoint closestPoint = null;
+            Double distance = 0;
+            foreach (var item in ProCollectTabViewModel.CoordinateAddInPoints)
+            {
+                //item.IsSelected = false;
+                var isWithinExtent = await IsPointWithinExtent(item.Point, poly.Extent);
+                var result = GeometryEngine.Instance.NearestPoint(item.Point, mp);
+                distance = (distance < result.Distance && distance > 0) ? distance : result.Distance;
+                if (isWithinExtent)
+                {
+                    if (result.Distance == distance)
+                    {
+                        closestPoint = item;
+                        distance = result.Distance;
+                    }
+                }
+            }
+            if (closestPoint != null)
+            {
+                closestPoint.IsSelected = true;
+                ListBoxSelectedItem = closestPoint;
+            }
+            RaisePropertyChanged(() => ListBoxSelectedItem);           
+        }
+
         #endregion overrides
+
+        internal async Task<bool> IsPointWithinExtent(MapPoint point, Envelope env)
+        {
+            var result = await QueuedTask.Run(() =>
+            {
+                Geometry projectedPoint = GeometryEngine.Instance.Project(point, env.SpatialReference);
+
+                return GeometryEngine.Instance.Contains(env, projectedPoint);
+            });
+
+            return result;
+        }
     }
 }

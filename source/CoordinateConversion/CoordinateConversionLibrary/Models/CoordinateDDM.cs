@@ -227,6 +227,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
+                    }
                     return this.Format("A-0°B0.0000' X-0°Y0.0000'", arg, this);
                 }
                 else

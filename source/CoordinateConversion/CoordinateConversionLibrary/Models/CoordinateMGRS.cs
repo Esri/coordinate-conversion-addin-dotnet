@@ -163,6 +163,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
+                    }
                     return this.Format("ZSX00000Y00000", arg, this);
                 }
                 else

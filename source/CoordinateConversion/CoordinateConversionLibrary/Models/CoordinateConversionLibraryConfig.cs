@@ -36,7 +36,7 @@ namespace CoordinateConversionLibrary.Models
 
         public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
 
-        private CoordinateTypes displayCoordinateType = CoordinateTypes.None;
+        private CoordinateTypes displayCoordinateType = CoordinateTypes.DDM;
         public CoordinateTypes DisplayCoordinateType
         {
             get { return displayCoordinateType; }
@@ -44,6 +44,17 @@ namespace CoordinateConversionLibrary.Models
             {
                 displayCoordinateType = value;
                 RaisePropertyChanged(() => DisplayCoordinateType);
+            }
+        }
+
+        private bool isCustomFormat = false;
+        public bool IsCustomFormat
+        {
+            get { return isCustomFormat; }
+            set
+            {
+                isCustomFormat = value;
+                RaisePropertyChanged(() => IsCustomFormat);
             }
         }
 
@@ -57,6 +68,9 @@ namespace CoordinateConversionLibrary.Models
                 RaisePropertyChanged(() => DisplayAmbiguousCoordsDlg);
             }
         }
+
+        public string CategorySelection { get; set; }
+        public string FormatSelection { get; set; }
 
         public ObservableCollection<OutputCoordinateModel> OutputCoordinateList { get; set; }
         public ObservableCollection<DefaultFormatModel> DefaultFormatList { get; set; }
@@ -134,6 +148,7 @@ namespace CoordinateConversionLibrary.Models
 
         private void LoadSomeDefaults()
         {
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.Default, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456 -40.123456", "Y0.0##### X0.0#####" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456N 40.123456W", "Y0.0#####N X0.0#####E" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.1234'N 40° 18.1234'W", "A0° B0.0###'N X0° Y0.0###'E" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", "A0° B0' C0.0#\"N X0° Y0' Z0.0#\"E" } } });

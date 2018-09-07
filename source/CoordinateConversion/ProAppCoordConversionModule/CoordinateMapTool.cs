@@ -27,6 +27,7 @@ namespace ProAppCoordConversionModule
     internal class CoordinateMapTool : MapTool
     {
         public static bool AllowUpdates = true;
+        public static bool SelectFeatureEnable = false;
 
         public CoordinateMapTool()
         {
@@ -53,7 +54,14 @@ namespace ProAppCoordConversionModule
         {
             var mp = geometry as MapPoint;
 
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
+            if (SelectFeatureEnable)
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, mp);
+            }
+            else
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
+            }
 
             return base.OnSketchCompleteAsync(geometry);
         }
@@ -130,7 +138,7 @@ namespace ProAppCoordConversionModule
 
                     Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
                 }
-            } 
+            }
         }
 
         /// <summary>
@@ -151,7 +159,8 @@ namespace ProAppCoordConversionModule
                         try
                         {
                             // for now we will always project to WGS84
-                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None
+                                && CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.Default)
                                 temp = GeometryEngine.Instance.Project(temp, SpatialReferences.WGS84) as MapPoint;
 
                             return temp;
@@ -168,7 +177,7 @@ namespace ProAppCoordConversionModule
                     if (!ListHasItems)
                         Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
                 }
-            } 
+            }
         }
     }
 }

@@ -12,13 +12,14 @@
   *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
   *   See the License for the specific language governing permissions and 
   *   limitations under the License. 
-  ******************************************************************************/ 
+  ******************************************************************************/
 
 using System;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Models;
+using ArcMapAddinCoordinateConversion.ValueConverters;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -226,7 +227,7 @@ namespace ArcMapAddinCoordinateConversion
                 }
                 catch { /* Creation Failed */ }
             }
-            
+
             if (sr == null)
                 return;
 
@@ -279,9 +280,14 @@ namespace ArcMapAddinCoordinateConversion
                         default:
                             break;
                     }
+                    if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
+                    {
+                        ProcessData processData = new ProcessData();
+                        result = processData.ProcessInput(result);
+                    }
                 }
             }
-            catch 
+            catch
             {
                 return "NA";
             }

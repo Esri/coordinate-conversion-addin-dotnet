@@ -264,6 +264,10 @@ namespace CoordinateConversionLibrary.Models
             {       
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
+                    }
                     return this.Format("A0°B0'C0.00\"N X0°Y0'Z0.00\"E", arg, this);
                 }
                 else
@@ -275,6 +279,10 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
+                    bool isHyphenFirstCharacter = false;
+
+                    if (format.Trim().StartsWith("-"))
+                        isHyphenFirstCharacter = true;
 
                     foreach (char c in format)
                     {
@@ -329,8 +337,17 @@ namespace CoordinateConversionLibrary.Models
                                     sb.Append("+");
                                 break;
                             case '-':
-                                if (cnum < 0.0)
+                                if (isHyphenFirstCharacter)
+                                {
+                                    if (cnum < 0.0)
+                                        sb.Append("-");
+
+                                    isHyphenFirstCharacter = false;
+                                }
+                                else
+                                {
                                     sb.Append("-");
+                                }
                                 break;
                             case 'N': // N or S
                             case 'S':
