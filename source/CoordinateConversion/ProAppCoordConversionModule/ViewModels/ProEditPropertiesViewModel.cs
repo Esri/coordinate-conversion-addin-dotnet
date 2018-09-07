@@ -171,15 +171,18 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _selectedStyleItem = value;
-                QueuedTask.Run(() =>
+                if (value != null)
                 {
-                    var sym = ((ArcGIS.Core.CIM.CIMPointSymbol)(value.SymbolItem.Symbol));
-                    var _color = ((System.Windows.Media.SolidColorBrush)(SelectedBrush)).Color;
-                    sym.SetColor(CIMColor.CreateRGBColor(_color.R, _color.G, _color.B));
-                    value.SymbolItem.Symbol = sym;
-                    SelectedSymbolImage = value.SymbolItem.PreviewImage as BitmapImage;
-                    SelectedSymbolText = value.SymbolText;
-                });
+                    QueuedTask.Run(() =>
+                    {
+                        var sym = ((ArcGIS.Core.CIM.CIMPointSymbol)(value.SymbolItem.Symbol));
+                        var _color = ((System.Windows.Media.SolidColorBrush)(SelectedBrush)).Color;
+                        sym.SetColor(CIMColor.CreateRGBColor(_color.R, _color.G, _color.B));
+                        value.SymbolItem.Symbol = sym;
+                        SelectedSymbolImage = value.SymbolItem.PreviewImage as BitmapImage;
+                        SelectedSymbolText = value.SymbolText;
+                    });
+                }
             }
         }
 
@@ -401,7 +404,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnSearchResultCommand(object obj)
         {
             if (SearchString != "")
-                SymbolCollections = new ObservableCollection<Symbol>(SymbolCollections.Where(x => x.SymbolText.ToLower().Contains(SearchString.ToLower())));
+                SymbolCollections = new ObservableCollection<Symbol>(AllSymbolCollections.Where(x => x.SymbolText.ToLower().Contains(SearchString.ToLower())));
             else
                 SymbolCollections = new ObservableCollection<Symbol>(AllSymbolCollections);
         }

@@ -328,6 +328,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public override void OnEditPropertiesDialogCommand(object obj)
         {
+            //Get the active map view.
+            var mapView = MapView.Active;
+            if (mapView == null)
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                return;
+            }
+
             var dlg = new ProEditPropertiesView();
             dlg.DataContext = new ProEditPropertiesViewModel();
             try
