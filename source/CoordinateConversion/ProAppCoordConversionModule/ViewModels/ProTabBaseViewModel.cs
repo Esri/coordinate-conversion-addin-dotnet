@@ -36,6 +36,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using ProAppCoordConversionModule.Views;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
