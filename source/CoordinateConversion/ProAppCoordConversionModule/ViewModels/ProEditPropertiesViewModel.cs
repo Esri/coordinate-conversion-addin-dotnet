@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using System;
+using System.Windows.Threading;
+using System.Windows;
 namespace ProAppCoordConversionModule.ViewModels
 {
     class ProEditPropertiesViewModel : ProTabBaseViewModel
@@ -24,7 +26,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public ProEditPropertiesViewModel()
         {
             IsInitialCall = true;
-
+            ArrowRotation = 0M;
             FormatList = new ObservableCollection<string>() { "One", "Two", "Three", "Four", "Five", "Six", "Custom" };
             Sample = "Sample";
             var removedType = new string[] { "Custom", "None" };
@@ -34,7 +36,8 @@ namespace ProAppCoordConversionModule.ViewModels
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
 
             DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
-            SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            //SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            SelectedCoordinateType = CoordinateTypeCollections.FirstOrDefault();
             DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
             CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
@@ -56,15 +59,62 @@ namespace ProAppCoordConversionModule.ViewModels
                 FormatExpanded = false;
                 IsEnableExpander = false;
             }
-            var symbolCollections = GetSymbolCollection();
-            SymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
-            AllSymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
-            SelectedStyleItem = (SelectedSymbolObject == null) ? SymbolCollections.FirstOrDefault() : SelectedSymbolObject;
-            SelectedSymbolText = SelectedStyleItem.SymbolText;
-            ColorPickerCollection = new ObservableCollection<PropertyInfo>(typeof(System.Windows.Media.Brushes).GetProperties());
-            SelectedColor = (SelectedColorObject == null) ? ColorPickerCollection.Where(x => x.Name == "Red").FirstOrDefault() : SelectedColorObject;
-            SelectedBrush = (System.Windows.Media.Brush)SelectedColor.GetValue(null, null);
+            if (AllSymbolCollection == null)
+                AllSymbolCollection = new Dictionary<string, ObservableCollection<Symbol>>();
             IsInitialCall = false;
+        }
+
+        private Visibility _showLoadingProcess;
+
+        public Visibility ShowLoadingProcess
+        {
+            get { return _showLoadingProcess; }
+            set
+            {
+                _showLoadingProcess = value;
+                ShowControls = (value == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+                RaisePropertyChanged(() => ShowLoadingProcess);
+            }
+        }
+
+        private Visibility _showControls;
+
+        public Visibility ShowControls
+        {
+            get { return _showControls; }
+            set
+            {
+                _showControls = value;
+                RaisePropertyChanged(() => ShowControls);
+            }
+        }
+
+
+
+        private decimal _arrowRotation;
+
+        public decimal ArrowRotation
+        {
+            get { return _arrowRotation; }
+            set
+            {
+                _arrowRotation = value;
+                RaisePropertyChanged(() => ArrowRotation);
+            }
+        }
+
+
+        private int _selectedTabIndex;
+
+        public int SelectedTabIndex
+        {
+            get { return _selectedTabIndex; }
+            set
+            {
+                _selectedTabIndex = value;
+                OnTabSelectionChanged();
+                RaisePropertyChanged(() => SelectedTabIndex);
+            }
         }
 
 
@@ -77,6 +127,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _isPopUpOpen = value;
+                ArrowRotation = _isPopUpOpen ? 180 : 0;
                 RaisePropertyChanged(() => IsPopUpOpen);
             }
         }
@@ -423,36 +474,52 @@ namespace ProAppCoordConversionModule.ViewModels
             UpdateHighlightedGraphics(true, true);
         }
 
-        private ObservableCollection<Symbol> GetSymbolCollection()
+        private async Task<ObservableCollection<Symbol>> GetSymbolCollection()
         {
-            QueuedTask.Run(() =>
-            {
-                Is3DMap = IsView3D();
-                var mapType = Is3DMap ? "ArcGIS 3D" : "ArcGIS 2D";
-                SymbolCollections = new ObservableCollection<Symbol>();
-                var container = Project.Current.GetItems<StyleProjectItem>();
-                var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
-                var itemList = styleProjectItems.GetItems();
-                var symbolNames = itemList.Select(x => x.Name);
-                var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
-                foreach (var name in symbolNames)
-                {
-                    var symbolQuery = lstSymbols.Select(x => styleProjectItems.SearchSymbols(x, name));
-                    var listCollection = symbolQuery.SelectMany(x => x.Select(y => y));
-                    foreach (var listItem in listCollection)
-                    {
-                        var image = listItem.PreviewImage;
-                        var symbolImage = image as BitmapImage;
-                        var wSource = symbolImage;
-                        var wImage = new System.Windows.Controls.Image { Source = wSource };
-                        Canvas.SetLeft(wImage, 20);
-                        Canvas.SetTop(wImage, 20);
-                        var variable = new Symbol() { SymbolImage = symbolImage, SymbolText = listItem.Name, SymbolItem = listItem };
-                        SymbolCollections.Add(variable);
-                    }
-                }
-            }).Wait();
-            return SymbolCollections;
+            return await QueuedTask.Run(() =>
+                 {
+                     var View3D = "ArcGIS 3D";
+                     var View2D = "ArcGIS 2D";
+                     Is3DMap = IsView3D();
+                     var mapType = Is3DMap ? View3D : View2D;
+                     if (AllSymbolCollection.Count == 0 || AllSymbolCollection.Where(x => x.Key == mapType).Count() == 0)
+                     {
+
+                         SymbolCollections = new ObservableCollection<Symbol>();
+                         var container = Project.Current.GetItems<StyleProjectItem>();
+                         var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
+                         var itemList = styleProjectItems.GetItems();
+                         var symbolNames = itemList.Select(x => x.Name);
+                         var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
+                         foreach (var name in symbolNames)
+                         {
+                             var symbolQuery = lstSymbols.Select(x => styleProjectItems.SearchSymbols(x, name));
+                             var listCollection = symbolQuery.SelectMany(x => x.Select(y => y));
+                             foreach (var listItem in listCollection)
+                             {
+                                 var image = listItem.PreviewImage;
+                                 var symbolImage = image as BitmapImage;
+                                 var wSource = symbolImage;
+                                 var wImage = new System.Windows.Controls.Image { Source = wSource };
+                                 Canvas.SetLeft(wImage, 20);
+                                 Canvas.SetTop(wImage, 20);
+                                 var variable = new Symbol() { SymbolImage = symbolImage, SymbolText = listItem.Name, SymbolItem = listItem };
+
+                                 Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() =>
+                                 {
+                                     SymbolCollections.Add(variable);
+                                 }));
+                             }
+                         }
+
+                         AllSymbolCollection.Add(mapType, SymbolCollections);
+                     }
+                     else
+                     {
+                         SymbolCollections = AllSymbolCollection.Where(x => x.Key == mapType).FirstOrDefault().Value;
+                     }
+                     return SymbolCollections;
+                 });
         }
 
         private void OnFormatSelectionChanged()
@@ -662,6 +729,23 @@ namespace ProAppCoordConversionModule.ViewModels
             }
 
             return CoordinateConversionLibrary.Properties.Resources.CustomString;
+        }
+
+        private async void OnTabSelectionChanged()
+        {
+            if (SelectedTabIndex == 1)
+            {
+                ShowLoadingProcess = Visibility.Visible;
+                var symbolCollections = await GetSymbolCollection();
+                SymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
+                AllSymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
+                SelectedStyleItem = (SelectedSymbolObject == null) ? SymbolCollections.FirstOrDefault() : SelectedSymbolObject;
+                SelectedSymbolText = SelectedStyleItem.SymbolText;
+                ColorPickerCollection = new ObservableCollection<PropertyInfo>(typeof(System.Windows.Media.Brushes).GetProperties());
+                SelectedColor = (SelectedColorObject == null) ? ColorPickerCollection.Where(x => x.Name == "Red").FirstOrDefault() : SelectedColorObject;
+                SelectedBrush = (System.Windows.Media.Brush)SelectedColor.GetValue(null, null);
+                ShowLoadingProcess = Visibility.Collapsed;
+            }
         }
     }
 }

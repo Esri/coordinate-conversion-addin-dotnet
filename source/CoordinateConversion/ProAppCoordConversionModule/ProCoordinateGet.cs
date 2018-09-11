@@ -250,8 +250,8 @@ namespace ProAppCoordConversionModule
                 }
                 if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                 {
-                    ProcessData processData = new ProcessData();
-                    result = processData.ProcessInput(result);
+                    InputFormatHelper inputFormatHelper = new InputFormatHelper();
+                    result = inputFormatHelper.ProcessInput(result);
                 }
             }
             catch (Exception ex)

@@ -14,7 +14,7 @@
              Title="{x:Static prop:Resources.TitleEditProperties}"
              SizeToContent="WidthAndHeight"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
-                          d:DesignHeight="350" d:DesignWidth="370">
+                          d:DesignHeight="750" d:DesignWidth="370">
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -55,7 +55,7 @@
             <Setter Property="Background" Value="{DynamicResource Esri_DialogFrameBackgroundBrush}"/>
         </Style>
     </controls:ProWindow.Style>
-    <TabControl>
+    <TabControl SelectedIndex="{Binding SelectedTabIndex}">
         <TabItem>
             <TabItem.Header>
                 <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
@@ -123,83 +123,124 @@
                 <TextBlock Text="Symbology" 
                    Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
             </TabItem.Header>
-            <Grid>
+            <Grid MinHeight="350" MinWidth="330">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="searchBox" HorizontalAlignment="Stretch" Height="23" Margin="10,10,171,0" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Grid.Row="1"/>
-                <Button Content="Search" HorizontalAlignment="Stretch" Margin="160,10,21,0" VerticalAlignment="Top" Width="120" Height="24" Grid.Row="1"
-                Command="{Binding SearchResultCommand}" Style="{DynamicResource Esri_Button}" >
-                </Button>
-                <ListBox x:Name="symbolListBox" Margin="10,40,0,10" Grid.Row="1"   
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Visibility="{Binding ShowLoadingProcess}">
+                        <ProgressBar Name="pbStatus" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top"
+                            IsIndeterminate="True" Height="12" Margin="20,20,20,10"/>
+                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Loading..."
+                                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
+                                    Visibility="{Binding ShowControls}" ToolTip="{Binding SelectedSymbolText}">
+                        <TextBlock Text="Selected Symbol" />
+                        <Image Source="{Binding SelectedSymbolImage}" Height="40" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding SelectedSymbolText}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
+                                    Visibility="{Binding ShowControls}">
+                        <TextBlock Text="Selected Color" HorizontalAlignment="Left" />
+                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="Choose Color">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Fill="{Binding SelectedBrush}" HorizontalAlignment="Center" Height="25"  Width="25"
+                                                   Stroke="White" StrokeThickness="3" VerticalAlignment="Center" Grid.Column="1">
+                                        </Rectangle>
+                                        <Image Source="../Images/DownArrow.png" Height="9" Width="9" 
+                        	                        Canvas.ZIndex="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                                            <Image.LayoutTransform>
+                                                <RotateTransform Angle="{Binding ArrowRotation}"/>
+                                            </Image.LayoutTransform>
+                                        </Image>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Vertical" Visibility="{Binding ShowControls}" Grid.Row="1">
+                    <Popup IsOpen="{Binding IsPopUpOpen}" StaysOpen="False" Width="360" Height="280" VerticalOffset="-15" >
+                        <ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="colorList" 
+                             ItemsSource="{Binding ColorPickerCollection}" SelectedItem="{Binding SelectedColor}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Fill="{Binding Name}" Width="20" Height="20" Stroke="#FF211E1E" OpacityMask="Black" StrokeThickness="1" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Popup>
+                </StackPanel>
+                <GroupBox Grid.Row="2" Header="Choose Symbol" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--<TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Search Symbol" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,220" Grid.Row="1" />-->
+                        <TextBox x:Name="searchBox" Height="23" Width="260" Text="{Binding SearchString, Mode=TwoWay}" Grid.Column="0"/>
+                        <Button Content="Search" VerticalAlignment="Top" Height="24" Grid.Column="1"
+                        Command="{Binding SearchResultCommand}" Style="{DynamicResource Esri_Button}" />
+                        <ListBox x:Name="symbolListBox" Grid.Row="1"   Grid.ColumnSpan="2"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                          Width="350" Height="200"
                  ItemsSource="{Binding SymbolCollections}"
                  ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}"
                  SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,2" Height="64"  ToolTip="{Binding Name}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Source="{Binding SymbolImage}" HorizontalAlignment="Center" Stretch="None" VerticalAlignment="Top"/>
-                                <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{Binding SymbolText}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <StackPanel Orientation="Vertical" >
-                    <Popup Grid.Row="2" IsOpen="{Binding IsPopUpOpen}" StaysOpen="False" Height="250">
-                        <Grid Width="360" Height="330">
-                            <ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,81" 
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="colorList" 
-                             ItemsSource="{Binding ColorPickerCollection}" SelectedItem="{Binding SelectedColor}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Rectangle Fill="{Binding Name}" Width="20" Height="20" Stroke="#FF211E1E" OpacityMask="Black" StrokeThickness="1" />
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Grid>
-                    </Popup>
-                </StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Width="60" Height="60" Margin="5,0,0,0" HorizontalAlignment="Left">
-                        <Image Source="{Binding SelectedSymbolImage}" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{Binding SelectedSymbolText}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Width="100" Height="60" Margin="5,0,0,0" HorizontalAlignment="Left">
-                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Width="100">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Rectangle Fill="{Binding SelectedBrush}" HorizontalAlignment="Left" Height="40"
-                                   Stroke="Black" VerticalAlignment="Top" Width="60"
-                                   Grid.Column="1"/>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Selected Color" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-                    </StackPanel>
-                </Grid>
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2" Height="64"  ToolTip="{Binding Name}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="{Binding SymbolImage}" HorizontalAlignment="Center" Stretch="None" VerticalAlignment="Top" Grid.Row="0"/>
+                                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{Binding SymbolText}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding ShowControls}">
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
                             Command="{Binding ApplyButtonCommand}">Apply</Button>
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"

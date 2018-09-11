@@ -117,6 +117,7 @@
       <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
     </Compile>
     <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
+    <Compile Include="Helpers\InputFormatHelper.cs" />
     <Compile Include="Helpers\MapPointHelper.cs" />
     <Compile Include="Models\AddInPoint.cs" />
     <Compile Include="Models\CCProGraphic.cs" />
@@ -256,6 +257,9 @@
     <AddInContent Include="Images\coordinate-conversion-32.png" />
     <AddInContent Include="DarkImages\coordinate-conversion-16.png" />
     <AddInContent Include="DarkImages\coordinate-conversion-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DownArrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />

@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="ContextMenuCommands.cs" />
     <Compile Include="Helpers\ArcMapHelpers.cs" />
+    <Compile Include="Helpers\InputFormatHelper.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MapPointTool.cs" />
     <Compile Include="Models\AddInPoint.cs" />

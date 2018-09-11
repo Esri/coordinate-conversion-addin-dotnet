@@ -64,6 +64,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
         public static PropertyInfo SelectedColorObject { get; set; }

@@ -14,7 +14,7 @@ namespace CoordinateConversionLibrary.Views
             /*
              To avoid pro crash issue when you select custom format and select point from point tool
              */
-            ProcessData processData = new ProcessData();
+            InputFormatHelper inputFormatHelper = new InputFormatHelper();
         }
     }
 }

@@ -38,7 +38,8 @@ namespace CoordinateConversionLibrary.ViewModels
             CoordinateTypeCollections = new ObservableCollection<CoordinateTypes>(coordinateCollections);
 
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
-            SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            //SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
+            SelectedCoordinateType = CoordinateTypeCollections.FirstOrDefault();
             FormatSelection = CoordinateConversionLibraryConfig.AddInConfig.FormatSelection;
             if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
             {

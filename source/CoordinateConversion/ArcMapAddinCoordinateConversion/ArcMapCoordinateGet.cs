@@ -14,12 +14,12 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using System;
-using ESRI.ArcGIS.Geometry;
-using CoordinateConversionLibrary.Helpers;
+using ArcMapAddinCoordinateConversion.Helpers;
 using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
-using ArcMapAddinCoordinateConversion.ValueConverters;
+using ESRI.ArcGIS.Geometry;
+using System;
 
 namespace ArcMapAddinCoordinateConversion
 {
@@ -282,8 +282,8 @@ namespace ArcMapAddinCoordinateConversion
                     }
                     if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                     {
-                        ProcessData processData = new ProcessData();
-                        result = processData.ProcessInput(result);
+                        InputFormatHelper inputFormatHelper = new InputFormatHelper();
+                        result = inputFormatHelper.ProcessInput(result);
                     }
                 }
             }
