@@ -36,7 +36,7 @@ namespace CoordinateConversionLibrary.Models
 
         public static CoordinateConversionLibraryConfig AddInConfig = new CoordinateConversionLibraryConfig();
 
-        private CoordinateTypes displayCoordinateType = CoordinateTypes.DDM;
+        private CoordinateTypes displayCoordinateType = CoordinateTypes.Default;
         public CoordinateTypes DisplayCoordinateType
         {
             get { return displayCoordinateType; }
@@ -123,7 +123,7 @@ namespace CoordinateConversionLibrary.Models
                 if (temp == null)
                     return;
 
-                DisplayCoordinateType = temp.DisplayCoordinateType;
+                //DisplayCoordinateType = temp.DisplayCoordinateType;
                 DisplayAmbiguousCoordsDlg = temp.DisplayAmbiguousCoordsDlg;
                 OutputCoordinateList = temp.OutputCoordinateList;
                 DefaultFormatList = temp.DefaultFormatList;

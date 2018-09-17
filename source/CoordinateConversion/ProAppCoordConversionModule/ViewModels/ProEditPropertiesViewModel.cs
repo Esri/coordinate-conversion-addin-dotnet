@@ -35,9 +35,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateTypeCollections = new ObservableCollection<CoordinateTypes>(coordinateCollections);
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
 
-            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
-            //SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
-            SelectedCoordinateType = CoordinateTypeCollections.FirstOrDefault();
+            SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
             DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
             CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
