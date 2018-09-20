@@ -377,13 +377,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 sfDlg = new SaveFileDialog();
                 sfDlg.AddExtension = true;
                 sfDlg.CheckPathExists = true;
-                sfDlg.DefaultExt = ext;
-                sfDlg.Filter = filter;
                 sfDlg.OverwritePrompt = true;
-                sfDlg.Title = title;
-
             }
+
             sfDlg.FileName = "";
+            sfDlg.DefaultExt = ext;
+            sfDlg.Filter = filter;
+            sfDlg.Title = title;
 
             if (sfDlg.ShowDialog() == DialogResult.OK)
             {
@@ -596,6 +596,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var coordinates = new List<string>();
             foreach (var item in lines)
             {
+                if (item.Trim() == "")
+                    continue;
                 var sb = new StringBuilder();
                 sb.Append(item.Trim());
                 coordinates.Add(sb.ToString());

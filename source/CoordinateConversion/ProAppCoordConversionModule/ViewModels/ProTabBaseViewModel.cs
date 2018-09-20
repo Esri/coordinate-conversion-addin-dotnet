@@ -30,6 +30,7 @@ using CoordinateConversionLibrary.Views;
 using System.IO;
 using System.Text;
 using System.Linq;
+using ProAppCoordConversionModule.Views;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -326,13 +327,21 @@ namespace ProAppCoordConversionModule.ViewModels
                 using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     var headers = ImportCSV.GetHeaders(s);
-                    foreach (var header in headers)
+                    if (headers != null)
                     {
-                        fieldVM.AvailableFields.Add(header);
-                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
-                    }
+                        foreach (var header in headers)
+                        {
+                            fieldVM.AvailableFields.Add(header);
+                            System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                        }
 
-                    dlg.DataContext = fieldVM;
+                        dlg.DataContext = fieldVM;
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                        return;
+                    }
                 }
                 if (dlg.ShowDialog() == true)
                 {
@@ -646,6 +655,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
+            CoordinateDD.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             if (CoordinateDD.TryParse(input, out dd, true))
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
@@ -785,6 +795,16 @@ namespace ProAppCoordConversionModule.ViewModels
             return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
         }
 
+        public static void ShowAmbiguousEventHandler(object sender, AmbiguousEventArgs e)
+        {
+            if (e.IsEventHandled)
+            {
+                var ambiguous = new ProAmbiguousCoordsView();
+                ambiguous.DataContext = new ProAmbiguousCoordsViewModel();
+                ambiguous.ShowDialog();
+                e.IsEventHandled = false;
+            }
+        }
         #endregion Private Methods
 
     }

@@ -1,0 +1,46 @@
+﻿<controls:ProWindow x:Class="ProAppCoordConversionModule.Views.ProAmbiguousCoordsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
+             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
+             xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
+             xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
+             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
+             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             Title="Ambiguous Coordinates" 
+             WindowStartupLocation="CenterScreen"
+             SizeToContent="WidthAndHeight"          
+             helpers:DialogCloser.DialogResult="{Binding DialogResult}"
+             ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Cursor="Arrow" Topmost="True"
+             d:Height="210" d:Width="280">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <viewModels:EditOutputCoordinateViewModel x:Key="viewModelEdit" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="176,91,0,0" VerticalAlignment="Top" Width="75"
+                RenderTransformOrigin="-0.131,-6.576" Command="{Binding OKButtonPressedCommand}" 
+                IsCancel="False" Style="{DynamicResource Esri_Button}"/>
+        <TextBlock x:Name="txtAmbCoords" HorizontalAlignment="Left" Height="41" Margin="10,6,0,0" TextWrapping="Wrap" 
+                 Text="Ambiguous coordinates have been entered.  Please choose from the following:" 
+                 VerticalAlignment="Top" Width="241" IsEnabled="False" />
+        <RadioButton x:Name="rbLatLon" Content="Lat / Lon" HorizontalAlignment="Left" 
+                     Margin="10,52,0,0" VerticalAlignment="Top" IsChecked="{Binding Path=CheckedLatLon, Mode=TwoWay}" />
+        <RadioButton x:Name="rbLonLat" Content="Lon / Lat" HorizontalAlignment="Left" 
+                     Margin="10,73,0,0" VerticalAlignment="Top" IsChecked="{Binding Path=CheckedLonLat, Mode=TwoWay}" />
+        <Separator HorizontalAlignment="Left" Height="9" Margin="0,122,0,0" VerticalAlignment="Top" Width="274" RenderTransformOrigin="0.215,-1.033"/>
+        <CheckBox x:Name="cbDontShowAgain" Content="Don't show me this message again" 
+                  HorizontalAlignment="Left" Margin="10,139,10,10" VerticalAlignment="Top" 
+                  RenderTransformOrigin="0.471,1.312" 
+                  IsChecked="{Binding IsDontShowAgainChecked}"
+                  Command="{Binding DontShowAgainCommand}"/>
+    </Grid>
+</controls:ProWindow>

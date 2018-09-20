@@ -45,9 +45,6 @@ namespace ProAppCoordConversionModule
             ConvertTabView = new CCConvertTabView();
             ConvertTabView.DataContext = new ProConvertTabViewModel();
 
-            CollectTabView = new CCCollectTabView();
-            CollectTabView.DataContext = new ProCollectTabViewModel();
-
             MapSelectionChangedEvent.Subscribe(OnSelectionChanged);
         }
 
@@ -59,28 +56,6 @@ namespace ProAppCoordConversionModule
         private const string _dockPaneID = "ProAppCoordConversionModule_CoordinateConversionDockpane";
         
         public CCConvertTabView ConvertTabView { get; set; }
-        public CCCollectTabView CollectTabView { get; set; }
-
-        object selectedTab = null;
-        public object SelectedTab
-        {
-            get { return selectedTab; }
-            set
-            {
-                if (selectedTab == value)
-                    return;
-
-                selectedTab = value;
-                var tabItem = selectedTab as TabItem;
-                if(tabItem != null && tabItem.Content != null && ((tabItem.Content as UserControl).Content != null))
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.TAB_ITEM_SELECTED, ((tabItem.Content as UserControl).Content as UserControl).DataContext);
-                //TODO let the other viewmodels determine what to do when tab selection changes
-                if (tabItem.Header.ToString() == CoordinateConversionLibrary.Properties.Resources.HeaderCollect)
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Collect);
-                else
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetToolMode, MapPointToolMode.Convert);
-            }
-        }
 
         /// <summary>
         /// Show the DockPane.

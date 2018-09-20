@@ -32,10 +32,8 @@ namespace CoordinateConversionLibrary
         public const string SetListBoxItemAddInPoint = "SET_LISTBOX_ITEM_ADDINPOINT";
         public const string NewMapPointSelection = "NEW_MAP_POINT_SELECTION";
         public const string SetCoordinateGetter = "SET_COORDINATE_GETTER";
-        public const string SetToolMode = "SET_TOOL_MODE";
         public const string NEW_MAP_POINT = "NEW_MAP_POINT";
         public const string MOUSE_MOVE_POINT = "MOUSE_MOVE_POINT";
-        public const string TAB_ITEM_SELECTED = "TAB_ITEM_SELECTED";
         public const string IMPORT_COORDINATES = "IMPORT_COORDINATES";
         public const string CollectListHasItems = "COLLECT_LIST_HAS_ITEMS";
     }
