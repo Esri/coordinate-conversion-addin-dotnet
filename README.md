@@ -70,10 +70,9 @@ Coordinate Conversion allows analysts to input and quickly convert coordinates b
 * [Coordinate Conversion online documentation](http://solutions.arcgis.com/defense/help/coordinate-conversion/)
 * [Military Tools for ArcGIS](https://esri.github.io/military-tools-desktop-addins/)
 * [Military Tools for ArcGIS Solutions Pages](http://solutions.arcgis.com/defense/help/military-tools/)
-* [ArcGIS for Defense Solutions Website](http://solutions.arcgis.com/defense)
 * [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
-* [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
+* [ArcGIS Solutions Website](http://solutions.arcgis.com/)
 
 ## Issues
 
