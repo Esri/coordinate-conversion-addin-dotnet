@@ -50,44 +50,68 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public ObservableCollection<string> InputCoordinateHistoryList { get; set; }
 
+        private bool isToolActive = false;
         public bool IsToolActive
         {
             get
             {
-                if ((ArcMap.Application != null) && (ArcMap.Application.CurrentTool != null))
-                    return ArcMap.Application.CurrentTool.Name.ToLower() == MapPointToolName.ToLower();
-
-                return false;
+                return isToolActive;
             }
 
             set
             {
-                if (value)
-                {
-                    if (ArcMap.Application != null)
-                        CurrentTool = ArcMap.Application.CurrentTool;
-
-                    OnActivateTool(null);
-                }
-                else
-                {
-                    ArcMap.Application.CurrentTool = CurrentTool;
-                }
-
+                isSelectionToolActive = false;
+                RaisePropertyChanged(() => IsSelectionToolActive);
+                MapPointTool.SelectFeatureEnable = false;
+                isToolActive = value;
+                ActivateMapTool(value);
                 RaisePropertyChanged(() => IsToolActive);
-                Mediator.NotifyColleagues("IsMapPointToolActive", value);
             }
         }
+        private bool isSelectionToolActive = false;
+        public bool IsSelectionToolActive
+        {
+            get
+            {
+                return isSelectionToolActive;
+            }
 
+            set
+            {
+                isToolActive = false;
+                RaisePropertyChanged(() => IsToolActive);
+                MapPointTool.SelectFeatureEnable = true;
+                isSelectionToolActive = value;
+                ActivateMapTool(value);
+                RaisePropertyChanged(() => IsSelectionToolActive);
+            }
+        }
+        private void ActivateMapTool(bool active)
+        {
+            string toolToActivate = string.Empty;
+            if (active)
+            {
+                toolToActivate = MapPointToolName;
+                //if (ArcMap.Application != null)
+                //    CurrentTool = ArcMap.Application.CurrentTool;
+            }
+            else
+            {
+                //ArcMap.Application.CurrentTool = CurrentTool;
+                toolToActivate = "esriCore.PanTool";
+            }
+            OnActivateTool(toolToActivate);
+        }
         /// <summary>
         /// Activates the map tool to get map points from mouse clicks/movement
         /// </summary>
         /// <param name="obj"></param>
         internal void OnActivateTool(object obj)
         {
+            var toolToActivate = obj as String;
             if (ArcMap.LayerCount > 0)
             {
-                SetToolActiveInToolBar(ArcMap.Application, MapPointToolName);
+                SetToolActiveInToolBar(ArcMap.Application, toolToActivate);
             }
             else
             {

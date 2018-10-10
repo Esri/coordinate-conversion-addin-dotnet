@@ -31,14 +31,14 @@ namespace CoordinateConversionLibrary.ViewModels
             HasInputError = false;
             IsHistoryUpdate = true;
             IsToolGenerated = false;
-
+            
             // commands
             EditPropertiesDialogCommand = new RelayCommand(OnEditPropertiesDialogCommand);
             ImportCSVFileCommand = new RelayCommand(OnImportCSVFileCommand);
 
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPointInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
-
+            Mediator.Register(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, OnSelectMapPointInternal);
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
         }
@@ -93,9 +93,9 @@ namespace CoordinateConversionLibrary.ViewModels
             // do nothing
         }
 
-        public virtual void ProcessInput(string input)
+        public virtual string ProcessInput(string input)
         {
-            return;
+            return string.Empty;
         }
 
         public virtual void OnEditPropertiesDialogCommand(object obj)
@@ -185,9 +185,19 @@ namespace CoordinateConversionLibrary.ViewModels
             OnNewMapPoint(obj);
         }
 
+        private void OnSelectMapPointInternal(object obj)
+        {
+            OnMapPointSelection(obj);
+        }
+
         public virtual bool OnNewMapPoint(object obj)
         {
             return true;
+        }
+
+        public virtual void OnMapPointSelection(object obj)
+        {
+
         }
 
         private void OnMouseMoveInternal(object obj)

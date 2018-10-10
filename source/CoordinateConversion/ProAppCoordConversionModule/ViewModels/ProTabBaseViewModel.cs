@@ -30,6 +30,12 @@ using CoordinateConversionLibrary.Views;
 using System.IO;
 using System.Text;
 using System.Linq;
+using CoordinateConversionLibrary;
+using ArcGIS.Desktop.Core;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using System.Reflection;
 using ProAppCoordConversionModule.Views;
 
 namespace ProAppCoordConversionModule.ViewModels
@@ -57,6 +63,15 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
+
+        public static Symbol SelectedSymbolObject { get; set; }
+        public static PropertyInfo SelectedColorObject { get; set; }
+
+        public static bool Is3DMap { get; set; }
+
+        public static Symbol SelectedSymbol { get; set; }
 
         private bool isToolActive = false;
         public bool IsToolActive
@@ -67,38 +82,60 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             set
             {
-                bool active = value;
-
-                string toolToActivate = string.Empty;
-
-                if (active)
-                {
-                    isToolActive = true;
-                    string currentTool = FrameworkApplication.CurrentTool;
-                    if (currentTool != MapPointToolName)
-                    {
-                        // Save previous tool to reactivate
-                        PreviousTool = currentTool;
-                        toolToActivate = MapPointToolName;
-                    }
-                }
-                else
-                {
-                    isToolActive = false;
-
-                    // Handle case if no Previous Tool
-                    if (string.IsNullOrEmpty(PreviousTool))
-                        PreviousTool = "esri_mapping_exploreTool";
-
-                    toolToActivate = PreviousTool;
-                }
-
-                if (!string.IsNullOrEmpty(toolToActivate))
-                {
-                    FrameworkApplication.SetCurrentToolAsync(toolToActivate);
-                }
+                isSelectionToolActive = false;
+                RaisePropertyChanged(() => IsSelectionToolActive);
+                CoordinateMapTool.SelectFeatureEnable = false;
+                isToolActive = value;
+                ActivateMapTool(value);
 
                 RaisePropertyChanged(() => IsToolActive);
+            }
+        }
+
+        public bool isSelectionToolActive = false;
+        public bool IsSelectionToolActive
+        {
+            get
+            {
+                return isSelectionToolActive;
+            }
+            set
+            {
+                isToolActive = false;
+                RaisePropertyChanged(() => IsToolActive);
+                CoordinateMapTool.SelectFeatureEnable = true;
+                isSelectionToolActive = value;
+                ActivateMapTool(value);
+
+                RaisePropertyChanged(() => IsSelectionToolActive);
+            }
+        }
+
+        private void ActivateMapTool(bool active)
+        {
+            string toolToActivate = string.Empty;
+            if (active)
+            {
+                string currentTool = FrameworkApplication.CurrentTool;
+                if (currentTool != MapPointToolName)
+                {
+                    // Save previous tool to reactivate
+                    PreviousTool = currentTool;
+                    toolToActivate = MapPointToolName;
+                }
+            }
+            else
+            {
+                // Handle case if no Previous Tool
+                if (string.IsNullOrEmpty(PreviousTool))
+                    PreviousTool = "esri_mapping_exploreTool";
+
+                toolToActivate = PreviousTool;
+            }
+
+            if (!string.IsNullOrEmpty(toolToActivate))
+            {
+                FrameworkApplication.SetCurrentToolAsync(toolToActivate);
             }
         }
 
@@ -162,16 +199,16 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override void ProcessInput(string input)
+        public override string ProcessInput(string input)
         {
-            if (input == "NA") return;
+            if (input == "NA") return string.Empty;
 
             string result = string.Empty;
             //MapPoint point;
             HasInputError = false;
 
             if (string.IsNullOrWhiteSpace(input))
-                return;
+                return string.Empty;
 
             //var coordType = GetCoordinateType(input, out point);
             // must force non async here to avoid returning to base class early
@@ -197,9 +234,13 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 proCoordGetter.Point = ccc.Point;
                 result = new CoordinateDD(ccc.Point.Y, ccc.Point.X).ToString("", new CoordinateDDFormatter());
+                if (CoordinateBase.InputFormatSelection == CoordinateTypes.Custom.ToString())
+                    CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
+                else
+                    CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
             }
 
-            return;
+            return result;
         }
 
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
@@ -289,8 +330,16 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public override void OnEditPropertiesDialogCommand(object obj)
         {
+            //Get the active map view.
+            var mapView = MapView.Active;
+            if (mapView == null)
+            {
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                return;
+            }
+
             var dlg = new ProEditPropertiesView();
-            dlg.DataContext = new EditPropertiesViewModel();
+            dlg.DataContext = new ProEditPropertiesViewModel();
             try
             {
                 dlg.ShowDialog();
@@ -307,6 +356,18 @@ namespace ProAppCoordConversionModule.ViewModels
                     System.Windows.Forms.MessageBox.Show(e.Message);
                 }
             }
+        }
+
+        public bool IsView3D()
+        {
+            //Get the active map view.
+            var mapView = MapView.Active;
+            if (mapView == null)
+                return false;
+
+            //Return whether the viewing mode is SceneLocal or SceneGlobal
+            return mapView.ViewingMode == ArcGIS.Core.CIM.MapViewingMode.SceneLocal ||
+                   mapView.ViewingMode == ArcGIS.Core.CIM.MapViewingMode.SceneGlobal;
         }
 
         public override void OnImportCSVFileCommand(object obj)
@@ -402,9 +463,16 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             // Update active tool when tool changed so Map Point Tool button push state
             // stays in sync with Pro UI
-            isToolActive = args.CurrentID == MapPointToolName;
-
-            RaisePropertyChanged(() => IsToolActive);
+            if (IsSelectionToolActive)
+            {
+                IsSelectionToolActive = args.CurrentID == MapPointToolName;
+                RaisePropertyChanged(() => IsSelectionToolActive);
+            }
+            else
+            {
+                isToolActive = args.CurrentID == MapPointToolName;
+                RaisePropertyChanged(() => IsToolActive);
+            }
         }
 
         internal async Task<string> AddGraphicToMap(Geometry geom, CIMColor color, bool IsTempGraphic = false, double size = 1.0, string text = "", SimpleMarkerStyle markerStyle = SimpleMarkerStyle.Circle, string tag = "")
@@ -431,7 +499,22 @@ namespace ProAppCoordConversionModule.ViewModels
                     haloSymbol.SetOutlineColor(ColorFactory.Instance.GreenRGB);
                     s.HaloSymbol = haloSymbol;
                     s.HaloSize = 0;
-                    symbol = new CIMSymbolReference() { Symbol = s };
+                    if (SelectedSymbol != null)
+                    {
+                        if (Is3DMap)
+                        {
+                            var symbol3D = ((ArcGIS.Core.CIM.CIMPointSymbol)(SelectedSymbol.SymbolItem.Symbol));
+                            symbol3D.UseRealWorldSymbolSizes = false;
+                            symbol = new CIMSymbolReference() { Symbol = symbol3D };
+                        }
+                        else
+                        {
+                            symbol = new CIMSymbolReference() { Symbol = SelectedSymbol.SymbolItem.Symbol };
+                        }
+
+                    }
+                    else
+                        symbol = new CIMSymbolReference() { Symbol = s };
                 });
             }
             else if (geom.GeometryType == GeometryType.Polyline)
@@ -483,6 +566,71 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
+        }
+
+        internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
+        {
+            var list = ProGraphicsList.ToList();
+            foreach (var proGraphic in list)
+            {
+                var aiPoint = CoordinateAddInPoints.FirstOrDefault(p => p.GUID == proGraphic.GUID);
+                if (aiPoint != null)
+                {
+                    var s = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
+
+                    var doUpdate = false;
+
+                    if (s == null)
+                        continue;
+
+                    if (aiPoint.IsSelected)
+                    {
+                        if (reset)
+                        {
+                            s.HaloSize = 0;
+                            aiPoint.IsSelected = false;
+                        }
+                        else
+                            s.HaloSize = 2;
+                        doUpdate = true;
+                    }
+                    else if (s.HaloSize > 0)
+                    {
+                        s.HaloSize = 0;
+                        doUpdate = true;
+                    }
+
+                    if (doUpdate || isUpdateAll)
+                    {
+                        var result = await QueuedTask.Run(() =>
+                        {
+                            if (SelectedSymbolObject != null)
+                            {
+                                if (Is3DMap)
+                                {
+                                    var symbol3D = ((ArcGIS.Core.CIM.CIMPointSymbol)(SelectedSymbol.SymbolItem.Symbol));
+                                    symbol3D.UseRealWorldSymbolSizes = false;
+                                    proGraphic.SymbolRef.Symbol = symbol3D;
+                                }
+                                else
+                                {
+                                    proGraphic.SymbolRef.Symbol = SelectedSymbolObject.SymbolItem.Symbol;
+                                }
+                                var symbol = proGraphic.SymbolRef.Symbol as CIMPointSymbol;
+                                if (aiPoint.IsSelected)
+                                {
+                                    symbol.HaloSize = 2;
+                                    var haloSymbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.GreenRGB);
+                                    haloSymbol.SetOutlineColor(ColorFactory.Instance.GreenRGB);
+                                    symbol.HaloSymbol = haloSymbol;
+                                }
+                            }
+                            var temp = MapView.Active.UpdateOverlay(proGraphic.Disposable, proGraphic.Geometry, proGraphic.SymbolRef);
+                            return temp;
+                        });
+                    }
+                }
+            }
         }
 
         #region Private Methods
@@ -814,5 +962,6 @@ namespace ProAppCoordConversionModule.ViewModels
         public CCCoordinate() { }
         public CoordinateType Type { get; set; }
         public MapPoint Point { get; set; }
+        public CoordinateBase PointInformation { get; set; }
     }
 }

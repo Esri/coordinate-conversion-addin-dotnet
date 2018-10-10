@@ -13,7 +13,7 @@
              Title="{x:Static prop:Resources.TitleEditProperties}"
              SizeToContent="WidthAndHeight"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
-                          d:DesignHeight="300" d:DesignWidth="300">
+                          d:DesignHeight="350" d:DesignWidth="370">
     <Window.Resources>
         <ResourceDictionary>
             <!--<ResourceDictionary.MergedDictionaries>
@@ -49,29 +49,56 @@
     <StackPanel>
         <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
                    Margin="3,3,0,0" />
-        <ComboBox 
-            ItemsSource="{Binding Source={StaticResource coordinateTypes}}"
-            SelectedItem="{Binding Path=SelectedCoordinateType, Mode=TwoWay}"
-            Height="Auto" 
-            Margin="3,3,0,0" >
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="Black" />
-                </Style>
-            </ComboBox.ItemContainerStyle>
-        </ComboBox>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-            <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{x:Static prop:Resources.LabelCategory}" Margin="3,3,3,3" />
+                    <ListBox 
+                        ItemsSource="{Binding CoordinateTypeCollections}"
+                        SelectedItem="{Binding Path=SelectedCoordinateType, Mode=TwoWay}"
+                         MinWidth="150" Margin="3,3,3,3" />
+                    
+                    <GroupBox Header="Spatial Reference" Visibility="Collapsed">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
+                                <Image Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
+                            </Button>
+                            <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
+                            <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{x:Static prop:Resources.LabelFormats}" Margin="3,3,3,3" />
+                    <ListBox ItemsSource="{Binding FormatList}" 
+                             SelectedItem="{Binding FormatSelection, Mode=TwoWay}" 
+                         MinWidth="150" Margin="3,3,3,3" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static prop:Resources.LabelSample}" Margin="3,3,3,3" />
+                        <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
+                    </StackPanel>
+                    <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}" IsEnabled="{Binding IsEnableExpander}">
+                        <TextBox Text="{Binding Format, UpdateSourceTrigger=PropertyChanged}" MinWidth="150" Margin="3,3,3,3" />
+                    </Expander>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
                     Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{x:Static prop:Resources.ButtonOK}" 
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{x:Static prop:Resources.ButtonOK}" 
                     Command="{Binding OKButtonPressedCommand}" 
                     IsCancel="False"
                     Width="75" Margin="3,8,3,5" />
-            <Button Content="{x:Static prop:Resources.ButtonCancel}" 
+                <Button Content="{x:Static prop:Resources.ButtonCancel}" 
                     IsCancel="True" 
                     Width=" 75" Margin="3,8,3,5" />
+            </StackPanel>
         </StackPanel>
     </StackPanel>
 </Window>

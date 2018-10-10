@@ -77,6 +77,18 @@ namespace ProAppCoordConversionModule.Models
         /// <summary>
         /// Property used to determine if it is selected in the listbox
         /// </summary>
-        public bool IsSelected { get; set; }
+        private bool isSelected = false;
+        public bool IsSelected
+        {
+            get
+            {
+                return isSelected;
+            }
+            set
+            {
+                isSelected = value;
+                RaisePropertyChanged(() => IsSelected);
+            }
+        }
     }
 }

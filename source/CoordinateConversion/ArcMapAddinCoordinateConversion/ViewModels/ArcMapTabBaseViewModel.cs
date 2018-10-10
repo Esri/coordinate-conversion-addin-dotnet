@@ -29,6 +29,7 @@ using System.Windows.Input;
 using ESRI.ArcGIS.Framework;
 using System.Windows.Forms;
 using ArcMapAddinCoordinateConversion.Models;
+using CoordinateConversionLibrary;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -187,9 +188,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        public override void ProcessInput(string input)
+        public override string ProcessInput(string input)
         {
-            if (input == "NA") return;
+            if (input == "NA") return string.Empty;
 
             base.ProcessInput(input);
 
@@ -199,7 +200,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             HasInputError = false;
 
             if (string.IsNullOrWhiteSpace(input))
-                return;
+                return string.Empty;
 
             InputCoordinateType = GetCoordinateType(input, out point);
 
@@ -231,9 +232,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
+                if (CoordinateBase.InputFormatSelection == CoordinateTypes.Custom.ToString())
+                    CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
+                else
+                    CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
             }
 
-            return;
+            return result;
         }
 
         public Dictionary<string, string> GetOutputFormats(AddInPoint input)
@@ -417,7 +422,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 return null;
 
             var tempPoint = (IConversionNotation)new PointClass();
-            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR(); 
             var anotherMGRSstring = mgrs.ToString("", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);

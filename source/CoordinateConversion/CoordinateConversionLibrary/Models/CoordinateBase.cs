@@ -22,6 +22,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public enum CoordinateType
     {
+        Default,
         DD,
         DDM,
         DMS,
@@ -34,6 +35,9 @@ namespace CoordinateConversionLibrary.Models
 
     public class CoordinateBase
     {
+        public static string InputCustomFormat { get; set; }
+        public static string InputFormatSelection { get; set; }
+        public static CoordinateTypes InputCategorySelection { get; set; }
         protected static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
         //public AmbiguousCoordsView AmbiguousCoordsViewDlg()
         //{
