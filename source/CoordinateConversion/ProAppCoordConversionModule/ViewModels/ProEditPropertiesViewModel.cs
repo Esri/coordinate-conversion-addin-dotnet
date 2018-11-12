@@ -87,8 +87,6 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-
-
         private decimal _arrowRotation;
 
         public decimal ArrowRotation
@@ -114,7 +112,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => SelectedTabIndex);
             }
         }
-
 
         public bool IsInitialCall { get; set; }
 
@@ -285,6 +282,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 RaisePropertyChanged(() => SelectedCoordinateType);
             }
         }
+
         private string _format = string.Empty;
         public string Format
         {
@@ -318,6 +316,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
         }
+
         private string _categorySelection = string.Empty;
         public string CategorySelection
         {
@@ -452,7 +451,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnSearchResultCommand(object obj)
         {
-            if (SearchString != "")
+            if (!string.IsNullOrEmpty(SearchString))
                 SymbolCollections = new ObservableCollection<Symbol>(AllSymbolCollections.Where(x => x.SymbolText.ToLower().Contains(SearchString.ToLower())));
             else
                 SymbolCollections = new ObservableCollection<Symbol>(AllSymbolCollections);
@@ -485,7 +484,15 @@ namespace ProAppCoordConversionModule.ViewModels
 
                          SymbolCollections = new ObservableCollection<Symbol>();
                          var container = Project.Current.GetItems<StyleProjectItem>();
+
+                         // Handle edge-case where project has no styles:
+                         if ((container == null) || (container.Count() == 0))
+                             return null;
+
                          var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
+                         if (styleProjectItems == null)
+                             return null;                    
+
                          var itemList = styleProjectItems.GetItems();
                          var symbolNames = itemList.Select(x => x.Name);
                          var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
@@ -735,6 +742,15 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 ShowLoadingProcess = Visibility.Visible;
                 var symbolCollections = await GetSymbolCollection();
+
+                // Handle edge-case where project has no styles:
+                if (symbolCollections == null)
+                {
+                    AllSymbolCollections = new ObservableCollection<Symbol>();
+                    ShowLoadingProcess = Visibility.Collapsed;
+                    return;
+                }
+
                 SymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
                 AllSymbolCollections = new ObservableCollection<Symbol>(symbolCollections);
                 SelectedStyleItem = (SelectedSymbolObject == null) ? SymbolCollections.FirstOrDefault() : SelectedSymbolObject;
