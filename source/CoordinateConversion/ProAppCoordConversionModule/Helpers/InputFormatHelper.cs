@@ -92,8 +92,16 @@ namespace ProAppCoordConversionModule.Helpers
                         break;
                     case CoordinateTypes.MGRS:
                         var pointInformationMGRS = (CoordinateMGRS)ccc.PointInformation;
-                        result = new CoordinateMGRS(pointInformationMGRS.GZD, pointInformationMGRS.GS, pointInformationMGRS.Easting, pointInformationMGRS.Northing)
-                                                    .ToString();
+                        if (ccc.GetType() == typeof(CoordinateMGRS))
+                        {
+                            result = new CoordinateMGRS(pointInformationMGRS.GZD, pointInformationMGRS.GS, pointInformationMGRS.Easting, pointInformationMGRS.Northing)
+                                                        .ToString();
+                        }
+                        else
+                        {
+                            result = new CoordinateMGRS(pointInformationMGRS.GZD, pointInformationMGRS.GS, pointInformationMGRS.Easting, pointInformationMGRS.Northing)
+                                                        .ToString("", new CoordinateMGRSFormatter());
+                        }
                         break;
                     case CoordinateTypes.USNG:
                         var pointInformationUSNG = (CoordinateUSNG)ccc.PointInformation;
@@ -189,7 +197,7 @@ namespace ProAppCoordConversionModule.Helpers
                     point = await QueuedTask.Run(() =>
                     {
                         ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString(), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
                         return tmp;
                     });//.Result;
 
