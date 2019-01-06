@@ -199,24 +199,13 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override string ProcessInput(string input)
+        private string processCoordinate(CCCoordinate ccc)
         {
-            if (input == "NA") return string.Empty;
-
-            string result = string.Empty;
-            //MapPoint point;
-            HasInputError = false;
-
-            if (string.IsNullOrWhiteSpace(input))
+            if (ccc == null)
                 return string.Empty;
 
-            //var coordType = GetCoordinateType(input, out point);
-            // must force non async here to avoid returning to base class early
-            var ccc = QueuedTask.Run(() =>
-            {
-                return GetCoordinateType(input);
-            }).Result;
-
+            HasInputError = false;
+            string result = string.Empty;
 
             if (ccc.Type == CoordinateType.Unknown)
             {
@@ -241,6 +230,34 @@ namespace ProAppCoordConversionModule.ViewModels
             }
 
             return result;
+        }
+
+        public override string ProcessInput(string input)
+        {
+            if (input == "NA") return string.Empty;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Must force non async here to avoid returning to base class early
+            var ccc = QueuedTask.Run(() =>
+            {
+                return GetCoordinateType(input);
+            }).Result;
+
+            return processCoordinate(ccc);
+        }
+
+        public async Task<string> ProcessInputAsync(string input)
+        {
+            if (input == "NA") return string.Empty;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            var ccc = await GetCoordinateType(input);
+
+            return processCoordinate(ccc);
         }
 
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
