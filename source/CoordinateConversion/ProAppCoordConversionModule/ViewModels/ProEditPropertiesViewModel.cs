@@ -468,63 +468,63 @@ namespace ProAppCoordConversionModule.ViewModels
             SelectedColorObject = SelectedColor;
             DialogResult = true;
             SelectedSymbol = SelectedStyleItem;
-            UpdateHighlightedGraphics(true, true);
+            UpdateHighlightedGraphics(false, true);
         }
 
         private async Task<ObservableCollection<Symbol>> GetSymbolCollection()
         {
             return await QueuedTask.Run(() =>
-                 {
-                     var View3D = "ArcGIS 3D";
-                     var View2D = "ArcGIS 2D";
-                     Is3DMap = IsView3D();
-                     var mapType = Is3DMap ? View3D : View2D;
-                     if (AllSymbolCollection.Count == 0 || AllSymbolCollection.Where(x => x.Key == mapType).Count() == 0)
-                     {
+            {
+                var View3D = "ArcGIS 3D";
+                var View2D = "ArcGIS 2D";
+                Is3DMap = IsView3D();
+                var mapType = Is3DMap ? View3D : View2D;
+                if (AllSymbolCollection.Count == 0 || AllSymbolCollection.Where(x => x.Key == mapType).Count() == 0)
+                {
 
-                         SymbolCollections = new ObservableCollection<Symbol>();
-                         var container = Project.Current.GetItems<StyleProjectItem>();
+                    SymbolCollections = new ObservableCollection<Symbol>();
+                    var container = Project.Current.GetItems<StyleProjectItem>();
 
-                         // Handle edge-case where project has no styles:
-                         if ((container == null) || (container.Count() == 0))
-                             return null;
+                    // Handle edge-case where project has no styles:
+                    if ((container == null) || (container.Count() == 0))
+                        return null;
 
-                         var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
-                         if (styleProjectItems == null)
-                             return null;                    
+                    var styleProjectItems = container.Where(style => style.Name == mapType).FirstOrDefault();
+                    if (styleProjectItems == null)
+                        return null;
 
-                         var itemList = styleProjectItems.GetItems();
-                         var symbolNames = itemList.Select(x => x.Name);
-                         var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
-                         foreach (var name in symbolNames)
-                         {
-                             var symbolQuery = lstSymbols.Select(x => styleProjectItems.SearchSymbols(x, name));
-                             var listCollection = symbolQuery.SelectMany(x => x.Select(y => y));
-                             foreach (var listItem in listCollection)
-                             {
-                                 var image = listItem.PreviewImage;
-                                 var symbolImage = image as BitmapImage;
-                                 var wSource = symbolImage;
-                                 var wImage = new System.Windows.Controls.Image { Source = wSource };
-                                 Canvas.SetLeft(wImage, 20);
-                                 Canvas.SetTop(wImage, 20);
-                                 var variable = new Symbol() { SymbolImage = symbolImage, SymbolText = listItem.Name, SymbolItem = listItem };
+                    var itemList = styleProjectItems.GetItems();
+                    var symbolNames = itemList.Select(x => x.Name);
+                    var lstSymbols = new List<StyleItemType>() { StyleItemType.PointSymbol };
+                    foreach (var name in symbolNames)
+                    {
+                        var symbolQuery = lstSymbols.Select(x => styleProjectItems.SearchSymbols(x, name));
+                        var listCollection = symbolQuery.SelectMany(x => x.Select(y => y));
+                        foreach (var listItem in listCollection)
+                        {
+                            var image = listItem.PreviewImage;
+                            var symbolImage = image as BitmapImage;
+                            var wSource = symbolImage;
+                            var wImage = new System.Windows.Controls.Image { Source = wSource };
+                            Canvas.SetLeft(wImage, 20);
+                            Canvas.SetTop(wImage, 20);
+                            var variable = new Symbol() { SymbolImage = symbolImage, SymbolText = listItem.Name, SymbolItem = listItem };
 
-                                 Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() =>
-                                 {
-                                     SymbolCollections.Add(variable);
-                                 }));
-                             }
-                         }
+                            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() =>
+                            {
+                                SymbolCollections.Add(variable);
+                            }));
+                        }
+                    }
 
-                         AllSymbolCollection.Add(mapType, SymbolCollections);
-                     }
-                     else
-                     {
-                         SymbolCollections = AllSymbolCollection.Where(x => x.Key == mapType).FirstOrDefault().Value;
-                     }
-                     return SymbolCollections;
-                 });
+                    AllSymbolCollection.Add(mapType, SymbolCollections);
+                }
+                else
+                {
+                    SymbolCollections = AllSymbolCollection.Where(x => x.Key == mapType).FirstOrDefault().Value;
+                }
+                return SymbolCollections;
+            });
         }
 
         private void OnFormatSelectionChanged()

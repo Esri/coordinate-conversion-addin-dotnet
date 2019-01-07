@@ -38,7 +38,7 @@ namespace CoordinateConversionLibrary.Models
         public static string InputCustomFormat { get; set; }
         public static string InputFormatSelection { get; set; }
         public static CoordinateTypes InputCategorySelection { get; set; }
-        protected static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
+        public static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
         //public AmbiguousCoordsView AmbiguousCoordsViewDlg()
         //{
         //    if (ambiguousCoordsViewDlg == null)

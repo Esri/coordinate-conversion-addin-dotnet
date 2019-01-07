@@ -63,7 +63,7 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 case CoordinateTypes.MGRS:
                     var pointInformationMGRS = (CoordinateMGRS)PointInformation;
                     result = new CoordinateMGRS(pointInformationMGRS.GZD, pointInformationMGRS.GS, pointInformationMGRS.Easting, pointInformationMGRS.Northing)
-                                                .ToString();
+                                               .ToString("", new CoordinateMGRSFormatter());
                     break;
                 case CoordinateTypes.USNG:
                     var pointInformationUSNG = (CoordinateUSNG)PointInformation;
