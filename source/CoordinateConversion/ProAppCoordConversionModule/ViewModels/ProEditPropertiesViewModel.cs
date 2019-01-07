@@ -468,7 +468,7 @@ namespace ProAppCoordConversionModule.ViewModels
             SelectedColorObject = SelectedColor;
             DialogResult = true;
             SelectedSymbol = SelectedStyleItem;
-            UpdateHighlightedGraphics(true, true);
+            UpdateHighlightedGraphics(false, true);
         }
 
         private async Task<ObservableCollection<Symbol>> GetSymbolCollection()
