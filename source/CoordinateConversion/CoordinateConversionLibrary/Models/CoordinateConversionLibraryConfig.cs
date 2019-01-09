@@ -69,6 +69,20 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
+        private bool _isLatLong = true;
+        public bool isLatLong
+        {
+            get
+            {
+                return _isLatLong;
+            }
+            set
+            {
+                _isLatLong = value;
+                RaisePropertyChanged(() => isLatLong);
+            }
+        }
+
         public string CategorySelection { get; set; }
         public string FormatSelection { get; set; }
 
