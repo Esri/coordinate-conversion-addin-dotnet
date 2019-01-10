@@ -33,6 +33,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
         private bool _checkedLatLon;
+        private bool _checkedLonLat;
 
         public bool CheckedLatLon
         {
@@ -40,7 +41,19 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _checkedLatLon = value;
+                _checkedLonLat = !_checkedLatLon;
                 RaisePropertyChanged(() => CheckedLatLon);
+            }
+        }
+
+        public bool CheckedLonLat
+        {
+            get { return _checkedLonLat; }
+            set
+            {
+                _checkedLonLat = value;
+                _checkedLatLon = !_checkedLonLat;
+                RaisePropertyChanged(() => CheckedLonLat);
             }
         }
 

@@ -136,7 +136,7 @@ namespace CoordinateConversionLibrary.Models
                         ShowAmbiguousDialog();
                 }
 
-                blnMatchDMSLat = ambiguousCoordsViewDlg.CheckedLatLon;
+                blnMatchDMSLat = CoordinateConversionLibraryConfig.AddInConfig.isLatLong;
             }
 
             // Lat/Lon

@@ -116,7 +116,7 @@ namespace CoordinateConversionLibrary.Models
                     if (latValue < 90 && longValue < 90)
                         ShowAmbiguousDialog();
                 }
-                blnMatchDDLat = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+                blnMatchDDLat = CoordinateConversionLibraryConfig.AddInConfig.isLatLong;
             }
 
             // Lat/Lon
