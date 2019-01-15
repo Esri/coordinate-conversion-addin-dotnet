@@ -70,7 +70,7 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
-        private void OnImportCoordinates(object obj)
+        private async void OnImportCoordinates(object obj)
         {
             var coordinates = obj as List<string>;
             if (coordinates == null)
@@ -80,7 +80,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             foreach (var coordinate in coordinates)
             {
-                this.ProcessInput(coordinate);
+                await ProcessInputAsync(coordinate);
                 InputCoordinate = coordinate;
                 if (!HasInputError)
                     OnNewMapPoint(proCoordGetter.Point);
