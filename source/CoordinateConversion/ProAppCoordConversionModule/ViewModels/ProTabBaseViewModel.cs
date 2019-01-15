@@ -727,9 +727,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(gars, GeoCoordinateType.GARS);
                     }).Result;
 
                     return CoordinateType.GARS;
@@ -744,9 +742,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(mgrs, GeoCoordinateType.MGRS);
                     }).Result;
 
                     return CoordinateType.MGRS;
@@ -761,9 +757,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(usng, GeoCoordinateType.USNG);
                     }).Result;
 
                     return CoordinateType.USNG;
@@ -778,9 +772,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(utm, GeoCoordinateType.UTM);
                     }).Result;
 
                     return CoordinateType.UTM;
@@ -869,9 +861,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = await QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(gars, GeoCoordinateType.GARS);
                     });//.Result;
 
                     return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
@@ -886,9 +876,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = await QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(mgrs, GeoCoordinateType.MGRS);
                     });//.Result;
 
                     return new CCCoordinate() { Type = CoordinateType.MGRS, Point = point };
@@ -903,9 +891,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = await QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(usng, GeoCoordinateType.USNG);
                     });//.Result;
 
                     return new CCCoordinate() { Type = CoordinateType.USNG, Point = point }; ;
@@ -920,9 +906,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     point = await QueuedTask.Run(() =>
                     {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
-                        return tmp;
+                        return convertToMapPoint(utm, GeoCoordinateType.UTM);
                     });//.Result;
 
                     return new CCCoordinate() { Type = CoordinateType.UTM, Point = point };
@@ -960,6 +944,66 @@ namespace ProAppCoordConversionModule.ViewModels
             return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
         }
 
+        /// <summary>
+        /// Helper function to convert input coordinate to display coordinate. For example, input 
+        /// coordinate can be in MGRS and display coordinate is in DD. This function helps with that 
+        /// conversion
+        /// </summary>
+        /// <param name="cb">Coordinate notation type</param>
+        /// <param name="fromCoordinateType">Input coordinate notation type</param>
+        /// <returns></returns>
+        private MapPoint convertToMapPoint(CoordinateBase cb, GeoCoordinateType fromCoordinateType)
+        {
+            MapPoint retMapPoint = null;
+            //Create WGS84 SR
+            SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+            var coordType = GeoCoordinateType.DD;
+            var succeed = Enum.TryParse(CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType.ToString(), out coordType);
+            if (succeed)
+            {
+                try
+                {
+                    //Create map point from coordinate string
+                    var fromCoord = MapPointBuilder.FromGeoCoordinateString(cb.ToString(), sptlRef, fromCoordinateType);
+                    var geoCoordParam = new ToGeoCoordinateParameter(coordType);
+                    var geoStr = fromCoord.ToGeoCoordinateString(geoCoordParam);
+                    //Convert to map point with correct coordinate notation
+                    retMapPoint = MapPointBuilder.FromGeoCoordinateString(geoStr, sptlRef, coordType);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                IFormatProvider coordinateFormatter = null;
+                switch (fromCoordinateType)
+                {
+                    case GeoCoordinateType.GARS:
+                        coordinateFormatter = new CoordinateGARSFormatter();
+                        break;
+                    case GeoCoordinateType.MGRS:
+                        coordinateFormatter = new CoordinateMGRSFormatter();
+                        break;
+                    case GeoCoordinateType.USNG:
+                        coordinateFormatter = new CoordinateMGRSFormatter();
+                        break;
+                    case GeoCoordinateType.UTM:
+                        coordinateFormatter = new CoordinateUTMFormatter();
+                        break;
+                    default:
+                        Console.WriteLine("Unable to determine coordinate type");
+                        break;
+                };
+                retMapPoint = MapPointBuilder.FromGeoCoordinateString(cb.ToString("", coordinateFormatter), sptlRef, fromCoordinateType, FromGeoCoordinateMode.Default);
+            }
+            return retMapPoint;
+        }
+
+        #endregion Private Methods
+
+        #region Public Static Methods
         public static void ShowAmbiguousEventHandler(object sender, AmbiguousEventArgs e)
         {
             if (e.IsEventHandled)
@@ -972,7 +1016,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 e.IsEventHandled = false;
             }
         }
-        #endregion Private Methods
+        #endregion
 
     }
 
