@@ -104,7 +104,7 @@ namespace CoordinateConversionLibrary.Models
                         ShowAmbiguousDialog();
                 }
 
-                blnMatchDDMLat = ambiguousCoordsViewDlg.CheckedLatLon;
+                blnMatchDDMLat = CoordinateConversionLibraryConfig.AddInConfig.isLatLong; 
             }
 
             // Lat/Lon
@@ -227,6 +227,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
+                    }
                     return this.Format("A-0°B0.0000' X-0°Y0.0000'", arg, this);
                 }
                 else
@@ -238,7 +242,10 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
+                    bool isHyphenFirstCharacter = false;
 
+                    if (format.Trim().StartsWith("-"))
+                        isHyphenFirstCharacter = true;
                     foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
@@ -282,8 +289,17 @@ namespace CoordinateConversionLibrary.Models
                                     sb.Append("+");
                                 break;
                             case '-':
-                                if (cnum < 0.0)
+                                if (isHyphenFirstCharacter)
+                                {
+                                    if (cnum < 0.0)
+                                        sb.Append("-");
+
+                                    isHyphenFirstCharacter = false;
+                                }
+                                else
+                                {
                                     sb.Append("-");
+                                }
                                 break;
                             case 'N': // N or S
                             case 'S':

@@ -116,7 +116,7 @@ namespace CoordinateConversionLibrary.Models
                     if (latValue < 90 && longValue < 90)
                         ShowAmbiguousDialog();
                 }
-                blnMatchDDLat = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+                blnMatchDDLat = CoordinateConversionLibraryConfig.AddInConfig.isLatLong;
             }
 
             // Lat/Lon
@@ -245,6 +245,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat,arg,this);
+                    }
                     return this.Format("Y-0.000000 X-0.000000", arg, this);
                 }
                 else

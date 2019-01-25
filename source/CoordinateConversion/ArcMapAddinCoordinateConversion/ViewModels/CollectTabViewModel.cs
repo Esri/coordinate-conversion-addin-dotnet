@@ -38,8 +38,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
     {
         public CollectTabViewModel()
         {
-            ListBoxItemAddInPoint = null;
-
+            ListBoxItemAddInPoint = null;  
+          
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
@@ -85,7 +85,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
-        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }       
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -638,6 +638,41 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             CoordinateAddInPoints.Clear();
             foreach (var item in list)
                 CoordinateAddInPoints.Add(item);
+        }
+
+        public override void OnMapPointSelection(object obj)
+        {          
+            var mapPoint = obj as IPoint;
+            mapPoint.Project(ArcMap.Document.FocusMap.SpatialReference);
+            ITopologicalOperator topoOp = (ITopologicalOperator)mapPoint;
+            IGeometry p2Bufferd = topoOp.Buffer(20000);
+            AddInPoint closestPoint = null;
+            Double distance = 0;
+
+            if (p2Bufferd == null)
+                return;
+
+            foreach (var item in CollectTabViewModel.CoordinateAddInPoints)
+            {
+                IRelationalOperator rel1 = (IRelationalOperator)item.Point;
+                if (rel1.Within(p2Bufferd))
+                {
+                    var resultDistance = ((IProximityOperator)mapPoint).ReturnDistance((IGeometry)item.Point);
+                    distance = (distance < resultDistance && distance > 0) ? distance : resultDistance;
+
+                    if (resultDistance == distance)
+                    {
+                        closestPoint = item;
+                        distance = resultDistance;
+                    }
+                }
+            }
+            if (closestPoint != null)
+            {
+                closestPoint.IsSelected = true;
+                ListBoxSelectedItem = closestPoint;
+            }
+            RaisePropertyChanged(() => ListBoxSelectedItem);            
         }
 
         #endregion overrides

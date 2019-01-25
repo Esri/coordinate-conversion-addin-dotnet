@@ -22,6 +22,7 @@ namespace CoordinateConversionLibrary.Models
 {
     public enum CoordinateType
     {
+        Default,
         DD,
         DDM,
         DMS,
@@ -34,14 +35,10 @@ namespace CoordinateConversionLibrary.Models
 
     public class CoordinateBase
     {
-        protected static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
-        //public AmbiguousCoordsView AmbiguousCoordsViewDlg()
-        //{
-        //    if (ambiguousCoordsViewDlg == null)
-        //        ambiguousCoordsViewDlg = new AmbiguousCoordsView();
-
-        //    return ambiguousCoordsViewDlg;
-        //}
+        public static string InputCustomFormat { get; set; }
+        public static string InputFormatSelection { get; set; }
+        public static CoordinateTypes InputCategorySelection { get; set; }
+        public static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
 
         // only works with numeric values
         protected static bool ValidateNumericCoordinateMatch(Match m, string[] requiredGroupNames)

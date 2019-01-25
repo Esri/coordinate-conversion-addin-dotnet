@@ -6,7 +6,6 @@
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
              xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-             xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
              xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
              xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -15,7 +14,7 @@
              Title="{x:Static prop:Resources.TitleEditProperties}"
              SizeToContent="WidthAndHeight"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
-                          d:DesignHeight="300" d:DesignWidth="300">
+                          d:DesignHeight="750" d:DesignWidth="370">
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,7 +22,6 @@
                 <!--<ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
             <local:EnumToFriendlyNameConverter x:Key="enumItemsConverter" />
-            <viewModels:EditPropertiesViewModel x:Key="editPropertiesVM" />
             <ObjectDataProvider x:Key="coordinateTypes"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -52,37 +50,208 @@
             </Style>-->
         </ResourceDictionary>
     </controls:ProWindow.Resources>
-    <controls:ProWindow.DataContext>
-        <StaticResourceExtension ResourceKey="editPropertiesVM" />
-    </controls:ProWindow.DataContext>
     <controls:ProWindow.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}">
             <Setter Property="Background" Value="{DynamicResource Esri_DialogFrameBackgroundBrush}"/>
         </Style>
     </controls:ProWindow.Style>
-    <StackPanel Margin="10">
-        <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
+    <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+        <TabItem>
+            <TabItem.Header>
+                <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
                    Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
-        <ComboBox 
-            ItemsSource="{Binding Source={StaticResource coordinateTypes}}"
-            SelectedItem="{Binding Path=SelectedCoordinateType, Mode=TwoWay}"
-            Height="Auto" 
-            Margin="3,3,0,0" Style="{DynamicResource {x:Type ComboBox}}">
-        </ComboBox>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-            <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
+            </TabItem.Header>
+            <StackPanel Margin="10">
+                <TextBlock Text="{x:Static prop:Resources.LabelDisplayCoordinate}" 
+                   Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{x:Static prop:Resources.LabelCategory}" Margin="3,3,3,3" />
+                            <ListBox 
+                        ItemsSource="{Binding CoordinateTypeCollections}"
+                        SelectedItem="{Binding Path=SelectedCoordinateType, Mode=TwoWay}"
+                         MinWidth="150" Margin="3,3,3,3" />
+                            <GroupBox Header="Spatial Reference" Visibility="Collapsed">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
+                                        <Image Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
+                                    </Button>
+                                    <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
+                                    <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>
+                                </Grid>
+                            </GroupBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{x:Static prop:Resources.LabelFormats}" Margin="3,3,3,3" />
+                            <ListBox ItemsSource="{Binding FormatList}" 
+                             SelectedItem="{Binding FormatSelection, Mode=TwoWay}" 
+                         MinWidth="150" Margin="3,3,3,3" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Static prop:Resources.LabelSample}" Margin="3,3,3,3" />
+                                <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
+                            </StackPanel>
+                            <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}" IsEnabled="{Binding IsEnableExpander}">
+                                <TextBox Text="{Binding Format, UpdateSourceTrigger=PropertyChanged}" MinWidth="150" Margin="3,3,3,3" />
+                            </Expander>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
                     Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{x:Static prop:Resources.ButtonOK}" 
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="{x:Static prop:Resources.ButtonOK}" 
                     Command="{Binding OKButtonPressedCommand}" 
                     IsCancel="False"
                     Width="75" Margin="3,8,3,5" 
-                    Style="{DynamicResource Esri_Button}" />
-            <Button Content="{x:Static prop:Resources.ButtonCancel}" 
-                    IsCancel="True" 
-                    Width=" 75" Margin="3,8,3,5"
-                    Style="{DynamicResource Esri_Button}" />
-        </StackPanel>
-    </StackPanel>
+                        Style="{DynamicResource Esri_Button}" />
+                        <Button Content="{x:Static prop:Resources.ButtonCancel}" 
+                    Command="{Binding CancelButtonPressedCommand}" 
+                    Width=" 75" Margin="3,8,3,5" 
+                         Style="{DynamicResource Esri_Button}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Height="23" VerticalAlignment="Top">
+            <TabItem.Header>
+                <TextBlock Text="Symbology" 
+                   Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
+            </TabItem.Header>
+            <Grid MinHeight="350" MinWidth="330">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Visibility="{Binding ShowLoadingProcess}">
+                        <ProgressBar Name="pbStatus" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top"
+                            IsIndeterminate="True" Height="12" Margin="20,20,20,10"/>
+                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Loading..."
+                                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
+                                    Visibility="{Binding ShowControls}" ToolTip="{Binding SelectedSymbolText}">
+                        <TextBlock Text="Selected Symbol" />
+                        <Image Source="{Binding SelectedSymbolImage}" Height="40" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding SelectedSymbolText}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
+                                    Visibility="{Binding ShowControls}">
+                        <TextBlock Text="Selected Color" HorizontalAlignment="Left" />
+                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="Choose Color">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Fill="{Binding SelectedBrush}" HorizontalAlignment="Center" Height="25"  Width="25"
+                                                   Stroke="White" StrokeThickness="3" VerticalAlignment="Center" Grid.Column="1">
+                                        </Rectangle>
+                                        <Image Source="../Images/DownArrow.png" Height="9" Width="9" 
+                        	                        Canvas.ZIndex="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                                            <Image.LayoutTransform>
+                                                <RotateTransform Angle="{Binding ArrowRotation}"/>
+                                            </Image.LayoutTransform>
+                                        </Image>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Vertical" Visibility="{Binding ShowControls}" Grid.Row="1">
+                    <Popup IsOpen="{Binding IsPopUpOpen}" StaysOpen="False" Width="360" Height="280" VerticalOffset="-15" >
+                        <ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="colorList" 
+                             ItemsSource="{Binding ColorPickerCollection}" SelectedItem="{Binding SelectedColor}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Fill="{Binding Name}" Width="20" Height="20" Stroke="#FF211E1E" OpacityMask="Black" StrokeThickness="1" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Popup>
+                </StackPanel>
+                <GroupBox Grid.Row="2" Header="Choose Symbol" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--<TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Search Symbol" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,220" Grid.Row="1" />-->
+                        <TextBox x:Name="searchBox" Height="23" Width="260" Text="{Binding SearchString, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding SearchResultCommand}"/>
+                                <KeyBinding Key="Return" Command="{Binding SearchResultCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Content="Search" VerticalAlignment="Top" Height="24" Grid.Column="1"
+                        Command="{Binding SearchResultCommand}" Style="{DynamicResource Esri_Button}" />
+                        <ListBox x:Name="symbolListBox" Grid.Row="1"   Grid.ColumnSpan="2"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                         Width="350" Height="200"
+                 ItemsSource="{Binding SymbolCollections}"
+                 ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}"
+                 SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2" Height="64"  ToolTip="{Binding Name}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="{Binding SymbolImage}" HorizontalAlignment="Center" Stretch="None" VerticalAlignment="Top" Grid.Row="0"/>
+                                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{Binding SymbolText}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding ShowControls}">
+                    <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
+                            Command="{Binding ApplyButtonCommand}">Apply</Button>
+                    <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
+                            Command="{Binding CancelButtonCommand}">Cancel</Button>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </controls:ProWindow>

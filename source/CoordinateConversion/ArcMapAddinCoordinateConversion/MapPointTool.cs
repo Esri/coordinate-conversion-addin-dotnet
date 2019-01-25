@@ -29,6 +29,7 @@ namespace ArcMapAddinCoordinateConversion
         ISnappingEnvironment m_SnappingEnv = null;
         IPointSnapper m_Snapper = null;
         ISnappingFeedback m_SnappingFeedback = null;
+        public static bool SelectFeatureEnable = false;
 
         public MapPointTool()
         {
@@ -84,7 +85,14 @@ namespace ArcMapAddinCoordinateConversion
                 if (snapResult != null && snapResult.Location != null)
                     point = snapResult.Location;
 
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, point);
+                if (!SelectFeatureEnable)
+                {
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, point);
+                }
+                else
+                {
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, point);
+                }
             }
             catch (Exception ex)
             {
@@ -134,7 +142,8 @@ namespace ArcMapAddinCoordinateConversion
             if (point == null)
                 return null;
 
-            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None)
+            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.None
+                || CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType == CoordinateConversionLibrary.CoordinateTypes.Default)
             {
                 point.SpatialReference = ArcMap.Document.FocusMap.SpatialReference;
             }

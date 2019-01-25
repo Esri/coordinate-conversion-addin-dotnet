@@ -33,6 +33,9 @@ namespace CoordinateConversionLibrary
 
     public enum CoordinateTypes : int
     {
+        [LocalizableDescription(@"EnumCTDefaults", typeof(Resources))]
+        Default = 0,
+
         [LocalizableDescription(@"EnumCTDD", typeof(Resources))]
         DD = 1,
 
@@ -55,7 +58,10 @@ namespace CoordinateConversionLibrary
         UTM = 7,
 
         [LocalizableDescription(@"EnumCTNone", typeof(Resources))]
-        None = 8
+        None = 8,
+
+        [LocalizableDescription(@"EnumCTCustom", typeof(Resources))]
+        Custom = 9
     }
 
     /// <summary>

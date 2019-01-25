@@ -148,6 +148,10 @@ namespace CoordinateConversionLibrary.Models
             {
                 if (string.IsNullOrWhiteSpace(format))
                 {
+                    if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
+                    {
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
+                    }
                     return this.Format("Z#B X0 Y0", arg, this);
                 }
                 else

@@ -42,6 +42,7 @@ namespace CoordinateConversionLibrary.Views
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = System.Windows.Visibility.Hidden;
+            CoordinateConversionLibraryConfig.AddInConfig.isLatLong = CheckedLatLon;
         }
 
         private void OnDontShowAgainClick(object sender, RoutedEventArgs e)

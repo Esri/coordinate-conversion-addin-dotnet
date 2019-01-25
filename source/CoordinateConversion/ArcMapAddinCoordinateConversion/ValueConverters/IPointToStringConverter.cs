@@ -17,6 +17,12 @@ using System.Windows.Data;
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Models;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.ArcMapUI;
+using ArcMapAddinCoordinateConversion.Helpers;
+using System.Linq;
 
 namespace ArcMapAddinCoordinateConversion.ValueConverters
 {
@@ -67,6 +73,11 @@ namespace ArcMapAddinCoordinateConversion.ValueConverters
                         break;
                 }
             }
+            if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
+            {
+                InputFormatHelper inputFormatHelper = new InputFormatHelper();
+                result = inputFormatHelper.ProcessInput(result);
+            }
             return result;
         }
 
@@ -75,4 +86,5 @@ namespace ArcMapAddinCoordinateConversion.ValueConverters
             throw new NotImplementedException();
         }
     }
+    
 }

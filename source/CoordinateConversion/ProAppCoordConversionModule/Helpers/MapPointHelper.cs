@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.Helpers
@@ -90,8 +93,16 @@ namespace ProAppCoordConversionModule.Helpers
                 // do nothing
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
-
+            if (CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
+            {
+                InputFormatHelper inputFormatHelper = new InputFormatHelper();
+                result = inputFormatHelper.ProcessInput(result);
+            }
             return result;
         }
+
+
     }
+
+    
 }
