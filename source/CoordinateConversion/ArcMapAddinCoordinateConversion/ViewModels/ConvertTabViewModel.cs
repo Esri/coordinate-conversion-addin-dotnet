@@ -223,7 +223,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (point != null && !point.IsEmpty)
             {
                 var color = new RgbColorClass() { Red = 255 } as IColor;
-                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, ArcMapHelpers.DefaultMarkerSize);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
                 //Add point to the top of the list

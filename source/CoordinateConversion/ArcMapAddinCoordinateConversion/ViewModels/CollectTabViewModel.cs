@@ -462,14 +462,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                                 var simpleMarkerSymbol = (ISimpleMarkerSymbol)new SimpleMarkerSymbol();
 
                                 simpleMarkerSymbol.Color = sms.Color;
-                                simpleMarkerSymbol.Size = sms.Size;
+                                simpleMarkerSymbol.Size = ArcMapHelpers.DefaultMarkerSize;
                                 simpleMarkerSymbol.Style = sms.Style;
-                                simpleMarkerSymbol.OutlineSize = 1;
+                                simpleMarkerSymbol.OutlineSize = 1.7;
 
                                 if (aiPoint.IsSelected)
                                 {
                                     var color = (IColor)new RgbColorClass() { Green = 255 };
                                     // Marker symbols
+                                    simpleMarkerSymbol.Size = ArcMapHelpers.DefaultMarkerSize + ArcMapHelpers.DefaultOutlineSize;
                                     simpleMarkerSymbol.Outline = true;
                                     simpleMarkerSymbol.OutlineColor = color;
                                     doUpdate = true;
@@ -503,7 +504,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (point != null && !point.IsEmpty)
             {
                 var color = (IColor)new RgbColorClass() { Red = 255 };
-                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
+                var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, ArcMapHelpers.DefaultMarkerSize);
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
                 //Add point to the top of the list
