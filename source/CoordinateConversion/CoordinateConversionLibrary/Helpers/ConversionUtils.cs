@@ -44,7 +44,7 @@ namespace CoordinateConversionLibrary.Helpers
             CoordinateDD dd;
             if (CoordinateDD.TryParse(input, out dd, true) == true)
             {
-                formattedString = dd.ToString("Y0.0#N X0.0#E", new CoordinateDDFormatter());
+                formattedString = dd.ToString("Y0.0#####N X0.0#####E", new CoordinateDDFormatter());
                 return CoordinateType.DD;
             }
 

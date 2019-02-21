@@ -805,13 +805,13 @@ namespace CoordinateConversionLibrary.Tests
 
             temp = coord.ToString("Z,S,X00000,Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T,PE,83016,60286");
-            
+
             temp = coord.ToString("Z-S-X00000-Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17T-PE-83016-60286");
-            
+
             temp = coord.ToString("ZS X00000Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 8301660286");
-            
+
             temp = coord.ToString("ZS X00000 Y00000", new CoordinateMGRSFormatter());
             Assert.AreEqual(temp, "17TPE 83016 60286");
 
@@ -842,10 +842,10 @@ namespace CoordinateConversionLibrary.Tests
 
             temp = coord.ToString("NA0°B0.0#####' EX0°Y0.0#####'", new CoordinateDDMFormatter());
             Assert.AreEqual(temp, "N40°16.38288' W78°50.84562'");
-            
+
             temp = coord.ToString("A0°B0.0#####'N, X0°Y0.0#####'E", new CoordinateDDMFormatter());
             Assert.AreEqual(temp, "40°16.38288'N, 78°50.84562'W");
-            
+
             temp = coord.ToString("A0° B0.0#####'N X0° Y0.0#####'E", new CoordinateDDMFormatter());
             Assert.AreEqual(temp, "40° 16.38288'N 78° 50.84562'W");
 
@@ -927,13 +927,13 @@ namespace CoordinateConversionLibrary.Tests
 
             temp = coord.ToString("X# Y QK", new CoordinateGARSFormatter());
             Assert.AreEqual(temp, "203 LW 18");
-            
+
             temp = coord.ToString("X# Y Q K", new CoordinateGARSFormatter());
             Assert.AreEqual(temp, "203 LW 1 8");
-            
+
             temp = coord.ToString("X#-Y-QK", new CoordinateGARSFormatter());
             Assert.AreEqual(temp, "203-LW-18");
-            
+
             temp = coord.ToString("X#-Y-Q-K", new CoordinateGARSFormatter());
             Assert.AreEqual(temp, "203-LW-1-8");
 
@@ -953,7 +953,7 @@ namespace CoordinateConversionLibrary.Tests
 
             temp = coord.ToString("Z#H X0m E Y0m N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016m E 4460286m N");
-            
+
             temp = coord.ToString("Z#H X0 E Y0 N", new CoordinateUTMFormatter());
             Assert.AreEqual(temp, "17N 683016 E 4460286 N");
 
@@ -1118,5 +1118,78 @@ namespace CoordinateConversionLibrary.Tests
             }
         }
 
+        [TestMethod]
+        public void TestGetCoordinateString()
+        {
+            // Tests GetCoordinateString helper method which returns a string with the default formatter
+
+            // NOTE: Test assumes default+initial state is IsLatLon = true
+
+            // DD - Northwest Hemisphere Case
+            string resultFormattedString;
+            string valueIn = "-121.842673, 36.589155";
+            CoordinateType resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, "36.589155N 121.842673W");
+            Assert.AreEqual(resultCcType, CoordinateType.DD);
+
+            // DD - South East Hemisphere Case
+            valueIn = "121.842673, -36.589155";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, "36.589155S 121.842673E");
+            Assert.AreEqual(resultCcType, CoordinateType.DD);
+
+            // DDM - Northwest Hemisphere Case
+            valueIn = "121°16.38288'W,36°50.84562'N";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+// DDM TESTS ARE FAILING - Issue: https://github.com/Esri/coordinate-conversion-addin-dotnet/issues/575
+//            Assert.AreEqual(resultFormattedString, "36°16.3829' -121°50.8456'");
+            Assert.AreEqual(resultCcType, CoordinateType.DDM);
+
+            // DDM - South East Hemisphere Case
+            valueIn = "121°16.38288'E,36°50.84562'S";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+ //           Assert.AreEqual(resultFormattedString, "-36°16.3829' 121°50.8456'");
+            Assert.AreEqual(resultCcType, CoordinateType.DDM);
+// END FAILING TESTS
+
+            // DMS - Northwest Hemisphere Case
+            valueIn = "121°50'33.623\"W,36°35'20.958\"N";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, "36°35'20.958\"N 121°50'33.623\"W");
+            Assert.AreEqual(resultCcType, CoordinateType.DMS);
+
+            // DMS - South East Hemisphere Case
+            valueIn = "121°50'33.623\"E,36°35'20.958\"S";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, "36°35'20.958\"S 121°50'33.623\"E");
+            Assert.AreEqual(resultCcType, CoordinateType.DMS);
+            
+            // GARS
+            valueIn = "203 LW 18";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, "203LW18");
+            Assert.AreEqual(resultCcType, CoordinateType.GARS);
+
+            // UTM
+            valueIn = "17P 683016 4460286";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, valueIn);
+            Assert.AreEqual(resultCcType, CoordinateType.UTM);
+
+            // MGRS       
+            valueIn = "17TPE8301660286";
+            resultCcType = Helpers.ConversionUtils.GetCoordinateString(valueIn, out resultFormattedString);
+
+            Assert.AreEqual(resultFormattedString, valueIn);
+            Assert.AreEqual(resultCcType, CoordinateType.MGRS);
+        }
     }
 }
