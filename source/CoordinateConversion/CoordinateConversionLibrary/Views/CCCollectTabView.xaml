@@ -74,6 +74,7 @@
             ItemsSource="{Binding CoordinateAddInPoints}"
             SelectedIndex="{Binding ListBoxSelectedIndex}"
             SelectedItem="{Binding ListBoxSelectedItem}"
+            PreviewMouseDown="listBoxCoordinates_PreviewMouseDown" 
             SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -110,6 +111,11 @@
                     <MenuItem
                         Command="{Binding DataContext.PasteCoordinatesCommand}"
                         Header="Paste"/>
+                    <MenuItem
+                        Command="{Binding DataContext.ViewDetailCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{x:Static prop:Resources.ViewDetails}"
+                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.InputBindings>
@@ -117,6 +123,9 @@
                     Key="Delete"
                     Command="{Binding DeletePointCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}" />
+                <KeyBinding Modifiers="Control" Key="C" Command="{Binding CopyCommand}"
+                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}"/>
+                <KeyBinding Modifiers="Control" Key="V" Command="{Binding PasteCommand}"/>
             </ListBox.InputBindings>
             <ListBox.Style>
                 <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">

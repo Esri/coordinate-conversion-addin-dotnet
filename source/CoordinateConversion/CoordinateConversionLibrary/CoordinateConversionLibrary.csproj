@@ -89,6 +89,9 @@
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
     <Compile Include="ViewModels\TabBaseViewModel.cs" />
+    <Compile Include="Views\AdditionalFieldsView.xaml.cs">
+      <DependentUpon>AdditionalFieldsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CCCollectTabView.xaml.cs">
       <DependentUpon>CCCollectTabView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MAResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AdditionalFieldsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

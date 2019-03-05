@@ -129,270 +129,281 @@
 		x:Name="layoutRoot"
 		MouseLeftButtonUp="OnMouseLeftButtonUp"
 		MouseMove="OnMouseMove">
-        <DataGrid
-			x:Name="ocGrid"
-			AutoGenerateColumns="False"
-			CanUserAddRows="False"
-			CanUserDeleteRows="False"
-			CanUserReorderColumns="False"
-			CanUserResizeRows="False"
-			CanUserSortColumns="False"
-			ItemsSource="{Binding OutputCoordinateList}"
-			PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
-			SelectionMode="Single"
-			SizeChanged="ocGrid_SizeChanged"
-            FontSize="12"
-            FontFamily="{DynamicResource DefaultFontFamily}"
-			Style="{DynamicResource Esri_DataGrid}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyleCustom}" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyleCustom}">
-            <DataGrid.Resources>
-                <Style x:Key="DataGridRowHeaderStyleCustom" TargetType="{x:Type DataGridRowHeader}">
-                    <Setter Property="MinWidth" Value="20"/>
-                    <Setter Property="MinHeight" Value="20"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Foreground" Value="{DynamicResource Esri_TextStyleDefaultBrush}"/>
-                    <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource Esri_BorderBrush}"/>
-                    <Setter Property="BorderThickness" Value="1,1,1,1"/>
-                    <!--<Setter Property="Background">
-                        <Setter.Value>
-                            <ImageBrush/>
-                        </Setter.Value>
-                    </Setter>-->
-                    <Style.Triggers>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsRowSelected" Value="False"/>
-                                <Condition Property="IsMouseOver" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Esri_Blue2}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsRowSelected" Value="True"/>
-                                <Condition Property="IsMouseOver" Value="False"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Esri_Blue6}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsRowSelected" Value="True"/>
-                                <Condition Property="IsMouseOver" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Esri_Blue3}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsRowSelected" Value="False"/>
-                                <Condition Property="IsMouseOver" Value="False"/>
-                                <Condition Property="Behaviors:DataGridBehavior.IsSelectedHeader" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Esri_Blue6}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsRowSelected" Value="False"/>
-                                <Condition Property="IsMouseOver" Value="True"/>
-                                <Condition Property="Behaviors:DataGridBehavior.IsSelectedHeader" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Esri_Blue3}"/>
-                        </MultiTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <Image
-						Width="10"
-						Height="10"
-						Cursor="Hand"
-						Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" />
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="DetailsVisibility" Value="{Binding DVisibility}" />
-                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
-                    <Style.Triggers>
-                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"></Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn CanUserResize="False">
-                    <DataGridTemplateColumn.Header>
-                        <Button
-							Grid.Column="2"
-							Margin="0,0,0,0"
-							Command="{Binding DataContext.AddNewOCCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
-							ToolTip="{x:Static prop:Resources.TooltipAdd}"
-							Style="{StaticResource ImageButtonStyle}">
-                            <Image
-								Height="18"
-								Width="18"
-								Source="/CoordinateConversionLibrary;component/Images/hand.png" />
-                        </Button>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding DataContext.ExpandCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Name}">
-                                <Button.Style>
-                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Collapsed">
-                                                <!--<Setter Property="Content" Value="?" />-->
-                                                <Setter Property="Content" Value="{StaticResource expandImg}" />
-                                                <Setter Property="ToolTip" Value="Expand" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Visible">
-                                                <!--<Setter Property="Content" Value="?" />-->
-                                                <Setter Property="Content" Value="{StaticResource collapseImg}" />
-                                                <Setter Property="ToolTip" Value="Collapse" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn
-					Width="Auto"
-					MinWidth="40"
-					Binding="{Binding Name}"
-                    FontSize="12"
-                    FontFamily="{DynamicResource DefaultFontFamily}"
-					FontWeight="Bold"
-					Header="{x:Static prop:Resources.HeaderName}"
-					IsReadOnly="True"
-					SortDirection="Ascending">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTemplateColumn Width="*" Header="{x:Static prop:Resources.HeaderCoordinate}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox
-								BorderThickness="0"
-								IsReadOnly="True"
-                                FontSize="12"
-                                FontFamily="{DynamicResource DefaultFontFamily}"
-								Text="{Binding OutputCoordinate}"
-                                Style="{DynamicResource Esri_DataGridRowTextBox}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False">
-                    <DataGridTemplateColumn.Header>
-                        <Button
-							Margin="0,0,0,0"
-							Command="{Binding DataContext.CopyAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
-							ToolTip="{x:Static prop:Resources.TooltipCopyAll}"
-							Style="{StaticResource ImageButtonStyle}">
-                            <Image
-								Width="18"
-								Height="18"
-								Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
-                        </Button>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+        <StackPanel>
+           
+            <DataGrid
+			    x:Name="ocGrid"
+			    AutoGenerateColumns="False"
+			    CanUserAddRows="False"
+			    CanUserDeleteRows="False"
+			    CanUserReorderColumns="False"
+			    CanUserResizeRows="False"
+			    CanUserSortColumns="False"
+			    ItemsSource="{Binding OutputCoordinateList}"
+			    PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
+			    SelectionMode="Single"
+			    SizeChanged="ocGrid_SizeChanged"
+                FontSize="12"
+                FontFamily="{DynamicResource DefaultFontFamily}"
+			    Style="{DynamicResource Esri_DataGrid}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyleCustom}" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyleCustom}">
+                <DataGrid.Resources>
+                    <Style x:Key="DataGridRowHeaderStyleCustom" TargetType="{x:Type DataGridRowHeader}">
+                        <Setter Property="MinWidth" Value="20"/>
+                        <Setter Property="MinHeight" Value="20"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Foreground" Value="{DynamicResource Esri_TextStyleDefaultBrush}"/>
+                        <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Esri_BorderBrush}"/>
+                        <Setter Property="BorderThickness" Value="1,1,1,1"/>
+                        <!--<Setter Property="Background">
+                            <Setter.Value>
+                                <ImageBrush/>
+                            </Setter.Value>
+                        </Setter>-->
+                        <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsRowSelected" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource Esri_Blue2}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsRowSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource Esri_Blue6}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsRowSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource Esri_Blue3}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsRowSelected" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="False"/>
+                                    <Condition Property="Behaviors:DataGridBehavior.IsSelectedHeader" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource Esri_Blue6}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsRowSelected" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="Behaviors:DataGridBehavior.IsSelectedHeader" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource Esri_Blue3}"/>
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.RowHeaderTemplate>
+                    <DataTemplate>
+                        <Image
+						    Width="10"
+						    Height="10"
+						    Cursor="Hand"
+						    Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" />
+                    </DataTemplate>
+                </DataGrid.RowHeaderTemplate>
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="DetailsVisibility" Value="{Binding DVisibility}" />
+                        <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource Esri_ControlBackgroundBrush}"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn CanUserResize="False">
+                        <DataGridTemplateColumn.Header>
                             <Button
-								Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
-								CommandParameter="{Binding OutputCoordinate}"
-								ToolTip="{x:Static prop:Resources.TooltipCopy}"
-								Style="{StaticResource ImageButtonStyle}">
+							    Grid.Column="2"
+							    Margin="0,0,0,0"
+							    Command="{Binding DataContext.AddNewOCCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+							    ToolTip="{x:Static prop:Resources.TooltipAdd}"
+							    Style="{StaticResource ImageButtonStyle}">
                                 <Image
-									Width="16"
-									Height="16"
-									Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
+								    Height="18"
+								    Width="18"
+								    Source="/CoordinateConversionLibrary;component/Images/hand.png" />
                             </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Props}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" MinWidth="55" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            FontSize="12"
-                                            FontFamily="{DynamicResource DefaultFontFamily}"
-											Margin="3,3,0,0"
-											VerticalAlignment="Center"
-											Text="{Binding Key, Mode=OneWay}"/>
-                                        <TextBox
-                                            FontSize="12"
-                                            FontFamily="{DynamicResource DefaultFontFamily}"
-											Grid.Column="1"
-											Margin="3,3,0,0"
-											IsReadOnly="True"
-											Text="{Binding Value, Mode=OneWay}"/>
-                                        <Button
-											Grid.Column="2"
-											Margin="3,3,0,0"
-											Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
-											CommandParameter="{Binding Value}"
-											ToolTip="Copy"
-											Style="{StaticResource ImageButtonStyle}">
-                                            <Image
-												Width="16"
-												Height="16"
-												Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding DataContext.ExpandCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding Name}">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Collapsed">
+                                                    <!--<Setter Property="Content" Value="?" />-->
+                                                    <Setter Property="Content" Value="{StaticResource expandImg}" />
+                                                    <Setter Property="ToolTip" Value="Expand" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding DetailsVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}" Value="Visible">
+                                                    <!--<Setter Property="Content" Value="?" />-->
+                                                    <Setter Property="Content" Value="{StaticResource collapseImg}" />
+                                                    <Setter Property="ToolTip" Value="Collapse" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+					    Width="Auto"
+					    MinWidth="40"
+					    Binding="{Binding Name}"
+                        FontSize="12"
+                        FontFamily="{DynamicResource DefaultFontFamily}"
+					    FontWeight="Bold"
+					    Header="{x:Static prop:Resources.HeaderName}"
+					    IsReadOnly="True"
+					    SortDirection="Ascending">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Width="*" Header="{x:Static prop:Resources.HeaderCoordinate}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+								    BorderThickness="0"
+								    IsReadOnly="True"
+                                    FontSize="12"
+                                    FontFamily="{DynamicResource DefaultFontFamily}"
+								    Text="{Binding OutputCoordinate}"
+                                    Style="{DynamicResource Esri_DataGridRowTextBox}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn CanUserResize="False">
+                        <DataGridTemplateColumn.Header>
+                            <Button
+							    Margin="0,0,0,0"
+							    Command="{Binding DataContext.CopyAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+							    ToolTip="{x:Static prop:Resources.TooltipCopyAll}"
+							    Style="{StaticResource ImageButtonStyle}">
+                                <Image
+								    Width="18"
+								    Height="18"
+								    Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
+                            </Button>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+								    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+								    CommandParameter="{Binding OutputCoordinate}"
+								    ToolTip="{x:Static prop:Resources.TooltipCopy}"
+								    Style="{StaticResource ImageButtonStyle}">
+                                    <Image
+									    Width="16"
+									    Height="16"
+									    Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Props}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" MinWidth="55" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontFamily="{DynamicResource DefaultFontFamily}"
+											    Margin="3,3,0,0"
+											    VerticalAlignment="Center"
+											    Text="{Binding Key, Mode=OneWay}"/>
+                                            <TextBox
+                                                FontSize="12"
+                                                FontFamily="{DynamicResource DefaultFontFamily}"
+											    Grid.Column="1"
+											    Margin="3,3,0,0"
+											    IsReadOnly="True"
+											    Text="{Binding Value, Mode=OneWay}"/>
+                                            <Button
+											    Grid.Column="2"
+											    Margin="3,3,0,0"
+											    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+											    CommandParameter="{Binding Value}"
+											    ToolTip="Copy"
+											    Style="{StaticResource ImageButtonStyle}">
+                                                <Image
+												    Width="16"
+												    Height="16"
+												    Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+                <!--<DataGrid.ContextMenu>
+                    <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+                        <MenuItem Header="Configure" Command="{Binding DataContext.ConfigCommand}" CommandParameter="{Binding }" />
+                        <MenuItem Header="Configure2" Command="{Binding DataContext.ConfigCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.CurrentItem.Name}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>-->
+            </DataGrid>
+            <!--  Drag and Drop Popup  -->
+            <Popup
+			    x:Name="popup1"
+			    AllowsTransparency="True"
+			    IsHitTestVisible="False"
+			    Placement="RelativePoint"
+			    PlacementTarget="{Binding ElementName=ocView}">
+                <Border
+				    Background="{DynamicResource Esri_ControlBackgroundBrush}"
+                    Opacity="0.85"
+                    BorderBrush="{DynamicResource Esri_BorderBrush}"
+                    BorderThickness="2">
+                    <StackPanel Margin="4,3,8,3" Orientation="Horizontal">
+                        <Image
+						    Width="16"
+						    Height="16"
+						    Margin="5,0,0,0"
+						    Source="/CoordinateConversionLibrary;component/Images/hand.png" />
+                        <TextBlock
+						    Margin="8,0,0,0"
+						    VerticalAlignment="Center"
+						    FontWeight="Bold"
+                            FontSize="14"
+						    Text="{Binding DraggedItem.Name, ElementName=ocView}"  Style="{StaticResource Esri_TextBlockRegular}"/>
                     </StackPanel>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
-            <!--<DataGrid.ContextMenu>
-                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
-                    <MenuItem Header="Configure" Command="{Binding DataContext.ConfigCommand}" CommandParameter="{Binding }" />
-                    <MenuItem Header="Configure2" Command="{Binding DataContext.ConfigCommand}"
-                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.CurrentItem.Name}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>-->
-        </DataGrid>
-        <!--  Drag and Drop Popup  -->
-        <Popup
-			x:Name="popup1"
-			AllowsTransparency="True"
-			IsHitTestVisible="False"
-			Placement="RelativePoint"
-			PlacementTarget="{Binding ElementName=ocView}">
-            <Border
-				Background="{DynamicResource Esri_ControlBackgroundBrush}"
-                Opacity="0.85"
-                BorderBrush="{DynamicResource Esri_BorderBrush}"
-                BorderThickness="2">
-                <StackPanel Margin="4,3,8,3" Orientation="Horizontal">
-                    <Image
-						Width="16"
-						Height="16"
-						Margin="5,0,0,0"
-						Source="/CoordinateConversionLibrary;component/Images/hand.png" />
-                    <TextBlock
-						Margin="8,0,0,0"
-						VerticalAlignment="Center"
-						FontWeight="Bold"
-                        FontSize="14"
-						Text="{Binding DraggedItem.Name, ElementName=ocView}"  Style="{StaticResource Esri_TextBlockRegular}"/>
-                </StackPanel>
-            </Border>
-        </Popup>
+                </Border>
+            </Popup>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                Command="{Binding ResetButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                <Button x:Name="btnImport" Content="Import" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                Command="{Binding ImportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                <Button x:Name="btnExport" Content="Export" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                Command="{Binding ExportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

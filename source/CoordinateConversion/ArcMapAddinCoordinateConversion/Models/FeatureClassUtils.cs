@@ -29,6 +29,7 @@ using ESRI.ArcGIS.DataSourcesFile;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.ADF;
 using CoordinateConversionLibrary;
+using System.Linq;
 
 namespace ArcMapAddinCoordinateConversion.Models
 {
@@ -75,7 +76,7 @@ namespace ArcMapAddinCoordinateConversion.Models
                 IGxObject ipGxObject = m_ipSaveAsGxDialog.FinalLocation;
                 string nameString = m_ipSaveAsGxDialog.Name;
                 bool replacingObject = m_ipSaveAsGxDialog.ReplacingObject;
-                string path = m_ipSaveAsGxDialog.FinalLocation.FullName + 
+                string path = m_ipSaveAsGxDialog.FinalLocation.FullName +
                     System.IO.Path.DirectorySeparatorChar + m_ipSaveAsGxDialog.Name;
                 IGxObject ipSelectedObject = m_ipSaveAsGxDialog.InternalCatalog.SelectedObject;
 
@@ -110,7 +111,7 @@ namespace ArcMapAddinCoordinateConversion.Models
                         ipDataset = ipGxDataset.Dataset;
                     }
 
-                    return m_ipSaveAsGxDialog.FinalLocation.FullName 
+                    return m_ipSaveAsGxDialog.FinalLocation.FullName
                         + System.IO.Path.DirectorySeparatorChar
                         + m_ipSaveAsGxDialog.Name;
                 }
@@ -152,7 +153,7 @@ namespace ArcMapAddinCoordinateConversion.Models
                     {
                         var fieldKeys = graphicsList[0].Attributes.Keys;
 
-                        fc = CreateFeatureClass(fWorkspace, fieldKeys, fcName);
+                        fc = CreateFeatureClass(fWorkspace, fieldKeys, fcName, graphicsList);
 
                         foreach (var graphic in graphicsList)
                         {
@@ -368,7 +369,8 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// <param name="featWorkspace">IFeatureWorkspace</param> 
         /// <param name="name">Name of the featureclass</param> 
         /// <returns>IFeatureClass</returns> 
-        private IFeatureClass CreateFeatureClass(IFeatureWorkspace featWorkspace, Dictionary<string, string>.KeyCollection fieldNames, string name)
+        private IFeatureClass CreateFeatureClass(IFeatureWorkspace featWorkspace, Dictionary<string, string>.KeyCollection fieldNames, string name,
+            List<CCAMGraphic> graphicsList)
         {
             IFieldsEdit pFldsEdt = new FieldsClass();
             IFieldEdit pFldEdt = new FieldClass();
@@ -394,10 +396,37 @@ namespace ArcMapAddinCoordinateConversion.Models
             {
                 foreach (var field in fieldNames)
                 {
+
+                    var lstDT = new List<DataType>();
+                    foreach (var item in graphicsList.SelectMany(x => x.Attributes.Where(y => y.Key == field).Select(y => y.Value)))
+                    {
+                        lstDT.Add(ParseString(item));
+                    }
+                    esriFieldType dataType = esriFieldType.esriFieldTypeString;
+                    var totalCount = lstDT.Count;
+                    var matchedCount = lstDT.Where(x => x == lstDT.FirstOrDefault()).Count();
+                    if (totalCount == matchedCount)
+                    {
+                        if (lstDT.FirstOrDefault() == DataType.System_Boolean)
+                            dataType = esriFieldType.esriFieldTypeString;
+                        else if (lstDT.FirstOrDefault() == DataType.System_DateTime)
+                            dataType = esriFieldType.esriFieldTypeDate;
+                        else if (lstDT.FirstOrDefault() == DataType.System_Double)
+                            dataType = esriFieldType.esriFieldTypeDouble;
+                        else if (lstDT.FirstOrDefault() == DataType.System_Int32)
+                            dataType = esriFieldType.esriFieldTypeInteger;
+                        else if (lstDT.FirstOrDefault() == DataType.System_Int64)
+                            dataType = esriFieldType.esriFieldTypeDouble;
+                        else if (lstDT.FirstOrDefault() == DataType.System_String)
+                            dataType = esriFieldType.esriFieldTypeString;
+                    }
+                    else
+                        dataType = esriFieldType.esriFieldTypeString;
+
                     pFldEdt = new FieldClass();
                     pFldEdt.Name_2 = field;
                     pFldEdt.AliasName_2 = field;
-                    pFldEdt.Type_2 = esriFieldType.esriFieldTypeString;
+                    pFldEdt.Type_2 = dataType;
                     pFldsEdt.AddField(pFldEdt);
                 }
             }
@@ -407,5 +436,40 @@ namespace ArcMapAddinCoordinateConversion.Models
             return pFClass;
         }
 
+        public static DataType ParseString(string str)
+        {
+
+            bool boolValue;
+            Int32 intValue;
+            Int64 bigintValue;
+            double doubleValue;
+            DateTime dateValue;
+
+            // Place checks higher in if-else statement to give higher priority to type.
+
+            if (bool.TryParse(str, out boolValue))
+                return DataType.System_Boolean;
+            else if (Int32.TryParse(str, out intValue))
+                return DataType.System_Int32;
+            else if (Int64.TryParse(str, out bigintValue))
+                return DataType.System_Int64;
+            else if (double.TryParse(str, out doubleValue))
+                return DataType.System_Double;
+            else if (DateTime.TryParse(str, out dateValue))
+                return DataType.System_DateTime;
+            else return DataType.System_String;
+
+        }
+
+    }
+
+    enum DataType
+    {
+        System_Boolean = 0,
+        System_Int32 = 1,
+        System_Int64 = 2,
+        System_Double = 3,
+        System_DateTime = 4,
+        System_String = 5
     }
 }

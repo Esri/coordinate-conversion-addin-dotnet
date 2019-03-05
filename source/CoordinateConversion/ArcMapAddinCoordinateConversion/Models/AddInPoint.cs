@@ -15,6 +15,8 @@
 using ESRI.ArcGIS.Geometry;
 using CoordinateConversionLibrary.Helpers;
 using ArcMapAddinCoordinateConversion.ValueConverters;
+using System.Collections.Generic;
+using System;
 
 namespace ArcMapAddinCoordinateConversion.Models
 {
@@ -44,17 +46,17 @@ namespace ArcMapAddinCoordinateConversion.Models
         }
         public string Text
         {
-            get 
-            {   
+            get
+            {
                 try
                 {
-                    return pointConverter.Convert(point as object, typeof(string), null, null) as string; 
+                    return pointConverter.Convert(point as object, typeof(string), null, null) as string;
                 }
                 catch
                 {
                     return "NA";
                 }
-                
+
             }
         }
 
@@ -86,6 +88,13 @@ namespace ArcMapAddinCoordinateConversion.Models
                 isSelected = value;
                 RaisePropertyChanged(() => IsSelected);
             }
+        }
+
+        private Dictionary<string, Tuple<object,bool>> fieldsDictionary;
+        public Dictionary<string, Tuple<object, bool>> FieldsDictionary
+        {
+            get { return fieldsDictionary; }
+            set { fieldsDictionary = value; }
         }
     }
 }

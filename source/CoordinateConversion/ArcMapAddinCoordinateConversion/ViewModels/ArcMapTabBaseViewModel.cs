@@ -25,11 +25,19 @@ using CoordinateConversionLibrary.Models;
 using CoordinateConversionLibrary.ViewModels;
 using ArcMapAddinCoordinateConversion.Helpers;
 using System.Globalization;
-using System.Windows.Input;
 using ESRI.ArcGIS.Framework;
 using System.Windows.Forms;
 using ArcMapAddinCoordinateConversion.Models;
 using CoordinateConversionLibrary;
+using System.Collections.ObjectModel;
+using CoordinateConversionLibrary.Views;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.DataSourcesGDB;
+using ESRI.ArcGIS.ADF;
+using ESRI.ArcGIS.Geoprocessing;
+using ESRI.ArcGIS.Geoprocessor;
+using ESRI.ArcGIS.esriSystem;
+using System.Threading;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -43,7 +51,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             // commands
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
+            ViewDetailCommand = new RelayCommand(OnViewDetailCommand);
 
+            FieldsCollection = new ObservableCollection<CoordinateConversionLibrary.ViewModels.FieldsCollection>();
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
 
@@ -52,8 +62,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
+        public RelayCommand ViewDetailCommand { get; set; }
         public CoordinateType InputCoordinateType { get; set; }
         public ICommandItem CurrentTool { get; set; }
+        public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
@@ -146,12 +158,44 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+        internal virtual void OnViewDetailCommand(object obj)
+        {
+            var input = obj as System.Windows.Controls.ListBox;
+            if (input.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("No data available");
+                return;
+            }
+            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
+            if (dictionary == null)
+            {
+                MessageBox.Show("No data available");
+                return;
+            }
+            FieldsCollection = new ObservableCollection<FieldsCollection>();
+            foreach (var item in dictionary)
+            {
+                if (item.Value.Item2)
+                {
+                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                }
+            }
+
+            var diag = new AdditionalFieldsView();
+            diag.DataContext = this;
+            diag.ShowDialog();
+        }
+
         public override bool OnNewMapPoint(object obj)
         {
             if (!base.OnNewMapPoint(obj))
                 return false;
-
-            var point = obj as IPoint;
+            var input = obj as Dictionary<string, Tuple<object,bool>>;
+            IPoint point;
+            if (input != null)
+                point = input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as IPoint;
+            else
+                point = obj as IPoint;
 
             if (point == null)
                 return false;
@@ -241,6 +285,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             return result;
         }
 
+        public override bool CheckMapLoaded()
+        {
+            return ArcMap.LayerCount > 0;
+        }
+
         public Dictionary<string, string> GetOutputFormats(AddInPoint input)
         {
             var results = new Dictionary<string, string>();
@@ -251,7 +300,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
                 arcMapCoordinateGetter.Point = point;
                 CoordinateGetBase coordinateGetter = arcMapCoordinateGetter as CoordinateGetBase;
-                results.Add("Coordinate", input.Text);
+                results.Add(CoordinateFieldName, input.Text);
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -422,7 +471,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 return null;
 
             var tempPoint = (IConversionNotation)new PointClass();
-            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR(); 
+            ((IPoint)tempPoint).SpatialReference = ArcMapHelpers.GetGCS_WGS_1984_SR();
             var anotherMGRSstring = mgrs.ToString("", new CoordinateMGRSFormatter());
             tempPoint.PutCoordsFromMGRS(anotherMGRSstring, esriMGRSModeEnum.esriMGRSMode_Automatic);
             pc.AddPoint(tempPoint as IPoint);
@@ -691,5 +740,153 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             return CoordinateType.Unknown;
         }
 
+        public override List<Dictionary<string, Tuple<object,bool>>> ReadExcelInput(string fileName)
+        {
+            var tableName = Guid.NewGuid().ToString().Replace("-", "");
+            var lstDictionary = new List<Dictionary<string, Tuple<object,bool>>>();
+            using (ComReleaser oComReleaser = new ComReleaser())
+            {
+
+                IFeatureWorkspace workspace = CreateFeatureWorkspace("tempWorkspace");
+                if (workspace == null)
+                {
+                }
+
+                StartEditOperation((IWorkspace)workspace);
+
+                IGeoProcessor2 gp = new GeoProcessorClass();
+                gp.AddOutputsToMap = false;
+
+                 IVariantArray rasterToPolyParams = new VarArrayClass();
+                 rasterToPolyParams.Add(fileName);
+                 rasterToPolyParams.Add(((IWorkspace)workspace).PathName + System.IO.Path.DirectorySeparatorChar + tableName);
+                 object oResult = gp.Execute("ExcelToTable_conversion", rasterToPolyParams, null);
+                 IGeoProcessorResult ipResult = (IGeoProcessorResult)oResult;
+
+                //GeoProcessor GP = new GeoProcessor();
+                //GP.OverwriteOutput = true;
+                //// Generate the array of parameters.
+                //IVariantArray parameters = new VarArrayClass();
+                //parameters.Add(fileName);
+                //parameters.Add(tableName);
+                //// Execute the excel to table gp tool
+                //var gpResult = GP.Execute("ExcelToTable_conversion", parameters, null);
+                //var result = gpResult as IGeoProcessorResult;
+
+                //ComReleaser.ReleaseCOMObject(GP);
+                //GP = null;
+                //GC.Collect();
+
+                 if (ipResult.Status == esriJobStatus.esriJobSucceeded)
+                {
+                    var workspacePath = System.IO.Path.GetDirectoryName(Convert.ToString(ipResult.ReturnValue));
+
+                    var workspaceFactory = (IWorkspaceFactory)Activator.CreateInstance(typeof(FileGDBWorkspaceFactoryClass));
+                    var featureWorkspace = workspaceFactory.OpenFromFile(workspacePath, 0);
+                    ITable table = GetTables(featureWorkspace, tableName);
+                    if (table != null)
+                    {
+                        for (int i = 1; i <= table.RowCount(null); i++)
+                        {
+                            var dictionary = new Dictionary<string, Tuple<object,bool>>();
+                            IRow row = table.GetRow(i);
+                            for (int j = 0; j < row.Fields.FieldCount; j++)
+                            {
+                                dictionary.Add(row.Fields.get_Field(j).Name, Tuple.Create(row.get_Value(j),false));
+                            }
+                            lstDictionary.Add(dictionary);
+                        }
+                    }
+                    var ds = table as IDataset;
+                    ds.Delete();
+                }
+            }
+            return lstDictionary;
+        }
+
+        static ITable GetTables(IWorkspace workspace, string tableName)
+        {
+            var enumDataset = workspace.Datasets[esriDatasetType.esriDTTable];
+            ITable dataTable = null;
+            IDataset dataset;
+            while ((dataset = enumDataset.Next()) != null)
+            {
+                var dSet = dataset as ITable;
+                if ((dSet as IDataset).BrowseName == tableName)
+                    dataTable = dSet;
+            }
+            return dataTable;
+        }
+
+        public static IWorkspace OpenWorkspace(string workspacePath)
+        {
+            IWorkspaceFactory workspaceFactory = new AccessWorkspaceFactoryClass();
+            return workspaceFactory.OpenFromFile(workspacePath, 0);
+        }
+
+        public static IFeatureWorkspace CreateFeatureWorkspace(string workspaceNameString)
+        {
+
+            IScratchWorkspaceFactory2 ipScWsFactory = new FileGDBScratchWorkspaceFactoryClass();
+            IWorkspace ipScWorkspace = ipScWsFactory.CurrentScratchWorkspace;
+            if (null == ipScWorkspace)
+                ipScWorkspace = ipScWsFactory.CreateNewScratchWorkspace();
+
+            IFeatureWorkspace featWork = (IFeatureWorkspace)ipScWorkspace;
+
+            return featWork;
+        }
+
+        /// <summary>
+        /// Start Editing operation
+        /// </summary>
+        /// <param name="ipWorkspace">IWorkspace</param>
+        public static bool StartEditOperation(IWorkspace ipWorkspace)
+        {
+            bool blnWasSuccessful = false;
+            IWorkspaceEdit ipWsEdit = ipWorkspace as IWorkspaceEdit;
+
+            if (ipWsEdit != null)
+            {
+                try
+                {
+                    ipWsEdit.StartEditOperation();
+                    blnWasSuccessful = true;
+                }
+                catch (Exception ex)
+                {
+                    ipWsEdit.AbortEditOperation();
+                    throw (ex);
+                }
+            }
+
+            return blnWasSuccessful;
+        }
+
+        /// <summary>
+        /// Stop Editing operation
+        /// </summary>
+        /// <param name="ipWorkspace">IWorkspace</param>
+        /// <returns>True if successful, false otherwise</returns>
+        public static bool StopEditOperation(IWorkspace ipWorkspace)
+        {
+            bool blnWasSuccessful = false;
+            IWorkspaceEdit ipWsEdit = ipWorkspace as IWorkspaceEdit;
+            if (ipWsEdit != null)
+            {
+                try
+                {
+                    ipWsEdit.StopEditOperation();
+                    blnWasSuccessful = true;
+                }
+                catch (Exception ex)
+                {
+                    ipWsEdit.AbortEditOperation();
+                    throw (ex);
+                }
+            }
+
+            return blnWasSuccessful;
+        }
     }
 }

@@ -14,8 +14,9 @@
              WindowStartupLocation="CenterScreen"
              Title="{x:Static prop:Resources.TitleSelectCoordinateFields}"
              SizeToContent="WidthAndHeight"
+                     Topmost="True"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
-                     d:DesignHeight="200" d:DesignWidth="420">
+                     d:DesignHeight="300" d:DesignWidth="420">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -64,6 +65,23 @@
                       SelectedItem="{Binding SelectedField2}"
                       ItemContainerStyle="{StaticResource comboBoxItemStyle}">
             </ComboBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+            <TextBlock Text="Additional Fields" Margin="0,5,5,5" VerticalAlignment="Center"/>
+            <ListBox SelectedItem="{Binding Path=SelectedFieldItem,UpdateSourceTrigger=PropertyChanged}" 
+                    ItemsSource="{Binding FieldCollection, NotifyOnSourceUpdated=True}" Width="253" Height="100" Margin="20,0,0,0" SelectionMode="Multiple" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+            </ListBox>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
             <Button Command="{Binding OKButtonPressedCommand}"

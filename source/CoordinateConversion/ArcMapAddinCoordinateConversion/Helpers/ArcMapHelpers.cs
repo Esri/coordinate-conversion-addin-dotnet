@@ -17,6 +17,9 @@ using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geometry;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.DataSourcesGDB;
+using System.Collections.Generic;
 
 namespace ArcMapAddinCoordinateConversion.Helpers
 {
@@ -83,12 +86,23 @@ namespace ArcMapAddinCoordinateConversion.Helpers
 
             return null;
         }
+
+        public static double DefaultMarkerSize
+        {
+            get { return 7.0;  }
+        }
+
+        public static double DefaultOutlineSize
+        {
+            get { return 1.7; }
+        }
+        
         /// <summary>
         /// Adds a graphic element to the map graphics container
         /// Returns GUID
         /// </summary>
         /// <param name="geom">IGeometry</param>
-        public static string AddGraphicToMap(IGeometry geom, IColor color, bool IsTempGraphic = false, esriSimpleMarkerStyle markerStyle = esriSimpleMarkerStyle.esriSMSCircle, int size = 5)
+        public static string AddGraphicToMap(IGeometry geom, IColor color, bool IsTempGraphic = false, esriSimpleMarkerStyle markerStyle = esriSimpleMarkerStyle.esriSMSCircle, double size = 5)
         {
             if ((geom == null) || (ArcMap.Document == null) || (ArcMap.Document.FocusMap == null) 
                 || (ArcMap.Document.FocusMap.SpatialReference == null))
@@ -350,6 +364,5 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
-
     }
 }

@@ -38,8 +38,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
     {
         public CollectTabViewModel()
         {
-            ListBoxItemAddInPoint = null;  
-          
+            ListBoxItemAddInPoint = null;
+
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
@@ -85,7 +85,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public AddInPoint ListBoxItemAddInPoint { get; set; }
 
-        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }       
+        public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
 
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
@@ -174,7 +174,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         // copy parameter to clipboard
-        private void OnCopyCommand(object obj)
+        public override void OnCopyCommand(object obj)
         {
             var items = obj as IList;
             if (items == null)
@@ -234,7 +234,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
-                        string tempShapeFile = folderName + System.IO.Path.DirectorySeparatorChar + 
+                        string tempShapeFile = folderName + System.IO.Path.DirectorySeparatorChar +
                             "tmpShapefile.shp";
                         var grpList = GetMapPointExportFormat(GraphicsList);
                         IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, grpList, ArcMap.Document.FocusMap.SpatialReference);
@@ -258,24 +258,29 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                         string csvName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         string tempFile = System.IO.Path.Combine(folderName, csvName);
-
                         var aiPoints = CoordinateAddInPoints.ToList();
-
                         if (!aiPoints.Any())
                             return;
-
                         var csvExport = new CsvExport();
+                        var displayAmb = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
                         foreach (var point in aiPoints)
                         {
                             var results = GetOutputFormats(point);
                             csvExport.AddRow();
-                            foreach (KeyValuePair<string, string> format in results)
+                            foreach (var item in results)
+                                csvExport[item.Key] = item.Value;
+                            if (point.FieldsDictionary != null)
                             {
-                                csvExport[format.Key] = format.Value;
+                                foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
+                                {
+                                    if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                                        csvExport[item.Key] = item.Value;
+                                }
                             }
+                            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                         }
+                        CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = displayAmb;
                         csvExport.ExportToFile(tempFile);
-
                         System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + tempFile,
                             CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
                     }
@@ -297,7 +302,13 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (pt == null)
                     continue;
 
-                var attributes = GetOutputFormats(new AddInPoint() { Point= pt});
+                var attributes = GetOutputFormats(new AddInPoint() { Point = pt });
+                if (point.FieldsDictionary != null)
+                {
+                    foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
+                        if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                            attributes[item.Key] = Convert.ToString(item.Value);
+                }
                 CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
                 results.Add(ccMapPoint);
             }
@@ -462,14 +473,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                                 var simpleMarkerSymbol = (ISimpleMarkerSymbol)new SimpleMarkerSymbol();
 
                                 simpleMarkerSymbol.Color = sms.Color;
-                                simpleMarkerSymbol.Size = sms.Size;
+                                simpleMarkerSymbol.Size = ArcMapHelpers.DefaultMarkerSize;
                                 simpleMarkerSymbol.Style = sms.Style;
-                                simpleMarkerSymbol.OutlineSize = 1;
+                                simpleMarkerSymbol.OutlineSize = 1.7;
 
                                 if (aiPoint.IsSelected)
                                 {
                                     var color = (IColor)new RgbColorClass() { Green = 255 };
                                     // Marker symbols
+                                    simpleMarkerSymbol.Size = ArcMapHelpers.DefaultMarkerSize + ArcMapHelpers.DefaultOutlineSize;
                                     simpleMarkerSymbol.Outline = true;
                                     simpleMarkerSymbol.OutlineColor = color;
                                     doUpdate = true;
@@ -498,18 +510,18 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             av.Refresh();
         }
 
-        private void AddCollectionPoint(IPoint point)
+        private void AddCollectionPoint(IPoint point, Dictionary<string, Tuple<object, bool>> fieldsDictionary = null)
         {
             if (point != null && !point.IsEmpty)
             {
                 var color = (IColor)new RgbColorClass() { Red = 255 };
                 var guid = ArcMapHelpers.AddGraphicToMap(point, color, true, esriSimpleMarkerStyle.esriSMSCircle, 7);
-                var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+                var addInPoint = new AddInPoint() { Point = point, GUID = guid, FieldsDictionary = fieldsDictionary };
 
                 //Add point to the top of the list
                 CoordinateAddInPoints.Insert(0, addInPoint);
 
-                GraphicsList.Add(new AMGraphic(guid, point, true));
+                GraphicsList.Add(new AMGraphic(guid, point, true, fieldsDictionary));
             }
         }
 
@@ -558,17 +570,37 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         private void OnImportCoordinates(object obj)
         {
-            var coordinates = obj as List<string>;
-            if (coordinates == null)
+            if (obj == null)
                 return;
-
-            foreach (var coordinate in coordinates)
+            var input = obj as List<Dictionary<string, Tuple<object, bool>>>;
+            if (input != null)
+                foreach (var item in input)
+                {
+                    var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
+                    if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
+                        continue;
+                    this.ProcessInput(coordinate);
+                    InputCoordinate = coordinate;
+                    if (!HasInputError)
+                    {
+                        item.Add(PointFieldName, Tuple.Create((object)amCoordGetter.Point, false));
+                        OnNewMapPoint(item);
+                    }
+                }
+            else
             {
-                this.ProcessInput(coordinate);
-                InputCoordinate = coordinate;
-                if (!HasInputError)
-                    OnNewMapPoint(amCoordGetter.Point);
+                List<string> coordinates = obj as List<string>;
+                if (coordinates == null)
+                    return;
+                foreach (var coordinate in coordinates)
+                {
+                    this.ProcessInput(coordinate);
+                    InputCoordinate = coordinate;
+                    if (!HasInputError)
+                        OnNewMapPoint(amCoordGetter.Point);
+                }
             }
+            RaisePropertyChanged(() => CoordinateAddInPoints);
         }
 
         private void ClearGraphicsContainer(IMap map)
@@ -589,7 +621,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
-        private void OnPasteCommand(object obj)
+        public override void OnPasteCommand(object obj)
         {
             var input = Clipboard.GetText().Trim();
             string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -624,7 +656,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (!base.OnNewMapPoint(obj))
                 return false;
 
-            AddCollectionPoint(obj as IPoint);
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            IPoint point = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as IPoint : obj as IPoint;
+            AddCollectionPoint(point as IPoint, input);
 
             return true;
         }
@@ -641,7 +675,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         public override void OnMapPointSelection(object obj)
-        {          
+        {
             var mapPoint = obj as IPoint;
             mapPoint.Project(ArcMap.Document.FocusMap.SpatialReference);
             ITopologicalOperator topoOp = (ITopologicalOperator)mapPoint;
@@ -672,7 +706,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 closestPoint.IsSelected = true;
                 ListBoxSelectedItem = closestPoint;
             }
-            RaisePropertyChanged(() => ListBoxSelectedItem);            
+            RaisePropertyChanged(() => ListBoxSelectedItem);
         }
 
         #endregion overrides

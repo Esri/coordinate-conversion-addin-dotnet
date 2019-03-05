@@ -45,5 +45,11 @@ namespace CoordinateConversionLibrary.Views
         {
             this.listBoxCoordinates.UnselectAll();
         }
+
+        private void listBoxCoordinates_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            (sender as UIElement).Focus();
+            Keyboard.Focus(sender as UIElement);
+        }
     }
 }
