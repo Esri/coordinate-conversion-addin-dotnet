@@ -74,17 +74,19 @@
             ItemsSource="{Binding CoordinateAddInPoints}"
             SelectedIndex="{Binding ListBoxSelectedIndex}"
             SelectedItem="{Binding ListBoxSelectedItem}"
-            PreviewMouseDown="listBoxCoordinates_PreviewMouseDown" 
-            SelectionMode="Extended">
+            MouseLeftButtonDown="listBoxCoordinates_MouseLeftButtonDown"
+            SelectionMode="Extended" 
+            MouseRightButtonUp="listBoxCoordinates_MouseRightButtonUp">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Text}" />
+                        <TextBlock Text="{Binding Text}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
-                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}"
+                             >
                     <MenuItem
                         Command="{Binding DataContext.DeletePointCommand}"
                         CommandParameter="{Binding Path=SelectedItems}"
@@ -115,7 +117,7 @@
                         Command="{Binding DataContext.ViewDetailCommand}"
                         CommandParameter="{Binding}"
                         Header="{x:Static prop:Resources.ViewDetails}"
-                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>
+                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>                    
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.InputBindings>

@@ -151,12 +151,12 @@ namespace CoordinateConversionLibrary.ViewModels
         {
             return false;
         }
-
+        
         public virtual void OnImportCSVFileCommand(object obj)
         {
             try
             {
-                Cursor.Current = Cursors.WaitCursor;
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.DEACTIVATE_TOOL, null);
                 if (CheckMapLoaded())
                 {
                     CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;

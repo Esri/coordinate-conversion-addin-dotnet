@@ -51,7 +51,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
-
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
         }
@@ -77,7 +76,6 @@ namespace ProAppCoordConversionModule.ViewModels
                     var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
                     if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
                         continue;
-                    //this.ProcessInput(coordinate);
                     await this.ProcessInputAsync(coordinate);
                     InputCoordinate = coordinate;
 
@@ -142,6 +140,10 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 // update selections
                 UpdateHighlightedGraphics(false);
+
+                var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
+                proCoordGetter.Point = addinPoint.Point;
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
         }
 
@@ -158,7 +160,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             }
         }
-
+                
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
@@ -275,7 +277,7 @@ namespace ProAppCoordConversionModule.ViewModels
                                 {
                                     foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
-                                            csvExport[item.Key] = item.Value;
+                                            csvExport[item.Key] = item.Value.Item1;
                                 }
                                 CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                             }
@@ -305,7 +307,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
-                            attributes[item.Key] = Convert.ToString(item.Value);
+                            attributes[item.Key] = Convert.ToString(item.Value.Item1);
                 }
                 CCProGraphic ccMapPoint = new CCProGraphic() { Attributes = attributes, MapPoint = point.Point };
                 results.Add(ccMapPoint);
@@ -343,6 +345,8 @@ namespace ProAppCoordConversionModule.ViewModels
 
             //Add point to the top of the list
             CoordinateAddInPoints.Insert(0, addInPoint);
+            CoordinateAddInPoints.ToList().ForEach(x => x.IsSelected = false);
+            CoordinateAddInPoints.ElementAt(0).IsSelected = true;
         }
 
         private void RemoveGraphics(List<string> guidList)

@@ -36,6 +36,7 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using ProAppCoordConversionModule.Views;
 using System.Diagnostics;
+using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -50,7 +51,7 @@ namespace ProAppCoordConversionModule.ViewModels
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
             ViewDetailCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnViewDetailCommand);
             FieldsCollection = new ObservableCollection<FieldsCollection>();
-            ListDictionary=new List<Dictionary<string,Tuple<object,bool>>>();
+            ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
 
@@ -164,7 +165,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (!base.OnNewMapPoint(obj))
                 return false;
-            var input = obj as Dictionary<string, Tuple<object,bool>>;
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
             MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
                 return false;
@@ -431,7 +432,7 @@ namespace ProAppCoordConversionModule.ViewModels
             using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var headers = ImportCSV.GetHeaders(s);
-                ImportedData = new List<Dictionary<string, Tuple<object,bool>>>();
+                ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
                 if (headers != null)
                 {
                     foreach (var header in headers)
@@ -449,20 +450,20 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 if (dlg.ShowDialog() == true)
                 {
-                    var dictionary = new List<Dictionary<string, Tuple<object,bool>>>();
-                    
+                    var dictionary = new List<Dictionary<string, Tuple<object, bool>>>();
+
                     using (Stream str = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         var lists = ImportCSV.Import<ImportCoordinatesList>(str, fieldVM.SelectedFields.ToArray(), headers, dictionary);
                         FieldCollection = fieldVM.FieldCollection.Where(y => y.IsSelected).Select(x => x.Content).ToList();
                         foreach (var item in dictionary)
                         {
-                            var dict = new Dictionary<string, Tuple<object,bool>>();
+                            var dict = new Dictionary<string, Tuple<object, bool>>();
                             foreach (var field in item)
                             {
                                 if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key)
                                 {
-                                    dict.Add(field.Key, Tuple.Create((object)field.Value.Item1,FieldCollection.Contains(field.Key)));
+                                    dict.Add(field.Key, Tuple.Create((object)field.Value.Item1, FieldCollection.Contains(field.Key)));
                                     if (fieldVM.SelectedFields.ToArray()[0] == field.Key)
                                         SelectedField1 = Convert.ToString(field.Key);
                                 }
@@ -496,7 +497,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public static async void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
         {
-            ImportedData = new List<Dictionary<string, Tuple<object,bool>>>();
+            ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
             var filename = diag.FileName;
             string selectedCol1Key = "", selectedCol2Key = "";
@@ -541,25 +542,25 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 for (int i = 0; i < lstDictionary.Count; i++)
                 {
-                    var dict = new Dictionary<string, Tuple<object,bool>>();
+                    var dict = new Dictionary<string, Tuple<object, bool>>();
                     dict = lstDictionary[i];
                     if (fieldVM.UseTwoFields)
                     {
                         if (lstDictionary[i].Where(x => x.Key == selectedCol1Key) != null && lstDictionary[i].Where(x => x.Key == selectedCol2Key) != null)
                             dict.Add(OutputFieldName, Tuple.Create((object)Convert.ToString(lstDictionary[i].Where(x => x.Key == selectedCol1Key).Select(x => x.Value.Item1).FirstOrDefault()
-                                + " " + lstDictionary[i].Where(x => x.Key == selectedCol2Key).Select(x => x.Value.Item1).FirstOrDefault()),false));
+                                + " " + lstDictionary[i].Where(x => x.Key == selectedCol2Key).Select(x => x.Value.Item1).FirstOrDefault()), false));
                     }
                     else
                     {
                         if (lstDictionary[i].Where(x => x.Key == selectedCol1Key) != null)
-                            dict.Add(OutputFieldName, Tuple.Create((object)lstDictionary[i].Where(x => x.Key == selectedCol1Key).Select(x => x.Value.Item1).FirstOrDefault(),false));
+                            dict.Add(OutputFieldName, Tuple.Create((object)lstDictionary[i].Where(x => x.Key == selectedCol1Key).Select(x => x.Value.Item1).FirstOrDefault(), false));
                     }
                     ImportedData.Add(dict);
                 }
                 FieldCollection = fieldVM.FieldCollection.Where(y => y.IsSelected).Select(x => x.Content).ToList();
                 foreach (var item in ImportedData)
                 {
-                    var dict = new Dictionary<string, Tuple<object,bool>>();
+                    var dict = new Dictionary<string, Tuple<object, bool>>();
                     foreach (var field in item)
                     {
                         if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key || field.Key == OutputFieldName)
@@ -734,10 +735,12 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (item.Value.Item2)
                     FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
             }
+            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+            FieldsCollection.Add(new FieldsCollection() { FieldName = OutputFieldName, FieldValue = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint) });
             var diag = new ProAdditionalFieldsView();
             diag.DataContext = this;
             diag.ShowDialog();
-        }
+        }        
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
         {

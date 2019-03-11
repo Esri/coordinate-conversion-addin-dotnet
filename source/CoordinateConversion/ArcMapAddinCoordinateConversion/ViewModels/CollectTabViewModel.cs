@@ -100,6 +100,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 // update selections
                 UpdateHighlightedGraphics();
+                var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
+                amCoordGetter.Point = addinPoint.Point;
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
         }
 
@@ -274,7 +277,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                                 foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                                 {
                                     if (item.Key != PointFieldName && item.Key != OutputFieldName)
-                                        csvExport[item.Key] = item.Value;
+                                        csvExport[item.Key] = item.Value.Item1;
                                 }
                             }
                             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
@@ -307,7 +310,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
-                            attributes[item.Key] = Convert.ToString(item.Value);
+                            attributes[item.Key] = Convert.ToString(item.Value.Item1);
                 }
                 CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
                 results.Add(ccMapPoint);
@@ -520,7 +523,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 //Add point to the top of the list
                 CoordinateAddInPoints.Insert(0, addInPoint);
-
+                CoordinateAddInPoints.ToList().ForEach(x => x.IsSelected = false);
+                CoordinateAddInPoints.ElementAt(0).IsSelected = true;
                 GraphicsList.Add(new AMGraphic(guid, point, true, fieldsDictionary));
             }
         }

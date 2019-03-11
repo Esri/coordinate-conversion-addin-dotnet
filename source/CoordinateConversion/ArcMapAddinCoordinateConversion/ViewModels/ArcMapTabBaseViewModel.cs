@@ -38,6 +38,7 @@ using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.Geoprocessor;
 using ESRI.ArcGIS.esriSystem;
 using System.Threading;
+using ArcMapAddinCoordinateConversion.ValueConverters;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -180,7 +181,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
                 }
             }
-
+            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+            IPointToStringConverter pointConverter = new IPointToStringConverter();
+            var outputString = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
+            FieldsCollection.Add(new FieldsCollection() { FieldName = OutputFieldName, FieldValue = outputString });
             var diag = new AdditionalFieldsView();
             diag.DataContext = this;
             diag.ShowDialog();
@@ -751,31 +755,31 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 if (workspace == null)
                 {
                 }
+                // Cast the workspace to the IWorkspaceEdit interface.
+                IWorkspaceEdit workspaceEdit = (IWorkspaceEdit)workspace;
 
-                StartEditOperation((IWorkspace)workspace);
+                // Start an edit session. An undo/redo stack isn't necessary in this case.
+                workspaceEdit.StartEditing(false);
 
+                // Start an edit operation.
+                workspaceEdit.StartEditOperation();
+                
                 IGeoProcessor2 gp = new GeoProcessorClass();
                 gp.AddOutputsToMap = false;
 
-                 IVariantArray rasterToPolyParams = new VarArrayClass();
-                 rasterToPolyParams.Add(fileName);
-                 rasterToPolyParams.Add(((IWorkspace)workspace).PathName + System.IO.Path.DirectorySeparatorChar + tableName);
-                 object oResult = gp.Execute("ExcelToTable_conversion", rasterToPolyParams, null);
-                 IGeoProcessorResult ipResult = (IGeoProcessorResult)oResult;
+                IVariantArray rasterToPolyParams = new VarArrayClass();
+                rasterToPolyParams.Add(fileName);
+                rasterToPolyParams.Add(((IWorkspace)workspace).PathName + System.IO.Path.DirectorySeparatorChar + tableName);
+                object oResult = gp.Execute("ExcelToTable_conversion", rasterToPolyParams, null);
+                IGeoProcessorResult ipResult = (IGeoProcessorResult)oResult;
 
-                //GeoProcessor GP = new GeoProcessor();
-                //GP.OverwriteOutput = true;
-                //// Generate the array of parameters.
-                //IVariantArray parameters = new VarArrayClass();
-                //parameters.Add(fileName);
-                //parameters.Add(tableName);
-                //// Execute the excel to table gp tool
-                //var gpResult = GP.Execute("ExcelToTable_conversion", parameters, null);
-                //var result = gpResult as IGeoProcessorResult;
+                // Save the edit operation. To cancel an edit operation, the AbortEditOperation
+                // method can be used.
+                workspaceEdit.StopEditOperation();
 
-                //ComReleaser.ReleaseCOMObject(GP);
-                //GP = null;
-                //GC.Collect();
+                // Stop the edit session. The saveEdits parameter indioates the edit session
+                // will be committed.
+                workspaceEdit.StopEditing(true);
 
                  if (ipResult.Status == esriJobStatus.esriJobSucceeded)
                 {

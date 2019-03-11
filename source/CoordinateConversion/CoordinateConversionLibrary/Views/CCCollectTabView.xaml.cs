@@ -1,4 +1,5 @@
 ﻿using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,29 @@ namespace CoordinateConversionLibrary.Views
             this.listBoxCoordinates.UnselectAll();
         }
 
-        private void listBoxCoordinates_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void listBoxCoordinates_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            int index = -1;
+            for (int i = 0; i < listBoxCoordinates.Items.Count; i++)
+            {
+                var lbi = listBoxCoordinates.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
+                if (lbi == null) continue;
+                if (IsMouseOverTarget(lbi, e.GetPosition((IInputElement)lbi)))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            listBoxCoordinates.SelectedIndex = index;
+        }
+
+        private static bool IsMouseOverTarget(Visual target, Point point)
+        {
+            var bounds = VisualTreeHelper.GetDescendantBounds(target);
+            return bounds.Contains(point);
+        }
+
+        private void listBoxCoordinates_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             (sender as UIElement).Focus();
             Keyboard.Focus(sender as UIElement);
