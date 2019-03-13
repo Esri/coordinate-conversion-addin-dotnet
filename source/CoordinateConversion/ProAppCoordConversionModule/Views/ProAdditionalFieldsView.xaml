@@ -12,7 +12,7 @@
              xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             Title="Additional Fields" 
+             Title="{Binding ViewDetailsTitle}" 
              WindowStartupLocation="CenterScreen"
              SizeToContent="WidthAndHeight"          
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"

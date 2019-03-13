@@ -51,6 +51,7 @@ namespace ProAppCoordConversionModule.ViewModels
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
             ViewDetailCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnViewDetailCommand);
             FieldsCollection = new ObservableCollection<FieldsCollection>();
+            ViewDetailsTitle = string.Empty;
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
@@ -63,12 +64,13 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
-        
+
         public static ProgressDialog pDialog { get; set; }
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
+        public string ViewDetailsTitle { get; set; }
         public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
@@ -737,11 +739,11 @@ namespace ProAppCoordConversionModule.ViewModels
                     FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
             }
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
-            FieldsCollection.Add(new FieldsCollection() { FieldName = OutputFieldName, FieldValue = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint) });
-            var diag = new ProAdditionalFieldsView();
-            diag.DataContext = this;
-            diag.ShowDialog();
-        }        
+            ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
+            var dialog = new ProAdditionalFieldsView();
+            dialog.DataContext = this;
+            dialog.ShowDialog();
+        }
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
         {

@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Additional Fields"
+        Title="{Binding ViewDetailsTitle}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"

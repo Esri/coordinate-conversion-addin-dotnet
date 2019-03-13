@@ -55,6 +55,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ViewDetailCommand = new RelayCommand(OnViewDetailCommand);
 
             FieldsCollection = new ObservableCollection<CoordinateConversionLibrary.ViewModels.FieldsCollection>();
+            ViewDetailsTitle = string.Empty;
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
 
@@ -67,6 +68,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public CoordinateType InputCoordinateType { get; set; }
         public ICommandItem CurrentTool { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
+        public string ViewDetailsTitle { get; set; }
 
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
@@ -183,8 +185,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
             IPointToStringConverter pointConverter = new IPointToStringConverter();
-            var outputString = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
-            FieldsCollection.Add(new FieldsCollection() { FieldName = OutputFieldName, FieldValue = outputString });
+            ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
             var diag = new AdditionalFieldsView();
             diag.DataContext = this;
             diag.ShowDialog();
