@@ -139,6 +139,7 @@
 			    CanUserReorderColumns="False"
 			    CanUserResizeRows="False"
 			    CanUserSortColumns="False"
+                MaxHeight="220"
 			    ItemsSource="{Binding OutputCoordinateList}"
 			    PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
 			    SelectionMode="Single"

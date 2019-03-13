@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,8 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private async void OnImportCoordinates(object obj)
         {
+            pDialog.Show();
+            IsToolActive = false;
             if (obj == null)
                 return;
             var input = obj as List<Dictionary<string, Tuple<object, bool>>>;
@@ -103,6 +105,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 InputCoordinate = "";
             }
+            pDialog.Hide();
         }
 
         private void ClearListBoxSelection()

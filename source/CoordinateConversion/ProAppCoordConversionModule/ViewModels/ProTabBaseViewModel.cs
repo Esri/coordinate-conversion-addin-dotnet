@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ namespace ProAppCoordConversionModule.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-
+            pDialog = new ProgressDialog("Processing...Please wait...");
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -63,7 +63,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
-
+        
+        public static ProgressDialog pDialog { get; set; }
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }

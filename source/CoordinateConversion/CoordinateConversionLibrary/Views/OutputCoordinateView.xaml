@@ -45,8 +45,8 @@
         x:Name="layoutRoot"
         MouseLeftButtonUp="OnMouseLeftButtonUp"
         MouseMove="OnMouseMove">
-        <StackPanel>            
-            <DataGrid
+        <StackPanel>
+            <DataGrid MaxHeight="220"
             x:Name="ocGrid"
             AutoGenerateColumns="False"
             CanUserAddRows="False"

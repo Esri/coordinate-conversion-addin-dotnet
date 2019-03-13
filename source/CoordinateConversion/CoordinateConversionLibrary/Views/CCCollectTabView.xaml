@@ -68,84 +68,87 @@
                 </Button.Style>
             </Button>
         </StackPanel>
-        <ListBox
+        <Grid x:Name="grdListView" VerticalAlignment="Stretch">
+            <ListBox
             x:Name="listBoxCoordinates"
             MinHeight="40"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
             ItemsSource="{Binding CoordinateAddInPoints}"
             SelectedIndex="{Binding ListBoxSelectedIndex}"
             SelectedItem="{Binding ListBoxSelectedItem}"
             MouseLeftButtonDown="listBoxCoordinates_MouseLeftButtonDown"
             SelectionMode="Extended" 
             MouseRightButtonUp="listBoxCoordinates_MouseRightButtonUp">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Text}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ContextMenu>
-                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}"
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Text}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}"
                              >
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.DeletePointCommand}"
                         CommandParameter="{Binding Path=SelectedItems}"
                         Header="{x:Static prop:Resources.MenuLabelDelete}"
                         IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.DeleteAllPointsCommand}"
                         Header="{x:Static prop:Resources.MenuLabelDeleteAll}"
                         IsEnabled="{Binding HasItems}" />
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.FlashPointCommand}"
                         CommandParameter="{Binding}"
                         Header="{x:Static prop:Resources.HeaderFlash}"
                         IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}" />
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.CopyCoordinateCommand}"
                         CommandParameter="{Binding Path=SelectedItems}"
                         Header="{x:Static prop:Resources.MenuLabelCopy}"
                         IsEnabled="{Binding DataContext.HasAnySelectedItems}" />
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.CopyAllCoordinatesCommand}"
                         Header="{x:Static prop:Resources.MenuLabelCopyAll}"
                         IsEnabled="{Binding HasItems}" />
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.PasteCoordinatesCommand}"
                         Header="Paste"/>
-                    <MenuItem
+                        <MenuItem
                         Command="{Binding DataContext.ViewDetailCommand}"
                         CommandParameter="{Binding}"
                         Header="{x:Static prop:Resources.ViewDetails}"
-                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>                    
-                </ContextMenu>
-            </ListBox.ContextMenu>
-            <ListBox.InputBindings>
-                <KeyBinding
+                        IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+                <ListBox.InputBindings>
+                    <KeyBinding
                     Key="Delete"
                     Command="{Binding DeletePointCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}" />
-                <KeyBinding Modifiers="Control" Key="C" Command="{Binding CopyCommand}"
+                    <KeyBinding Modifiers="Control" Key="C" Command="{Binding CopyCommand}"
                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=SelectedItems}"/>
-                <KeyBinding Modifiers="Control" Key="V" Command="{Binding PasteCommand}"/>
-            </ListBox.InputBindings>
-            <ListBox.Style>
-                <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-                    <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
-                    <Setter Property="IsEnabled" Value="True" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsRunning}" Value="True">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.Style>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                    <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+                    <KeyBinding Modifiers="Control" Key="V" Command="{Binding PasteCommand}"/>
+                </ListBox.InputBindings>
+                <ListBox.Style>
+                    <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBox_MouseRightButtonDown" />
+                        <Setter Property="IsEnabled" Value="True" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.Style>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="listBoxItem_MouseRightButtonDown" />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Grid>
     </DockPanel>
 </UserControl>
