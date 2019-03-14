@@ -318,24 +318,42 @@ namespace CoordinateConversionLibrary.ViewModels
                     var temp = dt;
                     foreach (DataRow item in dt.Rows)
                     {
-                        CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Add(
-                        new OutputCoordinateModel()
+                        string itemName = Convert.ToString(item["Name"]);
+                        var coordFormats = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Where(x => x.Name == itemName).ToList();
+                        if (coordFormats.Count > 0)
                         {
-                            CType = (CoordinateType)Enum.Parse(typeof(CoordinateType), Convert.ToString(item["Ctype"])),
-                            DVisibility = (Visibility)Enum.Parse(typeof(Visibility), Convert.ToString(item["DVisibility"])),
-                            Format = Convert.ToString(item["Format"]),
-                            Name = Convert.ToString(item["Name"]),
-                            OutputCoordinate = Convert.ToString(item["OutputCoordinate"]),
-                            SRFactoryCode = Convert.ToInt32(item["SRFactoryCode"]),
-                            SRName = Convert.ToString(item["SRName"])
-                        });
+                            CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Where(x => x.Name == itemName).Select(x =>
+                            {
+                                x.CType = (CoordinateType)Enum.Parse(typeof(CoordinateType), Convert.ToString(item["Ctype"]));
+                                x.DVisibility = (Visibility)Enum.Parse(typeof(Visibility), Convert.ToString(item["DVisibility"]));
+                                x.Format = Convert.ToString(item["Format"]);
+                                x.OutputCoordinate = Convert.ToString(item["OutputCoordinate"]);
+                                x.SRFactoryCode = Convert.ToInt32(item["SRFactoryCode"]);
+                                x.SRName = Convert.ToString(item["SRName"]);
+                                return x;
+                            }).ToList();
+                        }
+                        else
+                        {
+                            CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Add(
+                            new OutputCoordinateModel()
+                            {
+                                CType = (CoordinateType)Enum.Parse(typeof(CoordinateType), Convert.ToString(item["Ctype"])),
+                                DVisibility = (Visibility)Enum.Parse(typeof(Visibility), Convert.ToString(item["DVisibility"])),
+                                Format = Convert.ToString(item["Format"]),
+                                Name = itemName,
+                                OutputCoordinate = Convert.ToString(item["OutputCoordinate"]),
+                                SRFactoryCode = Convert.ToInt32(item["SRFactoryCode"]),
+                                SRName = Convert.ToString(item["SRName"])
+                            });
+                        }
                     }
                 }
             }
             catch (Exception)
             {
                 MessageBox.Show("Something went wrong.");
-            }    
+            }
         }
 
         public virtual void OnResetButtonCommand(object obj)
@@ -387,7 +405,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
             catch (Exception)
             {
-            }            
+            }
         }
         #endregion
 
