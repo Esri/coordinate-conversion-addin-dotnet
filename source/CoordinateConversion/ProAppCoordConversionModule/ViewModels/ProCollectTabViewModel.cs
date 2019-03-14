@@ -348,8 +348,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             //Add point to the top of the list
             CoordinateAddInPoints.Insert(0, addInPoint);
-            CoordinateAddInPoints.ToList().ForEach(x => x.IsSelected = false);
-            CoordinateAddInPoints.ElementAt(0).IsSelected = true;
         }
 
         private void RemoveGraphics(List<string> guidList)
