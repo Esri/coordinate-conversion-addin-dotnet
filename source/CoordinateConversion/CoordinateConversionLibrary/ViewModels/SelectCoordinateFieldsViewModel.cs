@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CoordinateConversionLibrary.Helpers;
+using System.Windows.Controls;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -23,10 +24,12 @@ namespace CoordinateConversionLibrary.ViewModels
         public SelectCoordinateFieldsViewModel()
         {
             AvailableFields = new ObservableCollection<string>();
+            FieldCollection = new ObservableCollection<ListBoxItem>();
             SelectedFields = new List<string>();
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
         }
         public ObservableCollection<string> AvailableFields { get; set; }
+        public ObservableCollection<ListBoxItem> FieldCollection { get; set; }
         public List<string> SelectedFields { get; set; }
         private bool useTwoFields = false;
         public bool UseTwoFields

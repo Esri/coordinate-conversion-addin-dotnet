@@ -42,7 +42,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             CollectTabView.DataContext = new CollectTabViewModel();
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
-        }
+            Mediator.Register(CoordinateConversionLibrary.Constants.DEACTIVATE_TOOL, OnDeactivateTool);
+        }      
 
         public InputCoordinateConversionView InputCCView { get; set; }
         public OutputCoordinateView OutputCCView { get; set; }
@@ -217,6 +218,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         }
 
         #endregion overrides
+
+        public void OnDeactivateTool(object obj)
+        {
+            IsToolActive = false;
+        }
 
         private void AddCollectionPoint(IPoint point)
         {

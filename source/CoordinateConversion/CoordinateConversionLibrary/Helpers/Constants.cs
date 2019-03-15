@@ -37,5 +37,6 @@ namespace CoordinateConversionLibrary
         public const string IMPORT_COORDINATES = "IMPORT_COORDINATES";
         public const string CollectListHasItems = "COLLECT_LIST_HAS_ITEMS";
         public const string SELECT_MAP_POINT = "SELECT_MAP_POINT";
+        public const string DEACTIVATE_TOOL = "DEACTIVATE_TOOL";
     }
 }

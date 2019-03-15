@@ -17,6 +17,9 @@ using ESRI.ArcGIS.ArcMapUI;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geometry;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.DataSourcesGDB;
+using System.Collections.Generic;
 
 namespace ArcMapAddinCoordinateConversion.Helpers
 {
@@ -361,6 +364,5 @@ namespace ArcMapAddinCoordinateConversion.Helpers
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
-
     }
 }

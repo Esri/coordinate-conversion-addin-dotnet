@@ -72,7 +72,7 @@ namespace CoordinateConversionLibrary.Helpers
             return '\0';
         }
 
-        public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames) where T : new()
+        public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames, List<string> csvHeaders, List<Dictionary<string, Tuple<object,bool>>> lstDictionary) where T : new()
         {
             List<T> list = new List<T>();
             using (StreamReader reader = new StreamReader(stream))
@@ -87,7 +87,14 @@ namespace CoordinateConversionLibrary.Helpers
 
                 string[] row = line.Split(charSep);
                 List<ImportDescriptor> headers = ParseHeader<T>(row, fieldNames);
-                while (ImportLine(reader, headers, list, row.Count(), charSep)) ;
+                var fieldsDictionary = new Dictionary<string, Tuple<object,bool>>();
+                var result = true;
+                while (result)
+                {
+                    result = ImportLine(reader, headers, list, row.Count(), charSep, csvHeaders, out fieldsDictionary);
+                    if (result)
+                        lstDictionary.Add(fieldsDictionary);
+                }
             }
 
             return list;
@@ -147,11 +154,13 @@ namespace CoordinateConversionLibrary.Helpers
             throw new Exception("Import was unable to convert [" + name + "] string (" + value + ") to " + type);
         }
 
-        private static bool ImportLine<T>(StreamReader reader, List<ImportDescriptor> headers, List<T> list, int nColumns, char separator) where T : new()
+        private static bool ImportLine<T>(StreamReader reader, List<ImportDescriptor> headers, List<T> list, int nColumns, char separator, List<string> csvHeaders,
+            out Dictionary<string, Tuple<object,bool>> fieldsDictionary) where T : new()
         {
             List<string> row = new List<string>();
             string line = string.Empty;
             string temp = string.Empty;
+            fieldsDictionary = new Dictionary<string, Tuple<object,bool>>();
             while (row.Count() < nColumns)
             {
                 temp = reader.ReadLine();
@@ -162,18 +171,17 @@ namespace CoordinateConversionLibrary.Helpers
                         row.Add(line.Replace("\"\"", "\"")); // has embedded "qoated string"
                         break;
                     }
-
                     return false; // end of file
                 }
                 line = AddToRow(line + temp, row, separator, nColumns);
             }
-
             if (row.Count() == nColumns || LastColumnIsEmpty(nColumns, row))
             {
                 list.Add(CreateItem<T>(headers, row));
+                for (int i = 0; i < csvHeaders.Count; i++)
+                    fieldsDictionary.Add(csvHeaders[i], Tuple.Create((object)row[i],false));
                 return true;
             }
-
             throw new Exception("More than " + nColumns + " colunns in row " + list.Count() + ": " + Environment.NewLine + temp);
         }
 

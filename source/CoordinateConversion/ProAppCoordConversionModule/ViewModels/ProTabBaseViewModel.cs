@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using CoordinateConversionLibrary;
-using ArcGIS.Desktop.Core;
-using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using ProAppCoordConversionModule.Views;
+using System.Diagnostics;
+using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -49,10 +49,13 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
             FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
-
+            ViewDetailCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnViewDetailCommand);
+            FieldsCollection = new ObservableCollection<FieldsCollection>();
+            ViewDetailsTitle = string.Empty;
+            ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-
+            pDialog = new ProgressDialog("Processing...Please wait...");
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -60,10 +63,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
+        public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
 
+        public static ProgressDialog pDialog { get; set; }
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
+        public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
+        public string ViewDetailsTitle { get; set; }
         public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
@@ -161,9 +168,8 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (!base.OnNewMapPoint(obj))
                 return false;
-
-            var mp = obj as MapPoint;
-
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
                 return false;
 
@@ -238,13 +244,11 @@ namespace ProAppCoordConversionModule.ViewModels
 
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
-
             // Must force non async here to avoid returning to base class early
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(input);
             }).Result;
-
             return processCoordinate(ccc);
         }
 
@@ -263,7 +267,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
         {
             var results = new Dictionary<string, string>();
-            results.Add("Coordinate", point.Text);
+            results.Add(CoordinateFieldName, point.Text);
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(point.Text);
@@ -273,7 +277,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 ProCoordinateGet procoordinateGetter = new ProCoordinateGet();
                 procoordinateGetter.Point = ccc.Point;
                 CoordinateGetBase coordinateGetter = procoordinateGetter as CoordinateGetBase;
-
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -389,61 +392,190 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public override void OnImportCSVFileCommand(object obj)
         {
-            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
-
-            var fileDialog = new Microsoft.Win32.OpenFileDialog();
-            fileDialog.CheckFileExists = true;
-            fileDialog.CheckPathExists = true;
-            fileDialog.Filter = "csv files|*.csv";
-
-            // attemp to import
-            var fieldVM = new SelectCoordinateFieldsViewModel();
-            var result = fileDialog.ShowDialog();
-            if (result.HasValue && result.Value == true)
+            try
             {
-                var dlg = new ProSelectCoordinateFieldsView();
-                using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
+                var fileDialog = new Microsoft.Win32.OpenFileDialog();
+                fileDialog.CheckFileExists = true;
+                fileDialog.CheckPathExists = true;
+                fileDialog.Filter = "csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx";
+                // attemp to import
+                var fieldVM = new SelectCoordinateFieldsViewModel();
+                var result = fileDialog.ShowDialog();
+                if (result.HasValue && result.Value == true)
                 {
-                    var headers = ImportCSV.GetHeaders(s);
-                    if (headers != null)
-                    {
-                        foreach (var header in headers)
-                        {
-                            fieldVM.AvailableFields.Add(header);
-                            System.Diagnostics.Debug.WriteLine("header : {0}", header);
-                        }
+                    var dlg = new ProSelectCoordinateFieldsView();
 
-                        dlg.DataContext = fieldVM;
-                    }
-                    else
+                    var coordinates = new List<string>();
+                    var extension = Path.GetExtension(fileDialog.FileName);
+                    switch (extension)
                     {
-                        System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
-                        return;
+                        case ".csv":
+                            ImportFromCSV(fieldVM, dlg, coordinates, fileDialog.FileName);
+                            break;
+                        case ".xls":
+                        case ".xlsx":
+                            ImportFromExcel(dlg, fileDialog, fieldVM);
+                            break;
+                        default:
+                            break;
                     }
+                }
+                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
+            }
+            catch (Exception ex)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
+                Debug.WriteLine("Error " + ex.ToString());
+            }
+        }
+
+        private static void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, ProSelectCoordinateFieldsView dlg, List<string> coordinates, string fileName)
+        {
+            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var headers = ImportCSV.GetHeaders(s);
+                ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        fieldVM.AvailableFields.Add(header);
+                        fieldVM.FieldCollection.Add(new ListBoxItem() { Name = header, Content = header, IsSelected = false });
+                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                    }
+                    dlg.DataContext = fieldVM;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                    return;
                 }
                 if (dlg.ShowDialog() == true)
                 {
-                    using (Stream s = new FileStream(fileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    var dictionary = new List<Dictionary<string, Tuple<object, bool>>>();
+
+                    using (Stream str = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        var lists = ImportCSV.Import<ImportCoordinatesList>(s, fieldVM.SelectedFields.ToArray());
-                        var coordinates = new List<string>();
-
-                        foreach (var item in lists)
+                        var lists = ImportCSV.Import<ImportCoordinatesList>(str, fieldVM.SelectedFields.ToArray(), headers, dictionary);
+                        FieldCollection = fieldVM.FieldCollection.Where(y => y.IsSelected).Select(x => x.Content).ToList();
+                        foreach (var item in dictionary)
                         {
-                            var sb = new StringBuilder();
-                            sb.Append(item.lat.Trim());
-                            if (fieldVM.UseTwoFields)
-                                sb.Append(string.Format(" {0}", item.lon.Trim()));
-
-                            coordinates.Add(sb.ToString());
+                            var dict = new Dictionary<string, Tuple<object, bool>>();
+                            foreach (var field in item)
+                            {
+                                if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key)
+                                {
+                                    dict.Add(field.Key, Tuple.Create((object)field.Value.Item1, FieldCollection.Contains(field.Key)));
+                                    if (fieldVM.SelectedFields.ToArray()[0] == field.Key)
+                                        SelectedField1 = Convert.ToString(field.Key);
+                                }
+                                else if (fieldVM.UseTwoFields)
+                                    if (fieldVM.SelectedFields.ToArray()[1] == field.Key)
+                                    {
+                                        dict.Add(field.Key, Tuple.Create((object)field.Value.Item1, FieldCollection.Contains(field.Key)));
+                                        SelectedField2 = Convert.ToString(field.Key);
+                                    }
+                            }
+                            ImportedData.Add(dict);
                         }
-
-                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+                        foreach (var item in ImportedData)
+                        {
+                            var lat = item.Where(x => x.Key == fieldVM.SelectedFields.ToArray()[0]).Select(x => x.Value.Item1).FirstOrDefault();
+                            var sb = new StringBuilder();
+                            sb.Append(lat);
+                            if (fieldVM.UseTwoFields)
+                            {
+                                var lon = item.Where(x => x.Key == fieldVM.SelectedFields.ToArray()[1]).Select(x => x.Value.Item1).FirstOrDefault();
+                                sb.Append(string.Format(" {0}", lon));
+                            }
+                            item.Add(OutputFieldName, Tuple.Create((object)sb.ToString(), false));
+                            ListDictionary.Add(item);
+                        }
                     }
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ListDictionary);
                 }
             }
+        }
 
-            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
+        public static async void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        {
+            ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
+            List<string> headers = new List<string>();
+            var filename = diag.FileName;
+            string selectedCol1Key = "", selectedCol2Key = "";
+            var selectedColumn = fieldVM.SelectedFields.ToArray();
+            var columnCollection = new List<string>();
+            var fileExt = Path.GetExtension(filename); //get the extension of uploaded excel file  
+            var lstDictionary = await FeatureClassUtils.ImportFromExcel(filename);
+            var headerDict = lstDictionary.FirstOrDefault();
+            if (headerDict != null)
+                foreach (var item in headerDict)
+                {
+                    if (item.Key != "OBJECTID")
+                        headers.Add(item.Key);
+                }
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    fieldVM.AvailableFields.Add(header.Replace(" ", ""));
+                    fieldVM.FieldCollection.Add(new ListBoxItem() { Name = header.Replace(" ", ""), Content = header, IsSelected = false });
+                }
+                dlg.DataContext = fieldVM;
+            }
+            else
+                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+            if (dlg.ShowDialog() == true)
+            {
+                foreach (var item in headers)
+                {
+                    columnCollection.Add(item);
+                    if (item == fieldVM.SelectedFields.ToArray()[0])
+                    {
+                        selectedCol1Key = item;
+                        SelectedField1 = item;
+                    }
+                    if (fieldVM.UseTwoFields && item == fieldVM.SelectedFields.ToArray()[1])
+                    {
+                        selectedCol2Key = item;
+                        SelectedField2 = item;
+                    }
+                    continue;
+                }
+                for (int i = 0; i < lstDictionary.Count; i++)
+                {
+                    var dict = new Dictionary<string, Tuple<object, bool>>();
+                    dict = lstDictionary[i];
+                    if (fieldVM.UseTwoFields)
+                    {
+                        if (lstDictionary[i].Where(x => x.Key == selectedCol1Key) != null && lstDictionary[i].Where(x => x.Key == selectedCol2Key) != null)
+                            dict.Add(OutputFieldName, Tuple.Create((object)Convert.ToString(lstDictionary[i].Where(x => x.Key == selectedCol1Key).Select(x => x.Value.Item1).FirstOrDefault()
+                                + " " + lstDictionary[i].Where(x => x.Key == selectedCol2Key).Select(x => x.Value.Item1).FirstOrDefault()), false));
+                    }
+                    else
+                    {
+                        if (lstDictionary[i].Where(x => x.Key == selectedCol1Key) != null)
+                            dict.Add(OutputFieldName, Tuple.Create((object)lstDictionary[i].Where(x => x.Key == selectedCol1Key).Select(x => x.Value.Item1).FirstOrDefault(), false));
+                    }
+                    ImportedData.Add(dict);
+                }
+                FieldCollection = fieldVM.FieldCollection.Where(y => y.IsSelected).Select(x => x.Content).ToList();
+                foreach (var item in ImportedData)
+                {
+                    var dict = new Dictionary<string, Tuple<object, bool>>();
+                    foreach (var field in item)
+                    {
+                        if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key || field.Key == OutputFieldName)
+                            dict.Add(field.Key, Tuple.Create(field.Value.Item1, FieldCollection.Contains(field.Key)));
+                        else if (fieldVM.UseTwoFields)
+                            if (fieldVM.SelectedFields.ToArray()[1] == field.Key)
+                                dict.Add(field.Key, Tuple.Create(field.Value.Item1, FieldCollection.Contains(field.Key)));
+                    }
+                    ListDictionary.Add(dict);
+                }
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ListDictionary);
+            }
         }
 
         #endregion overrides
@@ -583,6 +715,34 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 Mediator.NotifyColleagues("UPDATE_FLASH", point);
             });
+        }
+
+        internal virtual void OnViewDetailCommand(object obj)
+        {
+            var input = obj as System.Windows.Controls.ListBox;
+            if (input.SelectedItems.Count == 0)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.
+                    MessageBox.Show("No data available");
+                return;
+            }
+            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
+            if (dictionary == null)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
+                return;
+            }
+            FieldsCollection = new ObservableCollection<FieldsCollection>();
+            foreach (var item in dictionary)
+            {
+                if (item.Value.Item2)
+                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+            }
+            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+            ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
+            var dialog = new ProAdditionalFieldsView();
+            dialog.DataContext = this;
+            dialog.ShowDialog();
         }
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)

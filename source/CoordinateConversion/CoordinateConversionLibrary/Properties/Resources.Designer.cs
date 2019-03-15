@@ -851,5 +851,14 @@ namespace CoordinateConversionLibrary.Properties {
                 return ResourceManager.GetString("UseTwoFields", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Details.
+        /// </summary>
+        public static string ViewDetails {
+            get {
+                return ResourceManager.GetString("ViewDetails", resourceCulture);
+            }
+        }
     }
 }

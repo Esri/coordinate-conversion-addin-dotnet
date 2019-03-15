@@ -289,17 +289,16 @@ namespace CoordinateConversionLibrary.Models
                                     sb.Append("+");
                                 break;
                             case '-':
-                                if (isHyphenFirstCharacter)
+                                if (isHyphenFirstCharacter || cnum < 0.0)
                                 {
-                                    if (cnum < 0.0)
-                                        sb.Append("-");
-
+                                    //if (cnum < 0.0)
+                                    sb.Append("-");
                                     isHyphenFirstCharacter = false;
                                 }
-                                else
-                                {
-                                    sb.Append("-");
-                                }
+                                //else
+                                //{
+                                //    sb.Append("-");
+                                //}
                                 break;
                             case 'N': // N or S
                             case 'S':
