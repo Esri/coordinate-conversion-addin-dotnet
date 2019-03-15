@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -299,6 +299,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         private List<CCAMGraphic> GetMapPointExportFormat(List<AMGraphic> mapPointList)
         {
             List<CCAMGraphic> results = new List<CCAMGraphic>();
+            var columnCollection = new List<string>();
             foreach (var point in mapPointList)
             {
                 var pt = point.Geometry as IPoint;
@@ -310,12 +311,25 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 {
                     foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                        {
                             attributes[item.Key] = Convert.ToString(item.Value.Item1);
+                            if (!columnCollection.Contains(item.Key))
+                                columnCollection.Add(item.Key);
+                        }
                 }
                 CCAMGraphic ccMapPoint = new CCAMGraphic() { Attributes = attributes, MapPoint = point };
                 results.Add(ccMapPoint);
             }
-
+            foreach (var item in results)
+            {
+                foreach (var column in columnCollection)
+	            {
+                    if(!item.Attributes.ContainsKey(column))
+                    {
+                        item.Attributes.Add(column, null);
+                    }
+	            }                
+            }
             return results;
         }
 
