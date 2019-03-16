@@ -169,7 +169,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     var result = fileDialog.ShowDialog();
                     if (result.HasValue && result.Value == true)
                     {
-                        var dlg = new SelectCoordinateFieldsView();
+                        var dlg = new SelectCoordinateFieldsCCView();
 
                         var coordinates = new List<string>();
                         var extension = Path.GetExtension(fileDialog.FileName);
@@ -201,7 +201,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, SelectCoordinateFieldsView dlg, List<string> coordinates, string fileName)
+        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, SelectCoordinateFieldsCCView dlg, List<string> coordinates, string fileName)
         {
             using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -260,7 +260,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        public void ImportFromExcel(SelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        public void ImportFromExcel(SelectCoordinateFieldsCCView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
         {
             ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
