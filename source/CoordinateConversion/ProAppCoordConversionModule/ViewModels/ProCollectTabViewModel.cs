@@ -302,6 +302,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private List<CCProGraphic> GetMapPointExportFormat(ObservableCollection<AddInPoint> mapPointList)
         {
             List<CCProGraphic> results = new List<CCProGraphic>();
+            var columnCollection = new List<string>();
             var dictionary = new Dictionary<string, object>();
             foreach (var point in mapPointList)
             {
@@ -310,10 +311,24 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                        {
                             attributes[item.Key] = Convert.ToString(item.Value.Item1);
+                            if (!columnCollection.Contains(item.Key))
+                                columnCollection.Add(item.Key);
+                        }
                 }
                 CCProGraphic ccMapPoint = new CCProGraphic() { Attributes = attributes, MapPoint = point.Point };
                 results.Add(ccMapPoint);
+            }
+            foreach (var item in results)
+            {
+                foreach (var column in columnCollection)
+                {
+                    if (!item.Attributes.ContainsKey(column))
+                    {
+                        item.Attributes.Add(column, null);
+                    }
+                }
             }
             return results;
         }

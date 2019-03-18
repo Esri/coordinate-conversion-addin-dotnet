@@ -169,7 +169,7 @@ namespace CoordinateConversionLibrary.ViewModels
                     var result = fileDialog.ShowDialog();
                     if (result.HasValue && result.Value == true)
                     {
-                        var dlg = new SelectCoordinateFieldsView();
+                        var dlg = new SelectCoordinateFieldsCCView();
 
                         var coordinates = new List<string>();
                         var extension = Path.GetExtension(fileDialog.FileName);
@@ -201,7 +201,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, SelectCoordinateFieldsView dlg, List<string> coordinates, string fileName)
+        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, SelectCoordinateFieldsCCView dlg, List<string> coordinates, string fileName)
         {
             using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -235,23 +235,14 @@ namespace CoordinateConversionLibrary.ViewModels
                             var dict = new Dictionary<string, Tuple<object, bool>>();
                             foreach (var field in item)
                             {
-                                if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key)
-                                {
+                                if(FieldCollection.Contains(field.Key))
                                     dict.Add(field.Key, Tuple.Create((object)field.Value.Item1, FieldCollection.Contains(field.Key)));
-                                    if (fieldVM.SelectedFields.ToArray()[0] == field.Key)
+                                if (fieldVM.SelectedFields.ToArray()[0] == field.Key)
                                         SelectedField1 = Convert.ToString(field.Key);
-                                }
                                 else if (fieldVM.UseTwoFields)
                                     if (fieldVM.SelectedFields.ToArray()[1] == field.Key)
-                                    {
-                                        dict.Add(field.Key, Tuple.Create((object)field.Value.Item1, FieldCollection.Contains(field.Key)));
                                         SelectedField2 = Convert.ToString(field.Key);
-                                    }
                             }
-                            ImportedData.Add(dict);
-                        }
-                        foreach (var item in ImportedData)
-                        {
                             var lat = item.Where(x => x.Key == fieldVM.SelectedFields.ToArray()[0]).Select(x => x.Value.Item1).FirstOrDefault();
                             var sb = new StringBuilder();
                             sb.Append(lat);
@@ -260,16 +251,16 @@ namespace CoordinateConversionLibrary.ViewModels
                                 var lon = item.Where(x => x.Key == fieldVM.SelectedFields.ToArray()[1]).Select(x => x.Value.Item1).FirstOrDefault();
                                 sb.Append(string.Format(" {0}", lon));
                             }
-                            item.Add(OutputFieldName, Tuple.Create((object)sb.ToString(), false));
-                            ListDictionary.Add(item);
+                            dict.Add(OutputFieldName, Tuple.Create((object)sb.ToString(), false));
+                            ImportedData.Add(dict);
                         }
                     }
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ListDictionary);
+                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ImportedData);
                 }
             }
         }
 
-        public void ImportFromExcel(SelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        public void ImportFromExcel(SelectCoordinateFieldsCCView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
         {
             ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
@@ -299,7 +290,6 @@ namespace CoordinateConversionLibrary.ViewModels
             }
             if (dlg.ShowDialog() == true)
             {
-
                 foreach (var item in headers)
                 {
                     columnCollection.Add(item);
@@ -316,7 +306,6 @@ namespace CoordinateConversionLibrary.ViewModels
                             selectedCol2Key = item;
                         }
                     }
-                    continue;
                 }
                 for (int i = 0; i < lstDictionary.Count; i++)
                 {
@@ -341,11 +330,8 @@ namespace CoordinateConversionLibrary.ViewModels
                     var dict = new Dictionary<string, Tuple<object, bool>>();
                     foreach (var field in item)
                     {
-                        if (FieldCollection.Contains(field.Key) || fieldVM.SelectedFields.ToArray()[0] == field.Key || field.Key == OutputFieldName)
+                        if (FieldCollection.Contains(field.Key) || field.Key == OutputFieldName)
                             dict.Add(field.Key, Tuple.Create(field.Value.Item1, FieldCollection.Contains(field.Key)));
-                        else if (fieldVM.UseTwoFields)
-                            if (fieldVM.SelectedFields.ToArray()[1] == field.Key)
-                                dict.Add(field.Key, Tuple.Create(field.Value.Item1, FieldCollection.Contains(field.Key)));
                     }
                     lstDictonary.Add(dict);
                 }

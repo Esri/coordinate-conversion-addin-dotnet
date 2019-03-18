@@ -100,6 +100,27 @@ namespace CoordinateConversionLibrary.Helpers
             return list;
         }
 
+        public static IEnumerable<T> Import<T>(Stream stream, string[] fieldNames) where T : new()
+        {
+            List<T> list = new List<T>();
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string line = reader.ReadLine().Trim();
+                if (line.Contains("sep="))
+                    line = reader.ReadLine();
+                if (string.IsNullOrEmpty(line))
+                    return list;
+
+                var charSep = GetSeparator(line);
+
+                string[] row = line.Split(charSep);
+                List<ImportDescriptor> headers = ParseHeader<T>(row, fieldNames);
+                while (ImportLine(reader, headers, list, row.Count(), charSep)) ;
+            }
+
+            return list;
+        }
+
         internal static object ConvertFromString(string type, string value, string dateformat, string name = null)
         {
             try
@@ -182,6 +203,36 @@ namespace CoordinateConversionLibrary.Helpers
                     fieldsDictionary.Add(csvHeaders[i], Tuple.Create((object)row[i],false));
                 return true;
             }
+            throw new Exception("More than " + nColumns + " colunns in row " + list.Count() + ": " + Environment.NewLine + temp);
+        }
+
+        private static bool ImportLine<T>(StreamReader reader, List<ImportDescriptor> headers, List<T> list, int nColumns, char separator) where T : new()
+        {
+            List<string> row = new List<string>();
+            string line = string.Empty;
+            string temp = string.Empty;
+            while (row.Count() < nColumns)
+            {
+                temp = reader.ReadLine();
+                if (temp == null)
+                {
+                    if (row.Count() == nColumns - 1 && line.Length > 0)  // this is crappy!!
+                    {
+                        row.Add(line.Replace("\"\"", "\"")); // has embedded "qoated string"
+                        break;
+                    }
+
+                    return false; // end of file
+                }
+                line = AddToRow(line + temp, row, separator, nColumns);
+            }
+
+            if (row.Count() == nColumns || LastColumnIsEmpty(nColumns, row))
+            {
+                list.Add(CreateItem<T>(headers, row));
+                return true;
+            }
+
             throw new Exception("More than " + nColumns + " colunns in row " + list.Count() + ": " + Environment.NewLine + temp);
         }
 

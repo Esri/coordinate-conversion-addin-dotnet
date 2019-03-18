@@ -110,6 +110,9 @@
     <Compile Include="Views\OutputCoordinateView.xaml.cs">
       <DependentUpon>OutputCoordinateView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SelectCoordinateFieldsCCView.xaml.cs">
+      <DependentUpon>SelectCoordinateFieldsCCView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectCoordinateFieldsView.xaml.cs">
       <DependentUpon>SelectCoordinateFieldsView.xaml</DependentUpon>
     </Compile>
@@ -150,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OutputCoordinateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SelectCoordinateFieldsCCView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
