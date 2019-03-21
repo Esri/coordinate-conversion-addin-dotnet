@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,27 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
+using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
+using Jitbit.Utils;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.Views;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ArcGIS.Core.CIM;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary.Helpers;
-using ProAppCoordConversionModule.Models;
-using ProAppCoordConversionModule.Views;
-using ProAppCoordConversionModule.ViewModels;
-using CoordinateConversionLibrary;
-using System;
 using System.Text;
-using Jitbit.Utils;
-using System.Windows;
-using System.IO;
-using CoordinateConversionLibrary.ViewModels;
-using CoordinateConversionLibrary.Models;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -40,8 +36,8 @@ namespace ProAppCoordConversionModule.ViewModels
     {
         public ProCollectTabViewModel()
         {
-            ListBoxItemAddInPoint = null; 
-            
+            ListBoxItemAddInPoint = null;
+
             CoordinateAddInPoints = new ObservableCollection<AddInPoint>();
 
             DeletePointCommand = new RelayCommand(OnDeletePointCommand);
@@ -55,7 +51,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
-
             Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
             Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
         }
@@ -72,20 +67,45 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private async void OnImportCoordinates(object obj)
         {
-            var coordinates = obj as List<string>;
-            if (coordinates == null)
+            pDialog.Show();
+            IsToolActive = false;
+            if (obj == null)
                 return;
+            var input = obj as List<Dictionary<string, Tuple<object, bool>>>;
+            if (input != null)
+                foreach (var item in input)
+                {
+                    var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
+                    if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
+                        continue;
+                    await this.ProcessInputAsync(coordinate);
+                    InputCoordinate = coordinate;
 
-            this.ClearListBoxSelection();
-
-            foreach (var coordinate in coordinates)
+                    if (!HasInputError)
+                    {
+                        if (item.ContainsKey(PointFieldName))
+                            continue;
+                        item.Add(PointFieldName, Tuple.Create((object)proCoordGetter.Point, false));
+                        OnNewMapPoint(item);
+                    }
+                }
+            else
             {
-                await ProcessInputAsync(coordinate);
-                InputCoordinate = coordinate;
-                if (!HasInputError)
-                    OnNewMapPoint(proCoordGetter.Point);
+                List<string> coordinates = obj as List<string>;
+                if (coordinates == null)
+                    return;
+                this.ClearListBoxSelection();
+                foreach (var coordinate in coordinates)
+                {
+                    await ProcessInputAsync(coordinate);
+                    InputCoordinate = coordinate;
+                    if (!HasInputError)
+                        OnNewMapPoint(proCoordGetter.Point);
+                }
+
+                InputCoordinate = "";
             }
-            InputCoordinate = "";
+            pDialog.Hide();
         }
 
         private void ClearListBoxSelection()
@@ -109,7 +129,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public AddInPoint ListBoxItemAddInPoint { get; set; }        
+        public AddInPoint ListBoxItemAddInPoint { get; set; }
         private object _ListBoxSelectedItem = null;
         public object ListBoxSelectedItem
         {
@@ -123,6 +143,10 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 // update selections
                 UpdateHighlightedGraphics(false);
+
+                var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
+                proCoordGetter.Point = addinPoint.Point;
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             }
         }
 
@@ -139,7 +163,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             }
         }
-
+                
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
@@ -185,7 +209,7 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
         // copy parameter to clipboard
-        private void OnCopyCommand(object obj)
+        public override void OnCopyCommand(object obj)
         {
             var items = obj as IList;
             if (items == null)
@@ -214,12 +238,9 @@ namespace ProAppCoordConversionModule.ViewModels
             var saveAsDialog = new ProSaveAsFormatView();
             var vm = new ProSaveAsFormatViewModel();
             saveAsDialog.DataContext = vm;
-
-
             if (saveAsDialog.ShowDialog() == true)
             {
                 var fcUtils = new FeatureClassUtils();
-
                 string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked, vm.CSVIsChecked);
                 if (path != null)
                 {
@@ -227,9 +248,9 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         string folderName = System.IO.Path.GetDirectoryName(path);
                         var mapPointList = CoordinateAddInPoints.Select(i => i.Point).ToList();
-                        var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
                         if (vm.FeatureIsChecked)
                         {
+                            var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
                             await fcUtils.CreateFCOutput(path,
                                                          SaveAsType.FileGDB,
                                                          ccMapPointList,
@@ -239,26 +260,31 @@ namespace ProAppCoordConversionModule.ViewModels
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
+                            var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
                             await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
                         }
                         else if (vm.CSVIsChecked)
                         {
                             var aiPoints = CoordinateAddInPoints.ToList();
-
                             if (!aiPoints.Any())
                                 return;
-
                             var csvExport = new CsvExport();
+                            var displayAmb = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
                             foreach (var point in aiPoints)
                             {
                                 var results = GetOutputFormats(point);
                                 csvExport.AddRow();
-                                foreach (KeyValuePair<string, string> format in results)
+                                foreach (var item in results)
+                                    csvExport[item.Key] = item.Value;
+                                if (point.FieldsDictionary != null)
                                 {
-                                    csvExport[format.Key] = format.Value;
+                                    foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
+                                        if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                                            csvExport[item.Key] = item.Value.Item1;
                                 }
-
+                                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                             }
+                            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = displayAmb;
                             csvExport.ExportToFile(path);
 
                             System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
@@ -276,13 +302,34 @@ namespace ProAppCoordConversionModule.ViewModels
         private List<CCProGraphic> GetMapPointExportFormat(ObservableCollection<AddInPoint> mapPointList)
         {
             List<CCProGraphic> results = new List<CCProGraphic>();
+            var columnCollection = new List<string>();
+            var dictionary = new Dictionary<string, object>();
             foreach (var point in mapPointList)
             {
                 var attributes = GetOutputFormats(point);
+                if (point.FieldsDictionary != null)
+                {
+                    foreach (KeyValuePair<string, Tuple<object, bool>> item in point.FieldsDictionary)
+                        if (item.Key != PointFieldName && item.Key != OutputFieldName)
+                        {
+                            attributes[item.Key] = Convert.ToString(item.Value.Item1);
+                            if (!columnCollection.Contains(item.Key))
+                                columnCollection.Add(item.Key);
+                        }
+                }
                 CCProGraphic ccMapPoint = new CCProGraphic() { Attributes = attributes, MapPoint = point.Point };
                 results.Add(ccMapPoint);
             }
-
+            foreach (var item in results)
+            {
+                foreach (var column in columnCollection)
+                {
+                    if (!item.Attributes.ContainsKey(column))
+                    {
+                        item.Attributes.Add(column, null);
+                    }
+                }
+            }
             return results;
         }
 
@@ -307,12 +354,12 @@ namespace ProAppCoordConversionModule.ViewModels
                 // copy to clipboard
                 System.Windows.Clipboard.SetText(sb.ToString());
             }
-        }        
+        }
 
-        private async void AddCollectionPoint(MapPoint point)
+        private async void AddCollectionPoint(MapPoint point, Dictionary<string, Tuple<object, bool>> fieldsDictionary = null)
         {
             var guid = await AddGraphicToMap(point, ColorFactory.Instance.RedRGB, true, 7);
-            var addInPoint = new AddInPoint() { Point = point, GUID = guid };
+            var addInPoint = new AddInPoint() { Point = point, GUID = guid, FieldsDictionary = fieldsDictionary };
 
             //Add point to the top of the list
             CoordinateAddInPoints.Insert(0, addInPoint);
@@ -353,7 +400,7 @@ namespace ProAppCoordConversionModule.ViewModels
             RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
         }
 
-        private void OnPasteCommand(object obj)
+        public override void OnPasteCommand(object obj)
         {
             var input = Clipboard.GetText().Trim();
             string[] lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -394,7 +441,17 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!base.OnNewMapPoint(obj))
                 return false;
 
-            AddCollectionPoint(obj as MapPoint);
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            if (input != null)
+            {
+                var point = input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+                AddCollectionPoint(point as MapPoint, input);
+            }
+            else
+            {
+                var point = obj as MapPoint;
+                AddCollectionPoint(point, input);
+            }
 
             return true;
         }
@@ -411,7 +468,7 @@ namespace ProAppCoordConversionModule.ViewModels
         }
 
         public override async void OnMapPointSelection(object obj)
-        {         
+        {
             var mp = obj as MapPoint;
             var poly = GeometryEngine.Instance.Buffer(mp, 20000);
             AddInPoint closestPoint = null;
@@ -436,7 +493,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 closestPoint.IsSelected = true;
                 ListBoxSelectedItem = closestPoint;
             }
-            RaisePropertyChanged(() => ListBoxSelectedItem);           
+            RaisePropertyChanged(() => ListBoxSelectedItem);
         }
 
         #endregion overrides

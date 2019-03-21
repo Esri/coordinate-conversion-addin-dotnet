@@ -1,0 +1,39 @@
+﻿<Window x:Class="CoordinateConversionLibrary.Views.AdditionalFieldsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers"
+        xmlns:local="clr-namespace:CoordinateConversionLibrary"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="{Binding ViewDetailsTitle}"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        helpers:DialogCloser.DialogResult="{Binding DialogResult}"
+        mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}" HorizontalAlignment="Left"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+                  HeadersVisibility="Column"
+                  RowHeight="25"
+                  Name="dgTripwire" VerticalAlignment="Top">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" />
+                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

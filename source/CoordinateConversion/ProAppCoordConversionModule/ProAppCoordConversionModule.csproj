@@ -155,6 +155,9 @@
     <Compile Include="ViewModels\ProOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
+    <Compile Include="Views\ProAdditionalFieldsView.xaml.cs">
+      <DependentUpon>ProAdditionalFieldsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProAmbiguousCoordsView.xaml.cs">
       <DependentUpon>ProAmbiguousCoordsView.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,10 @@
     <Page Include="UI\FlashEmbeddedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProAdditionalFieldsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ProAmbiguousCoordsView.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:libprop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
              xmlns:viewModels="clr-namespace:ArcMapAddinCoordinateConversion.ViewModels"
+             ScrollViewer.VerticalScrollBarVisibility="Hidden"
              Width="300"
              Height="300">
     <UserControl.Resources>
@@ -11,9 +12,7 @@
     <UserControl.DataContext>
         <StaticResourceExtension ResourceKey="viewModelMain" />
     </UserControl.DataContext>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid ScrollViewer.CanContentScroll="True">
-            <UserControl Content="{Binding ConvertTabView}" />
-        </Grid>
-    </ScrollViewer>
+    <Grid ScrollViewer.VerticalScrollBarVisibility="Hidden">
+        <UserControl Content="{Binding ConvertTabView}" />
+    </Grid>
 </UserControl>

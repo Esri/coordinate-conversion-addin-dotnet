@@ -47,11 +47,11 @@ namespace ProAppCoordConversionModule.Models
         }
         public string Text
         {
-            get 
+            get
             {
                 try
                 {
-                    return MapPointHelper.GetMapPointAsDisplayString(Point); 
+                    return MapPointHelper.GetMapPointAsDisplayString(Point);
                 }
                 catch
                 {
@@ -89,6 +89,13 @@ namespace ProAppCoordConversionModule.Models
                 isSelected = value;
                 RaisePropertyChanged(() => IsSelected);
             }
+        }
+
+        private Dictionary<string, Tuple<object, bool>> fieldsDictionary;
+        public Dictionary<string, Tuple<object, bool>> FieldsDictionary
+        {
+            get { return fieldsDictionary; }
+            set { fieldsDictionary = value; }
         }
     }
 }

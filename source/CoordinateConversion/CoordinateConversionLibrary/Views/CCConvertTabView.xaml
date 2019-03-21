@@ -18,9 +18,7 @@
             <UserControl Content="{Binding InputCCView}" />
         </GroupBox>
         <GroupBox Grid.Row="1" Header="{x:Static libprop:Resources.HeaderOutput}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <UserControl Content="{Binding OutputCCView}" />
-            </ScrollViewer>
+            <UserControl Content="{Binding OutputCCView}" />
         </GroupBox>
         <GroupBox Grid.Row="2" Header="{x:Static libprop:Resources.HeaderList}">
             <UserControl Content="{Binding CollectTabView}" />

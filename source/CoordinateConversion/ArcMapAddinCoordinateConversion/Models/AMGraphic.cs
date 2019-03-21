@@ -13,16 +13,19 @@
 // limitations under the License.
 
 using ESRI.ArcGIS.Geometry;
+using System;
+using System.Collections.Generic;
 
 namespace ArcMapAddinCoordinateConversion.Models
 {
     public class AMGraphic
     {
-        public AMGraphic(string _uniqueid, IGeometry _geometry, bool _isTemp = false)
+        public AMGraphic(string _uniqueid, IGeometry _geometry, bool _isTemp = false, Dictionary<string, Tuple<object, bool>> _dictionary = null)
         {
             UniqueId = _uniqueid;
             Geometry = _geometry;
             IsTemp = _isTemp;
+            FieldsDictionary = _dictionary;
         }
 
         // properties   
@@ -41,6 +44,8 @@ namespace ArcMapAddinCoordinateConversion.Models
         /// Property to determine if graphic is temporary or not
         /// </summary>
         public bool IsTemp { get; set; }
+
+        public Dictionary<string, Tuple<object, bool>> FieldsDictionary;
 
     }
 }

@@ -33,6 +33,7 @@ using ArcGIS.Desktop.Mapping;
 
 using CoordinateConversionLibrary;
 using System.Windows;
+using System.Linq;
 
 namespace ProAppCoordConversionModule.Models
 {
@@ -139,7 +140,7 @@ namespace ProAppCoordConversionModule.Models
         /// <returns></returns>
         private static async Task CreateFeatures(List<ProGraphic> graphicsList)
         {
-            RowBuffer rowBuffer = null;
+            ArcGIS.Core.Data.RowBuffer rowBuffer = null;
 
             try
             {
@@ -167,7 +168,7 @@ namespace ProAppCoordConversionModule.Models
                                 else if (graphic.Geometry is Polygon)
                                     rowBuffer[shapeIndex] = new PolygonBuilder(graphic.Geometry as Polygon).ToGeometry();
 
-                                Row row = table.CreateRow(rowBuffer);
+                                ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
                             }
                         }
 
@@ -201,7 +202,7 @@ namespace ProAppCoordConversionModule.Models
         }
         private static async Task CreateFeatures(List<CCProGraphic> mapPointList)
         {
-            RowBuffer rowBuffer = null;
+            ArcGIS.Core.Data.RowBuffer rowBuffer = null;
 
             try
             {
@@ -231,7 +232,7 @@ namespace ProAppCoordConversionModule.Models
                                     if (idx > -1)
                                         rowBuffer[idx] = item.Value;
                                 }
-                                Row row = table.CreateRow(rowBuffer);
+                                ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
                             }
                         }
 
@@ -381,7 +382,32 @@ namespace ProAppCoordConversionModule.Models
                 {
                     foreach (var field in mapPointList[0].Attributes)
                     {
-                        IGPResult addFieldResult = await Geoprocessing.ExecuteToolAsync("AddField_management", makeValueArray(featureClass, field.Key, "TEXT"));
+                        var lstDT = new List<DataType>();
+                        foreach (var item in mapPointList.SelectMany(x => x.Attributes.Where(y => y.Key == field.Key).Select(y => y.Value)))
+                        {
+                            lstDT.Add(ParseString(item));
+                        }
+                        var dataType = "TEXT";
+                        var totalCount = lstDT.Count;
+                        var matchedCount = lstDT.Where(x => x == lstDT.FirstOrDefault()).Count();
+                        if (totalCount == matchedCount)
+                        {
+                            if (lstDT.FirstOrDefault() == DataType.System_Boolean)
+                                dataType = "TEXT";
+                            else if (lstDT.FirstOrDefault() == DataType.System_DateTime)
+                                dataType = "DATE";
+                            else if (lstDT.FirstOrDefault() == DataType.System_Double)
+                                dataType = "DOUBLE";
+                            else if (lstDT.FirstOrDefault() == DataType.System_Int32)
+                                dataType = "LONG";
+                            else if (lstDT.FirstOrDefault() == DataType.System_Int64)
+                                dataType = "DOUBLE";
+                            else if (lstDT.FirstOrDefault() == DataType.System_String)
+                                dataType = "TEXT";
+                        }
+                        else
+                            dataType = "TEXT";
+                        IGPResult addFieldResult = await Geoprocessing.ExecuteToolAsync("AddField_management", makeValueArray(featureClass, field.Key, dataType));
                     }
                 }
 
@@ -406,5 +432,111 @@ namespace ProAppCoordConversionModule.Models
                 MessageBox.Show(ex.ToString());
             }
         }
+
+        public static DataType ParseString(string str)
+        {
+
+            bool boolValue;
+            Int32 intValue;
+            Int64 bigintValue;
+            double doubleValue;
+            DateTime dateValue;
+
+            // Place checks higher in if-else statement to give higher priority to type.
+
+            if (bool.TryParse(str, out boolValue))
+                return DataType.System_Boolean;
+            else if (Int32.TryParse(str, out intValue))
+                return DataType.System_Int32;
+            else if (Int64.TryParse(str, out bigintValue))
+                return DataType.System_Int64;
+            else if (double.TryParse(str, out doubleValue))
+                return DataType.System_Double;
+            else if (DateTime.TryParse(str, out dateValue))
+                return DataType.System_DateTime;
+            else return DataType.System_String;
+
+        }
+
+        public static async Task<List<Dictionary<string, Tuple<object,bool>>>> ImportFromExcel(string fileName)
+        {
+            var tableName = "ExcelData";
+            var lstDictionary = new List<Dictionary<string, Tuple<object,bool>>>();
+            List<object> arguments = new List<object>();
+            arguments.Add(fileName);
+            arguments.Add(tableName);
+            var env = Geoprocessing.MakeEnvironmentArray(overwriteoutput: true);
+            var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
+            var progressDialog = new ProgressDialog("Processing.. Please wait");
+            progressDialog.Show();
+            try
+            {
+                IGPResult result = await Geoprocessing.ExecuteToolAsync("ExcelToTable_conversion", valueArray, env, null, null, GPExecuteToolFlags.Default);
+                if (!result.IsFailed)
+                {
+                    lstDictionary = await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+                    {
+                        using (Geodatabase geodatabase = new Geodatabase(FgdbFileToConnectionPath(CoreModule.CurrentProject.DefaultGeodatabasePath)))
+                        {
+                            QueryDef queryDef = new QueryDef
+                            {
+                                Tables = tableName,
+                                WhereClause = "1 = 1",
+                            };
+
+                            using (RowCursor rowCursor = geodatabase.Evaluate(queryDef, false))
+                            {
+                                while (rowCursor.MoveNext())
+                                {
+                                    var dictionary = new Dictionary<string, Tuple<object,bool>>();
+                                    using (ArcGIS.Core.Data.Row row = rowCursor.Current)
+                                    {
+                                        for (int i = 0; i < row.GetFields().Count; i++)
+                                        {
+                                            var key = row.GetFields()[i].Name;
+                                            var val = rowCursor.Current[i];
+                                            dictionary.Add(key, Tuple.Create(val,false));
+                                        }
+                                    }
+                                    lstDictionary.Add(dictionary);
+                                }
+                            }
+                        }
+                        progressDialog.Hide();
+                        return lstDictionary;
+                    });
+                }
+                else
+                {
+                    progressDialog.Hide();
+                    MessageBox.Show("ExcelToTable_conversion operation failed.");
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                progressDialog.Hide();
+            }
+            return lstDictionary;
+        }
+
+        public static FileGeodatabaseConnectionPath FgdbFileToConnectionPath(string fGdbPath)
+        {
+            return new FileGeodatabaseConnectionPath(new Uri(CoreModule.CurrentProject.DefaultGeodatabasePath));
+        }
+    }
+
+    enum DataType
+    {
+        System_Boolean = 0,
+        System_Int32 = 1,
+        System_Int64 = 2,
+        System_Double = 3,
+        System_DateTime = 4,
+        System_String = 5
     }
 }
