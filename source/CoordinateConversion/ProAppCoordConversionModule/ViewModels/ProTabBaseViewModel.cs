@@ -72,6 +72,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
         public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
+        public ProAdditionalFieldsView DialogView { get; set; }
+        public bool IsDialogViewOpen { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
         public static PropertyInfo SelectedColorObject { get; set; }
@@ -754,9 +756,25 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
             ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
-            var dialog = new ProAdditionalFieldsView();
-            dialog.DataContext = this;
-            dialog.ShowDialog();
+            if (!IsDialogViewOpen)
+            {
+                IsDialogViewOpen = true;
+                DialogView = new ProAdditionalFieldsView();
+                DialogView.DataContext = this;
+                DialogView.Closed += diagView_Closed;
+                DialogView.Owner = ArcGIS.Desktop.Framework.FrameworkApplication.ActiveWindow as System.Windows.Window;
+                DialogView.Show();
+            }
+            else
+            {
+                DialogView.DataContext = this;
+                RaisePropertyChanged(() => FieldsCollection);
+            }
+        }
+
+        private void diagView_Closed(object sender, EventArgs e)
+        {
+            IsDialogViewOpen = false;
         }
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
@@ -843,12 +861,12 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 if (env != null)
                 {
-                    if (env.SpatialReference!=point.SpatialReference)
+                    if (env.SpatialReference != point.SpatialReference)
                     {
-                        point=GeometryEngine.Instance.Project(point, env.SpatialReference) as MapPoint;
+                        point = GeometryEngine.Instance.Project(point, env.SpatialReference) as MapPoint;
                     }
                     isValid = GeometryEngine.Instance.Contains(env, point);
-                }                   
+                }
 
                 return isValid;
             }

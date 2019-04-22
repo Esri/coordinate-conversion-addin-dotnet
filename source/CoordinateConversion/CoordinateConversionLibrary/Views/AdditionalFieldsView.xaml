@@ -12,6 +12,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
+        Topmost="True"
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>

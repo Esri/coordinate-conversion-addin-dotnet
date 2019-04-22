@@ -69,7 +69,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public ICommandItem CurrentTool { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
-        
+        public AdditionalFieldsView DialogView { get; set; }
+        public bool IsDialogViewOpen { get; set; }
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
         internal void OnActivatePointToolCommand(object obj)
@@ -186,9 +187,25 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
             IPointToStringConverter pointConverter = new IPointToStringConverter();
             ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
-            var diag = new AdditionalFieldsView();
-            diag.DataContext = this;
-            diag.ShowDialog();
+            
+            if (!IsDialogViewOpen)
+            {
+                IsDialogViewOpen = true;
+                DialogView = new AdditionalFieldsView();
+                DialogView.DataContext = this;
+                DialogView.Closed += diagView_Closed;
+                DialogView.Show();
+            }
+            else
+            {
+                DialogView.DataContext = this;
+                RaisePropertyChanged(() => FieldsCollection);
+            }
+        }
+
+        private void diagView_Closed(object sender, EventArgs e)
+        {
+            IsDialogViewOpen = false;
         }
 
         public override bool OnNewMapPoint(object obj)
@@ -208,7 +225,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public override void OnValidateMapPoint(object obj)
         {
-            if(OnValidationSuccess(obj))
+            if (OnValidationSuccess(obj))
             {
                 Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
             }
@@ -300,7 +317,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             return geomBag.Envelope;
         }
-
 
         public override bool OnMouseMove(object obj)
         {
