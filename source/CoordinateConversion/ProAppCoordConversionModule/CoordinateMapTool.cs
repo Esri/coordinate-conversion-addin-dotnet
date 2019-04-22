@@ -60,7 +60,7 @@ namespace ProAppCoordConversionModule
             }
             else
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, mp);
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, mp);
             }
 
             return base.OnSketchCompleteAsync(geometry);

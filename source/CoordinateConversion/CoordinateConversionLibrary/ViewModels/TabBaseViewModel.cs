@@ -44,11 +44,13 @@ namespace CoordinateConversionLibrary.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             FieldCollection = new List<object>();
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPointInternal);
+            Mediator.UnregisterAllCallBacks(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
+            Mediator.Register(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, OnSelectMapPointInternal);
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
-        }
+        }        
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
@@ -344,9 +346,14 @@ namespace CoordinateConversionLibrary.ViewModels
             return new List<Dictionary<string, Tuple<object, bool>>>();
         }
 
-        private void OnNewMapPointInternal(object obj)
+        private void OnValidateMapPointInternal(object obj)
         {
-            OnNewMapPoint(obj);
+            OnValidateMapPoint(obj);
+        }
+
+        public virtual void OnValidateMapPoint(object obj)
+        {
+
         }
 
         private void OnSelectMapPointInternal(object obj)
@@ -357,6 +364,11 @@ namespace CoordinateConversionLibrary.ViewModels
         public virtual bool OnNewMapPoint(object obj)
         {
             return true;
+        }
+
+        private void OnNewMapPointInternal(object obj)
+        {
+            OnNewMapPoint(obj);
         }
 
         public virtual void OnMapPointSelection(object obj)

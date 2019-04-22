@@ -38,5 +38,7 @@ namespace CoordinateConversionLibrary
         public const string CollectListHasItems = "COLLECT_LIST_HAS_ITEMS";
         public const string SELECT_MAP_POINT = "SELECT_MAP_POINT";
         public const string DEACTIVATE_TOOL = "DEACTIVATE_TOOL";
+        public const string VALIDATE_MAP_POINT = "VALIDATE_MAP_POINT";
+
     }
 }

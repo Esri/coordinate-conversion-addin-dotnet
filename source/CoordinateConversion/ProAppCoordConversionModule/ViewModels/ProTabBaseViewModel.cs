@@ -179,6 +179,33 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
+        public override void OnValidateMapPoint(object obj)
+        {
+            if (OnValidationSuccess(obj))
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
+            }
+        }
+
+        public bool OnValidationSuccess(object obj)
+        {
+            if (!base.OnNewMapPoint(obj))
+                return false;
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
+            if (mp == null)
+                return false;
+
+            var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
+            if (!isValidPoint.Result)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds");
+                return false;
+            }
+
+            return true;
+        }
+
         public override bool OnMouseMove(object obj)
         {
             if (!base.OnMouseMove(obj))
@@ -795,6 +822,37 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Method to check to see point is withing the map area of interest
+        /// </summary>
+        /// <param name="point">IPoint to validate</param>
+        /// <returns></returns>
+        internal async Task<bool> IsValidPoint(MapPoint point)
+        {
+            if ((point != null) && (MapView.Active != null) && (MapView.Active.Map != null))
+            {
+                Envelope env = null;
+                await QueuedTask.Run(() =>
+                {
+                    env = MapView.Active.Map.CalculateFullExtent();
+                });
+
+                bool isValid = false;
+
+                if (env != null)
+                {
+                    if (env.SpatialReference!=point.SpatialReference)
+                    {
+                        point=GeometryEngine.Instance.Project(point, env.SpatialReference) as MapPoint;
+                    }
+                    isValid = GeometryEngine.Instance.Contains(env, point);
+                }                   
+
+                return isValid;
+            }
+            return false;
         }
 
         #region Private Methods

@@ -46,6 +46,12 @@ namespace CoordinateConversionLibrary.Helpers
                 pl_dict[token].Remove(callback);
         }
 
+        static public void UnregisterAllCallBacks(string token, Action<object> callback)
+        {
+            if (pl_dict.ContainsKey(token))
+                pl_dict[token].RemoveAll(x=>1==1);
+        }
+
         static public void NotifyColleagues(string token, object args)
         {
             if (pl_dict.ContainsKey(token))

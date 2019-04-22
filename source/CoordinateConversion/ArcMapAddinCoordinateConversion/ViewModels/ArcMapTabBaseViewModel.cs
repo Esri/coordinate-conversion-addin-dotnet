@@ -69,7 +69,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public ICommandItem CurrentTool { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
-
+        
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
         internal void OnActivatePointToolCommand(object obj)
@@ -193,9 +193,32 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
         public override bool OnNewMapPoint(object obj)
         {
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            IPoint point;
+            if (input != null)
+                point = input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as IPoint;
+            else
+                point = obj as IPoint;
+
+            amCoordGetter.Point = point;
+            InputCoordinate = amCoordGetter.GetInputDisplayString();
+
+            return true;
+        }
+
+        public override void OnValidateMapPoint(object obj)
+        {
+            if(OnValidationSuccess(obj))
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
+            }
+        }
+
+        public bool OnValidationSuccess(object obj)
+        {
             if (!base.OnNewMapPoint(obj))
                 return false;
-            var input = obj as Dictionary<string, Tuple<object,bool>>;
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
             IPoint point;
             if (input != null)
                 point = input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as IPoint;
@@ -205,11 +228,79 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (point == null)
                 return false;
 
-            amCoordGetter.Point = point;
-            InputCoordinate = amCoordGetter.GetInputDisplayString();
+            if (!IsValidPoint(point))
+            {
+                MessageBox.Show("Point is out of bounds");
+                return false;
+            }
 
             return true;
         }
+
+        /// <summary>
+        /// Method to check to see point is withing the map area of interest
+        /// </summary>
+        /// <param name="point">IPoint to validate</param>
+        /// <retOnNewMapPointInternalurns></returns>
+        internal bool IsValidPoint(IPoint point)
+        {
+            if ((point != null) && (ArcMap.Document != null) &&
+                (ArcMap.Document.FocusMap != null))
+            {
+                return IsPointWithinExtent(point, UnionAllLayerExtents(ArcMap.Document.FocusMap));
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Method used to check to see if a point is contained by an envelope
+        /// </summary>
+        /// <param name="point">IPoint</param>
+        /// <param name="env">IEnvelope</param>
+        /// <returns></returns>
+        internal bool IsPointWithinExtent(IPoint point, IEnvelope env)
+        {
+            var relationOp = env as IRelationalOperator;
+
+            if (relationOp == null)
+                return false;
+
+            var envelop = env as IGeometry;
+            if (envelop.SpatialReference != point.SpatialReference)
+            {
+                point.Project(envelop.SpatialReference);
+            }
+            return relationOp.Contains(point);
+        }
+
+        /// <summary>
+        /// Unions all extents 
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns>envelope</returns>
+        internal IEnvelope UnionAllLayerExtents(IMap map)
+        {
+            var layers = map.get_Layers();
+            var layer = layers.Next();
+
+            var geomBag = new GeometryBagClass();
+            geomBag.SpatialReference = map.SpatialReference;
+
+            var geomColl = (IGeometryCollection)geomBag;
+            object MissingType = Type.Missing;
+
+            while (layer != null)
+            {
+                if (layer.AreaOfInterest != null)
+                {
+                    geomColl.AddGeometry(layer.AreaOfInterest, ref MissingType, ref MissingType);
+                }
+                layer = layers.Next();
+            }
+
+            return geomBag.Envelope;
+        }
+
 
         public override bool OnMouseMove(object obj)
         {
@@ -745,10 +836,10 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             return CoordinateType.Unknown;
         }
 
-        public override List<Dictionary<string, Tuple<object,bool>>> ReadExcelInput(string fileName)
+        public override List<Dictionary<string, Tuple<object, bool>>> ReadExcelInput(string fileName)
         {
             var tableName = Guid.NewGuid().ToString().Replace("-", "");
-            var lstDictionary = new List<Dictionary<string, Tuple<object,bool>>>();
+            var lstDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             using (ComReleaser oComReleaser = new ComReleaser())
             {
 
@@ -764,7 +855,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
                 // Start an edit operation.
                 workspaceEdit.StartEditOperation();
-                
+
                 IGeoProcessor2 gp = new GeoProcessorClass();
                 gp.AddOutputsToMap = false;
 
@@ -782,7 +873,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 // will be committed.
                 workspaceEdit.StopEditing(true);
 
-                 if (ipResult.Status == esriJobStatus.esriJobSucceeded)
+                if (ipResult.Status == esriJobStatus.esriJobSucceeded)
                 {
                     var workspacePath = System.IO.Path.GetDirectoryName(Convert.ToString(ipResult.ReturnValue));
 
@@ -793,11 +884,11 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {
                         for (int i = 1; i <= table.RowCount(null); i++)
                         {
-                            var dictionary = new Dictionary<string, Tuple<object,bool>>();
+                            var dictionary = new Dictionary<string, Tuple<object, bool>>();
                             IRow row = table.GetRow(i);
                             for (int j = 0; j < row.Fields.FieldCount; j++)
                             {
-                                dictionary.Add(row.Fields.get_Field(j).Name, Tuple.Create(row.get_Value(j),false));
+                                dictionary.Add(row.Fields.get_Field(j).Name, Tuple.Create(row.get_Value(j), false));
                             }
                             lstDictionary.Add(dictionary);
                         }
