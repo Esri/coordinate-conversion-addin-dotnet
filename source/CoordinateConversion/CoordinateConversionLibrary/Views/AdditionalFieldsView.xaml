@@ -21,20 +21,22 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}" HorizontalAlignment="Left"
+    <StackPanel>
+        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0"/>
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}"
+            HorizontalAlignment="Left"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             CanUserSortColumns="False"
-                  HeadersVisibility="Column"
-                  RowHeight="25"
-                  Name="dgTripwire" VerticalAlignment="Top">
+            HeadersVisibility="Column"
+            RowHeight="25"
+            Name="dgTripwire" VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" />
                 <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" />
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </StackPanel>
 </Window>
