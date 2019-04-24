@@ -13,6 +13,7 @@
         ResizeMode="NoResize"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
         Topmost="True"
+        WindowStyle="ToolWindow"
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>

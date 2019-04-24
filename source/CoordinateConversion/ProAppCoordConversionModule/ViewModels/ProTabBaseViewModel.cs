@@ -201,7 +201,8 @@ namespace ProAppCoordConversionModule.ViewModels
             var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
             if (!isValidPoint.Result)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds", "Point is out of bounds",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 return false;
             }
 
@@ -748,28 +749,71 @@ namespace ProAppCoordConversionModule.ViewModels
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
                 return;
             }
+            var htmlString = "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>"
+                                + "<meta charset=\"utf-8\">"
+                                + "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\">"
+                                + "<title>Popup</title>"
+                                + "<link rel=\"Stylesheet\" type=\"text/css\" href=\"c:/program files/arcgis/pro/Resources/Popups/esri/css/Popups.css\">"
+                                + "</head>"
+                                + "<body>"
+                                + "<div class=\"esriPopup\">"
+                                + "<div class=\"esriPopupWrapper\">"
+                                + "<div class=\"sizer content\">"
+                                + "<div class=\"contentPane\">"
+                                + "<div class=\"esriViewPopup\">"
+                                + "<div class=\"mainSection\">"
+                                + "<div><!--POPUP_MAIN_CONTENT_TEXT--></div>"
+                                + "<div><table class=\"attrTable\" cellspacing=\"0\" cellpadding=\"0\">";
             FieldsCollection = new ObservableCollection<FieldsCollection>();
+
             foreach (var item in dictionary)
             {
+                htmlString = htmlString + "<tbody><tr valign=\"top\">";
                 if (item.Value.Item2)
+                {
+                    htmlString = htmlString + "<td class=\"attrName\">" + item.Key + "</td><td class=\"attrValue\">" + Convert.ToString(item.Value.Item1) + "</td>";
+
                     FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                }
+                htmlString = htmlString + "</tr>";
             }
+            htmlString = htmlString + "</tbody></table></div>"
+                                        + "</div>"
+                                        + "<div id=\"mediaSection\" class=\"mediaSection hidden\">"
+                                        + "<div id=\"mediaTitle\" class=\"header\"></div>"
+                                        + "<div id=\"mediaTitleLine\" class=\"hzLine\"></div>"
+                                        + "<div id=\"mediaDescription\" class=\"caption\"></div>"
+                                        + "<div id=\"gallery\" class=\"gallery\">"
+                                        + "<div id=\"prevMedia\" title=\"Previous media\" class=\"mediaHandle prev\"></div>"
+                                        + "<div id=\"nextMedia\" title=\"Next media\" class=\"mediaHandle next\"></div>"
+                                        + "<ul id=\"mediaSummary\" class=\"summary\">"
+                                        + "<li id=\"imageCount\" class=\"image mediaCount\">0</li>"
+                                        + "<li id=\"imageIcon\" class=\"image mediaIcon\"></li>"
+                                        + "<li id=\"chartCount\" class=\"chart mediaCount\">0</li>"
+                                        + "<li id=\"chartIcon\" class=\"chart mediaIcon\"></li>"
+                                        + "</ul>"
+                                        + "<div id=\"mediaFrame\" class=\"frame\" style=\"-ms-user-select: none;\">"
+                                        + "<div id=\"mediaTarget\" class=\"chart\"></div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "<br><br>"
+                                        + "</div>"
+                                        + "<div>"
+                                        + "<div><!--POPUP_ATTACHMENTS--></div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/dojo/dojo.js\"></script>"
+                                        + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/esri/run.js\"></script>"
+                                        + "</body></html>";
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
             ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
-            if (!IsDialogViewOpen)
-            {
-                IsDialogViewOpen = true;
-                DialogView = new ProAdditionalFieldsView();
-                DialogView.DataContext = this;
-                DialogView.Closed += diagView_Closed;
-                DialogView.Owner = ArcGIS.Desktop.Framework.FrameworkApplication.ActiveWindow as System.Windows.Window;
-                DialogView.Show();
-            }
-            else
-            {
-                DialogView.DataContext = this;
-                RaisePropertyChanged(() => FieldsCollection);
-            }
+            MapView.Active.ShowCustomPopup(new List<PopupContent>() {
+                new PopupContent(htmlString,ViewDetailsTitle)
+            });
         }
 
         private void diagView_Closed(object sender, EventArgs e)

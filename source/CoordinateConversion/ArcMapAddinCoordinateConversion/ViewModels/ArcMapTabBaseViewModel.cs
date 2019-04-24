@@ -187,7 +187,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
             IPointToStringConverter pointConverter = new IPointToStringConverter();
             ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
-            
+
             if (!IsDialogViewOpen)
             {
                 IsDialogViewOpen = true;
@@ -200,6 +200,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 DialogView.DataContext = this;
                 RaisePropertyChanged(() => FieldsCollection);
+                RaisePropertyChanged(() => ViewDetailsTitle);
             }
         }
 
@@ -245,9 +246,9 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             if (point == null)
                 return false;
 
-            if (!IsValidPoint(point))
+            if (!IsValidPoint(point) || InputCoordinate == "NA")
             {
-                MessageBox.Show("Point is out of bounds");
+                MessageBox.Show("Point is out of bounds", "Point is out of bounds", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
