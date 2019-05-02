@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -1276,10 +1277,11 @@ namespace ProAppCoordConversionModule.ViewModels
             if (e.IsEventHandled)
             {
                 var ambiguous = new ProAmbiguousCoordsView();
-                var ambiguousVM = new ProAmbiguousCoordsViewModel();
-                ambiguous.DataContext = ambiguousVM;
-                ambiguous.ShowDialog();
-                CoordinateConversionLibraryConfig.AddInConfig.isLatLong = ambiguousVM.CheckedLatLon;
+                ambiguous.DataContext = new ProAmbiguousCoordsViewModel();
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ambiguous.ShowDialog();
+                });
                 e.IsEventHandled = false;
             }
         }
