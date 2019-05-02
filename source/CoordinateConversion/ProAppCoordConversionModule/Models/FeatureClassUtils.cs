@@ -34,6 +34,7 @@ using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary;
 using System.Windows;
 using System.Linq;
+using CoordinateConversionLibrary.ViewModels;
 
 namespace ProAppCoordConversionModule.Models
 {
@@ -235,6 +236,18 @@ namespace ProAppCoordConversionModule.Models
                                 ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
                             }
                         }
+
+                        //Set header text
+                        var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMFeatureLayer;
+                        var cimDisplayTable = cimFeatureDefinition.FeatureTable;
+                        var displayField = cimDisplayTable.DisplayField;
+                        cimDisplayTable.DisplayField = TabBaseViewModel.CoordinateFieldName;
+                        featureLayer.SetDefinition(cimFeatureDefinition);
+
+                        //set label property
+                        var lc = featureLayer.LabelClasses.FirstOrDefault();
+                        lc.SetExpression(string.Format("[{0}]", TabBaseViewModel.CoordinateFieldName));
+                        lc.SetExpressionEngine(LabelExpressionEngine.VBScript);
 
                         //Get simple renderer from feature layer 
                         CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
