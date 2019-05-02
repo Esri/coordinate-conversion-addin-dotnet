@@ -37,30 +37,10 @@ namespace CoordinateConversionLibrary.Views
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, obj);
             e.Handled = true;
         }
-        private void listBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, null);
-        }
 
         private void Import_Button_Click(object sender, RoutedEventArgs e)
         {
             this.listBoxCoordinates.UnselectAll();
-        }
-
-        private void listBoxCoordinates_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            int index = -1;
-            for (int i = 0; i < listBoxCoordinates.Items.Count; i++)
-            {
-                var lbi = listBoxCoordinates.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
-                if (lbi == null) continue;
-                if (IsMouseOverTarget(lbi, e.GetPosition((IInputElement)lbi)))
-                {
-                    index = i;
-                    break;
-                }
-            }
-            listBoxCoordinates.SelectedIndex = index;
         }
 
         private static bool IsMouseOverTarget(Visual target, Point point)
@@ -69,10 +49,27 @@ namespace CoordinateConversionLibrary.Views
             return bounds.Contains(point);
         }
 
-        private void listBoxCoordinates_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void listBoxCoordinates_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            (sender as UIElement).Focus();
-            Keyboard.Focus(sender as UIElement);
+            if (e.RightButton == MouseButtonState.Pressed && Keyboard.Modifiers != ModifierKeys.Control)
+            {
+                for (int i = 0; i < listBoxCoordinates.Items.Count; i++)
+                {
+                    var lbi = listBoxCoordinates.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
+                    if (lbi == null) continue;
+                    if (IsMouseOverTarget(lbi, e.GetPosition((IInputElement)lbi)))
+                    {
+                        if (!lbi.IsSelected)
+                        {
+                            listBoxCoordinates.UnselectAll();
+                            listBoxCoordinates.SelectedIndex = i;
+                        }
+                        break;
+                    }
+                }
+            }
+            else if (e.LeftButton != MouseButtonState.Pressed)
+                e.Handled = true;
         }
     }
 }
