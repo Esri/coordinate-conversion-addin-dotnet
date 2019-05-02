@@ -8,12 +8,14 @@
         xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="{Binding ViewDetailsTitle}"
-        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
+        Width="Auto"
+        SizeToContent="Height"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
         Topmost="True"
         WindowStyle="ToolWindow"
+        SizeChanged="Window_SizeChanged"
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -22,22 +24,22 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <StackPanel>
-        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0"/>
+    <Grid Width="Auto">
+        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0" x:Name="titleText" Width="Auto"/>
         <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}"
-            HorizontalAlignment="Left"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            CanUserReorderColumns="False"
-            CanUserResizeRows="False"
-            CanUserSortColumns="False"
-            HeadersVisibility="Column"
-            RowHeight="25"
-            Name="dgTripwire" VerticalAlignment="Top">
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="False"
+                CanUserResizeRows="False"
+                CanUserSortColumns="False"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                RowHeight="25"
+                Name="dgFieldsInfo" VerticalAlignment="Top">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" />
-                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" />
+                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" Width="Auto"/>
+                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
-    </StackPanel>
+    </Grid>
 </Window>
