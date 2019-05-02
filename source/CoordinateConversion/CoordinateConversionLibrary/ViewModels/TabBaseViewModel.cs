@@ -44,8 +44,7 @@ namespace CoordinateConversionLibrary.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             FieldCollection = new List<object>();
             Mediator.Register(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, OnNewMapPointInternal);
-            Mediator.UnregisterAllCallBacks(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
-            Mediator.Register(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
+            Mediator.RegisterSingleInstance(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
             Mediator.Register(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, OnSelectMapPointInternal);
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
