@@ -293,8 +293,17 @@ namespace ProAppCoordConversionModule.ViewModels
 
             set
             {
-                _format = value;
-                RaisePropertyChanged(() => Format);
+                if (IsNotValidInput(value))
+                {
+                    IsValidFormat = false;
+                    throw new ArgumentException(CoordinateConversionLibrary.Properties.Resources.SpecialCharactersValidationMsg);
+                }
+                else
+                {
+                    _format = value;
+                    IsValidFormat = true;
+                    RaisePropertyChanged(() => Format);
+                }
             }
         }
 
@@ -338,6 +347,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public ObservableCollection<string> FormatList { get; set; }
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType, string>();
         public string Sample { get; set; }
+        public bool IsValidFormat { get; set; }
         private bool _formatExpanded { get; set; }
         public bool FormatExpanded
         {
@@ -415,6 +425,9 @@ namespace ProAppCoordConversionModule.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
+            if (!IsValidFormat)
+                return;
+
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
@@ -761,6 +774,19 @@ namespace ProAppCoordConversionModule.ViewModels
                 ShowLoadingProcess = Visibility.Collapsed;
             }
         }
+
+        private bool IsNotValidInput(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            var type = GetCoordinateType();
+            if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
+                return false;
+
+            return (value.Contains("+") || value.Contains("-"));
+        }
+
     }
 }
 

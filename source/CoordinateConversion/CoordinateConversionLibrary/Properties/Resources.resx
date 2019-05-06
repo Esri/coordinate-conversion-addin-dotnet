@@ -387,4 +387,7 @@
   <data name="InformationNotAvailableMsg" xml:space="preserve">
     <value>No Field information associated with this point</value>
   </data>
+  <data name="SpecialCharactersValidationMsg" xml:space="preserve">
+    <value>Characters '+' and '-' are not allowed to define custom formatting.</value>
+  </data>
 </root>

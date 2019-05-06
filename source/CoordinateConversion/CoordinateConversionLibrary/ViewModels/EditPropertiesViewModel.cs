@@ -102,8 +102,18 @@ namespace CoordinateConversionLibrary.ViewModels
 
             set
             {
-                _format = value;
-                RaisePropertyChanged(() => Format);
+                if (IsNotValidInput(value))
+                {
+                    IsValidFormat = false;
+                    throw new ArgumentException(CoordinateConversionLibrary.Properties.Resources.SpecialCharactersValidationMsg);
+                }
+                else
+                {
+                    _format = value;
+                    IsValidFormat = true;
+                    RaisePropertyChanged(() => Format);
+                }
+
             }
         }
 
@@ -144,6 +154,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
+        public bool IsValidFormat { get; set; }
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType, string>();
         public string Sample { get; set; }
         private bool _formatExpanded { get; set; }
@@ -192,6 +203,9 @@ namespace CoordinateConversionLibrary.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
+            if (!IsValidFormat)
+                return;
+
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
 
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
@@ -230,13 +244,11 @@ namespace CoordinateConversionLibrary.ViewModels
                 UpdateSample();
                 IsEnableExpander = false;
                 FormatExpanded = false;
-                CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
             }
             else
             {
                 IsEnableExpander = true;
                 FormatExpanded = true;
-                CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 RaisePropertyChanged(() => FormatExpanded);
             }
         }
@@ -428,6 +440,18 @@ namespace CoordinateConversionLibrary.ViewModels
             }
 
             return Properties.Resources.CustomString;
+        }
+
+        private bool IsNotValidInput(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            var type = GetCoordinateType();
+            if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
+                return false;
+
+            return (value.Contains("+") || value.Contains("-"));
         }
     }
 }

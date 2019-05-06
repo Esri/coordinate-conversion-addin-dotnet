@@ -664,6 +664,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Characters &apos;+&apos; and &apos;-&apos; are not allowed to define custom formatting..
+        /// </summary>
+        public static string SpecialCharactersValidationMsg {
+            get {
+                return ResourceManager.GetString("SpecialCharactersValidationMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Easting.
         /// </summary>
         public static string StringEasting {
