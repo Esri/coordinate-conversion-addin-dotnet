@@ -740,16 +740,15 @@ namespace ProAppCoordConversionModule.ViewModels
             var input = obj as System.Windows.Controls.ListBox;
             if (input.SelectedItems.Count == 0)
             {
-                ArcGIS.Desktop.Framework.Dialogs.
-                    MessageBox.Show("No data available");
-                return;
-            }
-            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
-            if (dictionary == null)
-            {
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
                 return;
             }
+            ShowPopUp(((input.SelectedItems)[0] as AddInPoint));
+        }
+
+        private void ShowPopUp(AddInPoint addinPoint)
+        {
+            var dictionary = addinPoint.FieldsDictionary;
             var htmlString = "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>"
                                 + "<meta charset=\"utf-8\">"
                                 + "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\">"
@@ -764,19 +763,31 @@ namespace ProAppCoordConversionModule.ViewModels
                                 + "<div class=\"esriViewPopup\">"
                                 + "<div class=\"mainSection\">"
                                 + "<div><!--POPUP_MAIN_CONTENT_TEXT--></div>"
-                                + "<div><table class=\"attrTable\" cellspacing=\"0\" cellpadding=\"0\">";
+                                + "<div><table class=\"attrTable\" cellspacing=\"0\" cellpadding=\"0\"><tbody>";
             FieldsCollection = new ObservableCollection<FieldsCollection>();
-
-            foreach (var item in dictionary)
+            if (dictionary != null)
             {
-                htmlString = htmlString + "<tbody><tr valign=\"top\">";
-                if (item.Value.Item2)
+                foreach (var item in dictionary)
                 {
-                    htmlString = htmlString + "<td class=\"attrName\">" + item.Key + "</td><td class=\"attrValue\">" + Convert.ToString(item.Value.Item1) + "</td>";
+                    htmlString = htmlString + "<tr valign=\"top\">";
+                    if (item.Value.Item2)
+                    {
+                        htmlString = htmlString + "<td class=\"attrName\">" + item.Key + "</td><td class=\"attrValue\">" + Convert.ToString(item.Value.Item1) + "</td>";
 
-                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                        FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                    }
+                    htmlString = htmlString + "</tr>";
                 }
-                htmlString = htmlString + "</tr>";
+                var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+                ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
+            }
+            else
+                ViewDetailsTitle = addinPoint.Text;
+
+            if (!FieldsCollection.Any())
+            {
+                htmlString = htmlString + "<tr valign=\"top\"><td class=\"attrName\">"
+                    + CoordinateConversionLibrary.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
             }
             htmlString = htmlString + "</tbody></table></div>"
                                         + "</div>"
@@ -810,8 +821,9 @@ namespace ProAppCoordConversionModule.ViewModels
                                         + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/dojo/dojo.js\"></script>"
                                         + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/esri/run.js\"></script>"
                                         + "</body></html>";
-            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
-            ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
+
+
+
             MapView.Active.ShowCustomPopup(new List<PopupContent>() {
                 new PopupContent(htmlString,ViewDetailsTitle)
             });

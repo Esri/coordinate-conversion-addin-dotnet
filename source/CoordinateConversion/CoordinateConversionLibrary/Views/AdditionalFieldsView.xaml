@@ -25,7 +25,12 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid Width="Auto">
-        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0" x:Name="titleText" Width="Auto"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0" x:Name="titleText" 
+                   Width="Auto" Grid.Row="0"/>
         <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
@@ -35,11 +40,15 @@
                 HeadersVisibility="Column"
                 IsReadOnly="True"
                 RowHeight="25"
-                Name="dgFieldsInfo" VerticalAlignment="Top">
+                Name="dgFieldsInfo" 
+                Grid.Row="0"
+                VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" Width="Auto"/>
                 <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Label Grid.Row="1" Content="{x:Static prop:Resources.InformationNotAvailableMsg}"
+               Visibility="{Binding IsWarningVisible}"/>
     </Grid>
 </Window>

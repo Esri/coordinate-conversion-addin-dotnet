@@ -412,6 +412,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Field information associated with this point.
+        /// </summary>
+        public static string InformationNotAvailableMsg {
+            get {
+                return ResourceManager.GetString("InformationNotAvailableMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Coordinate.
         /// </summary>
         public static string InvalidCoordCap {

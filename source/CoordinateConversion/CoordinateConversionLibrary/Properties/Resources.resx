@@ -384,4 +384,7 @@
   <data name="ViewDetails" xml:space="preserve">
     <value>View Details</value>
   </data>
+  <data name="InformationNotAvailableMsg" xml:space="preserve">
+    <value>No Field information associated with this point</value>
+  </data>
 </root>

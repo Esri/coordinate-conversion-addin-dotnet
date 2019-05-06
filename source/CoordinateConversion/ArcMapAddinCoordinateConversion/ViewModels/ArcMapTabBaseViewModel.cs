@@ -39,6 +39,7 @@ using ESRI.ArcGIS.Geoprocessor;
 using ESRI.ArcGIS.esriSystem;
 using System.Threading;
 using ArcMapAddinCoordinateConversion.ValueConverters;
+using System.Windows;
 
 namespace ArcMapAddinCoordinateConversion.ViewModels
 {
@@ -56,6 +57,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             FieldsCollection = new ObservableCollection<CoordinateConversionLibrary.ViewModels.FieldsCollection>();
             ViewDetailsTitle = string.Empty;
+            IsWarningVisible = Visibility.Collapsed;
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
 
@@ -72,6 +74,18 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public AdditionalFieldsView DialogView { get; set; }
         public bool IsDialogViewOpen { get; set; }
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
+
+        private Visibility isWarningVisible;
+        public Visibility IsWarningVisible
+        {
+            get { return isWarningVisible; }
+            set
+            {
+                isWarningVisible = value;
+                RaisePropertyChanged(() => IsWarningVisible);
+            }
+        }
+
 
         internal void OnActivatePointToolCommand(object obj)
         {
@@ -167,27 +181,30 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             var input = obj as System.Windows.Controls.ListBox;
             if (input.SelectedItems.Count == 0)
             {
-                MessageBox.Show("No data available");
+                System.Windows.Forms.MessageBox.Show("No data available");
                 return;
             }
-            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
-            if (dictionary == null)
-            {
-                MessageBox.Show("No data available");
-                return;
-            }
-            FieldsCollection = new ObservableCollection<FieldsCollection>();
-            foreach (var item in dictionary)
-            {
-                if (item.Value.Item2)
-                {
-                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
-                }
-            }
-            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
-            IPointToStringConverter pointConverter = new IPointToStringConverter();
-            ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
+            ShowPopUp((input.SelectedItems)[0] as AddInPoint);
+        }
 
+        private void ShowPopUp(AddInPoint addinPoint)
+        {
+            var dictionary = addinPoint.FieldsDictionary;
+            FieldsCollection = new ObservableCollection<FieldsCollection>();
+            if (dictionary != null)
+            {
+                var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+                IPointToStringConverter pointConverter = new IPointToStringConverter();
+                ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;                
+                foreach (var item in dictionary)
+                    if (item.Value.Item2)
+                        FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+            }
+            else
+            {
+                ViewDetailsTitle = addinPoint.Text;
+            }
+            IsWarningVisible = FieldsCollection.Any()?Visibility.Collapsed:Visibility.Visible;
             if (!IsDialogViewOpen)
             {
                 IsDialogViewOpen = true;
@@ -203,6 +220,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 RaisePropertyChanged(() => ViewDetailsTitle);
             }
         }
+
 
         private void diagView_Closed(object sender, EventArgs e)
         {
@@ -248,7 +266,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
 
             if (!IsValidPoint(point) || InputCoordinate == "NA")
             {
-                MessageBox.Show("Point is out of bounds", "Point is out of bounds", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                System.Windows.Forms.MessageBox.Show("Point is out of bounds", "Point is out of bounds", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
