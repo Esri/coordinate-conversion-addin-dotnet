@@ -205,7 +205,7 @@
     <Resource Include="Images\SelectionSelectTool16.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\GenericErrorStop16.png" />
+    <Resource Include="Images\GenericErrorStop16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
