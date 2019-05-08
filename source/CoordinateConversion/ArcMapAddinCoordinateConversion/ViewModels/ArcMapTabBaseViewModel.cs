@@ -277,13 +277,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         /// Method to check to see point is withing the map area of interest
         /// </summary>
         /// <param name="point">IPoint to validate</param>
-        /// <retOnNewMapPointInternalurns></returns>
+        /// <returns></returns>
         internal bool IsValidPoint(IPoint point)
         {
             if ((point != null) && (ArcMap.Document != null) &&
-                (ArcMap.Document.FocusMap != null))
+                (ArcMap.Document.ActiveView != null))
             {
-                return IsPointWithinExtent(point, UnionAllLayerExtents(ArcMap.Document.FocusMap));
+                var viewExtent = ArcMap.Document.ActiveView.FullExtent;
+                return IsPointWithinExtent(point, viewExtent);
             }
             return false;
         }
