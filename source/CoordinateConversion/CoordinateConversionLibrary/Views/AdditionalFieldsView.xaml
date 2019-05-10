@@ -43,6 +43,15 @@
                 Name="dgFieldsInfo" 
                 Grid.Row="0"
                 VerticalAlignment="Top">
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count, ElementName=dgFieldsInfo}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" Width="Auto"/>
                 <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" Width="Auto"/>
