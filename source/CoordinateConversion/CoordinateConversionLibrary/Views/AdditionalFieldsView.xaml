@@ -11,11 +11,9 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Width="Auto"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
         Topmost="True"
-        WindowStyle="ToolWindow"
-        SizeChanged="Window_SizeChanged"
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -29,15 +27,20 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="30,0,30,0" x:Name="titleText" 
+        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="100,0,100,0" x:Name="titleText" 
                    Width="Auto" Grid.Row="0"/>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}"
+        <DataGrid AutoGenerateColumns="False" 
+                Margin="10,0,10,0"
+                ItemsSource="{Binding FieldsCollection}"
+                BorderBrush="Transparent"
+                BorderThickness="0"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 CanUserReorderColumns="False"
                 CanUserResizeRows="False"
                 CanUserSortColumns="False"
-                HeadersVisibility="Column"
+                HeadersVisibility="None"
+                GridLinesVisibility="None"
                 IsReadOnly="True"
                 RowHeight="25"
                 Name="dgFieldsInfo" 

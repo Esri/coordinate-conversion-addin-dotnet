@@ -25,23 +25,5 @@ namespace CoordinateConversionLibrary.Views
         {
             InitializeComponent();
         }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (dgFieldsInfo.Columns.Count > 0)
-            {
-                if (dgFieldsInfo.Columns.Count > 1)
-                {
-                    var col1 = dgFieldsInfo.Columns[0];
-                    var colLast = dgFieldsInfo.Columns[dgFieldsInfo.Columns.Count - 1];
-                    colLast.Width = this.ActualWidth - col1.ActualWidth - 19;
-                }
-                else
-                {
-                    var col1 = dgFieldsInfo.Columns[0];
-                    col1.Width = this.ActualWidth - 19;
-                }
-            }
-        }
     }
 }
