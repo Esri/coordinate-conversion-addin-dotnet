@@ -16,9 +16,9 @@
                           d:DesignHeight="350" d:DesignWidth="370">
     <Window.Resources>
         <ResourceDictionary>
-            <!--<ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml"/>
-            </ResourceDictionary.MergedDictionaries>-->
+            </ResourceDictionary.MergedDictionaries>
             <local:EnumToFriendlyNameConverter x:Key="enumItemsConverter" />
             <viewModels:EditPropertiesViewModel x:Key="editPropertiesVM" />
             <ObjectDataProvider x:Key="coordinateTypes"
@@ -82,7 +82,11 @@
                         <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
                     </StackPanel>
                     <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}" IsEnabled="{Binding IsEnableExpander}">
-                        <TextBox Text="{Binding Format, UpdateSourceTrigger=PropertyChanged}" MinWidth="150" Margin="3,3,3,3" />
+                        <TextBox Text="{Binding Format, 
+                            UpdateSourceTrigger=PropertyChanged,
+                             ValidatesOnExceptions=True}"
+                             Validation.ErrorTemplate="{StaticResource errorTemplate}" 
+                             MinWidth="150" Margin="3,3,3,3" />
                     </Expander>
                 </StackPanel>
             </StackPanel>

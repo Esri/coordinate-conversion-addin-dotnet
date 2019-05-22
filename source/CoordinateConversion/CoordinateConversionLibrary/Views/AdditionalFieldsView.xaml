@@ -8,10 +8,12 @@
         xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="{Binding ViewDetailsTitle}"
-        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
+        Width="Auto"
+        SizeToContent="WidthAndHeight"
         helpers:DialogCloser.DialogResult="{Binding DialogResult}"
+        Topmost="True"
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -20,20 +22,45 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding FieldsCollection}" HorizontalAlignment="Left"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            CanUserReorderColumns="False"
-            CanUserResizeRows="False"
-            CanUserSortColumns="False"
-                  HeadersVisibility="Column"
-                  RowHeight="25"
-                  Name="dgTripwire" VerticalAlignment="Top">
+    <Grid Width="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="100,0,100,0" x:Name="titleText" 
+                   Width="Auto" Grid.Row="0"/>
+        <DataGrid AutoGenerateColumns="False" 
+                Margin="10,0,10,0"
+                ItemsSource="{Binding FieldsCollection}"
+                BorderBrush="Transparent"
+                BorderThickness="0"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="False"
+                CanUserResizeRows="False"
+                CanUserSortColumns="False"
+                HeadersVisibility="None"
+                GridLinesVisibility="None"
+                IsReadOnly="True"
+                RowHeight="25"
+                Name="dgFieldsInfo" 
+                Grid.Row="0"
+                VerticalAlignment="Top">
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count, ElementName=dgFieldsInfo}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" />
-                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" />
+                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold" Width="Auto"/>
+                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Label Grid.Row="1" Content="{x:Static prop:Resources.InformationNotAvailableMsg}"
+               Visibility="{Binding IsWarningVisible}"/>
     </Grid>
 </Window>

@@ -240,6 +240,7 @@ namespace ProAppCoordConversionModule.ViewModels
             saveAsDialog.DataContext = vm;
             if (saveAsDialog.ShowDialog() == true)
             {
+                IsToolActive = false;
                 var fcUtils = new FeatureClassUtils();
                 string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked, vm.CSVIsChecked);
                 if (path != null)

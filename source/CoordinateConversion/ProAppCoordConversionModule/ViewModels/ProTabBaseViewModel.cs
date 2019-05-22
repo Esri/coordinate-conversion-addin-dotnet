@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -72,6 +73,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
         public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
+        public ProAdditionalFieldsView DialogView { get; set; }
+        public bool IsDialogViewOpen { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
         public static PropertyInfo SelectedColorObject { get; set; }
@@ -175,6 +178,34 @@ namespace ProAppCoordConversionModule.ViewModels
 
             proCoordGetter.Point = mp;
             InputCoordinate = proCoordGetter.GetInputDisplayString();
+
+            return true;
+        }
+
+        public override void OnValidateMapPoint(object obj)
+        {
+            if (OnValidationSuccess(obj))
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
+            }
+        }
+
+        public bool OnValidationSuccess(object obj)
+        {
+            if (!base.OnNewMapPoint(obj))
+                return false;
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
+            if (mp == null)
+                return false;
+
+            var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
+            if (!isValidPoint.Result)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds", "Point is out of bounds",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                return false;
+            }
 
             return true;
         }
@@ -709,27 +740,98 @@ namespace ProAppCoordConversionModule.ViewModels
             var input = obj as System.Windows.Controls.ListBox;
             if (input.SelectedItems.Count == 0)
             {
-                ArcGIS.Desktop.Framework.Dialogs.
-                    MessageBox.Show("No data available");
-                return;
-            }
-            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
-            if (dictionary == null)
-            {
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
                 return;
             }
+            ShowPopUp(((input.SelectedItems)[0] as AddInPoint));
+        }
+
+        private void ShowPopUp(AddInPoint addinPoint)
+        {
+            var dictionary = addinPoint.FieldsDictionary;
+            var htmlString = "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>"
+                                + "<meta charset=\"utf-8\">"
+                                + "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\">"
+                                + "<title>Popup</title>"
+                                + "<link rel=\"Stylesheet\" type=\"text/css\" href=\"c:/program files/arcgis/pro/Resources/Popups/esri/css/Popups.css\">"
+                                + "</head>"
+                                + "<body>"
+                                + "<div class=\"esriPopup\">"
+                                + "<div class=\"esriPopupWrapper\">"
+                                + "<div class=\"sizer content\">"
+                                + "<div class=\"contentPane\">"
+                                + "<div class=\"esriViewPopup\">"
+                                + "<div class=\"mainSection\">"
+                                + "<div><!--POPUP_MAIN_CONTENT_TEXT--></div>"
+                                + "<div><table class=\"attrTable\" cellspacing=\"0\" cellpadding=\"0\"><tbody>";
             FieldsCollection = new ObservableCollection<FieldsCollection>();
-            foreach (var item in dictionary)
+            if (dictionary != null)
             {
-                if (item.Value.Item2)
-                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                foreach (var item in dictionary)
+                {
+                    htmlString = htmlString + "<tr valign=\"top\">";
+                    if (item.Value.Item2)
+                    {
+                        htmlString = htmlString + "<td class=\"attrName\">" + item.Key + "</td><td class=\"attrValue\">" + Convert.ToString(item.Value.Item1) + "</td>";
+
+                        FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                    }
+                    htmlString = htmlString + "</tr>";
+                }
+                var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+                ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
             }
-            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
-            ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
-            var dialog = new ProAdditionalFieldsView();
-            dialog.DataContext = this;
-            dialog.ShowDialog();
+            else
+                ViewDetailsTitle = addinPoint.Text;
+
+            if (!FieldsCollection.Any())
+            {
+                htmlString = htmlString + "<tr valign=\"top\"><td class=\"attrName\">"
+                    + CoordinateConversionLibrary.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
+            }
+            htmlString = htmlString + "</tbody></table></div>"
+                                        + "</div>"
+                                        + "<div id=\"mediaSection\" class=\"mediaSection hidden\">"
+                                        + "<div id=\"mediaTitle\" class=\"header\"></div>"
+                                        + "<div id=\"mediaTitleLine\" class=\"hzLine\"></div>"
+                                        + "<div id=\"mediaDescription\" class=\"caption\"></div>"
+                                        + "<div id=\"gallery\" class=\"gallery\">"
+                                        + "<div id=\"prevMedia\" title=\"Previous media\" class=\"mediaHandle prev\"></div>"
+                                        + "<div id=\"nextMedia\" title=\"Next media\" class=\"mediaHandle next\"></div>"
+                                        + "<ul id=\"mediaSummary\" class=\"summary\">"
+                                        + "<li id=\"imageCount\" class=\"image mediaCount\">0</li>"
+                                        + "<li id=\"imageIcon\" class=\"image mediaIcon\"></li>"
+                                        + "<li id=\"chartCount\" class=\"chart mediaCount\">0</li>"
+                                        + "<li id=\"chartIcon\" class=\"chart mediaIcon\"></li>"
+                                        + "</ul>"
+                                        + "<div id=\"mediaFrame\" class=\"frame\" style=\"-ms-user-select: none;\">"
+                                        + "<div id=\"mediaTarget\" class=\"chart\"></div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "<br><br>"
+                                        + "</div>"
+                                        + "<div>"
+                                        + "<div><!--POPUP_ATTACHMENTS--></div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "</div>"
+                                        + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/dojo/dojo.js\"></script>"
+                                        + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/esri/run.js\"></script>"
+                                        + "</body></html>";
+
+
+
+            MapView.Active.ShowCustomPopup(new List<PopupContent>() {
+                new PopupContent(htmlString,ViewDetailsTitle)
+            });
+        }
+
+        private void diagView_Closed(object sender, EventArgs e)
+        {
+            IsDialogViewOpen = false;
         }
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
@@ -795,6 +897,37 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Method to check to see point is withing the map area of interest
+        /// </summary>
+        /// <param name="point">IPoint to validate</param>
+        /// <returns></returns>
+        internal async Task<bool> IsValidPoint(MapPoint point)
+        {
+            if ((point != null) && (MapView.Active != null) && (MapView.Active.Map != null))
+            {
+                Envelope env = null;
+                await QueuedTask.Run(() =>
+                {
+                    env = MapView.Active.Map.CalculateFullExtent();
+                });
+
+                bool isValid = false;
+
+                if (env != null)
+                {
+                    if (env.SpatialReference != point.SpatialReference)
+                    {
+                        point = GeometryEngine.Instance.Project(point, env.SpatialReference) as MapPoint;
+                    }
+                    isValid = GeometryEngine.Instance.Contains(env, point);
+                }
+
+                return isValid;
+            }
+            return false;
         }
 
         #region Private Methods
@@ -1156,10 +1289,11 @@ namespace ProAppCoordConversionModule.ViewModels
             if (e.IsEventHandled)
             {
                 var ambiguous = new ProAmbiguousCoordsView();
-                var ambiguousVM = new ProAmbiguousCoordsViewModel();
-                ambiguous.DataContext = ambiguousVM;
-                ambiguous.ShowDialog();
-                CoordinateConversionLibraryConfig.AddInConfig.isLatLong = ambiguousVM.CheckedLatLon;
+                ambiguous.DataContext = new ProAmbiguousCoordsViewModel();
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ambiguous.ShowDialog();
+                });
                 e.IsEventHandled = false;
             }
         }

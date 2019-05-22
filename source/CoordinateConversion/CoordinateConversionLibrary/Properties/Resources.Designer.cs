@@ -412,6 +412,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Field information associated with this point.
+        /// </summary>
+        public static string InformationNotAvailableMsg {
+            get {
+                return ResourceManager.GetString("InformationNotAvailableMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Coordinate.
         /// </summary>
         public static string InvalidCoordCap {
@@ -651,6 +660,15 @@ namespace CoordinateConversionLibrary.Properties {
         public static string MsgOverwrite {
             get {
                 return ResourceManager.GetString("MsgOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Characters &apos;+&apos; and &apos;-&apos; are not allowed to define custom formatting..
+        /// </summary>
+        public static string SpecialCharactersValidationMsg {
+            get {
+                return ResourceManager.GetString("SpecialCharactersValidationMsg", resourceCulture);
             }
         }
         
