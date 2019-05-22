@@ -152,12 +152,34 @@ namespace CoordinateConversionLibrary.Models
         }
 
         #endregion Public methods
-    
+
         #region Private methods
+
+        public string GetConfigFolder()
+        {
+            // Use local user settings Pro folder 
+            string configPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArcGIS");
+
+            // This should not happen, but use MyDocuments as backup just in case
+            if (!System.IO.Directory.Exists(configPath))
+                configPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            return configPath;
+        }
+
+        private string GetConfigPath()
+        {
+            string assemblyName = GetType().Assembly.GetName().Name + ".config"; ;
+            string configFolder = GetConfigFolder();
+            string configPath = System.IO.Path.Combine(configFolder, assemblyName);
+
+            return configPath;
+        }
 
         private string GetConfigFilename()
         {
-            return this.GetType().Assembly.Location + ".config";
+            return GetConfigPath();
         }
 
         private void LoadSomeDefaults()
