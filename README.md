@@ -5,7 +5,7 @@ Coordinate Conversion allows analysts to input and quickly convert coordinates b
 
 ![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
 
-## Features
+## Features2
 
 * Convert several coordinate formats in one dialog
 * Copy coordinates to support other applications
