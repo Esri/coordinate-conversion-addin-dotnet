@@ -111,7 +111,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 //Add point to the top of the list (using main thread)
                 ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
-                    ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint) );
+                    ProCollectTabViewModel.CoordinateAddInPoints.Add(addInPoint) );
 
             }
         }

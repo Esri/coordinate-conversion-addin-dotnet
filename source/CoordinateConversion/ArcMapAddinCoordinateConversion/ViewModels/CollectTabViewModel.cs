@@ -536,7 +536,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid, FieldsDictionary = fieldsDictionary };
 
                 //Add point to the top of the list
-                CoordinateAddInPoints.Insert(0, addInPoint);
+                CoordinateAddInPoints.Add(addInPoint);
                 GraphicsList.Add(new AMGraphic(guid, point, true, fieldsDictionary));
             }
         }
