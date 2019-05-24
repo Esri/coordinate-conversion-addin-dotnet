@@ -601,6 +601,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show - for S/W hemisphere.
+        /// </summary>
+        public static string LabelShowHyphen {
+            get {
+                return ResourceManager.GetString("LabelShowHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show + for N/E hemisphere.
+        /// </summary>
+        public static string LabelShowPlus {
+            get {
+                return ResourceManager.GetString("LabelShowPlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please wait while map loads....
         /// </summary>
         public static string LoadMapMsg {

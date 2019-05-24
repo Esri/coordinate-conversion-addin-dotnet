@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 
 namespace CoordinateConversionLibrary.ViewModels
 {
@@ -53,6 +54,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 FormatExpanded = false;
                 IsEnableExpander = false;
             }
+            ShowCheckBoxes();
             IsInitialCall = false;
         }
 
@@ -73,6 +75,29 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
+        private bool showPlusForDirection;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                CoordinateBase.ShowPlus = value;
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                CoordinateBase.ShowHyphen = value;
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+            }
+        }
 
         private CoordinateTypes _selectedCoordinateType { get; set; }
         public CoordinateTypes SelectedCoordinateType
@@ -89,6 +114,28 @@ namespace CoordinateConversionLibrary.ViewModels
                     CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
                 OnCategorySelectionChanged();
                 RaisePropertyChanged(() => SelectedCoordinateType);
+            }
+        }
+
+        private Visibility plusForDirectionVisibility;
+        public Visibility PlusForDirectionVisibility
+        {
+            get { return plusForDirectionVisibility; }
+            set
+            {
+                plusForDirectionVisibility = value;
+                RaisePropertyChanged(() => PlusForDirectionVisibility);
+            }
+        }
+
+        private Visibility hyphenForDirectionVisibility;
+        public Visibility HyphenForDirectionVisibility
+        {
+            get { return hyphenForDirectionVisibility; }
+            set
+            {
+                hyphenForDirectionVisibility = value;
+                RaisePropertyChanged(() => HyphenForDirectionVisibility);
             }
         }
 
@@ -207,7 +254,8 @@ namespace CoordinateConversionLibrary.ViewModels
                 return;
 
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
-
+            CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
             if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
@@ -244,13 +292,16 @@ namespace CoordinateConversionLibrary.ViewModels
                 UpdateSample();
                 IsEnableExpander = false;
                 FormatExpanded = false;
+                CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
             }
             else
             {
                 IsEnableExpander = true;
                 FormatExpanded = true;
+                CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 RaisePropertyChanged(() => FormatExpanded);
             }
+            ShowCheckBoxes();
         }
         private string GetFormatFromDefaults()
         {
@@ -452,6 +503,27 @@ namespace CoordinateConversionLibrary.ViewModels
                 return false;
 
             return (value.Contains("+") || value.Contains("-"));
+        }
+
+        private void ShowCheckBoxes()
+        {
+
+            if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
+                || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
+                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            {
+                PlusForDirectionVisibility = Visibility.Visible;
+                HyphenForDirectionVisibility = Visibility.Visible;
+                ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
+                ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+            }
+            else
+            {
+                PlusForDirectionVisibility = Visibility.Collapsed;
+                HyphenForDirectionVisibility = Visibility.Collapsed;
+                ShowPlusForDirection = false;
+                showHyphenForDirection = false;
+            }
         }
     }
 }

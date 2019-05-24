@@ -390,4 +390,10 @@
   <data name="SpecialCharactersValidationMsg" xml:space="preserve">
     <value>Characters '+' and '-' are not allowed to define custom formatting.</value>
   </data>
+  <data name="LabelShowHyphen" xml:space="preserve">
+    <value>Show - for S/W hemisphere</value>
+  </data>
+  <data name="LabelShowPlus" xml:space="preserve">
+    <value>Show + for N/E hemisphere</value>
+  </data>
 </root>

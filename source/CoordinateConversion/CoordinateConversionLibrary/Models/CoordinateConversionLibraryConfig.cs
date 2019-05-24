@@ -83,6 +83,29 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
+        private bool showPlusForDirection = false;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection=false;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+
+            }
+        }
+
         public string CategorySelection { get; set; }
         public string FormatSelection { get; set; }
 
@@ -141,7 +164,11 @@ namespace CoordinateConversionLibrary.Models
                 DisplayAmbiguousCoordsDlg = temp.DisplayAmbiguousCoordsDlg;
                 OutputCoordinateList = temp.OutputCoordinateList;
                 DefaultFormatList = temp.DefaultFormatList;
+                ShowPlusForDirection = temp.ShowPlusForDirection;
+                ShowHyphenForDirection = temp.ShowHyphenForDirection;
 
+                RaisePropertyChanged(() => ShowPlusForDirection);
+                RaisePropertyChanged(() => ShowHyphenForDirection);
                 RaisePropertyChanged(() => OutputCoordinateList);
                 RaisePropertyChanged(() => DefaultFormatList);
             }
@@ -152,7 +179,7 @@ namespace CoordinateConversionLibrary.Models
         }
 
         #endregion Public methods
-    
+
         #region Private methods
 
         private string GetConfigFilename()

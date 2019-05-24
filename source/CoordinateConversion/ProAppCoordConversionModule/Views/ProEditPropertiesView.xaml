@@ -96,12 +96,16 @@
                                 <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
                             </StackPanel>
                             <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}" IsEnabled="{Binding IsEnableExpander}">
-                                <TextBox Text="{Binding Format, 
+                                <TextBox Text="{Binding Format,  
                             UpdateSourceTrigger=PropertyChanged,
                              ValidatesOnExceptions=True}"
                              Validation.ErrorTemplate="{StaticResource errorTemplate}" 
                              MinWidth="150" Margin="3,3,3,3" />
                             </Expander>
+                            <CheckBox IsChecked="{Binding ShowPlusForDirection}" Content="{x:Static prop:Resources.LabelShowPlus}"
+                                      Visibility="{Binding PlusForDirectionVisibility}"/>
+                            <CheckBox IsChecked="{Binding ShowHyphenForDirection}" Content="{x:Static prop:Resources.LabelShowHyphen}"
+                                      Visibility="{Binding HyphenForDirectionVisibility}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">

@@ -36,7 +36,7 @@ namespace ProAppCoordConversionModule.ViewModels
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
 
             SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
-            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;            
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
             CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
             SearchResultCommand = new RelayCommand(OnSearchResultCommand);
@@ -59,9 +59,12 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             if (AllSymbolCollection == null)
                 AllSymbolCollection = new Dictionary<string, ObservableCollection<Symbol>>();
+
+            ShowCheckBoxes();
             IsInitialCall = false;
         }
 
+        #region Properties
         private Visibility _showLoadingProcess;
 
         public Visibility ShowLoadingProcess
@@ -416,8 +419,55 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-
         public string SearchString { get; set; }
+
+        private bool showPlusForDirection;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                CoordinateBase.ShowPlus = value;
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                CoordinateBase.ShowHyphen = value;
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+            }
+        }
+
+        private Visibility plusForDirectionVisibility;
+        public Visibility PlusForDirectionVisibility
+        {
+            get { return plusForDirectionVisibility; }
+            set
+            {
+                plusForDirectionVisibility = value;
+                RaisePropertyChanged(() => PlusForDirectionVisibility);
+            }
+        }
+
+        private Visibility hyphenForDirectionVisibility;
+        public Visibility HyphenForDirectionVisibility
+        {
+            get { return hyphenForDirectionVisibility; }
+            set
+            {
+                hyphenForDirectionVisibility = value;
+                RaisePropertyChanged(() => HyphenForDirectionVisibility);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Handler for when someone closes the dialog with the OK button
@@ -428,6 +478,8 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!IsValidFormat)
                 return;
 
+            CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
@@ -557,6 +609,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 RaisePropertyChanged(() => FormatExpanded);
             }
+            ShowCheckBoxes();
         }
         private string GetFormatFromDefaults()
         {
@@ -787,6 +840,25 @@ namespace ProAppCoordConversionModule.ViewModels
             return (value.Contains("+") || value.Contains("-"));
         }
 
+        private void ShowCheckBoxes()
+        {
+            if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
+                || SelectedCoordinateType==CoordinateTypes.DMS||SelectedCoordinateType==CoordinateTypes.Default)
+                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            {
+                PlusForDirectionVisibility = Visibility.Visible;
+                HyphenForDirectionVisibility = Visibility.Visible;
+                ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
+                ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+            }
+            else
+            {
+                PlusForDirectionVisibility = Visibility.Collapsed;
+                HyphenForDirectionVisibility = Visibility.Collapsed;
+                ShowPlusForDirection = false;
+                showHyphenForDirection = false;
+            }
+        }
     }
 }
 
