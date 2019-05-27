@@ -57,7 +57,7 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
             pDialog = new ProgressDialog("Processing...Please wait...");
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
-
+            CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
@@ -297,7 +297,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
         {
             var results = new Dictionary<string, string>();
-            results.Add(CoordinateFieldName, point.Text);
+            results.Add(CoordinateFieldName, point.Text);            
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(point.Text);
@@ -1068,7 +1068,6 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // DD
             CoordinateDD dd;
-            CoordinateDD.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             if (CoordinateDD.TryParse(input, out dd, true))
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)

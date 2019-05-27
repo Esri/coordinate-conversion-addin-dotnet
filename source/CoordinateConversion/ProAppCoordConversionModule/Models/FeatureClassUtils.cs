@@ -139,55 +139,58 @@ namespace ProAppCoordConversionModule.Models
         /// </summary>
         /// <param name="graphicsList">List of graphics to add to table</param>
         /// <returns></returns>
-        private static async Task CreateFeatures(List<ProGraphic> graphicsList)
+        private static async Task CreateFeatures(List<ProGraphic> graphicsList, string layerName)
         {
             ArcGIS.Core.Data.RowBuffer rowBuffer = null;
 
             try
             {
-                await QueuedTask.Run(() =>
-                {
-                    var layer = MapView.Active.GetSelectedLayers()[0];
-                    if (layer is FeatureLayer)
+                var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
+                if (layer == null)
+                    MessageBox.Show("Something went wrong");
+                else
+                    await QueuedTask.Run(() =>
                     {
-                        var featureLayer = (FeatureLayer)layer;
-
-                        using (var table = featureLayer.GetTable())
+                        if (layer is FeatureLayer)
                         {
-                            TableDefinition definition = table.GetDefinition();
-                            int shapeIndex = definition.FindField("Shape");
+                            var featureLayer = (FeatureLayer)layer;
 
-                            foreach (ProGraphic graphic in graphicsList)
+                            using (var table = featureLayer.GetTable())
                             {
-                                rowBuffer = table.CreateRowBuffer();
+                                TableDefinition definition = table.GetDefinition();
+                                int shapeIndex = definition.FindField("Shape");
 
-                                if (graphic.Geometry is Polyline)
+                                foreach (ProGraphic graphic in graphicsList)
                                 {
-                                    Polyline poly = new PolylineBuilder(graphic.Geometry as Polyline).ToGeometry();
-                                    rowBuffer[shapeIndex] = poly;
-                                }
-                                else if (graphic.Geometry is Polygon)
-                                    rowBuffer[shapeIndex] = new PolygonBuilder(graphic.Geometry as Polygon).ToGeometry();
+                                    rowBuffer = table.CreateRowBuffer();
 
-                                ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
+                                    if (graphic.Geometry is Polyline)
+                                    {
+                                        Polyline poly = new PolylineBuilder(graphic.Geometry as Polyline).ToGeometry();
+                                        rowBuffer[shapeIndex] = poly;
+                                    }
+                                    else if (graphic.Geometry is Polygon)
+                                        rowBuffer[shapeIndex] = new PolygonBuilder(graphic.Geometry as Polygon).ToGeometry();
+
+                                    ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
+                                }
+                            }
+
+                            //Get simple renderer from feature layer 
+                            CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
+                            if (currentRenderer != null)
+                            {
+                                CIMSymbolReference sybmol = currentRenderer.Symbol;
+
+                                var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.Solid);
+                                var s = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Null, outline);
+                                CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
+                                currentRenderer.Symbol = symbolRef;
+
+                                featureLayer.SetRenderer(currentRenderer);
                             }
                         }
-
-                        //Get simple renderer from feature layer 
-                        CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
-                        if (currentRenderer != null)
-                        {
-                            CIMSymbolReference sybmol = currentRenderer.Symbol;
-
-                            var outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.Solid);
-                            var s = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Null, outline);
-                            CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
-                            currentRenderer.Symbol = symbolRef;
-
-                            featureLayer.SetRenderer(currentRenderer);
-                        }
-                    }
-                });
+                    });
 
             }
             catch (GeodatabaseException exObj)
@@ -201,70 +204,72 @@ namespace ProAppCoordConversionModule.Models
                     rowBuffer.Dispose();
             }
         }
-        private static async Task CreateFeatures(List<CCProGraphic> mapPointList)
+        private static async Task CreateFeatures(List<CCProGraphic> mapPointList, string layerName)
         {
             ArcGIS.Core.Data.RowBuffer rowBuffer = null;
-
             try
             {
-                await QueuedTask.Run(() =>
-                {
-                    var layer = MapView.Active.GetSelectedLayers()[0];
-                    if (layer is FeatureLayer)
+                var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
+                if (layer == null)
+                    MessageBox.Show("Something went wrong");
+                else
+                    await QueuedTask.Run(() =>
                     {
-                        var featureLayer = (FeatureLayer)layer;
-
-                        using (var table = featureLayer.GetTable())
+                        if (layer is FeatureLayer)
                         {
-                            TableDefinition definition = table.GetDefinition();
-                            int shapeIndex = definition.FindField("Shape");
+                            var featureLayer = (FeatureLayer)layer;
 
-                            foreach (var point in mapPointList)
+                            using (var table = featureLayer.GetTable())
                             {
-                                rowBuffer = table.CreateRowBuffer();
+                                TableDefinition definition = table.GetDefinition();
+                                int shapeIndex = definition.FindField("Shape");
 
-                                var geom = !point.MapPoint.HasZ ?
-                                    new MapPointBuilder(point.MapPoint).ToGeometry() :
-                                    MapPointBuilder.CreateMapPoint(point.MapPoint.X, point.MapPoint.Y, point.MapPoint.SpatialReference);
-                                rowBuffer[shapeIndex] = geom;
-                                foreach (var item in point.Attributes)
+                                foreach (var point in mapPointList)
                                 {
-                                    int idx = definition.FindField(item.Key);
-                                    if (idx > -1)
-                                        rowBuffer[idx] = item.Value;
+                                    rowBuffer = table.CreateRowBuffer();
+
+                                    var geom = !point.MapPoint.HasZ ?
+                                        new MapPointBuilder(point.MapPoint).ToGeometry() :
+                                        MapPointBuilder.CreateMapPoint(point.MapPoint.X, point.MapPoint.Y, point.MapPoint.SpatialReference);
+                                    rowBuffer[shapeIndex] = geom;
+                                    foreach (var item in point.Attributes)
+                                    {
+                                        int idx = definition.FindField(item.Key);
+                                        if (idx > -1)
+                                            rowBuffer[idx] = item.Value;
+                                    }
+                                    ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
                                 }
-                                ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
+                            }
+
+                            //Set header text
+                            var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMFeatureLayer;
+                            var cimDisplayTable = cimFeatureDefinition.FeatureTable;
+                            var displayField = cimDisplayTable.DisplayField;
+                            cimDisplayTable.DisplayField = TabBaseViewModel.CoordinateFieldName;
+                            featureLayer.SetDefinition(cimFeatureDefinition);
+
+                            //set label property
+                            var lc = featureLayer.LabelClasses.FirstOrDefault();
+                            lc.SetExpression(string.Format("[{0}]", TabBaseViewModel.CoordinateFieldName));
+                            lc.SetExpressionEngine(LabelExpressionEngine.VBScript);
+
+                            //Get simple renderer from feature layer 
+                            CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
+                            if (currentRenderer != null)
+                            {
+                                CIMSymbolReference sybmol = currentRenderer.Symbol;
+
+                                //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
+                                //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
+                                var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
+                                CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
+                                currentRenderer.Symbol = symbolRef;
+
+                                featureLayer.SetRenderer(currentRenderer);
                             }
                         }
-
-                        //Set header text
-                        var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMFeatureLayer;
-                        var cimDisplayTable = cimFeatureDefinition.FeatureTable;
-                        var displayField = cimDisplayTable.DisplayField;
-                        cimDisplayTable.DisplayField = TabBaseViewModel.CoordinateFieldName;
-                        featureLayer.SetDefinition(cimFeatureDefinition);
-
-                        //set label property
-                        var lc = featureLayer.LabelClasses.FirstOrDefault();
-                        lc.SetExpression(string.Format("[{0}]", TabBaseViewModel.CoordinateFieldName));
-                        lc.SetExpressionEngine(LabelExpressionEngine.VBScript);
-
-                        //Get simple renderer from feature layer 
-                        CIMSimpleRenderer currentRenderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
-                        if (currentRenderer != null)
-                        {
-                            CIMSymbolReference sybmol = currentRenderer.Symbol;
-
-                            //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
-                            //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
-                            var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
-                            CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
-                            currentRenderer.Symbol = symbolRef;
-
-                            featureLayer.SetRenderer(currentRenderer);
-                        }
-                    }
-                });
+                    });
 
             }
             catch (GeodatabaseException exObj)
@@ -328,7 +333,7 @@ namespace ProAppCoordConversionModule.Models
                 var valueArray = Geoprocessing.MakeValueArray(arguments.ToArray());
                 IGPResult result = await Geoprocessing.ExecuteToolAsync("CreateFeatureclass_management", valueArray);
 
-                await CreateFeatures(graphicsList);
+                await CreateFeatures(graphicsList, dataset);
 
                 if (isKML)
                 {
@@ -424,7 +429,7 @@ namespace ProAppCoordConversionModule.Models
                     }
                 }
 
-                await CreateFeatures(mapPointList);
+                await CreateFeatures(mapPointList, dataset);
 
                 if (isKML)
                 {
@@ -471,10 +476,10 @@ namespace ProAppCoordConversionModule.Models
 
         }
 
-        public static async Task<List<Dictionary<string, Tuple<object,bool>>>> ImportFromExcel(string fileName)
+        public static async Task<List<Dictionary<string, Tuple<object, bool>>>> ImportFromExcel(string fileName)
         {
             var tableName = "ExcelData";
-            var lstDictionary = new List<Dictionary<string, Tuple<object,bool>>>();
+            var lstDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             List<object> arguments = new List<object>();
             arguments.Add(fileName);
             arguments.Add(tableName);
@@ -501,14 +506,14 @@ namespace ProAppCoordConversionModule.Models
                             {
                                 while (rowCursor.MoveNext())
                                 {
-                                    var dictionary = new Dictionary<string, Tuple<object,bool>>();
+                                    var dictionary = new Dictionary<string, Tuple<object, bool>>();
                                     using (ArcGIS.Core.Data.Row row = rowCursor.Current)
                                     {
                                         for (int i = 0; i < row.GetFields().Count; i++)
                                         {
                                             var key = row.GetFields()[i].Name;
                                             var val = rowCursor.Current[i];
-                                            dictionary.Add(key, Tuple.Create(val,false));
+                                            dictionary.Add(key, Tuple.Create(val, false));
                                         }
                                     }
                                     lstDictionary.Add(dictionary);

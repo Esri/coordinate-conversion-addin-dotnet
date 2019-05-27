@@ -108,8 +108,8 @@ namespace CoordinateConversionLibrary.Models
 
         public static void ShowAmbiguousDialog()
         {
-            CoordinateDD.ShowAmbiguousEvent();
-            if (!CoordinateDD.IsEventAttached)
+            ShowAmbiguousEvent();
+            if (!IsEventAttached)
                 ambiguousCoordsViewDlg.ShowDialog();
         }
 
