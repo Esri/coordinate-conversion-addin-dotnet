@@ -485,7 +485,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     double resultDistance = GeometryEngine.Instance.Distance(item.Point, mp);
                     distance = (distance < resultDistance && distance > 0) ? distance : resultDistance;
 
-                    if (result == distance)
+                    if (resultDistance == distance)
                     {
                         closestPoint = item;
                         distance = resultDistance;
