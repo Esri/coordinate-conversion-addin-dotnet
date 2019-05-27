@@ -163,7 +163,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             }
         }
-                
+
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
@@ -471,21 +471,24 @@ namespace ProAppCoordConversionModule.ViewModels
         public override async void OnMapPointSelection(object obj)
         {
             var mp = obj as MapPoint;
-            var poly = GeometryEngine.Instance.Buffer(mp, 20000);
+            var dblSrchDis = MapView.Active.Extent.Width / 200;
+            var poly = GeometryEngine.Instance.Buffer(mp, dblSrchDis);
             AddInPoint closestPoint = null;
             Double distance = 0;
             foreach (var item in ProCollectTabViewModel.CoordinateAddInPoints)
             {
-                //item.IsSelected = false;
+                if (item.Point.SpatialReference != MapView.Active.Map.SpatialReference)
+                    GeometryEngine.Instance.Project(item.Point, MapView.Active.Map.SpatialReference);
                 var isWithinExtent = await IsPointWithinExtent(item.Point, poly.Extent);
-                var result = GeometryEngine.Instance.NearestPoint(item.Point, mp);
-                distance = (distance < result.Distance && distance > 0) ? distance : result.Distance;
                 if (isWithinExtent)
                 {
-                    if (result.Distance == distance)
+                    double resultDistance = GeometryEngine.Instance.Distance(item.Point, mp);
+                    distance = (distance < resultDistance && distance > 0) ? distance : resultDistance;
+
+                    if (result == distance)
                     {
                         closestPoint = item;
-                        distance = result.Distance;
+                        distance = resultDistance;
                     }
                 }
             }

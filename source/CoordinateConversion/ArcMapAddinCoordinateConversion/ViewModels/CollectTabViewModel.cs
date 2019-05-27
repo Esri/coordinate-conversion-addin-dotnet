@@ -323,12 +323,12 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             foreach (var item in results)
             {
                 foreach (var column in columnCollection)
-	            {
-                    if(!item.Attributes.ContainsKey(column))
+                {
+                    if (!item.Attributes.ContainsKey(column))
                     {
                         item.Attributes.Add(column, null);
                     }
-	            }                
+                }
             }
             return results;
         }
@@ -693,17 +693,25 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         public override void OnMapPointSelection(object obj)
         {
             var mapPoint = obj as IPoint;
-            mapPoint.Project(ArcMap.Document.FocusMap.SpatialReference);
-            ITopologicalOperator topoOp = (ITopologicalOperator)mapPoint;
-            IGeometry p2Bufferd = topoOp.Buffer(20000);
+            double dblSrchDis = 0;
             AddInPoint closestPoint = null;
             Double distance = 0;
+
+            var mxdoc = ArcMap.Application.Document as IMxDocument;
+            var av = mxdoc.FocusMap as IActiveView;
+            var m_graphicsCont = (IGraphicsContainer)av;
+            dblSrchDis = av.Extent.Width / 200;
+            mapPoint.Project(ArcMap.Document.FocusMap.SpatialReference);
+            ITopologicalOperator topoOp = (ITopologicalOperator)mapPoint;
+            IGeometry p2Bufferd = topoOp.Buffer(dblSrchDis);
 
             if (p2Bufferd == null)
                 return;
 
             foreach (var item in CollectTabViewModel.CoordinateAddInPoints)
             {
+                if (item.Point.SpatialReference != ArcMap.Document.FocusMap.SpatialReference)
+                    item.Point.Project(ArcMap.Document.FocusMap.SpatialReference);
                 IRelationalOperator rel1 = (IRelationalOperator)item.Point;
                 if (rel1.Within(p2Bufferd))
                 {
