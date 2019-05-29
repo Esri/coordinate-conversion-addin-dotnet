@@ -297,10 +297,13 @@ namespace ProAppCoordConversionModule.ViewModels
         public Dictionary<string, string> GetOutputFormats(AddInPoint point)
         {
             var results = new Dictionary<string, string>();
-            results.Add(CoordinateFieldName, point.Text);            
+            results.Add(CoordinateFieldName, point.Text);
             var ccc = QueuedTask.Run(() =>
             {
-                return GetCoordinateType(point.Text);
+                var projectedPoint = (MapPoint)GeometryEngine.Instance.Project(point.Point, SpatialReferences.WGS84);
+                var inputText = projectedPoint.Y + " " + projectedPoint.X;
+
+                return GetCoordinateType(inputText);
             }).Result;
             if (ccc != null && ccc.Point != null)
             {

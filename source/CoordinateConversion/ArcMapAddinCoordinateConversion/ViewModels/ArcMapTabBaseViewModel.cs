@@ -60,7 +60,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             IsWarningVisible = Visibility.Collapsed;
             PageNumber = 1;
             IsPreviousRecordEnabled = false;
-            IsNextRecordEnabled = CollectTabViewModel.CoordinateAddInPoints!=null && CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).Count() <= PageNumber;
+            IsNextRecordEnabled = CollectTabViewModel.CoordinateAddInPoints != null && CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).Count() <= PageNumber;
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
@@ -267,7 +267,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 DialogView.DataContext = this;
                 RaisePropertyChanged(() => FieldsCollection);
                 RaisePropertyChanged(() => ViewDetailsTitle);
-            }            
+            }
         }
 
         private void diagView_Closed(object sender, EventArgs e)
@@ -474,7 +474,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             var results = new Dictionary<string, string>();
             IPoint point;
-            var ctype = GetCoordinateType(input.Text, out point);
+            var inputText = input.Point.Y + " " + input.Point.X;
+            var ctype = GetCoordinateType(inputText, out point);
             if (point != null)
             {
                 ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
