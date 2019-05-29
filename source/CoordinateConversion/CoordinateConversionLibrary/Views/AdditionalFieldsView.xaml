@@ -63,18 +63,26 @@
         </DataGrid>
         <Label Grid.Row="1" Content="{x:Static prop:Resources.InformationNotAvailableMsg}"
                Visibility="{Binding IsWarningVisible}"/>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button  Content="&lt;" Width="20" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                     Command="{Binding PreviousRecordCommand}" IsEnabled="{Binding IsPreviousRecordEnabled}"/>
-            <Label Grid.Column="1" Content="{Binding PageNumber}" HorizontalAlignment="Stretch"
-                   HorizontalContentAlignment="Center" Padding="0" FontWeight="Bold" />
-            <Button Content="&gt;" Width="20" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Command="{Binding NextRecordCommand}" IsEnabled="{Binding IsNextRecordEnabled}"/>
-        </Grid>
+        <Border BorderThickness="0,1,0,0" Grid.Row="2" BorderBrush="LightGray" Padding="3">
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Content="&lt;" 
+                    VerticalAlignment="Center"
+                    Command="{Binding PreviousRecordCommand}" 
+                    IsEnabled="{Binding IsPreviousRecordEnabled}"
+                    Style="{StaticResource BorderlessButtonStyle}"
+                    ToolTip="Previous"/>
+                <Label Content="{Binding PageNumber}" HorizontalAlignment="Stretch"
+                   HorizontalContentAlignment="Center" FontWeight="Bold" 
+                VerticalAlignment="Center" Padding="2,0,2,0"/>
+                <Button
+                    Content="&gt;"
+                    VerticalAlignment="Center"
+                    Command="{Binding NextRecordCommand}" 
+                    IsEnabled="{Binding IsNextRecordEnabled}"
+                    Style="{StaticResource BorderlessButtonStyle}" 
+                    ToolTip="Previous"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
