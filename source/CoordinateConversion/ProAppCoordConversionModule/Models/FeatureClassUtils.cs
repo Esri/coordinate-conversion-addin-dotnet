@@ -28,7 +28,6 @@ using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
-using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Mapping;
 
 using CoordinateConversionLibrary;
@@ -147,7 +146,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong");
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -236,7 +235,7 @@ namespace ProAppCoordConversionModule.Models
                                     {
                                         int idx = definition.FindField(item.Key);
                                         if (idx > -1)
-                                            rowBuffer[idx] = item.Value;
+                                            rowBuffer[idx] = item.Value == null ? "" : item.Value;
                                     }
                                     ArcGIS.Core.Data.Row row = table.CreateRow(rowBuffer);
                                 }
@@ -351,7 +350,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ex.ToString());
             }
         }
         private static async Task CreateFeatureClass(string dataset, string connection, SpatialReference spatialRef, List<CCProGraphic> mapPointList, MapView mapview, bool isKML = false)
