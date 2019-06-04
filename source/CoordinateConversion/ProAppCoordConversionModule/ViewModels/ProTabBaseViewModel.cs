@@ -37,6 +37,7 @@ using System.Reflection;
 using ProAppCoordConversionModule.Views;
 using System.Diagnostics;
 using ProAppCoordConversionModule.Helpers;
+using System.Windows.Threading;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -282,14 +283,14 @@ namespace ProAppCoordConversionModule.ViewModels
             return processCoordinate(ccc);
         }
 
-        public async Task<string> ProcessInputAsync(string input)
+        public string ProcessInputValue(string input)
         {
             if (input == "NA") return string.Empty;
 
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
 
-            var ccc = await GetCoordinateType(input);
+            var ccc = GetCoordinateType(input);
 
             return processCoordinate(ccc);
         }
@@ -298,13 +299,10 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var results = new Dictionary<string, string>();
             results.Add(CoordinateFieldName, point.Text);
-            var ccc = QueuedTask.Run(() =>
-            {
-                var projectedPoint = (MapPoint)GeometryEngine.Instance.Project(point.Point, SpatialReferences.WGS84);
-                var inputText = projectedPoint.Y + " " + projectedPoint.X;
 
-                return GetCoordinateType(inputText);
-            }).Result;
+            var projectedPoint = (MapPoint)GeometryEngine.Instance.Project(point.Point, SpatialReferences.WGS84);
+            var inputText = projectedPoint.Y + " " + projectedPoint.X;
+            var ccc = GetCoordinateType(inputText);
             if (ccc != null && ccc.Point != null)
             {
                 ProCoordinateGet procoordinateGetter = new ProCoordinateGet();
@@ -429,7 +427,6 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             try
             {
-                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                 var fileDialog = new Microsoft.Win32.OpenFileDialog();
                 fileDialog.CheckFileExists = true;
                 fileDialog.CheckPathExists = true;
@@ -456,7 +453,6 @@ namespace ProAppCoordConversionModule.ViewModels
                             break;
                     }
                 }
-                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
             }
             catch (Exception ex)
             {
@@ -1072,7 +1068,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             return CoordinateType.Unknown;
         }
-        private async Task<CCCoordinate> GetCoordinateType(string input)
+        private CCCoordinate GetCoordinateType(string input)
         {
             MapPoint point = null;
 
@@ -1082,11 +1078,11 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
             }
 
@@ -1097,11 +1093,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 dd = new CoordinateDD(ddm);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DDM, Point = point };
             }
             // DMS
@@ -1111,11 +1107,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 dd = new CoordinateDD(dms);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DMS, Point = point };
             }
 
@@ -1124,10 +1120,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(gars, GeoCoordinateType.GARS);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
                 }
@@ -1139,10 +1135,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(mgrs, GeoCoordinateType.MGRS);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.MGRS, Point = point };
                 }
@@ -1154,10 +1150,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(usng, GeoCoordinateType.USNG);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.USNG, Point = point }; ;
                 }
@@ -1169,10 +1165,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(utm, GeoCoordinateType.UTM);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.UTM, Point = point };
                 }
@@ -1193,10 +1189,10 @@ namespace ProAppCoordConversionModule.ViewModels
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
-                    });//.Result;
+                    }).Result;
                     return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
                 }
                 catch (Exception ex)

@@ -83,7 +83,7 @@ namespace ProAppCoordConversionModule.ViewModels
             // Don't allow updating of the inputs or outputs while flashpoint is happening
             CoordinateMapTool.AllowUpdates = false;
 
-            await ProcessInputAsync(InputCoordinate);
+            ProcessInputValue(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             await QueuedTask.Run(() =>
             {
