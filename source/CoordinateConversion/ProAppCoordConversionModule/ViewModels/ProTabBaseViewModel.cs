@@ -1274,11 +1274,10 @@ namespace ProAppCoordConversionModule.ViewModels
             if (e.IsEventHandled)
             {
                 var ambiguous = new ProAmbiguousCoordsView();
-                ambiguous.DataContext = new ProAmbiguousCoordsViewModel();
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ambiguous.ShowDialog();
-                });
+                var ambiguousVM = new ProAmbiguousCoordsViewModel();
+                ambiguous.DataContext = ambiguousVM;
+                ambiguous.ShowDialog();
+                CoordinateConversionLibraryConfig.AddInConfig.isLatLong = ambiguousVM.CheckedLatLon;
                 e.IsEventHandled = false;
             }
         }
