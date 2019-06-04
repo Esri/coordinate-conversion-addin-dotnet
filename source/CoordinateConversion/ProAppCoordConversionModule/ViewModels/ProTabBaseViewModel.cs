@@ -310,6 +310,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 ProCoordinateGet procoordinateGetter = new ProCoordinateGet();
                 procoordinateGetter.Point = ccc.Point;
                 CoordinateGetBase coordinateGetter = procoordinateGetter as CoordinateGetBase;
+                CoordinateBase.IsOutputInProcess = true;
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -377,6 +378,7 @@ namespace ProAppCoordConversionModule.ViewModels
                             break;
                     }
                 }
+                CoordinateBase.IsOutputInProcess = false;
             }
             return results;
         }
@@ -460,6 +462,11 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
                 Debug.WriteLine("Error " + ex.ToString());
+            }
+            finally
+            {
+                if (pDialog != null)
+                    pDialog.Hide();
             }
         }
 

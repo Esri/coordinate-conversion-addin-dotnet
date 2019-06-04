@@ -14,13 +14,13 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using CoordinateConversionLibrary.Helpers;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Collections.ObjectModel;
-using CoordinateConversionLibrary.Helpers;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -106,6 +106,18 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
+        private bool showHemisphereIndicator = false;
+        public bool ShowHemisphereIndicator
+        {
+            get { return showHemisphereIndicator; }
+            set
+            {
+                showHemisphereIndicator = value;
+                RaisePropertyChanged(() => ShowHemisphereIndicator);
+
+            }
+        }
+
         public string CategorySelection { get; set; }
         public string FormatSelection { get; set; }
 
@@ -166,6 +178,7 @@ namespace CoordinateConversionLibrary.Models
                 DefaultFormatList = temp.DefaultFormatList;
                 ShowPlusForDirection = temp.ShowPlusForDirection;
                 ShowHyphenForDirection = temp.ShowHyphenForDirection;
+                ShowHemisphereIndicator = temp.ShowHemisphereIndicator;
 
                 RaisePropertyChanged(() => ShowPlusForDirection);
                 RaisePropertyChanged(() => ShowHyphenForDirection);
@@ -182,43 +195,21 @@ namespace CoordinateConversionLibrary.Models
 
         #region Private methods
 
-        public string GetConfigFolder()
-        {
-            // Use local user settings Pro folder 
-            string configPath = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArcGIS");
-
-            // This should not happen, but use MyDocuments as backup just in case
-            if (!System.IO.Directory.Exists(configPath))
-                configPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-            return configPath;
-        }
-
-        private string GetConfigPath()
-        {
-            string assemblyName = GetType().Assembly.GetName().Name + ".config"; ;
-            string configFolder = GetConfigFolder();
-            string configPath = System.IO.Path.Combine(configFolder, assemblyName);
-
-            return configPath;
-        }
-
         private string GetConfigFilename()
         {
-            return GetConfigPath();
+            return this.GetType().Assembly.Location + ".config";
         }
 
         private void LoadSomeDefaults()
         {
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.Default, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456 -40.123456", "Y0.0##### X0.0#####" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456N 40.123456W", "Y0.0#####N X0.0#####E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.1234'N 40° 18.1234'W", "A0° B0.0###'N X0° Y0.0###'E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", "A0° B0' C0.0#\"N X0° Y0' Z0.0#\"E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.Default, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456 -40.123456", Constants.DefaultCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456N 40.123456W", Constants.DDCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.1234'N 40° 18.1234'W", Constants.DDMCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", Constants.DMSCustomFormat } } });
             //DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.GARS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "221LW37", "X#YQK" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19F 414639 4428236", "Z#B X0 Y0" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.MGRSCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.USNGCustomFormat} } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19F 414639 4428236", Constants.UTMCustomFormat } } });
         }
 
         #endregion Private methods

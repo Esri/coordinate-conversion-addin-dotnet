@@ -106,6 +106,8 @@
                                       Visibility="{Binding PlusForDirectionVisibility}"/>
                             <CheckBox IsChecked="{Binding ShowHyphenForDirection}" Content="{x:Static prop:Resources.LabelShowHyphen}"
                                       Visibility="{Binding HyphenForDirectionVisibility}"/>
+                            <CheckBox IsChecked="{Binding ShowHemisphereIndicator}" Content="{x:Static prop:Resources.LabelShowHemisphere}"
+                                      Visibility="{Binding HemisphereIndicatorVisibility}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">

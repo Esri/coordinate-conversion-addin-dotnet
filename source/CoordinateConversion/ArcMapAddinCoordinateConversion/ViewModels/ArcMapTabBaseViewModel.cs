@@ -482,6 +482,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 arcMapCoordinateGetter.Point = point;
                 CoordinateGetBase coordinateGetter = arcMapCoordinateGetter as CoordinateGetBase;
                 results.Add(CoordinateFieldName, input.Text);
+                CoordinateBase.IsOutputInProcess = true;
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -549,6 +550,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             break;
                     }
                 }
+                CoordinateBase.IsOutputInProcess = false;
             }
             return results;
         }

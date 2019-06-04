@@ -39,6 +39,8 @@ namespace CoordinateConversionLibrary.Models
         public static string InputFormatSelection { get; set; }
         public static bool ShowPlus { get; set; }
         public static bool ShowHyphen { get; set; }
+        public static bool ShowHemisphere { get; set; }
+        public static bool IsOutputInProcess { get; set; }
         public static CoordinateTypes InputCategorySelection { get; set; }
         public static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
 

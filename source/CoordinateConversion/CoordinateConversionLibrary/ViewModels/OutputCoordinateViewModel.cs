@@ -187,7 +187,7 @@ namespace CoordinateConversionLibrary.ViewModels
             {
                 Name = CoordinateType.DD.ToString(),
                 CType = CoordinateType.DD,
-                Format = "Y0.0#####N X0.0#####E"
+                Format = Constants.DDCustomFormat
             });
         }
 

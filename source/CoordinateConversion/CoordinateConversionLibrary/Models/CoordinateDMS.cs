@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -276,6 +277,8 @@ namespace CoordinateConversionLibrary.Models
                     double cnum = coord.LatDegrees;
                     var sb = new StringBuilder();
                     var olist = new List<object>();
+                    int latIndex = -1, lonIndex = -1;
+                    var closingIndexes = new List<int>();
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
@@ -298,6 +301,7 @@ namespace CoordinateConversionLibrary.Models
                         {
                             sb.Append("}");
                             endIndexNeeded = false;
+                            closingIndexes.Add(sb.Length);
                         }
 
                         switch (c)
@@ -315,6 +319,7 @@ namespace CoordinateConversionLibrary.Models
                                 {
                                     if (CoordinateBase.ShowHyphen) sb.Append("-");
                                 }
+                                latIndex = sb.Length;
                                 break;
                             case 'B':
                                 cnum = coord.LatMinutes;
@@ -332,13 +337,14 @@ namespace CoordinateConversionLibrary.Models
                                 startIndexNeeded = true;
                                 if (coord.LonDegrees > 0.0)
                                 {
-                                    if (CoordinateBase.ShowPlus) sb.Append(" +");
+                                    if (CoordinateBase.ShowPlus & !CoordinateBase.IsOutputInProcess) sb.Append(" +");
                                 }
 
                                 else
                                 {
-                                    if (CoordinateBase.ShowHyphen) sb.Append(" -");
+                                    if (CoordinateBase.ShowHyphen & !CoordinateBase.IsOutputInProcess) sb.Append(" -");
                                 }
+                                lonIndex = sb.Length;
                                 break;
                             case 'Y':
                                 cnum = coord.LonMinutes;
@@ -369,17 +375,23 @@ namespace CoordinateConversionLibrary.Models
                                 break;
                             case 'N': // N or S
                             case 'S':
-                                if (coord.LatDegrees > 0)
-                                    sb.Append("N"); // do we always want UPPER
-                                else
-                                    sb.Append("S");
+                                if (!CoordinateBase.IsOutputInProcess)
+                                {
+                                    if (coord.LatDegrees > 0)
+                                        sb.Append("N"); // do we always want UPPER
+                                    else
+                                        sb.Append("S");
+                                }
                                 break;
                             case 'E': // E or W
                             case 'W':
-                                if (coord.LonDegrees > 0)
-                                    sb.Append("E");
-                                else
-                                    sb.Append("W");
+                                if (!CoordinateBase.IsOutputInProcess)
+                                {
+                                    if (coord.LonDegrees > 0)
+                                        sb.Append("E");
+                                    else
+                                        sb.Append("W");
+                                }
                                 break;
                             default:
                                 sb.Append(c);
@@ -391,6 +403,7 @@ namespace CoordinateConversionLibrary.Models
                     {
                         sb.Append("}");
                     }
+                    PlaceHemiSphereIndicator(format, coord, sb, latIndex, lonIndex, closingIndexes);
 
                     return String.Format(sb.ToString(), olist.ToArray());
 
@@ -404,6 +417,62 @@ namespace CoordinateConversionLibrary.Models
             else
             {
                 return arg.ToString();
+            }
+        }
+
+        private static void PlaceHemiSphereIndicator(string format, CoordinateDMS coord, StringBuilder sb, int latIndex, int lonIndex, List<int> closingIndexes)
+        {
+            if (lonIndex != -1 && latIndex != -1)
+            {
+                int lonVal = -1, latVal = -1;
+                if (closingIndexes.Where(x => x < lonIndex).Any())
+                {
+                    lonVal = closingIndexes.Max();
+                    latVal = closingIndexes.Where(x => x < lonIndex).Max();
+                }
+                else
+                {
+                    lonVal = closingIndexes.Where(x => x < latIndex).Max();
+                    latVal = closingIndexes.Max();
+                }
+
+                var nextLatChar = sb.ToString().ElementAt(latVal);
+                var skipLatChar = ((nextLatChar == '"' & format.Contains('C'))
+                    | (nextLatChar == '\'' & format.Contains('B'))
+                    | (nextLatChar == '°' & format.Contains('A')));
+
+                var nextLonChar = sb.ToString().ElementAt(lonVal);
+                var skipLonChar = ((nextLonChar == '"' & format.Contains('Z'))
+                    | (nextLonChar == '\'' & format.Contains('Y'))
+                    | (nextLonChar == '°' & format.Contains('X')));
+                if (coord.LonDegrees > 0.0)
+                {
+                    if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                    {
+                        sb.Insert(skipLonChar ? lonVal + 1 : lonVal, "E");
+                    }
+                }
+                else
+                {
+                    if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                    {
+                        sb.Insert(skipLonChar ? lonVal + 1 : lonVal, "W");
+                    }
+                }
+                if (coord.LatDegrees > 0.0)
+                {
+                    if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                    {
+                        sb.Insert(skipLatChar ? latVal + 1 : latVal, "N");
+                    }
+                }
+                else
+                {
+                    if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                    {
+                        sb.Insert(skipLatChar ? latVal + 1 : latVal, "S");
+                    }
+                }
             }
         }
     }

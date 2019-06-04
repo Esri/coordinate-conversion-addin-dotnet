@@ -17,7 +17,6 @@ using CoordinateConversionLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -99,6 +98,18 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
+        private bool showHemisphereIndicator;
+        public bool ShowHemisphereIndicator
+        {
+            get { return showHemisphereIndicator; }
+            set
+            {
+                showHemisphereIndicator = value;
+                CoordinateBase.ShowHemisphere = value;
+                RaisePropertyChanged(() => ShowHemisphereIndicator);
+            }
+        }
+
         private CoordinateTypes _selectedCoordinateType { get; set; }
         public CoordinateTypes SelectedCoordinateType
         {
@@ -136,6 +147,17 @@ namespace CoordinateConversionLibrary.ViewModels
             {
                 hyphenForDirectionVisibility = value;
                 RaisePropertyChanged(() => HyphenForDirectionVisibility);
+            }
+        }
+
+        private Visibility hemisphereIndicatorVisibility;
+        public Visibility HemisphereIndicatorVisibility
+        {
+            get { return hemisphereIndicatorVisibility; }
+            set
+            {
+                hemisphereIndicatorVisibility = value;
+                RaisePropertyChanged(() => HemisphereIndicatorVisibility);
             }
         }
 
@@ -256,6 +278,7 @@ namespace CoordinateConversionLibrary.ViewModels
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
             CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator = ShowHemisphereIndicator;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
             if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
@@ -502,7 +525,11 @@ namespace CoordinateConversionLibrary.ViewModels
             if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
                 return false;
 
-            return (value.Contains("+") || value.Contains("-"));
+            return (value.Contains("+") || value.Contains("-")
+                || value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
         }
 
         private void ShowCheckBoxes()
@@ -514,15 +541,19 @@ namespace CoordinateConversionLibrary.ViewModels
             {
                 PlusForDirectionVisibility = Visibility.Visible;
                 HyphenForDirectionVisibility = Visibility.Visible;
+                HemisphereIndicatorVisibility = Visibility.Visible;
                 ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
                 ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+                ShowHemisphereIndicator = CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator;
             }
             else
             {
                 PlusForDirectionVisibility = Visibility.Collapsed;
                 HyphenForDirectionVisibility = Visibility.Collapsed;
+                HemisphereIndicatorVisibility = Visibility.Collapsed;
                 ShowPlusForDirection = false;
                 showHyphenForDirection = false;
+                ShowHemisphereIndicator = false;
             }
         }
     }

@@ -1,24 +1,22 @@
 ﻿
 using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using ProAppCoordConversionModule.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Core;
-using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Threading.Tasks;
-using System;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 namespace ProAppCoordConversionModule.ViewModels
 {
     class ProEditPropertiesViewModel : ProTabBaseViewModel
@@ -36,7 +34,7 @@ namespace ProAppCoordConversionModule.ViewModels
             DefaultFormats = CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList;
 
             SelectedCoordinateType = CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType;
-            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;            
+            DisplayAmbiguousCoordsDlg = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
             OKButtonPressedCommand = new RelayCommand(OnOkButtonPressedCommand);
             CancelButtonPressedCommand = new RelayCommand(OnCancelButtonPressedCommand);
             SearchResultCommand = new RelayCommand(OnSearchResultCommand);
@@ -445,6 +443,18 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
+        private bool showHemisphereIndicator;
+        public bool ShowHemisphereIndicator
+        {
+            get { return showHemisphereIndicator; }
+            set
+            {
+                showHemisphereIndicator = value;
+                CoordinateBase.ShowHemisphere = value;
+                RaisePropertyChanged(() => ShowHemisphereIndicator);
+            }
+        }
+
         private Visibility plusForDirectionVisibility;
         public Visibility PlusForDirectionVisibility
         {
@@ -467,6 +477,16 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
+        private Visibility hemisphereIndicatorVisibility;
+        public Visibility HemisphereIndicatorVisibility
+        {
+            get { return hemisphereIndicatorVisibility; }
+            set
+            {
+                hemisphereIndicatorVisibility = value;
+                RaisePropertyChanged(() => HemisphereIndicatorVisibility);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -480,6 +500,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
             CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator = ShowHemisphereIndicator;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
@@ -837,26 +858,34 @@ namespace ProAppCoordConversionModule.ViewModels
             if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
                 return false;
 
-            return (value.Contains("+") || value.Contains("-"));
+            return (value.Contains("+") || value.Contains("-")
+                || value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
         }
 
         private void ShowCheckBoxes()
         {
             if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
-                || SelectedCoordinateType==CoordinateTypes.DMS||SelectedCoordinateType==CoordinateTypes.Default)
+                || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
                 && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
             {
                 PlusForDirectionVisibility = Visibility.Visible;
                 HyphenForDirectionVisibility = Visibility.Visible;
+                HemisphereIndicatorVisibility = Visibility.Visible;
                 ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
                 ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+                ShowHemisphereIndicator = CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator;
             }
             else
             {
                 PlusForDirectionVisibility = Visibility.Collapsed;
                 HyphenForDirectionVisibility = Visibility.Collapsed;
+                HemisphereIndicatorVisibility = Visibility.Collapsed;
                 ShowPlusForDirection = false;
-                showHyphenForDirection = false;
+                ShowHyphenForDirection = false;
+                ShowHemisphereIndicator = false;
             }
         }
     }
