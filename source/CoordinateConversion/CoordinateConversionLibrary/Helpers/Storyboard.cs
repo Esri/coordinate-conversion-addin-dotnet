@@ -59,7 +59,6 @@ namespace CoordinateConversionLibrary.Helpers
                 oldListener.DeleteHandler();
             }
             Storyboard storyboard = (Storyboard)e.NewValue;
-            storyboard.Stop();
             var listener = new StoryboardListener(target, storyboard);
             target.SetValue(StoryboardCompleteBehavior.StoryboardListenerProperty, listener);
         }
