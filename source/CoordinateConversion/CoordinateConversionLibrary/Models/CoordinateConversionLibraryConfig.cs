@@ -100,7 +100,18 @@ namespace CoordinateConversionLibrary.Models
                 XmlSerializer x = new XmlSerializer(GetType());
                 XmlWriter writer = new XmlTextWriter(filename, Encoding.UTF8);
 
-                x.Serialize(writer, this);
+                try
+                {
+                    x.Serialize(writer, this);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    writer.Close();
+                }
             }
             catch (Exception ex)
             {
