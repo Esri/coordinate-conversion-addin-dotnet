@@ -1,24 +1,22 @@
 ﻿
 using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using ProAppCoordConversionModule.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Core;
-using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Threading.Tasks;
-using System;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 namespace ProAppCoordConversionModule.ViewModels
 {
     class ProEditPropertiesViewModel : ProTabBaseViewModel
@@ -59,9 +57,12 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             if (AllSymbolCollection == null)
                 AllSymbolCollection = new Dictionary<string, ObservableCollection<Symbol>>();
+
+            ShowCheckBoxes();
             IsInitialCall = false;
         }
 
+        #region Properties
         private Visibility _showLoadingProcess;
 
         public Visibility ShowLoadingProcess
@@ -416,8 +417,77 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-
         public string SearchString { get; set; }
+
+        private bool showPlusForDirection;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                CoordinateBase.ShowPlus = value;
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                CoordinateBase.ShowHyphen = value;
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+            }
+        }
+
+        private bool showHemisphereIndicator;
+        public bool ShowHemisphereIndicator
+        {
+            get { return showHemisphereIndicator; }
+            set
+            {
+                showHemisphereIndicator = value;
+                CoordinateBase.ShowHemisphere = value;
+                RaisePropertyChanged(() => ShowHemisphereIndicator);
+            }
+        }
+
+        private Visibility plusForDirectionVisibility;
+        public Visibility PlusForDirectionVisibility
+        {
+            get { return plusForDirectionVisibility; }
+            set
+            {
+                plusForDirectionVisibility = value;
+                RaisePropertyChanged(() => PlusForDirectionVisibility);
+            }
+        }
+
+        private Visibility hyphenForDirectionVisibility;
+        public Visibility HyphenForDirectionVisibility
+        {
+            get { return hyphenForDirectionVisibility; }
+            set
+            {
+                hyphenForDirectionVisibility = value;
+                RaisePropertyChanged(() => HyphenForDirectionVisibility);
+            }
+        }
+
+        private Visibility hemisphereIndicatorVisibility;
+        public Visibility HemisphereIndicatorVisibility
+        {
+            get { return hemisphereIndicatorVisibility; }
+            set
+            {
+                hemisphereIndicatorVisibility = value;
+                RaisePropertyChanged(() => HemisphereIndicatorVisibility);
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Handler for when someone closes the dialog with the OK button
@@ -428,6 +498,9 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!IsValidFormat)
                 return;
 
+            CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator = ShowHemisphereIndicator;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
@@ -557,6 +630,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 RaisePropertyChanged(() => FormatExpanded);
             }
+            ShowCheckBoxes();
         }
         private string GetFormatFromDefaults()
         {
@@ -784,9 +858,36 @@ namespace ProAppCoordConversionModule.ViewModels
             if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
                 return false;
 
-            return (value.Contains("+") || value.Contains("-"));
+            return (value.Contains("+") || value.Contains("-")
+                || value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
         }
 
+        private void ShowCheckBoxes()
+        {
+            if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
+                || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
+                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            {
+                PlusForDirectionVisibility = Visibility.Visible;
+                HyphenForDirectionVisibility = Visibility.Visible;
+                HemisphereIndicatorVisibility = Visibility.Visible;
+                ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
+                ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+                ShowHemisphereIndicator = CoordinateConversionLibraryConfig.AddInConfig.ShowHemisphereIndicator;
+            }
+            else
+            {
+                PlusForDirectionVisibility = Visibility.Collapsed;
+                HyphenForDirectionVisibility = Visibility.Collapsed;
+                HemisphereIndicatorVisibility = Visibility.Collapsed;
+                ShowPlusForDirection = false;
+                ShowHyphenForDirection = false;
+                ShowHemisphereIndicator = false;
+            }
+        }
     }
 }
 

@@ -25,6 +25,7 @@
     <Grid Width="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding ViewDetailsTitle}" Height="0" Margin="100,0,100,0" x:Name="titleText" 
@@ -62,5 +63,26 @@
         </DataGrid>
         <Label Grid.Row="1" Content="{x:Static prop:Resources.InformationNotAvailableMsg}"
                Visibility="{Binding IsWarningVisible}"/>
+        <Border BorderThickness="0,1,0,0" Grid.Row="2" BorderBrush="LightGray" Padding="3">
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Content="&lt;" 
+                    VerticalAlignment="Center"
+                    Command="{Binding PreviousRecordCommand}" 
+                    IsEnabled="{Binding IsPreviousRecordEnabled}"
+                    Style="{StaticResource BorderlessButtonStyle}"
+                    ToolTip="Previous"/>
+                <Label Content="{Binding PageNumber}" HorizontalAlignment="Stretch"
+                   HorizontalContentAlignment="Center" FontWeight="Bold" 
+                VerticalAlignment="Center" Padding="2,0,2,0"/>
+                <Button
+                    Content="&gt;"
+                    VerticalAlignment="Center"
+                    Command="{Binding NextRecordCommand}" 
+                    IsEnabled="{Binding IsNextRecordEnabled}"
+                    Style="{StaticResource BorderlessButtonStyle}" 
+                    ToolTip="Previous"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

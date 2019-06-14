@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,9 +35,7 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.ADF;
 using ESRI.ArcGIS.Geoprocessing;
-using ESRI.ArcGIS.Geoprocessor;
 using ESRI.ArcGIS.esriSystem;
-using System.Threading;
 using ArcMapAddinCoordinateConversion.ValueConverters;
 using System.Windows;
 
@@ -54,25 +52,55 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             ActivatePointToolCommand = new RelayCommand(OnActivatePointToolCommand);
             FlashPointCommand = new RelayCommand(OnFlashPointCommand);
             ViewDetailCommand = new RelayCommand(OnViewDetailCommand);
+            PreviousRecordCommand = new RelayCommand(OnPreviousRecordCommand);
+            NextRecordCommand = new RelayCommand(OnNextRecordCommand);
 
             FieldsCollection = new ObservableCollection<CoordinateConversionLibrary.ViewModels.FieldsCollection>();
             ViewDetailsTitle = string.Empty;
             IsWarningVisible = Visibility.Collapsed;
+            PageNumber = 1;
+            IsPreviousRecordEnabled = false;
+            IsNextRecordEnabled = CollectTabViewModel.CoordinateAddInPoints != null && CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).Count() <= PageNumber;
             Mediator.Register(CoordinateConversionLibrary.Constants.NewMapPointSelection, OnNewMapPointSelection);
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
-
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, amCoordGetter);
         }
 
         public RelayCommand ActivatePointToolCommand { get; set; }
         public RelayCommand FlashPointCommand { get; set; }
         public RelayCommand ViewDetailCommand { get; set; }
+        public RelayCommand PreviousRecordCommand { get; set; }
+        public RelayCommand NextRecordCommand { get; set; }
         public CoordinateType InputCoordinateType { get; set; }
         public ICommandItem CurrentTool { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
         public AdditionalFieldsView DialogView { get; set; }
         public bool IsDialogViewOpen { get; set; }
+
+        private bool isPreviousRecordEnabled;
+        public bool IsPreviousRecordEnabled
+        {
+            get { return isPreviousRecordEnabled; }
+            set
+            {
+                isPreviousRecordEnabled = value;
+                RaisePropertyChanged(() => IsPreviousRecordEnabled);
+            }
+        }
+
+        private bool isNextRecordEnabled;
+        public bool IsNextRecordEnabled
+        {
+            get { return isNextRecordEnabled; }
+            set
+            {
+                isNextRecordEnabled = value;
+                RaisePropertyChanged(() => IsNextRecordEnabled);
+            }
+        }
+
+
         public static ArcMapCoordinateGet amCoordGetter = new ArcMapCoordinateGet();
 
         private Visibility isWarningVisible;
@@ -86,6 +114,34 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             }
         }
 
+        private int pageNumber;
+        public int PageNumber
+        {
+            get { return pageNumber; }
+            set
+            {
+                pageNumber = value;
+                IsPreviousRecordEnabled = (value > 1);
+                if (CollectTabViewModel.CoordinateAddInPoints != null)
+                    IsNextRecordEnabled = (value < CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).Count());
+                RaisePropertyChanged(() => PageNumber);
+            }
+        }
+
+
+        private void OnNextRecordCommand(object obj)
+        {
+            PageNumber++;
+            var currentPointData = CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).ElementAt(PageNumber - 1);
+            ShowPopUp(currentPointData);
+        }
+
+        private void OnPreviousRecordCommand(object obj)
+        {
+            PageNumber--;
+            var currentPointData = CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).ElementAt(PageNumber - 1);
+            ShowPopUp(currentPointData);
+        }
 
         internal void OnActivatePointToolCommand(object obj)
         {
@@ -159,20 +215,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 }
                 var av = mxdoc.FocusMap as IActiveView;
                 ArcMapHelpers.FlashGeometry(address, color, av.ScreenDisplay, 500, av.Extent);
-
-                //AddElement(map, address);
-
-                // do not center if in layout view
-                //if (mxdoc.ActiveView is IMap)
-                //{
-                //    if (poly != null && !poly.IsEmpty && (poly as IArea) != null)
-                //        envelope.CenterAt((poly as IArea).Centroid);
-                //    else
-                //        envelope.CenterAt(amCoordGetter.Point);
-
-                //    activeView.Extent = envelope;
-                //    activeView.Refresh();
-                //}
             }
         }
 
@@ -184,7 +226,8 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 System.Windows.Forms.MessageBox.Show("No data available");
                 return;
             }
-            ShowPopUp((input.SelectedItems)[0] as AddInPoint);
+            PageNumber = 1;
+            ShowPopUp((CollectTabViewModel.CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault()) as AddInPoint);
         }
 
         private void ShowPopUp(AddInPoint addinPoint)
@@ -195,19 +238,25 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             {
                 var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
                 IPointToStringConverter pointConverter = new IPointToStringConverter();
-                ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;                
+                ViewDetailsTitle = pointConverter.Convert(valOutput, typeof(string), null, null) as string;
+
                 foreach (var item in dictionary)
+                {
                     if (item.Value.Item2)
+                    {
                         FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                    }
+                }
             }
             else
             {
                 ViewDetailsTitle = addinPoint.Text;
             }
-            IsWarningVisible = FieldsCollection.Any()?Visibility.Collapsed:Visibility.Visible;
+            IsWarningVisible = FieldsCollection.Any() ? Visibility.Collapsed : Visibility.Visible;
             if (!IsDialogViewOpen)
             {
                 IsDialogViewOpen = true;
+                PageNumber = 1;
                 DialogView = new AdditionalFieldsView();
                 DialogView.DataContext = this;
                 DialogView.Closed += diagView_Closed;
@@ -220,7 +269,6 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 RaisePropertyChanged(() => ViewDetailsTitle);
             }
         }
-
 
         private void diagView_Closed(object sender, EventArgs e)
         {
@@ -426,13 +474,15 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             var results = new Dictionary<string, string>();
             IPoint point;
-            var ctype = GetCoordinateType(input.Text, out point);
+            var inputText = input.Point.Y + " " + input.Point.X;
+            var ctype = GetCoordinateType(inputText, out point);
             if (point != null)
             {
                 ArcMapCoordinateGet arcMapCoordinateGetter = new ArcMapCoordinateGet();
                 arcMapCoordinateGetter.Point = point;
                 CoordinateGetBase coordinateGetter = arcMapCoordinateGetter as CoordinateGetBase;
                 results.Add(CoordinateFieldName, input.Text);
+                CoordinateBase.IsOutputInProcess = true;
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -500,6 +550,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                             break;
                     }
                 }
+                CoordinateBase.IsOutputInProcess = false;
             }
             return results;
         }

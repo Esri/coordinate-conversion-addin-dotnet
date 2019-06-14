@@ -65,7 +65,7 @@ namespace ProAppCoordConversionModule.ViewModels
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
-        private async void OnImportCoordinates(object obj)
+        private void OnImportCoordinates(object obj)
         {
             pDialog.Show();
             IsToolActive = false;
@@ -78,7 +78,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
                     if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
                         continue;
-                    await this.ProcessInputAsync(coordinate);
+                    this.ProcessInputValue(coordinate);
                     InputCoordinate = coordinate;
 
                     if (!HasInputError)
@@ -97,7 +97,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 this.ClearListBoxSelection();
                 foreach (var coordinate in coordinates)
                 {
-                    await ProcessInputAsync(coordinate);
+                    ProcessInputValue(coordinate);
                     InputCoordinate = coordinate;
                     if (!HasInputError)
                         OnNewMapPoint(proCoordGetter.Point);
@@ -163,7 +163,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             }
         }
-                
+
         public RelayCommand DeletePointCommand { get; set; }
         public RelayCommand DeleteAllPointsCommand { get; set; }
         public RelayCommand ClearGraphicsCommand { get; set; }
@@ -245,6 +245,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 string path = fcUtils.PromptUserWithSaveDialog(vm.FeatureIsChecked, vm.ShapeIsChecked, vm.KmlIsChecked, vm.CSVIsChecked);
                 if (path != null)
                 {
+                    var displayAmb = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+                    CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                     try
                     {
                         string folderName = System.IO.Path.GetDirectoryName(path);
@@ -270,7 +272,7 @@ namespace ProAppCoordConversionModule.ViewModels
                             if (!aiPoints.Any())
                                 return;
                             var csvExport = new CsvExport();
-                            var displayAmb = CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg;
+
                             foreach (var point in aiPoints)
                             {
                                 var results = GetOutputFormats(point);
@@ -283,9 +285,7 @@ namespace ProAppCoordConversionModule.ViewModels
                                         if (item.Key != PointFieldName && item.Key != OutputFieldName)
                                             csvExport[item.Key] = item.Value.Item1;
                                 }
-                                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                             }
-                            CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = displayAmb;
                             csvExport.ExportToFile(path);
 
                             System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
@@ -296,6 +296,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         System.Diagnostics.Debug.WriteLine(ex.Message);
                     }
+                    CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = displayAmb;
                 }
             }
         }
@@ -363,7 +364,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var addInPoint = new AddInPoint() { Point = point, GUID = guid, FieldsDictionary = fieldsDictionary };
 
             //Add point to the top of the list
-            CoordinateAddInPoints.Insert(0, addInPoint);
+            CoordinateAddInPoints.Add(addInPoint);
         }
 
         private void RemoveGraphics(List<string> guidList)
@@ -471,21 +472,24 @@ namespace ProAppCoordConversionModule.ViewModels
         public override async void OnMapPointSelection(object obj)
         {
             var mp = obj as MapPoint;
-            var poly = GeometryEngine.Instance.Buffer(mp, 20000);
+            var dblSrchDis = MapView.Active.Extent.Width / 200;
+            var poly = GeometryEngine.Instance.Buffer(mp, dblSrchDis);
             AddInPoint closestPoint = null;
             Double distance = 0;
             foreach (var item in ProCollectTabViewModel.CoordinateAddInPoints)
             {
-                //item.IsSelected = false;
+                if (item.Point.SpatialReference != MapView.Active.Map.SpatialReference)
+                    item.Point = GeometryEngine.Instance.Project(item.Point, MapView.Active.Map.SpatialReference) as MapPoint;
                 var isWithinExtent = await IsPointWithinExtent(item.Point, poly.Extent);
-                var result = GeometryEngine.Instance.NearestPoint(item.Point, mp);
-                distance = (distance < result.Distance && distance > 0) ? distance : result.Distance;
                 if (isWithinExtent)
                 {
-                    if (result.Distance == distance)
+                    double resultDistance = GeometryEngine.Instance.Distance(item.Point, mp);
+                    distance = (distance < resultDistance && distance > 0) ? distance : resultDistance;
+
+                    if (resultDistance == distance)
                     {
                         closestPoint = item;
-                        distance = result.Distance;
+                        distance = resultDistance;
                     }
                 }
             }

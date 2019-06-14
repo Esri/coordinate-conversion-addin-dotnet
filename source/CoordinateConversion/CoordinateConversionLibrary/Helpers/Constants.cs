@@ -40,5 +40,13 @@ namespace CoordinateConversionLibrary
         public const string DEACTIVATE_TOOL = "DEACTIVATE_TOOL";
         public const string VALIDATE_MAP_POINT = "VALIDATE_MAP_POINT";
 
+        public const string DefaultCustomFormat = "Y0.0##### X0.0#####";
+        public const string DDCustomFormat = "Y0.0##### X0.0#####";
+        public const string DDMCustomFormat = "A0° B0.0###' X0° Y0.0###'";
+        public const string DMSCustomFormat = "A0° B0' C0.0#\" X0° Y0' Z0.0#\"";
+        public const string MGRSCustomFormat = "ZSX00000Y00000";
+        public const string USNGCustomFormat = "ZSX00000Y00000";
+        public const string UTMCustomFormat = "Z#B X0 Y0";
+
     }
 }

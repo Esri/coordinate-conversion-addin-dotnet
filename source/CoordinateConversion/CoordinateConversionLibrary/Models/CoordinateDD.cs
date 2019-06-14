@@ -14,13 +14,13 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using CoordinateConversionLibrary.Views;
+using CoordinateConversionLibrary.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
+using System.Linq;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -155,29 +155,29 @@ namespace CoordinateConversionLibrary.Models
             try
             {
                 //// Don't allow both prefix and suffix for lat or lon
-                if (firstPrefix.Success && firstSuffix.Success)
+                if (firstPrefix.ValidatePrefix(ShowHyphen, ShowPlus) && firstSuffix.Success)
                 {
                     return false;
                 }
 
-                if (lastPrefix.Success && lastSuffix.Success)
+                if (lastPrefix.ValidatePrefix(ShowHyphen, ShowPlus) && lastSuffix.Success)
                 {
                     return false;
                 }
 
-                if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) ||
-                    (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
+                if ((firstSuffix.Success || firstPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (firstSuffix.Value.ToUpper().Equals("S") || firstPrefix.Value.ToUpper().Equals("S")) ||
+                    (lastSuffix.Success || lastPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (lastSuffix.Value.ToUpper().Equals("S") || lastPrefix.Value.ToUpper().Equals("S")))
                 {
                     coord.Lat = Math.Abs(coord.Lat) * -1;
                 }
 
-                if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) ||
-                    (lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("W") || lastPrefix.Value.ToUpper().Equals("W")))
+                if ((firstSuffix.Success || firstPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (firstSuffix.Value.ToUpper().Equals("W") || firstPrefix.Value.ToUpper().Equals("W")) ||
+                    (lastSuffix.Success || lastPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (lastSuffix.Value.ToUpper().Equals("W") || lastPrefix.Value.ToUpper().Equals("W")))
                 {
                     coord.Lon = Math.Abs(coord.Lon) * -1;
                 }
 
-                if ((firstSuffix.Success || firstPrefix.Success) && (firstSuffix.Value.ToUpper().Equals("-") || firstPrefix.Value.ToUpper().Equals("-")))
+                if ((firstSuffix.Success || firstPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (firstSuffix.Value.ToUpper().Equals("-") || firstPrefix.Value.ToUpper().Equals("-")))
                 {
                     if (blnMatchDDLat)
                         coord.Lat = Math.Abs(coord.Lat) * -1;
@@ -185,7 +185,7 @@ namespace CoordinateConversionLibrary.Models
                         coord.Lon = Math.Abs(coord.Lon) * -1;
                 }
 
-                if ((lastSuffix.Success || lastPrefix.Success) && (lastSuffix.Value.ToUpper().Equals("-") || lastPrefix.Value.ToUpper().Equals("-")))
+                if ((lastSuffix.Success || lastPrefix.ValidatePrefix(ShowHyphen, ShowPlus)) && (lastSuffix.Value.ToUpper().Equals("-") || lastPrefix.Value.ToUpper().Equals("-")))
                 {
                     if (blnMatchDDLat)
                         coord.Lon = Math.Abs(coord.Lon) * -1;
@@ -247,7 +247,7 @@ namespace CoordinateConversionLibrary.Models
                 {
                     if (!string.IsNullOrEmpty(CoordinateBase.InputCustomFormat))
                     {
-                        return this.Format(CoordinateBase.InputCustomFormat,arg,this);
+                        return this.Format(CoordinateBase.InputCustomFormat, arg, this);
                     }
                     return this.Format("Y-0.000000 X-0.000000", arg, this);
                 }
@@ -257,6 +257,8 @@ namespace CoordinateConversionLibrary.Models
                     var cnum = coord.Lat;
                     var sb = new StringBuilder();
                     var olist = new List<object>();
+                    int latIndex = -1, lonIndex = -1;
+                    var closingIndexes = new List<int>();
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
@@ -275,6 +277,7 @@ namespace CoordinateConversionLibrary.Models
                         {
                             sb.Append("}");
                             endIndexNeeded = false;
+                            closingIndexes.Add(sb.Length);
                         }
 
                         switch (c)
@@ -283,11 +286,30 @@ namespace CoordinateConversionLibrary.Models
                                 cnum = coord.Lon;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
+                                if (coord.Lon > 0.0)
+                                {
+                                    if (CoordinateBase.ShowPlus) sb.Append("+");
+                                }
+                                else
+                                {
+                                    if (CoordinateBase.ShowHyphen) sb.Append("-");
+                                }
+                                lonIndex = sb.Length;
                                 break;
                             case 'Y': // latitude coordinate
                                 cnum = coord.Lat;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
+                                if (coord.Lat > 0.0)
+                                {
+                                    if (CoordinateBase.ShowPlus & !CoordinateBase.IsOutputInProcess) sb.Append(" +");
+                                }
+
+                                else
+                                {
+                                    if (CoordinateBase.ShowHyphen & !CoordinateBase.IsOutputInProcess) sb.Append(" -");
+                                }
+                                latIndex = sb.Length;
                                 break;
                             case '+': // show +
                                 if (cnum > 0.0)
@@ -299,17 +321,29 @@ namespace CoordinateConversionLibrary.Models
                                 break;
                             case 'N':
                             case 'S': // N or S
-                                if (coord.Lat > 0.0)
-                                    sb.Append("N"); // do we always want UPPER
-                                else
-                                    sb.Append("S");
+                                if (!CoordinateBase.IsOutputInProcess
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.MGRS
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.UTM
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.USNG)
+                                {
+                                    if (coord.Lat > 0.0)
+                                        sb.Append("N"); // do we always want UPPER
+                                    else
+                                        sb.Append("S");
+                                }
                                 break;
                             case 'E':
                             case 'W': // E or W
-                                if (coord.Lon > 0.0)
-                                    sb.Append("E");
-                                else
-                                    sb.Append("W");
+                                if (!CoordinateBase.IsOutputInProcess
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.MGRS
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.UTM
+                                    && CoordinateBase.InputCategorySelection != CoordinateTypes.USNG)
+                                {
+                                    if (coord.Lon > 0.0)
+                                        sb.Append("E");
+                                    else
+                                        sb.Append("W");
+                                }
                                 break;
                             default:
                                 sb.Append(c);
@@ -320,6 +354,52 @@ namespace CoordinateConversionLibrary.Models
                     if (endIndexNeeded)
                     {
                         sb.Append("}");
+                        closingIndexes.Add(sb.Length);
+                    }
+                    if (lonIndex != -1 && latIndex != -1
+                        && CoordinateBase.InputCategorySelection != CoordinateTypes.MGRS
+                        && CoordinateBase.InputCategorySelection != CoordinateTypes.UTM
+                        && CoordinateBase.InputCategorySelection != CoordinateTypes.USNG)
+                    {
+                        int lonVal = -1, latVal = -1;
+                        if (closingIndexes.Where(x => x < lonIndex).Any())
+                        {
+                            lonVal = closingIndexes.Max();
+                            latVal = closingIndexes.Where(x => x < lonIndex).Max();
+                        }
+                        else
+                        {
+                            lonVal = closingIndexes.Where(x => x < latIndex).Max();
+                            latVal = closingIndexes.Max();
+                        }
+                        if (coord.Lon > 0.0)
+                        {
+                            if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                            {
+                                sb.Insert(lonVal, "E");
+                            }
+                        }
+                        else
+                        {
+                            if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                            {
+                                sb.Insert(lonVal, "W");
+                            }
+                        }
+                        if (coord.Lat > 0.0)
+                        {
+                            if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                            {
+                                sb.Insert(latVal, "N");
+                            }
+                        }
+                        else
+                        {
+                            if (CoordinateBase.ShowHemisphere | CoordinateBase.IsOutputInProcess)
+                            {
+                                sb.Insert(latVal, "S");
+                            }
+                        }
                     }
 
                     return String.Format(sb.ToString(), olist.ToArray());

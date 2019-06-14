@@ -37,6 +37,10 @@ namespace CoordinateConversionLibrary.Models
     {
         public static string InputCustomFormat { get; set; }
         public static string InputFormatSelection { get; set; }
+        public static bool ShowPlus { get; set; }
+        public static bool ShowHyphen { get; set; }
+        public static bool ShowHemisphere { get; set; }
+        public static bool IsOutputInProcess { get; set; }
         public static CoordinateTypes InputCategorySelection { get; set; }
         public static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
 
@@ -106,8 +110,8 @@ namespace CoordinateConversionLibrary.Models
 
         public static void ShowAmbiguousDialog()
         {
-            CoordinateDD.ShowAmbiguousEvent();
-            if (!CoordinateDD.IsEventAttached)
+            ShowAmbiguousEvent();
+            if (!IsEventAttached)
                 ambiguousCoordsViewDlg.ShowDialog();
         }
 

@@ -601,6 +601,33 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show N/S/E/W for hemisphere.
+        /// </summary>
+        public static string LabelShowHemisphere {
+            get {
+                return ResourceManager.GetString("LabelShowHemisphere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show - for S/W hemisphere.
+        /// </summary>
+        public static string LabelShowHyphen {
+            get {
+                return ResourceManager.GetString("LabelShowHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show + for N/E hemisphere.
+        /// </summary>
+        public static string LabelShowPlus {
+            get {
+                return ResourceManager.GetString("LabelShowPlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please wait while map loads....
         /// </summary>
         public static string LoadMapMsg {
@@ -664,7 +691,7 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Characters &apos;+&apos; and &apos;-&apos; are not allowed to define custom formatting..
+        ///   Looks up a localized string similar to Characters &apos;+&apos;,&apos;-&apos;,&apos;N&apos;,&apos;W&apos;,&apos;E&apos; and &apos;S&apos; are not allowed to define custom formatting..
         /// </summary>
         public static string SpecialCharactersValidationMsg {
             get {

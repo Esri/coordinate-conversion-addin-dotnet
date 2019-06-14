@@ -233,7 +233,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                 var addInPoint = new AddInPoint() { Point = point, GUID = guid };
 
                 //Add point to the top of the list
-                CollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint);
+                CollectTabViewModel.CoordinateAddInPoints.Add(addInPoint);
 
                 CollectTabViewModel.GraphicsList.Add(new AMGraphic(guid, point, true));
             }
