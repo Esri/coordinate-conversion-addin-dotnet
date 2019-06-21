@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Esri 
+// Copyright 2016 Esri 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -525,11 +525,50 @@ namespace CoordinateConversionLibrary.ViewModels
             if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
                 return false;
 
-            return (value.Contains("+") || value.Contains("-")
+            if (type == CoordinateType.DMS || type == CoordinateType.DDM)
+            {
+                var result = ValidationForDDM_DMS(value);
+                if (result)
+                    return result;
+                return (value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
+            }
+            else
+            {
+                return (value.Contains("+") || value.Contains("-")
                 || value.Contains("N") || value.Contains("S")
                 || value.Contains("E") || value.Contains("W")
                 || value.Contains("n") || value.Contains("s")
                 || value.Contains("e") || value.Contains("w"));
+            }
+        }
+
+        private static bool ValidationForDDM_DMS(string value)
+        {
+            int latIndex = value.IndexOf('A'), lonIndex = value.IndexOf('X');
+            int startIndex = -1, nextIndex = -1;
+            var isLatFirst = latIndex < lonIndex;
+
+            if (new[] { "+", "-" }.Any(value.Substring(0, isLatFirst ? latIndex : lonIndex).Contains))
+                return true;
+
+            //get next prefix start index
+            if (value.Contains(isLatFirst ? "C" : "Z"))
+                startIndex = value.IndexOf(isLatFirst ? "C" : "Z");
+            else if (value.Contains(isLatFirst ? "B" : "Y"))
+                startIndex = value.IndexOf(isLatFirst ? "B" : "Y");
+            else if (value.Contains(isLatFirst ? "A" : "X"))
+                startIndex = value.IndexOf(isLatFirst ? "A" : "X");
+
+            //get next prefix
+            nextIndex = value.IndexOf(isLatFirst ? "X" : "A");
+            var nextPrefix = value.Substring(startIndex, (nextIndex - startIndex));
+
+            if (new[] { "+", "-" }.Any(nextPrefix.Contains))
+                return true;
+            return false;
         }
 
         private void ShowCheckBoxes()
@@ -552,7 +591,7 @@ namespace CoordinateConversionLibrary.ViewModels
                 HyphenForDirectionVisibility = Visibility.Collapsed;
                 HemisphereIndicatorVisibility = Visibility.Collapsed;
                 ShowPlusForDirection = false;
-                showHyphenForDirection = false;
+                ShowHyphenForDirection = false;
                 ShowHemisphereIndicator = false;
             }
         }

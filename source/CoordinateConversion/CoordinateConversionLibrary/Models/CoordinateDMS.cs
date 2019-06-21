@@ -282,10 +282,6 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
-                    bool isHyphenFirstCharacter = false;
-
-                    if (format.Trim().StartsWith("-"))
-                        isHyphenFirstCharacter = true;
 
                     foreach (char c in format)
                     {
@@ -355,23 +351,6 @@ namespace CoordinateConversionLibrary.Models
                                 cnum = coord.LonSeconds;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
-                                break;
-                            case '+': // show + or -
-                                if (cnum > 0.0)
-                                    sb.Append("+");
-                                break;
-                            case '-':
-                                if (isHyphenFirstCharacter)
-                                {
-                                    if (cnum < 0.0)
-                                        sb.Append("-");
-
-                                    isHyphenFirstCharacter = false;
-                                }
-                                else
-                                {
-                                    sb.Append("-");
-                                }
                                 break;
                             case 'N': // N or S
                             case 'S':
