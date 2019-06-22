@@ -96,18 +96,29 @@
                                 <TextBlock Text="{Binding Sample}" MinWidth="150" Margin="3,3,3,3" />
                             </StackPanel>
                             <Expander Header="{x:Static prop:Resources.HeaderAdvanced}" IsExpanded="{Binding FormatExpanded}" IsEnabled="{Binding IsEnableExpander}">
-                                <TextBox Text="{Binding Format,  
-                            UpdateSourceTrigger=PropertyChanged,
-                             ValidatesOnExceptions=True}"
-                             Validation.ErrorTemplate="{StaticResource errorTemplate}" 
-                             MinWidth="150" Margin="3,3,3,3" />
+                                <StackPanel>
+                                    <TextBox Text="{Binding Format,  
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}"
+                                        Validation.ErrorTemplate="{StaticResource errorTemplate}" 
+                                        MinWidth="150" Margin="3,3,3,3" />
+                                    <RadioButton Content="{x:Static prop:Resources.ShowNSEW}" GroupName="FormatSelection" IsChecked="{Binding IsHemisphereIndicatorChecked}"
+                                                         Visibility="{Binding HemisphereIndicatorVisibility}" Margin="10,0,3,0"/>
+                                    <GroupBox Visibility="{Binding PlusHyphenForDirectionVisibility}">
+                                        <GroupBox.Header>
+                                            <RadioButton Content="{x:Static prop:Resources.ShowPlusHyphen}" GroupName="FormatSelection" IsChecked="{Binding IsPlusHyphenChecked}"/>
+                                        </GroupBox.Header>
+                                        <StackPanel IsEnabled="{Binding IsPlusHyphenEnabled}">
+                                            <CheckBox IsChecked="{Binding ShowPlusForDirection}" Content="{x:Static prop:Resources.LabelShowPlus}"/>
+                                            <CheckBox IsChecked="{Binding ShowHyphenForDirection}" Content="{x:Static prop:Resources.LabelShowHyphen}"/>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <StackPanel Orientation="Vertical">
+                                        <Label Content="Preview"/>
+                                        <TextBlock Text="{Binding CustomFormatPreview}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </Expander>
-                            <CheckBox IsChecked="{Binding ShowPlusForDirection}" Content="{x:Static prop:Resources.LabelShowPlus}"
-                                      Visibility="{Binding PlusForDirectionVisibility}"/>
-                            <CheckBox IsChecked="{Binding ShowHyphenForDirection}" Content="{x:Static prop:Resources.LabelShowHyphen}"
-                                      Visibility="{Binding HyphenForDirectionVisibility}"/>
-                            <CheckBox IsChecked="{Binding ShowHemisphereIndicator}" Content="{x:Static prop:Resources.LabelShowHemisphere}"
-                                      Visibility="{Binding HemisphereIndicatorVisibility}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
