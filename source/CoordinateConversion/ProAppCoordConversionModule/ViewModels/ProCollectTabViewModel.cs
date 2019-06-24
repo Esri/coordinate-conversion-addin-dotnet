@@ -67,45 +67,55 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnImportCoordinates(object obj)
         {
-            pDialog.Show();
-            IsToolActive = false;
-            if (obj == null)
-                return;
-            var input = obj as List<Dictionary<string, Tuple<object, bool>>>;
-            if (input != null)
-                foreach (var item in input)
-                {
-                    var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
-                    if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
-                        continue;
-                    this.ProcessInputValue(coordinate);
-                    InputCoordinate = coordinate;
+            var progressDialog = new ProgressDialog("Processing.. Please wait");
+            progressDialog.Show();
 
-                    if (!HasInputError)
-                    {
-                        if (item.ContainsKey(PointFieldName))
-                            continue;
-                        item.Add(PointFieldName, Tuple.Create((object)proCoordGetter.Point, false));
-                        OnNewMapPoint(item);
-                    }
-                }
-            else
+            try
             {
-                List<string> coordinates = obj as List<string>;
-                if (coordinates == null)
+                IsToolActive = false;
+                if (obj == null)
                     return;
-                this.ClearListBoxSelection();
-                foreach (var coordinate in coordinates)
-                {
-                    ProcessInputValue(coordinate);
-                    InputCoordinate = coordinate;
-                    if (!HasInputError)
-                        OnNewMapPoint(proCoordGetter.Point);
-                }
+                var input = obj as List<Dictionary<string, Tuple<object, bool>>>;
+                if (input != null)
+                    foreach (var item in input)
+                    {
+                        var coordinate = item.Where(x => x.Key == OutputFieldName).Select(x => Convert.ToString(x.Value.Item1)).FirstOrDefault();
+                        if (coordinate == "" || item.Where(x => x.Key == PointFieldName).Any())
+                            continue;
+                        this.ProcessInputValue(coordinate);
+                        InputCoordinate = coordinate;
 
-                InputCoordinate = "";
+                        if (!HasInputError)
+                        {
+                            if (item.ContainsKey(PointFieldName))
+                                continue;
+                            item.Add(PointFieldName, Tuple.Create((object)proCoordGetter.Point, false));
+                            OnNewMapPoint(item);
+                        }
+                    }
+                else
+                {
+                    List<string> coordinates = obj as List<string>;
+                    if (coordinates == null)
+                        return;
+                    this.ClearListBoxSelection();
+                    foreach (var coordinate in coordinates)
+                    {
+                        ProcessInputValue(coordinate);
+                        InputCoordinate = coordinate;
+                        if (!HasInputError)
+                            OnNewMapPoint(proCoordGetter.Point);
+                    }
+
+                    InputCoordinate = "";
+                }
             }
-            pDialog.Hide();
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed in OnImportCoordinates: " + ex.Message);
+            }
+
+            progressDialog.Hide();
         }
 
         private void ClearListBoxSelection()
