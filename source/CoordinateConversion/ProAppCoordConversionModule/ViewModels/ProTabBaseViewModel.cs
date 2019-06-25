@@ -56,7 +56,6 @@ namespace ProAppCoordConversionModule.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-            pDialog = new ProgressDialog("Processing...Please wait...");
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
             CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -66,7 +65,6 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
 
-        public static ProgressDialog pDialog { get; set; }
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
@@ -458,11 +456,6 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
                 Debug.WriteLine("Error " + ex.ToString());
-            }
-            finally
-            {
-                if (pDialog != null)
-                    pDialog.Hide();
             }
         }
 
