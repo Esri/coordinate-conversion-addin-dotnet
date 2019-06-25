@@ -644,51 +644,73 @@ namespace CoordinateConversionLibrary.ViewModels
 
         private void UpdateCustomFormatPreview()
         {
-            if (!string.IsNullOrEmpty(Format) && Format.Contains("X"))
+            if (!string.IsNullOrEmpty(Format) && (Format.Contains("X") || Format.Contains("Y")))
             {
-                var coord = Format.Split('X');
-                coord[0] = coord[0].TrimEnd(' ');
-                coord[1] = "X" + coord[1];
-                if (ShowPlusForDirection && !ShowHyphenForDirection)
+                var xIndex = Format.IndexOf('X');
+                var yIndex = SelectedCoordinateType == CoordinateTypes.DD ? Format.IndexOf('Y') : Format.IndexOf('A');
+                Char splitChar = Char.MinValue;
+
+                if (xIndex >= 0 && yIndex >= 0)
                 {
-                    coord[0] = "+" + coord[0];
-                    coord[1] = "+" + coord[1];
+                    if (xIndex > yIndex)
+                        splitChar = 'X';
+                    else
+                        splitChar = SelectedCoordinateType == CoordinateTypes.DD ? 'Y' : 'A';
                 }
                 else
                 {
-                    coord[0].Replace("+", "");
-                    coord[1].Replace("+", "");
+                    if (xIndex > -1)
+                        splitChar = 'X';
+                    else if (yIndex > -1)
+                        splitChar = 'Y';
                 }
-                if (ShowHyphenForDirection && !ShowPlusForDirection)
+
+                if (splitChar != Char.MinValue)
                 {
-                    coord[0] = "-" + coord[0];
-                    coord[1] = "-" + coord[1];
-                }
-                else
-                {
-                    coord[0].Replace("-", "");
-                    coord[1].Replace("-", "");
-                }
-                if (ShowHyphenForDirection && ShowPlusForDirection)
-                {
-                    coord[0] = "+/-" + coord[0];
-                    coord[1] = "+/-" + coord[1];
-                }
-                else
-                {
-                    coord[0].Replace("+/-", "");
-                    coord[1].Replace("+/-", "");
-                }
-                CustomFormatPreview = coord[0] + " " + coord[1];
-                if (IsHemisphereIndicatorChecked)
-                {
-                    ParseCustomFormats(Format);
-                }
-                else
-                {
-                    coord[0].Replace("N", "");
-                    coord[1].Replace("E", "");
+                    var coord = Format.Split(splitChar);
+                    coord[0] = coord[0].TrimEnd(' ');
+                    coord[1] = splitChar + coord[1];
+                    if (ShowPlusForDirection && !ShowHyphenForDirection)
+                    {
+                        coord[0] = "+" + coord[0];
+                        coord[1] = "+" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("+", "");
+                        coord[1].Replace("+", "");
+                    }
+                    if (ShowHyphenForDirection && !ShowPlusForDirection)
+                    {
+                        coord[0] = "-" + coord[0];
+                        coord[1] = "-" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("-", "");
+                        coord[1].Replace("-", "");
+                    }
+                    if (ShowHyphenForDirection && ShowPlusForDirection)
+                    {
+                        coord[0] = "+/-" + coord[0];
+                        coord[1] = "+/-" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("+/-", "");
+                        coord[1].Replace("+/-", "");
+                    }
                     CustomFormatPreview = coord[0] + " " + coord[1];
+                    if (IsHemisphereIndicatorChecked)
+                    {
+                        ParseCustomFormats(Format);
+                    }
+                    else
+                    {
+                        coord[0].Replace("N", "");
+                        coord[1].Replace("E", "");
+                        CustomFormatPreview = coord[0] + " " + coord[1];
+                    }
                 }
             }
         }
@@ -699,7 +721,8 @@ namespace CoordinateConversionLibrary.ViewModels
             int latIndex = -1, lonIndex = -1;
             var formatChar = format.ToArray();
             var endIndexCollection = new List<int>();
-            for (int i = 0; i < formatChar.Length; i++)
+            int i = 0;
+            for (; i < formatChar.Length; i++)
             {
                 var c = formatChar[i];
                 if ((c == 'X' && SelectedCoordinateType == CoordinateTypes.DD)
@@ -727,14 +750,44 @@ namespace CoordinateConversionLibrary.ViewModels
                     endIndexNeeded = false;
                 }
             }
-            if (endIndexCollection.Count == 1)
-                endIndexCollection.Add(format.Length);
-            if (lonIndex != -1 && latIndex != -1)
+            if (startIndexNeeded == false && format.Length > 0)
             {
-                var lonVal = endIndexCollection.Where(x => x > latIndex).Any() ?
-                    endIndexCollection.Max() : endIndexCollection.Where(x => x > lonIndex).Min();
-                var latVal = endIndexCollection.Where(x => x > latIndex).Any() ?
-                    endIndexCollection.Where(x => x > latIndex).Min() : endIndexCollection.Max();
+                endIndexCollection.Add(format.Length);
+            }
+            //endIndexCollection.Add(format.Length);
+            //var orderedColl = endIndexCollection.OrderBy(x => x).ToList();
+            int latVal = -1;
+            int lonVal = -1;
+            if ((lonIndex != -1 || latIndex != -1) && endIndexCollection.Count > 0)
+            {
+                if (lonIndex != -1 && latIndex != -1)
+                {
+                    if (latIndex > lonIndex)
+                    {
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    if (lonIndex != -1)
+                    {
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                    }
+                }
+                //var lonVal = endIndexCollection.Where(x => x > lonIndex).Any() ?
+                //    endIndexCollection.Max() : endIndexCollection.Where(x => x > lonIndex).Min();
+                //var latVal = endIndexCollection.Where(x => x > latIndex).Any() ?
+                //    endIndexCollection.Max() : endIndexCollection.Where(x => x > latIndex).Min();
                 if (SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.DDM)
                 {
                     var nextLatChar = format.ElementAt(latVal);
@@ -758,8 +811,13 @@ namespace CoordinateConversionLibrary.ViewModels
                     lonVal = skipLonChar ? lonVal + 1 : lonVal;
                     latVal = skipLatChar ? latVal + 1 : latVal;
                 }
-                format = format.Substring(0, lonVal) + "E" + format.Substring(lonVal);
-                format = format.Substring(0, latVal) + "N" + format.Substring(latVal);
+                if (lonVal > -1)
+                {
+                    format = format.Substring(0, lonVal) + "E" + format.Substring(lonVal);
+                    latVal = (lonVal < latVal) ? latVal + 1 : latVal;
+                }
+                if (latVal > -1)
+                    format = format.Substring(0, latVal) + "N" + format.Substring(latVal);
             }
             CustomFormatPreview = format;
         }
