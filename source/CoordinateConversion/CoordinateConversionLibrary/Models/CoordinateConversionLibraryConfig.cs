@@ -94,7 +94,7 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
-        private bool showHyphenForDirection=false;
+        private bool showHyphenForDirection = false;
         public bool ShowHyphenForDirection
         {
             get { return showHyphenForDirection; }
@@ -107,16 +107,28 @@ namespace CoordinateConversionLibrary.Models
         }
 
         private bool showHemisphereIndicator = false;
-        public bool ShowHemisphereIndicator
+        public bool IsHemisphereIndicatorChecked
         {
             get { return showHemisphereIndicator; }
             set
             {
                 showHemisphereIndicator = value;
-                RaisePropertyChanged(() => ShowHemisphereIndicator);
+                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
 
             }
         }
+
+        private bool isPlusHyphenChecked;
+        public bool IsPlusHyphenChecked
+        {
+            get { return isPlusHyphenChecked; }
+            set
+            {
+                isPlusHyphenChecked = value;
+                RaisePropertyChanged(() => IsPlusHyphenChecked);
+            }
+        }
+
 
         public string CategorySelection { get; set; }
         public string FormatSelection { get; set; }
@@ -189,8 +201,12 @@ namespace CoordinateConversionLibrary.Models
                 DefaultFormatList = temp.DefaultFormatList;
                 ShowPlusForDirection = temp.ShowPlusForDirection;
                 ShowHyphenForDirection = temp.ShowHyphenForDirection;
-                ShowHemisphereIndicator = temp.ShowHemisphereIndicator;
+                IsHemisphereIndicatorChecked = temp.IsHemisphereIndicatorChecked;
+                IsPlusHyphenChecked = temp.IsPlusHyphenChecked;
+                IsHemisphereIndicatorChecked = temp.IsHemisphereIndicatorChecked;
 
+                RaisePropertyChanged(() => IsPlusHyphenChecked);
+                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
                 RaisePropertyChanged(() => ShowPlusForDirection);
                 RaisePropertyChanged(() => ShowHyphenForDirection);
                 RaisePropertyChanged(() => OutputCoordinateList);
@@ -219,7 +235,7 @@ namespace CoordinateConversionLibrary.Models
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", Constants.DMSCustomFormat } } });
             //DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.GARS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "221LW37", "X#YQK" } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.MGRSCustomFormat } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.USNGCustomFormat} } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.USNGCustomFormat } } });
             DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19F 414639 4428236", Constants.UTMCustomFormat } } });
         }
 

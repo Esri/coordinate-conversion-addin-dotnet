@@ -243,10 +243,6 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
-                    bool isHyphenFirstCharacter = false;
-
-                    if (format.Trim().StartsWith("-"))
-                        isHyphenFirstCharacter = true;
                     foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
@@ -305,17 +301,6 @@ namespace CoordinateConversionLibrary.Models
                                 cnum = coord.LonMinutes;
                                 olist.Add(Math.Abs(cnum));
                                 startIndexNeeded = true;
-                                break;
-                            case '+': // show + or -
-                                if (cnum > 0.0)
-                                    sb.Append("+");
-                                break;
-                            case '-':
-                                if (isHyphenFirstCharacter || cnum < 0.0)
-                                {
-                                    sb.Append("-");
-                                    isHyphenFirstCharacter = false;
-                                }
                                 break;
                             case 'N': // N or S
                             case 'S':

@@ -691,6 +691,24 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show N/S/E/W.
+        /// </summary>
+        public static string ShowNSEW {
+            get {
+                return ResourceManager.GetString("ShowNSEW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show +/-.
+        /// </summary>
+        public static string ShowPlusHyphen {
+            get {
+                return ResourceManager.GetString("ShowPlusHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Characters &apos;+&apos;,&apos;-&apos;,&apos;N&apos;,&apos;W&apos;,&apos;E&apos; and &apos;S&apos; are not allowed to define custom formatting..
         /// </summary>
         public static string SpecialCharactersValidationMsg {

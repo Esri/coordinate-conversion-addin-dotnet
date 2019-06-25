@@ -9,7 +9,7 @@ namespace CoordinateConversionLibrary.Helpers
             if (group.ToString().Contains("+"))
                 return !(showPlus && group.ToString().Contains("+"));
             else if (group.ToString().Contains("-"))
-                return !(showHyphen && group.ToString().Contains("-"));
+                return true;
             return group.Success;
         }
     }
