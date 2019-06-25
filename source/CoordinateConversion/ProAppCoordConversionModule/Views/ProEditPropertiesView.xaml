@@ -115,7 +115,7 @@
                                     </GroupBox>
                                     <StackPanel Orientation="Vertical">
                                         <Label Content="Preview"/>
-                                        <TextBlock Text="{Binding CustomFormatPreview}"/>
+                                        <TextBlock Text="{Binding CustomFormatPreview}" Style="{DynamicResource Esri_TextBlockRegular}"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Expander>
