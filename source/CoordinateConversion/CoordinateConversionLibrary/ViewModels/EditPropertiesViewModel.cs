@@ -644,7 +644,7 @@ namespace CoordinateConversionLibrary.ViewModels
 
         private void UpdateCustomFormatPreview()
         {
-            if (!string.IsNullOrEmpty(Format) && (Format.Contains("X") || Format.Contains("Y")))
+            if (!string.IsNullOrEmpty(Format) && ((SelectedCoordinateType == CoordinateTypes.DD && (Format.Contains("X") || Format.Contains("Y"))) || (SelectedCoordinateType != CoordinateTypes.DD && (Format.Contains("A") || Format.Contains("X")))))
             {
                 var xIndex = Format.IndexOf('X');
                 var yIndex = SelectedCoordinateType == CoordinateTypes.DD ? Format.IndexOf('Y') : Format.IndexOf('A');
