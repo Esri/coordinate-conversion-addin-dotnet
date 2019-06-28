@@ -3,7 +3,7 @@
 Coordinate Conversion window in ArcGIS Pro
 Coordinate Conversion allows analysts to input and quickly convert coordinates between several common formats, including Universal Transverse Mercator (UTM) and Military Grid Reference System (MGRS). 
 
-![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
+![Image of Coordinate Conversion Addin](CoordinateConversion.png)
 
 ## Features
 
