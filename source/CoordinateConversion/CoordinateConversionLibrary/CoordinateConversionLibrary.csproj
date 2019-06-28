@@ -51,6 +51,7 @@
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\ConversionUtils.cs" />
+    <Compile Include="Helpers\CoordinateConversionExtensions.cs" />
     <Compile Include="Helpers\ExportCSV.cs" />
     <Compile Include="Helpers\ImportCSV.cs" />
     <Compile Include="Helpers\Mediator.cs" />
@@ -203,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\SelectionSelectTool16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\GenericErrorStop16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

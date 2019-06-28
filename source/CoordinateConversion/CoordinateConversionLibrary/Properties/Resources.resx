@@ -384,4 +384,25 @@
   <data name="ViewDetails" xml:space="preserve">
     <value>View Details</value>
   </data>
+  <data name="InformationNotAvailableMsg" xml:space="preserve">
+    <value>No Field information associated with this point</value>
+  </data>
+  <data name="SpecialCharactersValidationMsg" xml:space="preserve">
+    <value>Characters '+','-','N','W','E' and 'S' are not allowed to define custom formatting.</value>
+  </data>
+  <data name="LabelShowHyphen" xml:space="preserve">
+    <value>Show - for S/W hemisphere</value>
+  </data>
+  <data name="LabelShowPlus" xml:space="preserve">
+    <value>Show + for N/E hemisphere</value>
+  </data>
+  <data name="LabelShowHemisphere" xml:space="preserve">
+    <value>Show N/S/E/W for hemisphere</value>
+  </data>
+  <data name="ShowNSEW" xml:space="preserve">
+    <value>Show N/S/E/W</value>
+  </data>
+  <data name="ShowPlusHyphen" xml:space="preserve">
+    <value>Show +/-</value>
+  </data>
 </root>

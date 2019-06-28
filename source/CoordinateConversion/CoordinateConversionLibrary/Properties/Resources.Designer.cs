@@ -412,6 +412,15 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Field information associated with this point.
+        /// </summary>
+        public static string InformationNotAvailableMsg {
+            get {
+                return ResourceManager.GetString("InformationNotAvailableMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Coordinate.
         /// </summary>
         public static string InvalidCoordCap {
@@ -592,6 +601,33 @@ namespace CoordinateConversionLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show N/S/E/W for hemisphere.
+        /// </summary>
+        public static string LabelShowHemisphere {
+            get {
+                return ResourceManager.GetString("LabelShowHemisphere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show - for S/W hemisphere.
+        /// </summary>
+        public static string LabelShowHyphen {
+            get {
+                return ResourceManager.GetString("LabelShowHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show + for N/E hemisphere.
+        /// </summary>
+        public static string LabelShowPlus {
+            get {
+                return ResourceManager.GetString("LabelShowPlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please wait while map loads....
         /// </summary>
         public static string LoadMapMsg {
@@ -651,6 +687,33 @@ namespace CoordinateConversionLibrary.Properties {
         public static string MsgOverwrite {
             get {
                 return ResourceManager.GetString("MsgOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show N/S/E/W.
+        /// </summary>
+        public static string ShowNSEW {
+            get {
+                return ResourceManager.GetString("ShowNSEW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show +/-.
+        /// </summary>
+        public static string ShowPlusHyphen {
+            get {
+                return ResourceManager.GetString("ShowPlusHyphen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Characters &apos;+&apos;,&apos;-&apos;,&apos;N&apos;,&apos;W&apos;,&apos;E&apos; and &apos;S&apos; are not allowed to define custom formatting..
+        /// </summary>
+        public static string SpecialCharactersValidationMsg {
+            get {
+                return ResourceManager.GetString("SpecialCharactersValidationMsg", resourceCulture);
             }
         }
         

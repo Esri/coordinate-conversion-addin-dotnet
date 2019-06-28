@@ -3,6 +3,17 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib" 
                     xmlns:local="clr-namespace:CoordinateConversionLibrary"
                     xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties">
+    <ControlTemplate x:Key="errorTemplate">
+        <Grid ClipToBounds="False">
+            <Image HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Source="/CoordinateConversionLibrary;component/Images/GenericErrorStop16.png" 
+                                   Width="16" Height="16" Margin="0,0,3,0"
+                                   ToolTip="{Binding [0].ErrorContent}" />
+            <Border BorderBrush="Red" BorderThickness="1" Margin="-1">
+                <AdornedElementPlaceholder Name="adornedElement" />
+            </Border>
+        </Grid>
+    </ControlTemplate>
     <Style x:Key="BorderedButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Background" Value="Transparent"/>

@@ -1,24 +1,22 @@
 ﻿
 using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Helpers;
 using CoordinateConversionLibrary.Models;
 using ProAppCoordConversionModule.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Core;
-using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Threading.Tasks;
-using System;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 namespace ProAppCoordConversionModule.ViewModels
 {
     class ProEditPropertiesViewModel : ProTabBaseViewModel
@@ -50,18 +48,25 @@ namespace ProAppCoordConversionModule.ViewModels
                 FormatExpanded = true;
                 IsEnableExpander = true;
                 Format = CoordinateBase.InputCustomFormat;
+                IsHemisphereIndicatorChecked = CoordinateConversionLibraryConfig.AddInConfig.IsHemisphereIndicatorChecked;
+                IsPlusHyphenChecked = CoordinateConversionLibraryConfig.AddInConfig.IsPlusHyphenChecked;
             }
             else
             {
                 _categorySelection = FormatList.FirstOrDefault();
                 FormatExpanded = false;
                 IsEnableExpander = false;
+                CoordinateConversionLibraryConfig.AddInConfig.IsHemisphereIndicatorChecked = true;
             }
             if (AllSymbolCollection == null)
                 AllSymbolCollection = new Dictionary<string, ObservableCollection<Symbol>>();
+
+            ShowSymbols();
+
             IsInitialCall = false;
         }
 
+        #region Properties
         private Visibility _showLoadingProcess;
 
         public Visibility ShowLoadingProcess
@@ -293,8 +298,18 @@ namespace ProAppCoordConversionModule.ViewModels
 
             set
             {
-                _format = value;
-                RaisePropertyChanged(() => Format);
+                if (IsNotValidInput(value))
+                {
+                    IsValidFormat = false;
+                    throw new ArgumentException(CoordinateConversionLibrary.Properties.Resources.SpecialCharactersValidationMsg);
+                }
+                else
+                {
+                    _format = value;
+                    IsValidFormat = true;
+                    UpdateCustomFormatPreview();
+                    RaisePropertyChanged(() => Format);
+                }
             }
         }
 
@@ -338,6 +353,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public ObservableCollection<string> FormatList { get; set; }
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType, string>();
         public string Sample { get; set; }
+        public bool IsValidFormat { get; set; }
         private bool _formatExpanded { get; set; }
         public bool FormatExpanded
         {
@@ -406,8 +422,115 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-
         public string SearchString { get; set; }
+
+        private bool showPlusForDirection;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                CoordinateBase.ShowPlus = value;
+                UpdateCustomFormatPreview();
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                CoordinateBase.ShowHyphen = value;
+                UpdateCustomFormatPreview();
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+            }
+        }
+
+        private bool isHemisphereIndicatorChecked;
+        public bool IsHemisphereIndicatorChecked
+        {
+            get { return isHemisphereIndicatorChecked; }
+            set
+            {
+                isHemisphereIndicatorChecked = value;
+                CoordinateBase.ShowHemisphere = value;
+                ShowPlusForDirection = false;
+                ShowHyphenForDirection = false;
+                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
+            }
+        }
+
+        private Visibility plusHyphenForDirectionVisibility;
+        public Visibility PlusHyphenForDirectionVisibility
+        {
+            get { return plusHyphenForDirectionVisibility; }
+            set
+            {
+                plusHyphenForDirectionVisibility = value;
+                RaisePropertyChanged(() => PlusHyphenForDirectionVisibility);
+            }
+        }
+
+        private Visibility hemisphereIndicatorVisibility;
+        public Visibility HemisphereIndicatorVisibility
+        {
+            get { return hemisphereIndicatorVisibility; }
+            set
+            {
+                hemisphereIndicatorVisibility = value;
+                RaisePropertyChanged(() => HemisphereIndicatorVisibility);
+            }
+        }
+
+        private bool isPlusHyphenChecked;
+        public bool IsPlusHyphenChecked
+        {
+            get { return isPlusHyphenChecked; }
+            set
+            {
+                isPlusHyphenChecked = value;
+                IsPlusHyphenEnabled = value;
+                RaisePropertyChanged(() => IsPlusHyphenChecked);
+            }
+        }
+
+        private bool isHemisphereIndicatorEnabled;
+        public bool IsHemisphereIndicatorEnabled
+        {
+            get { return isHemisphereIndicatorEnabled; }
+            set
+            {
+                isHemisphereIndicatorEnabled = value;
+                RaisePropertyChanged(() => IsHemisphereIndicatorEnabled);
+            }
+        }
+
+        private bool isPlusHyphenEnabled;
+        public bool IsPlusHyphenEnabled
+        {
+            get { return isPlusHyphenEnabled; }
+            set
+            {
+                isPlusHyphenEnabled = value;
+                RaisePropertyChanged(() => IsPlusHyphenEnabled);
+            }
+        }
+
+        private string customFormatPreview;
+        public string CustomFormatPreview
+        {
+            get { return customFormatPreview; }
+            set
+            {
+                customFormatPreview = value;
+                RaisePropertyChanged(() => CustomFormatPreview);
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Handler for when someone closes the dialog with the OK button
@@ -415,6 +538,13 @@ namespace ProAppCoordConversionModule.ViewModels
         /// <param name="obj"></param>
         private void OnOkButtonPressedCommand(object obj)
         {
+            if (!IsValidFormat)
+                return;
+
+            CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection = ShowPlusForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection = ShowHyphenForDirection;
+            CoordinateConversionLibraryConfig.AddInConfig.IsHemisphereIndicatorChecked = IsHemisphereIndicatorChecked;
+            CoordinateConversionLibraryConfig.AddInConfig.IsPlusHyphenChecked = IsPlusHyphenChecked;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
@@ -541,9 +671,12 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 IsEnableExpander = true;
                 FormatExpanded = true;
+                IsHemisphereIndicatorChecked = false;
+                IsPlusHyphenChecked = false;
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 RaisePropertyChanged(() => FormatExpanded);
             }
+            ShowSymbols();
         }
         private string GetFormatFromDefaults()
         {
@@ -760,6 +893,267 @@ namespace ProAppCoordConversionModule.ViewModels
                 SelectedBrush = (System.Windows.Media.Brush)SelectedColor.GetValue(null, null);
                 ShowLoadingProcess = Visibility.Collapsed;
             }
+        }
+
+        private bool IsNotValidInput(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            var type = GetCoordinateType();
+            if (type == CoordinateType.MGRS || type == CoordinateType.USNG || type == CoordinateType.UTM)
+                return false;
+
+            if (type == CoordinateType.DMS || type == CoordinateType.DDM)
+            {
+                var result = ValidationForDDM_DMS(value);
+                if (result)
+                    return result;
+                return (value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
+            }
+            else
+            {
+                return (value.Contains("+") || value.Contains("-")
+                || value.Contains("N") || value.Contains("S")
+                || value.Contains("E") || value.Contains("W")
+                || value.Contains("n") || value.Contains("s")
+                || value.Contains("e") || value.Contains("w"));
+            }
+        }
+
+        private static bool ValidationForDDM_DMS(string value)
+        {
+            int latIndex = value.IndexOf('A'), lonIndex = value.IndexOf('X');
+            int startIndex = -1, nextIndex = -1;
+            var isLatFirst = latIndex < lonIndex;
+
+            if (new[] { "+", "-" }.Any(value.Substring(0, isLatFirst ? latIndex : lonIndex).Contains))
+                return true;
+
+            //get next prefix start index
+            if (value.Contains(isLatFirst ? "C" : "Z"))
+                startIndex = value.IndexOf(isLatFirst ? "C" : "Z");
+            else if (value.Contains(isLatFirst ? "B" : "Y"))
+                startIndex = value.IndexOf(isLatFirst ? "B" : "Y");
+            else if (value.Contains(isLatFirst ? "A" : "X"))
+                startIndex = value.IndexOf(isLatFirst ? "A" : "X");
+
+            //get next prefix
+            nextIndex = value.IndexOf(isLatFirst ? "X" : "A");
+            var nextPrefix = value.Substring(startIndex, (nextIndex - startIndex));
+
+            if (new[] { "+", "-" }.Any(nextPrefix.Contains))
+                return true;
+            return false;
+        }
+
+        private void ShowSymbols()
+        {
+            if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
+                || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
+                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            {
+                PlusHyphenForDirectionVisibility = Visibility.Visible;
+                HemisphereIndicatorVisibility = Visibility.Visible;
+                if (IsInitialCall)
+                {
+                    IsHemisphereIndicatorChecked = CoordinateConversionLibraryConfig.AddInConfig.IsHemisphereIndicatorChecked;
+                    ShowHyphenForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowHyphenForDirection;
+                    ShowPlusForDirection = CoordinateConversionLibraryConfig.AddInConfig.ShowPlusForDirection;
+                    IsPlusHyphenChecked = CoordinateConversionLibraryConfig.AddInConfig.IsPlusHyphenChecked;
+                }
+            }
+            else
+            {
+                PlusHyphenForDirectionVisibility = Visibility.Collapsed;
+                HemisphereIndicatorVisibility = Visibility.Collapsed;
+                ShowPlusForDirection = false;
+                ShowHyphenForDirection = false;
+                IsHemisphereIndicatorChecked = false;
+            }
+        }
+
+        private void UpdateCustomFormatPreview()
+        {
+            if (!string.IsNullOrEmpty(Format) && (Format.Contains("X") || Format.Contains("Y") || Format.Contains("A")))
+            {
+                var xIndex = Format.IndexOf('X');
+                var yIndex = SelectedCoordinateType == CoordinateTypes.DD ? Format.IndexOf('Y') : Format.IndexOf('A');
+                Char splitChar = Char.MinValue;
+
+                if (xIndex >= 0 && yIndex >= 0)
+                {
+                    if (xIndex > yIndex)
+                        splitChar = 'X';
+                    else
+                        splitChar = SelectedCoordinateType == CoordinateTypes.DD ? 'Y' : 'A';
+                }
+                else
+                {
+                    if (xIndex > -1)
+                        splitChar = 'X';
+                    else if (yIndex > -1)
+                        splitChar = 'Y';
+                }
+
+                if (splitChar != Char.MinValue)
+                {
+                    var coord = Format.Split(splitChar);
+                    coord[0] = coord[0].TrimEnd(' ');
+                    coord[1] = splitChar + coord[1];
+                    if (ShowPlusForDirection && !ShowHyphenForDirection)
+                    {
+                        coord[0] = "+" + coord[0];
+                        coord[1] = "+" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("+", "");
+                        coord[1].Replace("+", "");
+                    }
+                    if (ShowHyphenForDirection && !ShowPlusForDirection)
+                    {
+                        coord[0] = "-" + coord[0];
+                        coord[1] = "-" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("-", "");
+                        coord[1].Replace("-", "");
+                    }
+                    if (ShowHyphenForDirection && ShowPlusForDirection)
+                    {
+                        coord[0] = "+/-" + coord[0];
+                        coord[1] = "+/-" + coord[1];
+                    }
+                    else
+                    {
+                        coord[0].Replace("+/-", "");
+                        coord[1].Replace("+/-", "");
+                    }
+                    CustomFormatPreview = coord[0] + " " + coord[1];
+                    if (IsHemisphereIndicatorChecked)
+                    {
+                        ParseCustomFormats(Format);
+                    }
+                    else
+                    {
+                        coord[0].Replace("N", "");
+                        coord[1].Replace("E", "");
+                        CustomFormatPreview = coord[0] + " " + coord[1];
+                    }
+                }
+            }
+        }
+
+        private void ParseCustomFormats(string format)
+        {
+            bool startIndexNeeded = true, endIndexNeeded = true, skipLonChar = false, skipLatChar = false;
+            int latIndex = -1, lonIndex = -1;
+            var formatChar = format.ToArray();
+            var endIndexCollection = new List<int>();
+            int i = 0;
+            for (; i < formatChar.Length; i++)
+            {
+                var c = formatChar[i];
+                if ((c == 'X' && SelectedCoordinateType == CoordinateTypes.DD)
+                    || ((c == 'X' || c == 'Y') && SelectedCoordinateType == CoordinateTypes.DDM)
+                    || ((c == 'X' || c == 'Y' || c == 'Z') && SelectedCoordinateType == CoordinateTypes.DMS))
+                {
+                    startIndexNeeded = true;
+                    lonIndex = i;
+                }
+                else if ((c == 'Y' && SelectedCoordinateType == CoordinateTypes.DD)
+                    || ((c == 'A' || c == 'B') && SelectedCoordinateType == CoordinateTypes.DDM)
+                    || ((c == 'A' || c == 'B' || c == 'C') && SelectedCoordinateType == CoordinateTypes.DMS))
+                {
+                    startIndexNeeded = true;
+                    latIndex = i;
+                }
+                else if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
+                {
+                    startIndexNeeded = false;
+                    endIndexNeeded = true;
+                }
+                else if (endIndexNeeded && (c != '#' && c != '.' && c != '0'))
+                {
+                    endIndexCollection.Add(i);
+                    endIndexNeeded = false;
+                }
+            }
+            if (startIndexNeeded == false && format.Length > 0)
+            {
+                endIndexCollection.Add(format.Length);
+            }
+            //endIndexCollection.Add(format.Length);
+            //var orderedColl = endIndexCollection.OrderBy(x => x).ToList();
+            int latVal = -1;
+            int lonVal = -1;
+            if ((lonIndex != -1 || latIndex != -1) && endIndexCollection.Count > 0)
+            {
+                if (lonIndex != -1 && latIndex != -1)
+                {
+                    if (latIndex > lonIndex)
+                    {
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    if (lonIndex != -1)
+                    {
+                        lonVal = endIndexCollection.Where(x => x > lonIndex).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        latVal = endIndexCollection.Where(x => x > latIndex).ToList().FirstOrDefault();
+                    }
+                }
+                //var lonVal = endIndexCollection.Where(x => x > lonIndex).Any() ?
+                //    endIndexCollection.Max() : endIndexCollection.Where(x => x > lonIndex).Min();
+                //var latVal = endIndexCollection.Where(x => x > latIndex).Any() ?
+                //    endIndexCollection.Max() : endIndexCollection.Where(x => x > latIndex).Min();
+                if (SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.DDM)
+                {
+                    var nextLatChar = format.ElementAt(latVal);
+                    var nextLonChar = format.ElementAt(lonVal);
+                    if (SelectedCoordinateType == CoordinateTypes.DMS)
+                    {
+                        skipLatChar = ((nextLatChar == '"' & format.Contains('C'))
+                            || (nextLatChar == '\'' & format.Contains('B'))
+                            || (nextLatChar == '°' & format.Contains('A')));
+                        skipLonChar = ((nextLonChar == '"' & format.Contains('Z'))
+                            || (nextLonChar == '\'' & format.Contains('Y'))
+                            || (nextLonChar == '°' & format.Contains('X')));
+                    }
+                    else if (SelectedCoordinateType == CoordinateTypes.DDM)
+                    {
+                        skipLatChar = ((nextLatChar == '\'' & format.Contains('B'))
+                            || (nextLatChar == '°' & format.Contains('A')));
+                        skipLonChar = ((nextLonChar == '\'' & format.Contains('Y'))
+                            || (nextLonChar == '°' & format.Contains('X')));
+                    }
+                    lonVal = skipLonChar ? lonVal + 1 : lonVal;
+                    latVal = skipLatChar ? latVal + 1 : latVal;
+                }
+                if (lonVal > -1)
+                {
+                    format = format.Substring(0, lonVal) + "E" + format.Substring(lonVal);
+                    latVal = (lonVal < latVal) ? latVal + 1 : latVal;
+                }
+                if (latVal > -1)
+                    format = format.Substring(0, latVal) + "N" + format.Substring(latVal);
+            }
+            CustomFormatPreview = format;
         }
     }
 }

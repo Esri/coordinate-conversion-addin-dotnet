@@ -3,7 +3,7 @@
 Coordinate Conversion window in ArcGIS Pro
 Coordinate Conversion allows analysts to input and quickly convert coordinates between several common formats, including Universal Transverse Mercator (UTM) and Military Grid Reference System (MGRS). 
 
-![Image of Coordinate Conversion Addin](CoordinateConversion_ScreencaptureDTandPro.PNG)
+![Image of Coordinate Conversion Addin](CoordinateConversion.png)
 
 ## Features
 
@@ -26,19 +26,19 @@ Coordinate Conversion allows analysts to input and quickly convert coordinates b
 ### Build Requirements 
 
 * Visual Studio 2015
-    * Important Note: Visual Studio 2013 is required if building on ArcGIS 10.3.1
+    * Important Note: Visual Studio 2013 [may also be required if building on ArcGIS 10.4.1-10.5.1](https://support.esri.com/en/technical-article/000012659)
 * ArcGIS for Desktop 
-	* ArcMap 10.3.1+
-	* ArcGIS Pro 2.1+
-* ArcGIS Desktop SDK for .NET 10.3.1+
+	* ArcMap 10.4.1+
+	* ArcGIS Pro 2.2+
+* ArcGIS Desktop SDK for .NET 10.4.1+
 	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
-* [ArcGIS Pro SDK](http://pro.arcgis.com/en/pro-app/sdk/) 2.1+
+* [ArcGIS Pro SDK](http://pro.arcgis.com/en/pro-app/sdk/) 2.2+
 
 ### Run Requirements
 
 * ArcGIS for Desktop 
-	* ArcMap 10.3.1+
-	* ArcGIS Pro 2.1+
+	* ArcMap 10.4.1+
+	* ArcGIS Pro 2.2+
 
 ## Instructions
 

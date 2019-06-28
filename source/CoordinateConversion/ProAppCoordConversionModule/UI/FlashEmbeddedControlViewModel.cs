@@ -112,6 +112,9 @@ namespace ProAppCoordConversionModule.UI
                 return 0;
 
             var screenPoint = (System.Windows.Point)values[0];
+            if ((screenPoint == null) || ((screenPoint.X == 0) && (screenPoint.Y == 0)))
+                return 0.0;
+
             var c = values[1] as System.Windows.Controls.Canvas;
             if (c == null)
                 return 0.0;
@@ -143,6 +146,7 @@ namespace ProAppCoordConversionModule.UI
             throw new NotImplementedException();
         }
     }
+
     internal class ScreenToClientPointMarginConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -151,6 +155,9 @@ namespace ProAppCoordConversionModule.UI
                 return 0;
 
             var screenPoint = (System.Windows.Point)values[0];
+            if ((screenPoint == null) || ((screenPoint.X == 0) && (screenPoint.Y == 0)))
+                return 0.0;
+
             var c = values[1] as System.Windows.Controls.Canvas;
             if (c == null)
                 return -999;

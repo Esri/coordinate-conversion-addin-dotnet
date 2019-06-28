@@ -83,7 +83,7 @@ namespace ProAppCoordConversionModule.ViewModels
             // Don't allow updating of the inputs or outputs while flashpoint is happening
             CoordinateMapTool.AllowUpdates = false;
 
-            await ProcessInputAsync(InputCoordinate);
+            ProcessInputValue(InputCoordinate);
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
             await QueuedTask.Run(() =>
             {
@@ -111,7 +111,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 //Add point to the top of the list (using main thread)
                 ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
-                    ProCollectTabViewModel.CoordinateAddInPoints.Insert(0, addInPoint) );
+                    ProCollectTabViewModel.CoordinateAddInPoints.Add(addInPoint) );
 
             }
         }

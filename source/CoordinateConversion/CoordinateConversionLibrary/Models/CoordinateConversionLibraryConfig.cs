@@ -14,13 +14,13 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using CoordinateConversionLibrary.Helpers;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Collections.ObjectModel;
-using CoordinateConversionLibrary.Helpers;
 
 namespace CoordinateConversionLibrary.Models
 {
@@ -83,6 +83,53 @@ namespace CoordinateConversionLibrary.Models
             }
         }
 
+        private bool showPlusForDirection = false;
+        public bool ShowPlusForDirection
+        {
+            get { return showPlusForDirection; }
+            set
+            {
+                showPlusForDirection = value;
+                RaisePropertyChanged(() => ShowPlusForDirection);
+            }
+        }
+
+        private bool showHyphenForDirection = false;
+        public bool ShowHyphenForDirection
+        {
+            get { return showHyphenForDirection; }
+            set
+            {
+                showHyphenForDirection = value;
+                RaisePropertyChanged(() => ShowHyphenForDirection);
+
+            }
+        }
+
+        private bool showHemisphereIndicator = false;
+        public bool IsHemisphereIndicatorChecked
+        {
+            get { return showHemisphereIndicator; }
+            set
+            {
+                showHemisphereIndicator = value;
+                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
+
+            }
+        }
+
+        private bool isPlusHyphenChecked;
+        public bool IsPlusHyphenChecked
+        {
+            get { return isPlusHyphenChecked; }
+            set
+            {
+                isPlusHyphenChecked = value;
+                RaisePropertyChanged(() => IsPlusHyphenChecked);
+            }
+        }
+
+
         public string CategorySelection { get; set; }
         public string FormatSelection { get; set; }
 
@@ -100,7 +147,18 @@ namespace CoordinateConversionLibrary.Models
                 XmlSerializer x = new XmlSerializer(GetType());
                 XmlWriter writer = new XmlTextWriter(filename, Encoding.UTF8);
 
-                x.Serialize(writer, this);
+                try
+                {
+                    x.Serialize(writer, this);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    writer.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -141,7 +199,16 @@ namespace CoordinateConversionLibrary.Models
                 DisplayAmbiguousCoordsDlg = temp.DisplayAmbiguousCoordsDlg;
                 OutputCoordinateList = temp.OutputCoordinateList;
                 DefaultFormatList = temp.DefaultFormatList;
+                ShowPlusForDirection = temp.ShowPlusForDirection;
+                ShowHyphenForDirection = temp.ShowHyphenForDirection;
+                IsHemisphereIndicatorChecked = temp.IsHemisphereIndicatorChecked;
+                IsPlusHyphenChecked = temp.IsPlusHyphenChecked;
+                IsHemisphereIndicatorChecked = temp.IsHemisphereIndicatorChecked;
 
+                RaisePropertyChanged(() => IsPlusHyphenChecked);
+                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
+                RaisePropertyChanged(() => ShowPlusForDirection);
+                RaisePropertyChanged(() => ShowHyphenForDirection);
                 RaisePropertyChanged(() => OutputCoordinateList);
                 RaisePropertyChanged(() => DefaultFormatList);
             }
@@ -152,7 +219,7 @@ namespace CoordinateConversionLibrary.Models
         }
 
         #endregion Public methods
-    
+
         #region Private methods
 
         private string GetConfigFilename()
@@ -162,14 +229,14 @@ namespace CoordinateConversionLibrary.Models
 
         private void LoadSomeDefaults()
         {
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.Default, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456 -40.123456", "Y0.0##### X0.0#####" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456N 40.123456W", "Y0.0#####N X0.0#####E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.1234'N 40° 18.1234'W", "A0° B0.0###'N X0° Y0.0###'E" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", "A0° B0' C0.0#\"N X0° Y0' Z0.0#\"E" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.Default, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456 -40.123456", Constants.DefaultCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70.123456N 40.123456W", Constants.DDCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DDM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49.1234'N 40° 18.1234'W", Constants.DDMCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.DMS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "70° 49' 23.12\"N 40° 18' 45.12\"W", Constants.DMSCustomFormat } } });
             //DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.GARS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "221LW37", "X#YQK" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", "ZSX00000Y00000" } } });
-            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19F 414639 4428236", "Z#B X0 Y0" } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.MGRS, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.MGRSCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.USNG, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19TDE1463928236", Constants.USNGCustomFormat } } });
+            DefaultFormatList.Add(new DefaultFormatModel() { CType = CoordinateType.UTM, DefaultNameFormatDictionary = new SerializableDictionary<string, string>() { { "19F 414639 4428236", Constants.UTMCustomFormat } } });
         }
 
         #endregion Private methods

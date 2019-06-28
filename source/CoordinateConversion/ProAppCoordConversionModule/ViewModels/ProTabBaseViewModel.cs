@@ -37,6 +37,7 @@ using System.Reflection;
 using ProAppCoordConversionModule.Views;
 using System.Diagnostics;
 using ProAppCoordConversionModule.Helpers;
+using System.Windows.Threading;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -55,9 +56,8 @@ namespace ProAppCoordConversionModule.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
             Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-            pDialog = new ProgressDialog("Processing...Please wait...");
             Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
-
+            CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
@@ -65,13 +65,14 @@ namespace ProAppCoordConversionModule.ViewModels
         public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
         public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
 
-        public static ProgressDialog pDialog { get; set; }
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
         public string ViewDetailsTitle { get; set; }
         public static Dictionary<string, ObservableCollection<Symbol>> AllSymbolCollection { get; set; }
+        public ProAdditionalFieldsView DialogView { get; set; }
+        public bool IsDialogViewOpen { get; set; }
 
         public static Symbol SelectedSymbolObject { get; set; }
         public static PropertyInfo SelectedColorObject { get; set; }
@@ -179,6 +180,34 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
+        public override void OnValidateMapPoint(object obj)
+        {
+            if (OnValidationSuccess(obj))
+            {
+                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
+            }
+        }
+
+        public bool OnValidationSuccess(object obj)
+        {
+            if (!base.OnNewMapPoint(obj))
+                return false;
+            var input = obj as Dictionary<string, Tuple<object, bool>>;
+            MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
+            if (mp == null)
+                return false;
+
+            var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
+            if (!isValidPoint.Result)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds", "Point is out of bounds",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
         public override bool OnMouseMove(object obj)
         {
             if (!base.OnMouseMove(obj))
@@ -252,14 +281,14 @@ namespace ProAppCoordConversionModule.ViewModels
             return processCoordinate(ccc);
         }
 
-        public async Task<string> ProcessInputAsync(string input)
+        public string ProcessInputValue(string input)
         {
             if (input == "NA") return string.Empty;
 
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
 
-            var ccc = await GetCoordinateType(input);
+            var ccc = GetCoordinateType(input);
 
             return processCoordinate(ccc);
         }
@@ -268,15 +297,16 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var results = new Dictionary<string, string>();
             results.Add(CoordinateFieldName, point.Text);
-            var ccc = QueuedTask.Run(() =>
-            {
-                return GetCoordinateType(point.Text);
-            }).Result;
+
+            var projectedPoint = (MapPoint)GeometryEngine.Instance.Project(point.Point, SpatialReferences.WGS84);
+            var inputText = projectedPoint.Y + " " + projectedPoint.X;
+            var ccc = GetCoordinateType(inputText);
             if (ccc != null && ccc.Point != null)
             {
                 ProCoordinateGet procoordinateGetter = new ProCoordinateGet();
                 procoordinateGetter.Point = ccc.Point;
                 CoordinateGetBase coordinateGetter = procoordinateGetter as CoordinateGetBase;
+                CoordinateBase.IsOutputInProcess = true;
                 foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
                 {
                     var props = new Dictionary<string, string>();
@@ -344,6 +374,7 @@ namespace ProAppCoordConversionModule.ViewModels
                             break;
                     }
                 }
+                CoordinateBase.IsOutputInProcess = false;
             }
             return results;
         }
@@ -394,7 +425,6 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             try
             {
-                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
                 var fileDialog = new Microsoft.Win32.OpenFileDialog();
                 fileDialog.CheckFileExists = true;
                 fileDialog.CheckPathExists = true;
@@ -421,7 +451,6 @@ namespace ProAppCoordConversionModule.ViewModels
                             break;
                     }
                 }
-                CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = true;
             }
             catch (Exception ex)
             {
@@ -709,27 +738,75 @@ namespace ProAppCoordConversionModule.ViewModels
             var input = obj as System.Windows.Controls.ListBox;
             if (input.SelectedItems.Count == 0)
             {
-                ArcGIS.Desktop.Framework.Dialogs.
-                    MessageBox.Show("No data available");
-                return;
-            }
-            var dictionary = ((input.SelectedItems)[0] as AddInPoint).FieldsDictionary;
-            if (dictionary == null)
-            {
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
                 return;
             }
-            FieldsCollection = new ObservableCollection<FieldsCollection>();
-            foreach (var item in dictionary)
+            ShowPopUp(input.SelectedItems.Cast<AddInPoint>());
+        }
+
+        private void ShowPopUp(IEnumerable<AddInPoint> addinPoint)
+        {
+            var pointDict = addinPoint.Select(x => x.FieldsDictionary);
+            var popupContentList = new List<PopupContent>();
+            int index = 0;
+            foreach (var dictionary in pointDict)
             {
-                if (item.Value.Item2)
-                    FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                //popup info is not showing duplicate html content. data-attr-index attribute with an incremental number is added to workaround the issue.
+                var htmlString = "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>"
+                                + "<meta charset=\"utf-8\">"
+                                + "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\">"
+                                + "<title>Popup</title>"
+                                + "<link rel=\"Stylesheet\" type=\"text/css\" href=\"c:/program files/arcgis/pro/Resources/Popups/esri/css/Popups.css\">"
+                                + "</head>"
+                                + "<body data-attr-index=\"  data-attr-index=\"" + Guid.NewGuid() + "\">"
+                                + "<div class=\"esriPopup\">"
+                                + "<div class=\"esriPopupWrapper\">"
+                                + "<div class=\"sizer content\">"
+                                + "<div class=\"contentPane\">"
+                                + "<div class=\"esriViewPopup\">"
+                                + "<div class=\"mainSection\">"
+                                + "<div><!--POPUP_MAIN_CONTENT_TEXT--></div>"
+                                + "<div><table class=\"attrTable\" cellspacing=\"0\" cellpadding=\"0\"><tbody>";
+                FieldsCollection = new ObservableCollection<FieldsCollection>();
+                if (dictionary != null)
+                {
+                    foreach (var item in dictionary)
+                    {
+                        htmlString = htmlString + "<tr valign=\"top\">";
+                        if (item.Value.Item2)
+                        {
+                            htmlString = htmlString + "<td class=\"attrName\">" + item.Key + "</td><td class=\"attrValue\">" + Convert.ToString(item.Value.Item1) + "</td>";
+
+                            FieldsCollection.Add(new FieldsCollection() { FieldName = item.Key, FieldValue = Convert.ToString(item.Value.Item1) });
+                        }
+                        htmlString = htmlString + "</tr>";
+                    }
+                    var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
+                    ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
+                }
+                else
+                    ViewDetailsTitle = addinPoint.ElementAtOrDefault(index).Text;
+
+                if (!FieldsCollection.Any())
+                {
+                    htmlString = htmlString + "<tr valign=\"top\"><td class=\"attrName\">"
+                        + CoordinateConversionLibrary.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
+                }
+
+                htmlString = htmlString + "</tbody></table></div>"
+                                            + "</div>"
+                                            + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/dojo/dojo.js\"></script>"
+                                            + "<script type=\"text/javascript\" src=\"c:/program files/arcgis/pro/Resources/Popups/esri/run.js\"></script>"
+                                            + "</body></html>";
+                popupContentList.Add(new PopupContent(htmlString, ViewDetailsTitle));
+                index++;
             }
-            var valOutput = dictionary.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault();
-            ViewDetailsTitle = MapPointHelper.GetMapPointAsDisplayString(valOutput as MapPoint);
-            var dialog = new ProAdditionalFieldsView();
-            dialog.DataContext = this;
-            dialog.ShowDialog();
+            MapView.Active.ShowCustomPopup(popupContentList);
+        }
+
+        private void diagView_Closed(object sender, EventArgs e)
+        {
+            IsDialogViewOpen = false;
         }
 
         internal async void UpdateHighlightedGraphics(bool reset, bool isUpdateAll = false)
@@ -795,6 +872,37 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Method to check to see point is withing the map area of interest
+        /// </summary>
+        /// <param name="point">IPoint to validate</param>
+        /// <returns></returns>
+        internal async Task<bool> IsValidPoint(MapPoint point)
+        {
+            if ((point != null) && (MapView.Active != null) && (MapView.Active.Map != null))
+            {
+                Envelope env = null;
+                await QueuedTask.Run(() =>
+                {
+                    env = MapView.Active.Map.CalculateFullExtent();
+                });
+
+                bool isValid = false;
+
+                if (env != null)
+                {
+                    if (env.SpatialReference != point.SpatialReference)
+                    {
+                        point = GeometryEngine.Instance.Project(point, env.SpatialReference) as MapPoint;
+                    }
+                    isValid = GeometryEngine.Instance.Contains(env, point);
+                }
+
+                return isValid;
+            }
+            return false;
         }
 
         #region Private Methods
@@ -953,22 +1061,21 @@ namespace ProAppCoordConversionModule.ViewModels
 
             return CoordinateType.Unknown;
         }
-        private async Task<CCCoordinate> GetCoordinateType(string input)
+        private CCCoordinate GetCoordinateType(string input)
         {
             MapPoint point = null;
 
             // DD
             CoordinateDD dd;
-            CoordinateDD.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             if (CoordinateDD.TryParse(input, out dd, true))
             {
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
             }
 
@@ -979,11 +1086,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 dd = new CoordinateDD(ddm);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DDM, Point = point };
             }
             // DMS
@@ -993,11 +1100,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 dd = new CoordinateDD(dms);
                 if (dd.Lat > 90 || dd.Lat < -90 || dd.Lon > 180 || dd.Lon < -180)
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
-                point = await QueuedTask.Run(() =>
+                point = QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
                     return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, sptlRef);
-                });//.Result;
+                }).Result;
                 return new CCCoordinate() { Type = CoordinateType.DMS, Point = point };
             }
 
@@ -1006,10 +1113,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(gars, GeoCoordinateType.GARS);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.GARS, Point = point };
                 }
@@ -1021,10 +1128,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(mgrs, GeoCoordinateType.MGRS);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.MGRS, Point = point };
                 }
@@ -1036,10 +1143,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(usng, GeoCoordinateType.USNG);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.USNG, Point = point }; ;
                 }
@@ -1051,10 +1158,10 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 try
                 {
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return convertToMapPoint(utm, GeoCoordinateType.UTM);
-                    });//.Result;
+                    }).Result;
 
                     return new CCCoordinate() { Type = CoordinateType.UTM, Point = point };
                 }
@@ -1075,10 +1182,10 @@ namespace ProAppCoordConversionModule.ViewModels
                     var Lat = Double.Parse(matchMercator.Groups["latitude"].Value);
                     var Lon = Double.Parse(matchMercator.Groups["longitude"].Value);
                     var sr = proCoordGetter.Point != null ? proCoordGetter.Point.SpatialReference : SpatialReferences.WebMercator;
-                    point = await QueuedTask.Run(() =>
+                    point = QueuedTask.Run(() =>
                     {
                         return MapPointBuilder.CreateMapPoint(Lon, Lat, sr);
-                    });//.Result;
+                    }).Result;
                     return new CCCoordinate() { Type = CoordinateType.DD, Point = point };
                 }
                 catch (Exception ex)
