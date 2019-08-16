@@ -237,18 +237,14 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
                     {
                         string kmlName = System.IO.Path.GetFileName(path);
                         string folderName = System.IO.Path.GetDirectoryName(path);
-                        string tempShapeFile = folderName + System.IO.Path.DirectorySeparatorChar +
-                            "tmpShapefile.shp";
                         var grpList = GetMapPointExportFormat(GraphicsList);
-                        IFeatureClass tempFc = fcUtils.CreateFCOutput(tempShapeFile, SaveAsType.Shapefile, grpList, ArcMap.Document.FocusMap.SpatialReference);
+                        var fileNameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(kmlName);
+                        IFeatureClass tempFc = fcUtils.CreateFCOutput(fileNameWithoutExt, SaveAsType.KML, grpList, ArcMap.Document.FocusMap.SpatialReference);
 
                         if (tempFc != null)
                         {
                             var kmlUtils = new KMLUtils();
-                            kmlUtils.ConvertLayerToKML(path, tempShapeFile, ArcMap.Document.FocusMap);
-
-                            // delete the temporary shapefile
-                            fcUtils.DeleteShapeFile(tempShapeFile);
+                            kmlUtils.ConvertLayerToKML(tempFc,path, fileNameWithoutExt, ArcMap.Document.FocusMap);
                         }
                     }
                 }

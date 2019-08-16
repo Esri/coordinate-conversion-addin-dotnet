@@ -207,6 +207,30 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
             RaisePropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
         }
+
+        public override void OnDeleteCommand(object obj)
+        {
+            var name = obj as string;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (
+                    System.Windows.MessageBoxResult.Yes !=
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(CoordinateConversionLibrary.Properties.Resources.FormattedRemove, name),
+                    CoordinateConversionLibrary.Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
+                    return;
+
+                foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    if (item.Name == name)
+                    {
+                        CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Remove(item);
+                        CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
+                        return;
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

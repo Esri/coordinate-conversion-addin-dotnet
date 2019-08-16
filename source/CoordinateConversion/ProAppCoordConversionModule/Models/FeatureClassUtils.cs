@@ -203,7 +203,7 @@ namespace ProAppCoordConversionModule.Models
                     rowBuffer.Dispose();
             }
         }
-        private static async Task CreateFeatures(List<CCProGraphic> mapPointList, string layerName)
+        private static async Task CreateFeatures(List<CCProGraphic> mapPointList, string layerName, bool isKML)
         {
             ArcGIS.Core.Data.RowBuffer rowBuffer = null;
             try
@@ -258,10 +258,10 @@ namespace ProAppCoordConversionModule.Models
                             if (currentRenderer != null)
                             {
                                 CIMSymbolReference sybmol = currentRenderer.Symbol;
-
                                 //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
-                                //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);
+                                //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);                                
                                 var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
+                                if (isKML) s.SetSize(CoordinateConversionLibrary.Constants.SymbolSize);
                                 CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
                                 currentRenderer.Symbol = symbolRef;
 
@@ -428,7 +428,7 @@ namespace ProAppCoordConversionModule.Models
                     }
                 }
 
-                await CreateFeatures(mapPointList, dataset);
+                await CreateFeatures(mapPointList, dataset, isKML);
 
                 if (isKML)
                 {

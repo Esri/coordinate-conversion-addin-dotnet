@@ -381,8 +381,8 @@
   <data name="MsgNoDataFound" xml:space="preserve">
     <value>No data found.</value>
   </data>
-  <data name="ViewDetails" xml:space="preserve">
-    <value>View Details</value>
+  <data name="Popup" xml:space="preserve">
+    <value>Pop-up</value>
   </data>
   <data name="InformationNotAvailableMsg" xml:space="preserve">
     <value>No Field information associated with this point</value>
@@ -404,5 +404,14 @@
   </data>
   <data name="ShowPlusHyphen" xml:space="preserve">
     <value>Show +/-</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>
