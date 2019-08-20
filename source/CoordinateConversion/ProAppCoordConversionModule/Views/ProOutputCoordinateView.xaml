@@ -398,11 +398,11 @@
                 </Border>
             </Popup>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                <Button x:Name="btnReset" Content="{x:Static prop:Resources.Reset}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
                 Command="{Binding ResetButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
-                <Button x:Name="btnImport" Content="Import" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                <Button x:Name="btnImport" Content="{x:Static prop:Resources.Open}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
                 Command="{Binding ImportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
-                <Button x:Name="btnExport" Content="Export" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                <Button x:Name="btnExport" Content="{x:Static prop:Resources.Save}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
                 Command="{Binding ExportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
             </StackPanel>
         </StackPanel>

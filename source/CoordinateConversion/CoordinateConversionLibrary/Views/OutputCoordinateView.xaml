@@ -252,9 +252,12 @@
                 </Border>
             </Popup>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="btnReset" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ResetButtonCommand}"/>
-                <Button x:Name="btnImport" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" Content="Import" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ImportButtonCommand}"/>
-                <Button x:Name="btnExport" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" Content="Export" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ExportButtonCommand}"/>
+                <Button x:Name="btnReset" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" 
+                        Content="{x:Static prop:Resources.Reset}" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ResetButtonCommand}"/>
+                <Button x:Name="btnImport" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" 
+                        Content="{x:Static prop:Resources.Open}" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ImportButtonCommand}"/>
+                <Button x:Name="btnExport" Margin="3,3,0,0" Style="{StaticResource TransparentButtonStyle}" 
+                        Content="{x:Static prop:Resources.Save}" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ExportButtonCommand}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

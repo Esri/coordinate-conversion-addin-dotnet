@@ -930,7 +930,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
             using (ComReleaser oComReleaser = new ComReleaser())
             {
 
-                IFeatureWorkspace workspace = CreateFeatureWorkspace("tempWorkspace");
+                IFeatureWorkspace workspace = FeatureClassUtils.CreateFeatureWorkspace("tempWorkspace");
                 if (workspace == null)
                 {
                 }
@@ -1005,20 +1005,7 @@ namespace ArcMapAddinCoordinateConversion.ViewModels
         {
             IWorkspaceFactory workspaceFactory = new AccessWorkspaceFactoryClass();
             return workspaceFactory.OpenFromFile(workspacePath, 0);
-        }
-
-        public static IFeatureWorkspace CreateFeatureWorkspace(string workspaceNameString)
-        {
-
-            IScratchWorkspaceFactory2 ipScWsFactory = new FileGDBScratchWorkspaceFactoryClass();
-            IWorkspace ipScWorkspace = ipScWsFactory.CurrentScratchWorkspace;
-            if (null == ipScWorkspace)
-                ipScWorkspace = ipScWsFactory.CreateNewScratchWorkspace();
-
-            IFeatureWorkspace featWork = (IFeatureWorkspace)ipScWorkspace;
-
-            return featWork;
-        }
+        }       
 
         /// <summary>
         /// Start Editing operation

@@ -209,7 +209,7 @@ namespace CoordinateConversionLibrary.ViewModels
             }
         }
 
-        private void OnDeleteCommand(object obj)
+        public virtual void OnDeleteCommand(object obj)
         {
             var name = obj as string;
 

@@ -47,6 +47,7 @@ namespace CoordinateConversionLibrary
         public const string MGRSCustomFormat = "ZSX00000Y00000";
         public const string USNGCustomFormat = "ZSX00000Y00000";
         public const string UTMCustomFormat = "Z#B X0 Y0";
-
+        public const double SymbolSize = 10;
+        public const string LayerToKMLGPTool = "LayerToKML_conversion";
     }
 }

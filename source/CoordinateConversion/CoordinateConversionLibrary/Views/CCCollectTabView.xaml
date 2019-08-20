@@ -117,7 +117,7 @@
                         <MenuItem
                         Command="{Binding DataContext.ViewDetailCommand}"
                         CommandParameter="{Binding}"
-                        Header="{x:Static prop:Resources.ViewDetails}"
+                        Header="{x:Static prop:Resources.Popup}"
                         IsEnabled="{Binding DataContext.HasListBoxRightClickSelectedItem}"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
