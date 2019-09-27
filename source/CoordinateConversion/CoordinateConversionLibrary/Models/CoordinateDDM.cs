@@ -243,6 +243,8 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
+                    char lastChar = ' ';
+
                     foreach (char c in format)
                     {
                         if (startIndexNeeded && (c == '#' || c == '.' || c == '0'))
@@ -270,7 +272,6 @@ namespace CoordinateConversionLibrary.Models
                                 {
                                     if (CoordinateBase.ShowPlus & !CoordinateBase.IsOutputInProcess) sb.Append("+");
                                 }
-
                                 else
                                 {
                                     if (CoordinateBase.ShowHyphen & !CoordinateBase.IsOutputInProcess) sb.Append("-");
@@ -322,11 +323,23 @@ namespace CoordinateConversionLibrary.Models
                                         sb.Append("W");
                                 }
                                 break;
+                            case '+': // show +
+                                if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '-'))
+                                    if (cnum > 0.0)
+                                        sb.Append("+");
+                                    break;
+                            case '-': // show -
+                                if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '+'))
+                                    if (cnum < 0.0)
+                                        sb.Append("-");
+                                    break;
                             default:
                                 sb.Append(c);
                                 break;
-                        }
-                    }
+                        } // switch
+
+                        lastChar = c;
+                    } // foreach 
 
                     if (endIndexNeeded)
                     {

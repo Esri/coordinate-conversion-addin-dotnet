@@ -369,8 +369,16 @@ namespace CoordinateConversionLibrary.Models
                         }
                         else
                         {
-                            lonVal = closingIndexes.Where(x => x < latIndex).Max();
-                            latVal = closingIndexes.Max();
+                            try
+                            {
+                                lonVal = closingIndexes.Where(x => x < latIndex).Max();
+                                latVal = closingIndexes.Max();
+                            }
+                            catch
+                            {
+                                // Exception possible here if formatting chars have been used as separators
+                                // These characters won't always show up, but at least it won't crash 
+                            }
                         }
                         if (coord.Lon > 0.0)
                         {
