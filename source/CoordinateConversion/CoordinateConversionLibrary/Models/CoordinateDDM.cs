@@ -325,14 +325,28 @@ namespace CoordinateConversionLibrary.Models
                                 break;
                             case '+': // show +
                                 if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '-'))
+                                { 
                                     if (cnum > 0.0)
                                         sb.Append("+");
                                     break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
                             case '-': // show -
                                 if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '+'))
+                                { 
                                     if (cnum < 0.0)
                                         sb.Append("-");
                                     break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
                             default:
                                 sb.Append(c);
                                 break;
