@@ -181,6 +181,37 @@ namespace ArcMapAddinCoordinateConversion.Models
 
                     fc = ExportToShapefile(outputPath, graphicsList, ipSpatialRef);
                 }
+                else if (saveAsType == SaveAsType.KML)
+                {
+                    using (ComReleaser oComReleaser = new ComReleaser())
+                    {
+                        IFeatureWorkspace fWorkspace = CreateFeatureWorkspace("tempWorkspace");
+                        if (fWorkspace != null)
+                        {
+                            if (graphicsList.Count > 0 && graphicsList[0].Attributes != null && graphicsList[0].Attributes.Keys != null)
+                            {
+                                var fieldKeys = graphicsList[0].Attributes.Keys;
+
+                                fc = CreateFeatureClass(fWorkspace, fieldKeys, fcName, graphicsList);
+
+                                foreach (var graphic in graphicsList)
+                                {
+                                    IFeature feature = fc.CreateFeature();
+
+                                    feature.Shape = graphic.MapPoint.Geometry;
+                                    foreach (var item in graphic.Attributes)
+                                    {
+                                        int idx = feature.Fields.FindField(item.Key);
+                                        if (idx > -1)
+                                            feature.set_Value(idx, item.Value);
+                                    }
+
+                                    feature.Store();
+                                }
+                            }
+                        }
+                    }
+                }
                 return fc;
             }
             catch (Exception ex)
@@ -189,6 +220,20 @@ namespace ArcMapAddinCoordinateConversion.Models
             }
 
             return fc;
+        }
+
+
+        public static IFeatureWorkspace CreateFeatureWorkspace(string workspaceNameString)
+        {
+
+            IScratchWorkspaceFactory2 ipScWsFactory = new FileGDBScratchWorkspaceFactoryClass();
+            IWorkspace ipScWorkspace = ipScWsFactory.CurrentScratchWorkspace;
+            if (null == ipScWorkspace)
+                ipScWorkspace = ipScWsFactory.CreateNewScratchWorkspace();
+
+            IFeatureWorkspace featWork = (IFeatureWorkspace)ipScWorkspace;
+
+            return featWork;
         }
 
         public void DeleteShapeFile(string shapeFilePath)

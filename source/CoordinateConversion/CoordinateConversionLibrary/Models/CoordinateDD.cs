@@ -262,6 +262,7 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
+                    char lastChar = ' ';
 
                     foreach (char c in format)
                     {
@@ -312,13 +313,29 @@ namespace CoordinateConversionLibrary.Models
                                 latIndex = sb.Length;
                                 break;
                             case '+': // show +
-                                if (cnum > 0.0)
-                                    sb.Append("+");
-                                break;
+                                if ((lastChar == 'X') || (lastChar == 'Y') || (lastChar == '-'))
+                                {
+                                    if (cnum > 0.0)
+                                        sb.Append("+");
+                                    break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
                             case '-': // show -
-                                if (cnum < 0.0)
-                                    sb.Append("-");
-                                break;
+                                if ((lastChar == 'X') || (lastChar == 'Y') || (lastChar == '+'))
+                                {
+                                    if (cnum < 0.0)
+                                        sb.Append("-");
+                                    break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
                             case 'N':
                             case 'S': // N or S
                                 if (!CoordinateBase.IsOutputInProcess
@@ -348,8 +365,10 @@ namespace CoordinateConversionLibrary.Models
                             default:
                                 sb.Append(c);
                                 break;
-                        }
-                    }
+                        } // switch
+
+                        lastChar = c;
+                    } // foreach 
 
                     if (endIndexNeeded)
                     {
@@ -369,8 +388,16 @@ namespace CoordinateConversionLibrary.Models
                         }
                         else
                         {
-                            lonVal = closingIndexes.Where(x => x < latIndex).Max();
-                            latVal = closingIndexes.Max();
+                            try
+                            {
+                                lonVal = closingIndexes.Where(x => x < latIndex).Max();
+                                latVal = closingIndexes.Max();
+                            }
+                            catch
+                            {
+                                // Exception possible here if formatting chars have been used as separators
+                                // These characters won't always show up, but at least it won't crash 
+                            }
                         }
                         if (coord.Lon > 0.0)
                         {

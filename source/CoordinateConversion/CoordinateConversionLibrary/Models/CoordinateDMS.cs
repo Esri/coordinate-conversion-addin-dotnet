@@ -282,6 +282,7 @@ namespace CoordinateConversionLibrary.Models
                     bool startIndexNeeded = false;
                     bool endIndexNeeded = false;
                     int currentIndex = 0;
+                    char lastChar = ' ';
 
                     foreach (char c in format)
                     {
@@ -310,7 +311,6 @@ namespace CoordinateConversionLibrary.Models
                                 {
                                     if (CoordinateBase.ShowPlus) sb.Append("+");
                                 }
-
                                 else
                                 {
                                     if (CoordinateBase.ShowHyphen) sb.Append("-");
@@ -335,7 +335,6 @@ namespace CoordinateConversionLibrary.Models
                                 {
                                     if (CoordinateBase.ShowPlus & !CoordinateBase.IsOutputInProcess) sb.Append(" +");
                                 }
-
                                 else
                                 {
                                     if (CoordinateBase.ShowHyphen & !CoordinateBase.IsOutputInProcess) sb.Append(" -");
@@ -372,11 +371,37 @@ namespace CoordinateConversionLibrary.Models
                                         sb.Append("W");
                                 }
                                 break;
+                            case '+': // show +
+                                if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '-'))
+                                { 
+                                    if (cnum > 0.0)
+                                        sb.Append("+");
+                                    break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
+                            case '-': // show -
+                                if ((lastChar == 'A') || (lastChar == 'X') || (lastChar == '+'))
+                                {
+                                    if (cnum < 0.0)
+                                        sb.Append("-");
+                                    break;
+                                }
+                                else
+                                {
+                                    sb.Append(c);
+                                    break;
+                                }
                             default:
                                 sb.Append(c);
                                 break;
-                        }
-                    }
+                        } // switch
+
+                        lastChar = c;
+                    } // foreach 
 
                     if (endIndexNeeded)
                     {

@@ -19,39 +19,56 @@ using System;
 
 // Esri
 using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.esriSystem;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Geoprocessing;
 
 namespace ArcMapAddinCoordinateConversion.Models
 {
     class KMLUtils
     {
-        
-        public bool ConvertLayerToKML(string kmzOutputPath, string tmpShapefilePath, ESRI.ArcGIS.Carto.IMap map)
+
+        public bool ConvertLayerToKML(IFeatureClass fc, string kmzOutputPath, string tmpShapefilePath, ESRI.ArcGIS.Carto.IMap map)
         {
             try
             {
                 string kmzName = System.IO.Path.GetFileName(kmzOutputPath);
                 string folderName = System.IO.Path.GetDirectoryName(kmzOutputPath);
+                var fcName = System.IO.Path.GetFileNameWithoutExtension(kmzName);
 
+                IFeatureLayer fLayer = new FeatureLayer();
+                fLayer.FeatureClass = fc;
+                var geoLayer = (fLayer as IGeoFeatureLayer);
+                if (geoLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ISimpleMarkerSymbol pSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
+                    pSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
+                    pSimpleMarkerSymbol.Size = CoordinateConversionLibrary.Constants.SymbolSize;
+                    pSimpleMarkerSymbol.Color = new RgbColorClass() { Red = 255 };
+                    ISimpleRenderer pSimpleRenderer;
+                    pSimpleRenderer = new SimpleRenderer();
+                    pSimpleRenderer.Symbol = (ISymbol)pSimpleMarkerSymbol;
+                    geoLayer.Name = fcName;
+                    geoLayer.Renderer = (IFeatureRenderer)pSimpleRenderer;
+                }
+                var featureLayer = geoLayer as FeatureLayer;
+
+                map.AddLayer(geoLayer);
+
+                // Initialize the geoprocessor.
                 IGeoProcessor2 gp = new GeoProcessorClass();
                 IVariantArray parameters = new VarArrayClass();
-                parameters.Add(tmpShapefilePath);
-                parameters.Add(kmzName);
-                gp.Execute("MakeFeatureLayer_management", parameters, null);
-
-                IVariantArray parameters1 = new VarArrayClass();
-                // assign  parameters        
-                parameters1.Add(kmzName);
-                parameters1.Add(kmzOutputPath);
-
-                gp.Execute("LayerToKML_conversion", parameters1, null);
+                parameters.Add(featureLayer.Name);
+                parameters.Add(folderName + "\\" + kmzName);
+                var result = gp.Execute(CoordinateConversionLibrary.Constants.LayerToKMLGPTool, parameters, null);
 
                 // Remove the temporary layer from the TOC
-                for (int i = 0; i < map.LayerCount; i++ )
+                for (int i = 0; i < map.LayerCount; i++)
                 {
                     ILayer layer = map.get_Layer(i);
-                    if (layer.Name == "featureLayer")
+                    if (layer.Name == fcName)
                     {
                         map.DeleteLayer(layer);
                         break;
@@ -60,7 +77,7 @@ namespace ArcMapAddinCoordinateConversion.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
@@ -69,5 +86,5 @@ namespace ArcMapAddinCoordinateConversion.Models
         }
     }
 
-    
+
 }
