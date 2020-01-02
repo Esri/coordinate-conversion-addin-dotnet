@@ -94,15 +94,17 @@
     <!-- Update the mapping module. Insert our custom button into the layers existing context menu. -->
     <!-- NOTE: This context menu "Convert Coordinates" was added for Pro 2.2 to the mapping pop-up
          so the custom one below has been removed from this pop-up -->
-    <updateModule refID="esri_mapping">
+    <!--         
+     <updateModule refID="esri_mapping">
       <menus>
-        <updateMenu refID="esri_mapping_selection2DContextMenu">
+         <updateMenu refID="esri_mapping_selection2DContextMenu">
           <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
-        </updateMenu>
-        <!--<updateMenu refID="esri_mapping_popupToolContextMenu">
+         </updateMenu> 
+         <updateMenu refID="esri_mapping_popupToolContextMenu">
           <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
-        </updateMenu>-->
+         </updateMenu>
       </menus>
-    </updateModule>
+     </updateModule>
+     -->    
   </modules>
 </ArcGIS>
