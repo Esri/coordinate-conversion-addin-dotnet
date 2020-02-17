@@ -3,9 +3,7 @@ using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Common;
 using ProAppCoordConversionModule.Models;
 using System;
 using System.Collections.Generic;
@@ -42,9 +40,9 @@ namespace ProAppCoordConversionModule.ViewModels
             CancelButtonCommand = new RelayCommand(OnCancelButtonCommand);
             ApplyButtonCommand = new RelayCommand(OnApplyButtonCommand);
             FormatSelection = CoordinateConversionLibraryConfig.AddInConfig.FormatSelection;
-            if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection == Properties.Resources.CustomString)
             {
-                _categorySelection = FormatList.Where(x => x == CoordinateConversionLibrary.Properties.Resources.CustomString).FirstOrDefault();
+                _categorySelection = FormatList.Where(x => x == Properties.Resources.CustomString).FirstOrDefault();
                 FormatExpanded = true;
                 IsEnableExpander = true;
                 Format = CoordinateBase.InputCustomFormat;
@@ -301,7 +299,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (IsNotValidInput(value))
                 {
                     IsValidFormat = false;
-                    throw new ArgumentException(CoordinateConversionLibrary.Properties.Resources.SpecialCharactersValidationMsg);
+                    throw new ArgumentException(Properties.Resources.SpecialCharactersValidationMsg);
                 }
                 else
                 {
@@ -548,7 +546,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
-            if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection == Properties.Resources.CustomString)
             {
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 CoordinateConversionLibraryConfig.AddInConfig.CategorySelection = CategorySelection;
@@ -659,7 +657,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnFormatSelectionChanged()
         {
-            if (FormatSelection != CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection != Properties.Resources.CustomString)
             {
                 _format = GetFormatFromDefaults();
                 UpdateSample();
@@ -682,7 +680,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
             if (item == null)
-                return CoordinateConversionLibrary.Properties.Resources.StringNoFormatFound;
+                return Properties.Resources.StringNoFormatFound;
             return item.DefaultNameFormatDictionary.Select(x => x.Value).FirstOrDefault();
         }
         private CoordinateType GetCoordinateType()
@@ -791,11 +789,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 return;
 
             if (selectedCoordinateType != CoordinateType.Default.ToString())
-                list.Add(CoordinateConversionLibrary.Properties.Resources.CustomString);
+                list.Add(Properties.Resources.CustomString);
 
             FormatList = list;
             if ((
-                (!FormatList.Contains(FormatSelection) || FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+                (!FormatList.Contains(FormatSelection) || FormatSelection == Properties.Resources.CustomString)
                 && !CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                 )
             {
@@ -866,7 +864,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
 
-            return CoordinateConversionLibrary.Properties.Resources.CustomString;
+            return Properties.Resources.CustomString;
         }
 
         private async void OnTabSelectionChanged()
@@ -954,7 +952,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
                 || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
-                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+                && FormatSelection == Properties.Resources.CustomString)
             {
                 PlusHyphenForDirectionVisibility = Visibility.Visible;
                 HemisphereIndicatorVisibility = Visibility.Visible;

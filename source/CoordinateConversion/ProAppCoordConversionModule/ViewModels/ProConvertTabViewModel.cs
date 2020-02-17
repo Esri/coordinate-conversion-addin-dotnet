@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System.Collections.ObjectModel;
-using CoordinateConversionLibrary.Views;
-using CoordinateConversionLibrary.ViewModels;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Views;
+using ProAppCoordConversionModule.ViewModels;
+using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Models;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
-using ProAppCoordConversionModule.Models;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.ViewModels
@@ -67,7 +66,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // KG - Added so output component will updated when user clicks on the map 
             //      not when mouse move event is fired.
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+            Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
 
             return true;
         }
@@ -76,7 +75,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                System.Windows.Forms.MessageBox.Show(Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -84,7 +83,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateMapTool.AllowUpdates = false;
 
             ProcessInputValue(InputCoordinate);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+            Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
             await QueuedTask.Run(() =>
             {
                 if (obj == null)

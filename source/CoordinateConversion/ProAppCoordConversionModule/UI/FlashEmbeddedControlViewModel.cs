@@ -18,7 +18,7 @@ using ArcGIS.Desktop.Framework.Controls;
 using System.Xml.Linq;
 using System.Windows.Data;
 using System.Windows;
-using CoordinateConversionLibrary.Helpers;
+using ProAppCoordConversionModule.Common;
 
 namespace ProAppCoordConversionModule.UI
 {

@@ -1,7 +1,7 @@
-﻿using ProAppCoordConversionModule.Helpers;
+﻿using ProAppCoordConversionModule.Common;
 using System.Windows.Controls;
 
-namespace CoordinateConversionLibrary.Views
+namespace ProAppCoordConversionModule.Views
 {
     /// <summary>
     /// Interaction logic for ProEditPropertiesView.xaml

@@ -20,7 +20,7 @@ using System.Windows.Controls;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 
-namespace CoordinateSystemAddin.UI {
+namespace ProAppCoordConversionModule.UI {
     /// <summary>
     /// Interaction logic for CoordSysDialog.xaml
     /// </summary>

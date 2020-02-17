@@ -1,6 +1,6 @@
-﻿using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
-using CoordinateConversionLibrary.Views;
+﻿using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
+using ProAppCoordConversionModule.Views;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace ProAppCoordConversionModule.ViewModels
             if (vm == null)
                 return;
 
-            vm.WindowTitle = CoordinateConversionLibrary.Properties.Resources.TitleAddNewOutputCoordinate;
+            vm.WindowTitle = Properties.Resources.TitleAddNewOutputCoordinate;
 
             if (dlg.ShowDialog() == true)
             {
@@ -74,7 +74,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
-            vm.WindowTitle = CoordinateConversionLibrary.Properties.Resources.TitleEditOutputCoordinate;
+            vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
 
             if (dlg.ShowDialog() == true)
             {
@@ -216,8 +216,8 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (
                     System.Windows.MessageBoxResult.Yes !=
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(CoordinateConversionLibrary.Properties.Resources.FormattedRemove, name),
-                    CoordinateConversionLibrary.Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(Properties.Resources.FormattedRemove, name),
+                    Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
                     return;
 
                 foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)

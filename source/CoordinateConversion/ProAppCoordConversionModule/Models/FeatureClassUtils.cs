@@ -30,10 +30,9 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Mapping;
 
-using CoordinateConversionLibrary;
 using System.Windows;
 using System.Linq;
-using CoordinateConversionLibrary.ViewModels;
+using ProAppCoordConversionModule.ViewModels;
 
 namespace ProAppCoordConversionModule.Models
 {
@@ -50,7 +49,7 @@ namespace ProAppCoordConversionModule.Models
         {
             //Prep the dialog
             SaveItemDialog saveItemDlg = new SaveItemDialog();
-            saveItemDlg.Title = CoordinateConversionLibrary.Properties.Resources.TitleSelectOutput;
+            saveItemDlg.Title = Properties.Resources.TitleSelectOutput;
             saveItemDlg.OverwritePrompt = true;
             if (!string.IsNullOrEmpty(previousLocation))
                 saveItemDlg.InitialLocation = previousLocation;
@@ -261,7 +260,7 @@ namespace ProAppCoordConversionModule.Models
                                 //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
                                 //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);                                
                                 var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
-                                if (isKML) s.SetSize(CoordinateConversionLibrary.Constants.SymbolSize);
+                                if (isKML) s.SetSize(Constants.SymbolSize);
                                 CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
                                 currentRenderer.Symbol = symbolRef;
 

@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using ArcGIS.Core.Geometry;
-using CoordinateConversionLibrary.Helpers;
-using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

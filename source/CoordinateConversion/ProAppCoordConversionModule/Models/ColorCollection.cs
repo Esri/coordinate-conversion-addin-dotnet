@@ -1,5 +1,4 @@
-﻿using CoordinateConversionLibrary.Helpers;
-
+﻿
 namespace ProAppCoordConversionModule.Models
 {
     public class ColorCollection

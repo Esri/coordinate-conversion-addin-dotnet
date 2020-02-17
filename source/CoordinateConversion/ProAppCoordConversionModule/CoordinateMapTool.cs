@@ -19,8 +19,8 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ProAppCoordConversionModule.UI;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Models;
 
 namespace ProAppCoordConversionModule
 {
@@ -39,7 +39,7 @@ namespace ProAppCoordConversionModule
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
             Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
 
-            Mediator.Register(CoordinateConversionLibrary.Constants.CollectListHasItems, onCollectCoordinatesHasItems);
+            Mediator.Register(Constants.CollectListHasItems, onCollectCoordinatesHasItems);
         }
 
         public bool ListHasItems { get; set; }
@@ -56,11 +56,11 @@ namespace ProAppCoordConversionModule
 
             if (SelectFeatureEnable)
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, mp);
+                Mediator.NotifyColleagues(Constants.SELECT_MAP_POINT, mp);
             }
             else
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, mp);
+                Mediator.NotifyColleagues(Constants.VALIDATE_MAP_POINT, mp);
             }
 
             return base.OnSketchCompleteAsync(geometry);
@@ -133,10 +133,10 @@ namespace ProAppCoordConversionModule
             {
                 if (mp != null)
                 {
-                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.None)
                         mp = GeometryEngine.Instance.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                    Mediator.NotifyColleagues(Constants.MOUSE_MOVE_POINT, mp);
                 }
             }
         }
@@ -159,8 +159,8 @@ namespace ProAppCoordConversionModule
                         try
                         {
                             // for now we will always project to WGS84
-                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None
-                                && CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.Default)
+                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.None
+                                && CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.Default)
                                 temp = GeometryEngine.Instance.Project(temp, SpatialReferences.WGS84) as MapPoint;
 
                             return temp;
@@ -173,9 +173,9 @@ namespace ProAppCoordConversionModule
 
                 if (mp != null)
                 {
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                    Mediator.NotifyColleagues(Constants.MOUSE_MOVE_POINT, mp);
                     if (!ListHasItems)
-                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                        Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
                 }
             }
         }

@@ -15,11 +15,9 @@
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using Jitbit.Utils;
+using ProAppCoordConversionModule.Common;
 using ProAppCoordConversionModule.Models;
+using Jitbit.Utils;
 using ProAppCoordConversionModule.Views;
 using System;
 using System.Collections;
@@ -51,8 +49,8 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
-            Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
-            Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
+            Mediator.Register(Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
+            Mediator.Register(Constants.IMPORT_COORDINATES, OnImportCoordinates);
         }
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace ProAppCoordConversionModule.ViewModels
         /// <param name="e"></param>
         private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+            Mediator.NotifyColleagues(Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
         private void OnImportCoordinates(object obj)
@@ -121,7 +119,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void ClearListBoxSelection()
         {
             UpdateHighlightedGraphics(true);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+            Mediator.NotifyColleagues(Constants.CollectListHasItems, CoordinateAddInPoints.Any());
         }
 
         public bool HasListBoxRightClickSelectedItem
@@ -156,7 +154,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
                 proCoordGetter.Point = addinPoint.Point;
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
             }
         }
 
@@ -269,12 +267,12 @@ namespace ProAppCoordConversionModule.ViewModels
                                                          ccMapPointList,
                                                          MapView.Active.Map.SpatialReference,
                                                          MapView.Active,
-                                                         CoordinateConversionLibrary.GeomType.Point);
+                                                         GeomType.Point);
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
                             var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
-                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, GeomType.Point, vm.KmlIsChecked);
                         }
                         else if (vm.CSVIsChecked)
                         {
@@ -298,8 +296,8 @@ namespace ProAppCoordConversionModule.ViewModels
                             }
                             csvExport.ExportToFile(path);
 
-                            System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
-                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
+                            System.Windows.Forms.MessageBox.Show(Properties.Resources.CSVExportSuccessfulMessage + path,
+                                Properties.Resources.CSVExportSuccessfulCaption);
                         }
                     }
                     catch (Exception ex)
@@ -426,7 +424,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 coordinates.Add(sb.ToString());
             }
 
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+            Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, coordinates);
         }
 
         #region overrides
@@ -435,7 +433,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                System.Windows.Forms.MessageBox.Show(Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -468,7 +466,7 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
+        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
         {
             base.OnDisplayCoordinateTypeChanged(obj);
 

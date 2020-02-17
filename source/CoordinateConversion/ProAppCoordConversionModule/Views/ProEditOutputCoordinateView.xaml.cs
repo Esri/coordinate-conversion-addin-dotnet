@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
 using System.Text.RegularExpressions;
 
-namespace CoordinateConversionLibrary.Views
+namespace ProAppCoordConversionModule.Views
 {
     /// <summary>
     /// Interaction logic for ProEditOutputCoordinateView.xaml

@@ -1,8 +1,8 @@
-﻿<Window x:Class="CoordinateSystemAddin.UI.CoordSysDialog"
+﻿<Window x:Class="ProAppCoordConversionModule.UI.CoordSysDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:coordpicker="clr-namespace:CoordinateSystemAddin.UI"
-        xmlns:common="clr-namespace:CoordinateSystemAddin.Common"
+        xmlns:coordpicker="clr-namespace:ProAppCoordConversionModule.UI"
+        xmlns:common="clr-namespace:ProAppCoordConversionModule.Common"
         Title="Pick a Coordinate System" Height="400" Width="650">
     <Grid>
 

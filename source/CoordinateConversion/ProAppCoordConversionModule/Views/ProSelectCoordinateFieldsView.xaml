@@ -1,14 +1,14 @@
-<controls:ProWindow  x:Class="CoordinateConversionLibrary.Views.ProSelectCoordinateFieldsView"
+<controls:ProWindow  x:Class="ProAppCoordConversionModule.Views.ProSelectCoordinateFieldsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-             xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-             xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
-             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
-             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+             xmlns:local="clr-namespace:ProAppCoordConversionModule;assembly=ProAppCoordConversionModule"
+             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels;assembly=ProAppCoordConversionModule"
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Common;assembly=ProAppCoordConversionModule"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
@@ -21,7 +21,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="/ProAppCoordConversionModule;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

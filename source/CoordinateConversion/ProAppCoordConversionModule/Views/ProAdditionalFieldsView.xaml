@@ -5,26 +5,27 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-            xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-            xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
-            xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
-            xmlns:Behaviors="clr-namespace:ArcGIS.Desktop.Internal.Framework.Behaviors;assembly=ArcGIS.Desktop.Framework"
-             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+            xmlns:local="clr-namespace:ProAppCoordConversionModule;assembly=ProAppCoordConversionModule"
+            xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels;assembly=ProAppCoordConversionModule"
+            xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
+             xmlns:Behaviors="clr-namespace:ArcGIS.Desktop.Internal.Framework.Behaviors;assembly=ArcGIS.Desktop.Framework"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Common;assembly=ProAppCoordConversionModule"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Title="{Binding ViewDetailsTitle}" 
+             
              WindowStartupLocation="CenterScreen"
+                    
              SizeToContent="WidthAndHeight"          
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
              ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Cursor="Arrow" Topmost="True"
-             d:Height="210" d:Width="280">
+             d:DesignHeight="210" d:DesignWidth="280">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="/ProAppCoordConversionModule;component/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <viewModels:EditOutputCoordinateViewModel x:Key="viewModelEdit" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid Background="Transparent">

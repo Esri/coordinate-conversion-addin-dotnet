@@ -14,7 +14,6 @@
   *   limitations under the License. 
   ******************************************************************************/ 
 
-using ProAppCoordConversionModule;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +23,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Threading;
 
-namespace CoordinateSystemAddin.UI {
+namespace ProAppCoordConversionModule.UI {
     internal class CoordSystemInfo {
         public string Region { get; set; }
         public string Name { get; set; }
@@ -183,7 +182,7 @@ namespace CoordinateSystemAddin.UI {
                     regions.Add("Geographic Coordinate Systems", new Dictionary<string, CoordSystemRegion>());//Geographic
                     regions.Add("Projected Coordinate Systems", new Dictionary<string, CoordSystemRegion>());//Projected
 
-                    string content = ProAppCoordConversionModule.Properties.FileResources.sr_out;// Resources.sr_out;//Stored coordinate system information
+                    string content = Properties.Resources.sr_out;// Resources.sr_out;//Stored coordinate system information
 
                     //int startIndex = 0;
                     string coordSystemType = "]]Geographic Coordinate Systems";

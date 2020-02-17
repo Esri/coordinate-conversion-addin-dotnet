@@ -1,7 +1,6 @@
-﻿using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
+﻿using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
 
 namespace ProAppCoordConversionModule.ViewModels
 {

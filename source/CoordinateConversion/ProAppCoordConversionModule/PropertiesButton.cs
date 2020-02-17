@@ -21,7 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
-using CoordinateConversionLibrary.Views;
+using ProAppCoordConversionModule.Views;
 
 namespace ProAppCoordConversionModule
 {
