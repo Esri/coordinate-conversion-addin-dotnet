@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace ProAppCoordConversionModule.Common
+namespace ProAppCoordConversionModule.Common.ValueConverters
 {
     public class MaxHeightConverter : IValueConverter
     {

@@ -21,7 +21,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule.Views
 {

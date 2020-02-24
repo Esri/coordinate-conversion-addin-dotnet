@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using ProAppCoordConversionModule.Common.Attributes;
 using ProAppCoordConversionModule.Properties;
 
-namespace ProAppCoordConversionModule.Common
+namespace ProAppCoordConversionModule.Common.Enums
 {
 
     public enum GeomType : int
@@ -73,5 +74,5 @@ namespace ProAppCoordConversionModule.Common
         Convert = 1,
         Collect = 2
     }
-    
+
 }

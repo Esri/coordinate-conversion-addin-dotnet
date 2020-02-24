@@ -14,8 +14,8 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ProAppCoordConversionModule.Helpers;
 using System.Windows.Controls;
-using ProAppCoordConversionModule.Common;
 
 namespace ProAppCoordConversionModule.ViewModels
 {

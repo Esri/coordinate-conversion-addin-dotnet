@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-             xmlns:local="clr-namespace:ProAppCoordConversionModule.Module;assembly=ProAppCoordConversionModule"
-             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels;assembly=ProAppCoordConversionModule"
-             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
-             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Common;assembly=ProAppCoordConversionModule"
+             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Title="{Binding Path=WindowTitle}" 
@@ -19,7 +18,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <!--<ResourceDictionary Source="/ProAppCoordConversionModule;component/MAResourceDictionary.xaml"/>-->
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <viewModels:EditOutputCoordinateViewModel x:Key="viewModelEdit" />
         </ResourceDictionary>
@@ -53,7 +52,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
-                            <Image Source="/ProAppCoordConversionModule;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
+                            <Image Source="/CoordinateConversion;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
                         </Button>
                         <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
                         <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>

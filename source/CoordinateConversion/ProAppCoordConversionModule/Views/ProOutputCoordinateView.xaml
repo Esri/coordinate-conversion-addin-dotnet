@@ -5,9 +5,8 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-            xmlns:local="clr-namespace:ProAppCoordConversionModule;assembly=ProAppCoordConversionModule"
-            xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
-            xmlns:viewModels="clr-namespace:CoordiProAppCoordConversionModulenateConversionLibrary.ViewModels;assembly=ProAppCoordConversionModule"
+            xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+            xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
             xmlns:Behaviors="clr-namespace:ArcGIS.Desktop.Internal.Framework.Behaviors;assembly=ArcGIS.Desktop.Framework"
             x:Name="ocView"
             d:DesignHeight="150"
@@ -19,20 +18,20 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/ProAppCoordConversionModule;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Image
                 x:Key="expandImg"
                 Width="16"
                 Height="16"
                 x:Shared="false"
-                Source="/ProAppCoordConversionModule;component/Images/TablePlusExpand16_d.png" />
+                Source="/CoordinateConversion;component/Images/TablePlusExpand16_d.png" />
             <Image
                 x:Key="collapseImg"
                 Width="16"
                 Height="16"
                 x:Shared="false"
-                Source="/ProAppCoordConversionModule;component/Images/TableMinusCollaps16_d.png" />
+                Source="/CoordinateConversion;component/Images/TableMinusCollaps16_d.png" />
             <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
                 <MenuItem
                     Command="{Binding DataContext.ConfigCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
@@ -208,7 +207,7 @@
 						    Width="10"
 						    Height="10"
 						    Cursor="Hand"
-						    Source="/ProAppCoordConversionModule;component/Images/RowHandle.png" />
+						    Source="/CoordinateConversion;component/Images/RowHandle.png" />
                     </DataTemplate>
                 </DataGrid.RowHeaderTemplate>
                 <DataGrid.RowStyle>
@@ -234,7 +233,7 @@
                                 <Image
 								    Height="18"
 								    Width="18"
-								    Source="/ProAppCoordConversionModule;component/Images/hand.png" />
+								    Source="/CoordinateConversion;component/Images/hand.png" />
                             </Button>
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
@@ -299,7 +298,7 @@
                                 <Image
 								    Width="18"
 								    Height="18"
-								    Source="/ProAppCoordConversionModule;component/Images/copyall.png" />
+								    Source="/CoordinateConversion;component/Images/copyall.png" />
                             </Button>
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
@@ -312,7 +311,7 @@
                                     <Image
 									    Width="16"
 									    Height="16"
-									    Source="/ProAppCoordConversionModule;component/Images/EditCopy16.png" />
+									    Source="/CoordinateConversion;component/Images/EditCopy16.png" />
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -353,7 +352,7 @@
                                                 <Image
 												    Width="16"
 												    Height="16"
-												    Source="/ProAppCoordConversionModule;component/Images/EditCopy16.png" />
+												    Source="/CoordinateConversion;component/Images/EditCopy16.png" />
                                             </Button>
                                         </Grid>
                                     </DataTemplate>
@@ -387,7 +386,7 @@
 						    Width="16"
 						    Height="16"
 						    Margin="5,0,0,0"
-						    Source="/ProAppCoordConversionModule;component/Images/hand.png" />
+						    Source="/CoordinateConversion;component/Images/hand.png" />
                         <TextBlock
 						    Margin="8,0,0,0"
 						    VerticalAlignment="Center"

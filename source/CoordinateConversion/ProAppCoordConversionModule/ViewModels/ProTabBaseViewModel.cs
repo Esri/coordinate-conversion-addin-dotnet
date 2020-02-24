@@ -20,46 +20,53 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
+using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
 using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
-using ProAppCoordConversionModule.Models;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Views;
 using System.IO;
 using System.Text;
 using System.Linq;
+using ProAppCoordConversionModule.Common.Enums;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Reflection;
-using ProAppCoordConversionModule.Views;
 using System.Diagnostics;
 using System.Windows.Threading;
-using ProAppCoordConversionModule.Common;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProTabBaseViewModel : TabBaseViewModel
     {
-        // This name should correlate to the name specified in Config.esriaddinx - Tool id="ProAppCoordConversionModule_CoordinateMapTool"
-        internal const string MapPointToolName = "ProAppCoordConversionModule_CoordinateMapTool";
+
+        public string MapPointToolName = CoordinateMapTool.ToolId;
 
         public ProTabBaseViewModel()
         {
-            ActivatePointToolCommand = new RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new RelayCommand(OnFlashPointCommandAsync);
-            ViewDetailCommand = new RelayCommand(OnViewDetailCommand);
+            ActivatePointToolCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMapToolCommand);
+            FlashPointCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashPointCommandAsync);
+            ViewDetailCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnViewDetailCommand);
             FieldsCollection = new ObservableCollection<FieldsCollection>();
             ViewDetailsTitle = string.Empty;
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
-            Mediator.Register(Constants.RequestCoordinateBroadcast, OnBCNeeded);
-            Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-            Mediator.NotifyColleagues(Constants.SetCoordinateGetter, proCoordGetter);
+
+            FlashCompleted = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashCompleted);
+                  
+           
+            RequestCoordinateCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnBCNeeded);
+            
             CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
 
-        public RelayCommand ActivatePointToolCommand { get; set; }
-        public RelayCommand FlashPointCommand { get; set; }
-        public RelayCommand ViewDetailCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand FlashPointCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ViewDetailCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand FlashCompleted { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand RequestCoordinateCommand { get; set; }
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
         public String PreviousTool { get; set; }
@@ -180,7 +187,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (OnValidationSuccess(obj))
             {
-                Mediator.NotifyColleagues(Constants.NEW_MAP_POINT, obj);
+                 this.NewMapPointInternal.Execute(obj);
             }
         }
 
@@ -247,8 +254,8 @@ namespace ProAppCoordConversionModule.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
-                System.Windows.Forms.MessageBox.Show(Properties.Resources.InvalidCoordMsg,
-                    Properties.Resources.InvalidCoordCap);
+                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
+                    ProAppCoordConversionModule.Properties.Resources.InvalidCoordCap);
             }
             else
             {
@@ -381,7 +388,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var mapView = MapView.Active;
             if (mapView == null)
             {
-                System.Windows.Forms.MessageBox.Show(Properties.Resources.LoadMapMsg);
+                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -393,10 +400,10 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception e)
             {
-                if (e.Message.ToLower() == Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                if (e.Message.ToLower() == ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + Properties.Resources.CoordsOutOfBoundsAddlMsg,
-                        Properties.Resources.CoordsoutOfBoundsCaption);
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                        ProAppCoordConversionModule.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
@@ -473,7 +480,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(Properties.Resources.MsgNoDataFound);
+                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
                     return;
                 }
                 if (dlg.ShowDialog() == true)
@@ -509,7 +516,10 @@ namespace ProAppCoordConversionModule.ViewModels
                             ImportedData.Add(dict);
                         }
                     }
-                    Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, ImportedData);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                    pCollectTabVM.ImportCoordinates.Execute(ImportedData);
                 }
             }
         }
@@ -541,7 +551,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 dlg.DataContext = fieldVM;
             }
             else
-                System.Windows.Forms.MessageBox.Show(Properties.Resources.MsgNoDataFound);
+                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
             if (dlg.ShowDialog() == true)
             {
                 foreach (var item in headers)
@@ -586,13 +596,18 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                     ListDictionary.Add(dict);
                 }
-                Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, ListDictionary);
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.ImportCoordinates.Execute(ListDictionary);
             }
+            
         }
 
         #endregion overrides
 
-        #region Mediator handlers
+        #region Relay handlers
 
         private void OnBCNeeded(object obj)
         {
@@ -608,7 +623,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateMapTool.AllowUpdates = true;
         }
 
-        #endregion Mediator handlers
+        #endregion Relay handlers
 
         private void SetAsCurrentToolAsync()
         {
@@ -725,7 +740,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // Note: The Map Point Tool is required to be active to enable flash overlay
                 MapView.Active.PanTo(projectedPoint, new TimeSpan(0, 0, 1));
 
-                Mediator.NotifyColleagues("UPDATE_FLASH", point);
+                if(Module1.coordMapTool != null) Module1.coordMapTool.PointFlash.Execute(point);
             });
         }
 
@@ -786,7 +801,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (!FieldsCollection.Any())
                 {
                     htmlString = htmlString + "<tr valign=\"top\"><td class=\"attrName\">"
-                        + Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
+                        + ProAppCoordConversionModule.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
                 }
 
                 htmlString = htmlString + "</tbody></table></div>"
@@ -927,7 +942,12 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch { /* Conversion Failed */ }
 
-            Mediator.NotifyColleagues(Constants.BroadcastCoordinateValues, dict);
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pConvertTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+
+            EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
+            pEditOutCCVM.BroadcastCoordinateCommand.Execute(dict);
         }
 
         private CoordinateType GetCoordinateType(string input, out MapPoint point)

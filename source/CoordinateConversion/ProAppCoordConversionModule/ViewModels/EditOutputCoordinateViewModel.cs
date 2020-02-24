@@ -14,12 +14,12 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ProAppCoordConversionModule.Common;
-using ProAppCoordConversionModule.Models;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -28,8 +28,7 @@ namespace ProAppCoordConversionModule.ViewModels
         public EditOutputCoordinateViewModel() 
         {
             CategoryList = new ObservableCollection<string>()
-              {
-                Properties.Resources.CategoryListDD,
+              { Properties.Resources.CategoryListDD,
                 Properties.Resources.CategoryListDDM,
                 Properties.Resources.CategoryListDMS,
                 //Properties.Resources.CategoryListGARS,
@@ -49,15 +48,21 @@ namespace ProAppCoordConversionModule.ViewModels
 
             FormatExpanded = false;
 
-            Mediator.Register(Constants.BroadcastCoordinateValues, OnHandleBCCValues);
-            Mediator.NotifyColleagues(Constants.RequestCoordinateBroadcast, null);
+            BroadcastCoordinateCommand = new RelayCommand(OnHandleBCCValues);
+            
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            pConvertTabView.RequestCoordinateCommand.Execute(null);
 
             ConfigCommand = new RelayCommand(OnConfigCommand);
 
-            Mediator.Register(Constants.SpatialReferenceSelected, OnSpatialReferenceSelected);
+            SpatialReferenceSelected = new RelayCommand(OnSpatialReferenceSelected);
         }
 
+        public RelayCommand SpatialReferenceSelected { get; set; }
+        public RelayCommand BroadcastCoordinateCommand { get; set; }
         public RelayCommand ConfigCommand { get; set; }
+
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType,string>();
         public ObservableCollection<string> CategoryList { get; set; }
         public ObservableCollection<string> FormatList { get; set; }
@@ -93,6 +98,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
         }
+
         private string _categorySelection = string.Empty;
         public string CategorySelection 
         {
@@ -109,7 +115,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
         }
-
         public bool FormatExpanded { get; set; }
 
         private void OnCategorySelectionChanged()
@@ -154,7 +159,6 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
         }
-
         public ObservableCollection<DefaultFormatModel> DefaultFormats { get; set; }
         private OutputCoordinateModel _outputCoordItem = null;
         public OutputCoordinateModel OutputCoordItem
@@ -316,8 +320,6 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-
-
         private CoordinateType GetCoordinateType()
         {
             CoordinateType type;
@@ -371,7 +373,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     return item.Key;
                 }
             }
-            
+
             return Properties.Resources.CustomString;
         }
 
@@ -390,7 +392,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnConfigCommand(object obj)
         {
             // need to get consumer to ask for spatial reference
-            Mediator.NotifyColleagues(Constants.SelectSpatialReference, null);
+            //Mediator.NotifyColleagues(Constants.SelectSpatialReference, null);
         }
 
         private void OnSpatialReferenceSelected(object obj)

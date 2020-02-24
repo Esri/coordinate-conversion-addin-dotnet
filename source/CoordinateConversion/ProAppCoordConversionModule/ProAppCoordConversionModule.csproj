@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files\ArcGIS\Pro\bin\ArcGISPro.exe</StartProgram>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -48,13 +48,12 @@
     <WarningLevel>4</WarningLevel>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files\ArcGIS\Pro\bin\ArcGISPro.exe</StartProgram>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -104,7 +103,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Config.daml" />
+    <AddInContent Include="Config.daml">
+      <SubType>Designer</SubType>
+    </AddInContent>
     <AddInContent Include="Images\AddInDesktop16.png" />
     <AddInContent Include="Images\AddInDesktop32.png" />
     <AddInContent Include="DarkImages\AddInDesktop16.png" />
@@ -114,32 +115,17 @@
     <Compile Include="Common\Attributes\LocalizableDescriptionAttribute.cs" />
     <Compile Include="Common\Behaviors\WindowBehavior.cs" />
     <Compile Include="Common\Enums\Enums.cs" />
-    <Compile Include="Common\Helpers\Constants.cs" />
-    <Compile Include="Common\Helpers\ConversionUtils.cs" />
-    <Compile Include="Common\Helpers\CoordinateConversionExtensions.cs" />
-    <Compile Include="Common\Helpers\ExportCSV.cs" />
-    <Compile Include="Common\Helpers\ImportCSV.cs" />
-    <Compile Include="Common\Helpers\InputFormatHelper.cs" />
-    <Compile Include="Common\Helpers\MapPointHelper.cs" />
-    <Compile Include="Common\Helpers\Mediator.cs" />
-    <Compile Include="Common\Helpers\NotificationObject.cs" />
-    <Compile Include="Common\Helpers\RelayCommand.cs" />
-    <Compile Include="Common\Helpers\SerializableDictionary.cs" />
-    <Compile Include="Common\Helpers\Storyboard.cs" />
-    <Compile Include="Common\Helpers\UIHelpers.cs" />
-    <Compile Include="Common\Helpers\Wpf.cs" />
-    <Compile Include="Common\ValueConverters\ValueConverters.cs" />
-    <Compile Include="Common\ValueConverters\EnumToFriendlyNameConverter.cs" />
-    <Compile Include="Common\ValueConverters\MaxHeightConverter.cs" />
-    <Compile Include="ContextMenuCommands.cs" />
-    <Compile Include="CoordinateMapTool.cs" />
-    <Compile Include="CoordinateConversionDockpane.xaml.cs">
-      <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
-    <Compile Include="Models\AddInPoint.cs" />
-    <Compile Include="Models\CCProGraphic.cs" />
-    <Compile Include="Models\ColorCollection.cs" />
+    <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\ConversionUtils.cs" />
+    <Compile Include="Helpers\CoordinateConversionExtensions.cs" />
+    <Compile Include="Helpers\ExportCSV.cs" />
+    <Compile Include="Helpers\ImportCSV.cs" />
+    <Compile Include="Helpers\NotificationObject.cs" />
+    <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\SerializableDictionary.cs" />
+    <Compile Include="Helpers\Storyboard.cs" />
+    <Compile Include="Helpers\UIHelpers.cs" />
+    <Compile Include="Helpers\Wpf.cs" />
     <Compile Include="Models\CoordinateBase.cs" />
     <Compile Include="Models\CoordinateConversionLibraryConfig.cs" />
     <Compile Include="Models\CoordinateDD.cs" />
@@ -153,15 +139,47 @@
     <Compile Include="Models\CoordinateUSNG.cs" />
     <Compile Include="Models\CoordinateUTM.cs" />
     <Compile Include="Models\DefaultFormatModel.cs" />
+    <Compile Include="Models\OutputCoordinateModel.cs" />
+    <Compile Include="Common\ValueConverters\BoolConverter.cs" />
+    <Compile Include="Common\ValueConverters\EnumToFriendlyNameConverter.cs" />
+    <Compile Include="Common\ValueConverters\MaxHeightConverter.cs" />
+    <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
+    <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
+    <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
+    <Compile Include="ViewModels\TabBaseViewModel.cs" />
+    <Compile Include="Views\CCCollectTabView.xaml.cs">
+      <DependentUpon>CCCollectTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CCConvertTabView.xaml.cs">
+      <DependentUpon>CCConvertTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InputCoordinateConversionView.xaml.cs">
+      <DependentUpon>InputCoordinateConversionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ContextMenuCommands.cs" />
+    <Compile Include="CoordinateMapTool.cs" />
+    <Compile Include="CoordinateConversionDockpane.xaml.cs">
+      <DependentUpon>CoordinateConversionDockpane.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CoordinateConversionDockpaneViewModel.cs" />
+    <Compile Include="Helpers\InputFormatHelper.cs" />
+    <Compile Include="Helpers\MapPointHelper.cs" />
+    <Compile Include="Models\AddInPoint.cs" />
+    <Compile Include="Models\CCProGraphic.cs" />
+    <Compile Include="Models\ColorCollection.cs" />
     <Compile Include="Models\FeatureClassUtils.cs" />
     <Compile Include="Models\KMLUtils.cs" />
-    <Compile Include="Models\OutputCoordinateModel.cs" />
     <Compile Include="Models\ProGraphic.cs" />
     <Compile Include="Models\Symbol.cs" />
     <Compile Include="Module1.cs" />
     <Compile Include="ProCoordinateGet.cs" />
     <Compile Include="PropertiesButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\FileResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -180,12 +198,6 @@
       <DependentUpon>FlashEmbeddedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FlashEmbeddedControlViewModel.cs" />
-    <Compile Include="UI\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
-    <Compile Include="ViewModels\EditPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProAmbiguousCoordsViewModel.cs" />
     <Compile Include="ViewModels\ProCollectTabViewModel.cs" />
     <Compile Include="ViewModels\ProConvertTabViewModel.cs" />
@@ -193,8 +205,6 @@
     <Compile Include="ViewModels\ProOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\ProSaveAsFormatViewModel.cs" />
     <Compile Include="ViewModels\ProTabBaseViewModel.cs" />
-    <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
-    <Compile Include="ViewModels\TabBaseViewModel.cs" />
     <Compile Include="Views\ProAdditionalFieldsView.xaml.cs">
       <DependentUpon>ProAdditionalFieldsView.xaml</DependentUpon>
     </Compile>
@@ -222,6 +232,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\CCCollectTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CCConvertTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InputCoordinateConversionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CoordinateConversionDockpane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -235,10 +257,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\FlashEmbeddedControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\UserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,6 +305,17 @@
     <None Include="Resources\sr_out.csv" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\FileResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <AddInContent Include="Images\GenericButtonBlue16.png" />
   </ItemGroup>
   <ItemGroup>
@@ -305,59 +334,25 @@
     <Resource Include="Images\DownArrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\FileResources.resx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Add_Point.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\copy.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\copyall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Delete.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\EditCopy16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\gears.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\GenericDeleteRed32_d.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\GenericErrorStop16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\GeoprocessingEnvironmentSettings16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\hand.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\pointtool.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\RowHandle.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\SelectionSelectTool16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\TableMinusCollaps16_d.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\TablePlusExpand16_d.png" />
+    <Resource Include="Images\tip.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\tip.png" />
+    <Resource Include="Images\CoordinateSystem16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />

@@ -24,7 +24,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Diagnostics;
-using ProAppCoordConversionModule.Common;
+
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -44,10 +44,14 @@ namespace ProAppCoordConversionModule.ViewModels
 
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
             FieldCollection = new List<object>();
-            Mediator.Register(Constants.NEW_MAP_POINT, OnNewMapPointInternal);
-            Mediator.RegisterSingleInstance(Constants.VALIDATE_MAP_POINT, OnValidateMapPointInternal);
-            Mediator.Register(Constants.MOUSE_MOVE_POINT, OnMouseMoveInternal);
-            Mediator.Register(Constants.SELECT_MAP_POINT, OnSelectMapPointInternal);
+
+            //Anupam
+            NewMapPointInternal = new RelayCommand(OnNewMapPointInternal);
+            ValidateMapPointInternal = new RelayCommand(OnValidateMapPointInternal);
+            MouseMoveInternal = new RelayCommand(OnMouseMoveInternal);
+            SelectMapPointInternal = new RelayCommand(OnSelectMapPointInternal);
+         
+      
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
                 .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
         }        
@@ -58,6 +62,11 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand ImportCSVFileCommand { get; set; }
         public RelayCommand CopyCommand { get; set; }
         public RelayCommand PasteCommand { get; set; }
+        public RelayCommand NewMapPointInternal { get; set; }
+        public RelayCommand ValidateMapPointInternal { get; set; }
+        public RelayCommand SelectMapPointInternal { get; set; }
+        public RelayCommand MouseMoveInternal { get; set; }
+
 
         //TODO is this used anymore?
         public static string OutputFieldName = "OutputCoordinate";
@@ -99,8 +108,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
                 //ProcessInput(_inputCoordinate);
-                //Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
-
+                
                 RaisePropertyChanged(() => InputCoordinate);
             }
         }
@@ -120,17 +128,17 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public virtual void OnEditPropertiesDialogCommand(object obj)
         {
-            var dlg = new EditPropertiesView();
+            var dlg = new ProEditPropertiesView();
             try
             {
                 dlg.ShowDialog();
             }
             catch (Exception e)
             {
-                if (e.Message.ToLower() == Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                if (e.Message.ToLower() == ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + Properties.Resources.CoordsOutOfBoundsAddlMsg,
-                        Properties.Resources.CoordsoutOfBoundsCaption);
+                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                        ProAppCoordConversionModule.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
@@ -158,7 +166,6 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             try
             {
-                Mediator.NotifyColleagues(Constants.DEACTIVATE_TOOL, null);
                 if (CheckMapLoaded())
                 {
                     CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
@@ -171,7 +178,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     var result = fileDialog.ShowDialog();
                     if (result.HasValue && result.Value == true)
                     {
-                        var dlg = new SelectCoordinateFieldsCCView();
+                        var dlg = new ProSelectCoordinateFieldsView();
 
                         var coordinates = new List<string>();
                         var extension = Path.GetExtension(fileDialog.FileName);
@@ -192,8 +199,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(Properties.Resources.AddLayerMsg,
-                        Properties.Resources.AddLayerCap);
+                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.AddLayerMsg,
+                        ProAppCoordConversionModule.Properties.Resources.AddLayerCap);
                 }
             }
             catch (Exception ex)
@@ -203,7 +210,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, SelectCoordinateFieldsCCView dlg, List<string> coordinates, string fileName)
+        private void ImportFromCSV(SelectCoordinateFieldsViewModel fieldVM, ProSelectCoordinateFieldsView dlg, List<string> coordinates, string fileName)
         {
             using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -221,7 +228,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(Properties.Resources.MsgNoDataFound);
+                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
                     return;
                 }
                 if (dlg.ShowDialog() == true)
@@ -257,12 +264,16 @@ namespace ProAppCoordConversionModule.ViewModels
                             ImportedData.Add(dict);
                         }
                     }
-                    Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, ImportedData);
+
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                    pCollectTabVM.ImportCoordinates.Execute(ImportedData);
                 }
             }
         }
 
-        public void ImportFromExcel(SelectCoordinateFieldsCCView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        private void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
         {
             ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
@@ -288,7 +299,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show(Properties.Resources.MsgNoDataFound);
+                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
             }
             if (dlg.ShowDialog() == true)
             {
@@ -337,7 +348,11 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                     lstDictonary.Add(dict);
                 }
-                Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, lstDictonary);
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.ImportCoordinates.Execute(lstDictonary);
             }
         }
 

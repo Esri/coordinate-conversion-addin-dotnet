@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-             xmlns:local="clr-namespace:ProAppCoordConversionModule;assembly=ProAppCoordConversionModule"
-             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels;assembly=ProAppCoordConversionModule"
-             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
-             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Common;assembly=ProAppCoordConversionModule"
+             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
@@ -16,12 +15,12 @@
              SizeToContent="WidthAndHeight"
                      Topmost="True"
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
-                     d:DesignHeight="300" d:DesignWidth="420">
+                     d:DesignHeight="303" d:DesignWidth="420">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/ProAppCoordConversionModule;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

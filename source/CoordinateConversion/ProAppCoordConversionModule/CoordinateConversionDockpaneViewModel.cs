@@ -21,7 +21,7 @@ using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ProAppCoordConversionModule.Views;
 using ProAppCoordConversionModule.Models;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Helpers;
 using ArcGIS.Core.Geometry;
 using ProAppCoordConversionModule.ViewModels;
 using System.ComponentModel;
@@ -32,8 +32,8 @@ using System.Collections.ObjectModel;
 using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
 using System.Text.RegularExpressions;
-using ProAppCoordConversionModule.ViewModels;
 using System.Windows.Controls;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
 
 namespace ProAppCoordConversionModule
 {
@@ -125,8 +125,8 @@ namespace ProAppCoordConversionModule
                     return null;
                 });
 
-                if(pointd != null)
-                    Mediator.NotifyColleagues(Constants.NewMapPointSelection, pointd);
+                //if(pointd != null)
+                //    Mediator.NotifyColleagues(Constants.NewMapPointSelection, pointd);
             }
         }
 

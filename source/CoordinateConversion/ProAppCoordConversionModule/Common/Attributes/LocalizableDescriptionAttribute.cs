@@ -18,7 +18,7 @@ using System.Reflection;
 using System.Globalization;
 using System.ComponentModel;
 
-namespace ProAppCoordConversionModule.Common
+namespace ProAppCoordConversionModule.Common.Attributes
 {
     /// <summary>
     /// Attribute for localization.

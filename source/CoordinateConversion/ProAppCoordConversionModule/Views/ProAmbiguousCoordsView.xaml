@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-             xmlns:local="clr-namespace:ProAppCoordConversionModule;assembly=ProAppCoordConversionModule"
-             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels;assembly=ProAppCoordConversionModule"
-             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties;assembly=ProAppCoordConversionModule"
-             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Common;assembly=ProAppCoordConversionModule"
+             xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Title="Ambiguous Coordinates" 
@@ -16,7 +15,7 @@
              SizeToContent="WidthAndHeight"          
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
              ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Cursor="Arrow" Topmost="True"
-             d:Height="210" d:Width="280">
+             d:DesignHeight="210" d:DesignWidth="280">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

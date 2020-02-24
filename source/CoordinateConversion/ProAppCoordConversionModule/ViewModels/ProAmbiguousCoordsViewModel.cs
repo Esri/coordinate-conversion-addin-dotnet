@@ -1,10 +1,11 @@
-﻿using ProAppCoordConversionModule.Common;
+﻿using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public partial class ProAmbiguousCoordsViewModel : BaseViewModel
+    public partial class ProAmbiguousCoordsViewModel : NotificationObject
     {
         public ProAmbiguousCoordsViewModel()
         {

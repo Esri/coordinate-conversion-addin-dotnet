@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="ProAppCoordConversionModule.Views.InputCoordinateConversionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:libprop="clr-namespace:ProAppCoordConversionModule.Properties"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="input"
+                  Margin="0,3,0,0"
+                  PreviewKeyDown="input_PreviewKeyDown"
+                  HorizontalAlignment="Stretch"
+                  IsEditable="True"
+                  ItemsSource="{Binding InputCoordinateHistoryList}"
+                  Text="{Binding InputCoordinate,
+                                 UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox.Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                    <Style.Triggers>
+                    <!-- Remove Triggers that don't work as expected in Pro dark mode 
+                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                        <Setter Property="TextBox.Background" Value="LightPink" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                            <Setter Property="TextBox.Background" Value="White" />
+                        </DataTrigger>
+                    -->
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.Style>
+            <ComboBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding FlashPointCommand}" />
+            </ComboBox.InputBindings>
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}"/>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+        <Button Grid.Column="1"
+                Margin="3,3,0,0"
+                Style="{StaticResource buttonProperties}"
+                ToolTip="{x:Static libprop:Resources.TooltipEditProperties}" />
+        <ToggleButton Grid.Column="2"
+                      Margin="3,3,0,0"
+                      IsChecked="{Binding IsSelectionToolActive}"
+                      Style="{StaticResource BorderedTButtonStyle}"
+                      ToolTip="Select Point">
+            <Image Width="18"
+                   Height="18"
+                   Source="/CoordinateConversion;component/Images/SelectionSelectTool16.png" />
+        </ToggleButton>
+        <ToggleButton Grid.Column="3"
+                      Margin="3,3,0,0"
+                      IsChecked="{Binding IsToolActive}"
+                      Style="{StaticResource BorderedTButtonStyle}"
+                      ToolTip="{x:Static libprop:Resources.TooltipMapPointTool}">
+            <Image Width="18"
+                   Height="18"
+                   Source="/CoordinateConversion;component/Images/Add_Point.png" />
+        </ToggleButton>
+    </Grid>
+</UserControl>

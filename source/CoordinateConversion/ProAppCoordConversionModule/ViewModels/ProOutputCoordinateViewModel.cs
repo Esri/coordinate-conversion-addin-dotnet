@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+
 namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProOutputCoordinateViewModel : OutputCoordinateViewModel
@@ -21,19 +22,21 @@ namespace ProAppCoordConversionModule.ViewModels
 
         #region overrides
 
+        public ProEditOutputCoordinateView dlg = null;
+
         public override void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
             if (outputCoordItem == null)
                 return;
 
-            var dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, this.GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
+            dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, this.GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             if (vm == null)
                 return;
 
-            vm.WindowTitle = Properties.Resources.TitleAddNewOutputCoordinate;
+            vm.WindowTitle = ProAppCoordConversionModule.Properties.Resources.TitleAddNewOutputCoordinate;
 
             if (dlg.ShowDialog() == true)
             {
@@ -63,7 +66,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
-            var dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames,
+            dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames,
                 new OutputCoordinateModel()
                 {
                     CType = outputCoordItem.CType,
@@ -74,7 +77,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
-            vm.WindowTitle = Properties.Resources.TitleEditOutputCoordinate;
+            vm.WindowTitle = ProAppCoordConversionModule.Properties.Resources.TitleEditOutputCoordinate;
 
             if (dlg.ShowDialog() == true)
             {
@@ -216,8 +219,8 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (
                     System.Windows.MessageBoxResult.Yes !=
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(Properties.Resources.FormattedRemove, name),
-                    Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(ProAppCoordConversionModule.Properties.Resources.FormattedRemove, name),
+                    ProAppCoordConversionModule.Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
                     return;
 
                 foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)

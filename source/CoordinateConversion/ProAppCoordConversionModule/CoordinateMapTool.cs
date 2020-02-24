@@ -19,8 +19,11 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ProAppCoordConversionModule.UI;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
+using ProAppCoordConversionModule.Common.Enums;
+
 
 namespace ProAppCoordConversionModule
 {
@@ -29,20 +32,32 @@ namespace ProAppCoordConversionModule
         public static bool AllowUpdates = true;
         public static bool SelectFeatureEnable = false;
 
+        public static string ToolId
+        {
+            // Important: this must match the Tool ID used in the DAML
+            get { return "ProAppCoordConversionModule_CoordinateMapTool"; }
+        }
+
         public CoordinateMapTool()
         {
             IsSketchTool = true;
             SketchType = SketchGeometryType.Point;
             UseSnapping = true;
 
+            Module1.coordMapTool = this;
+
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
-            Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
 
-            Mediator.Register(Constants.CollectListHasItems, onCollectCoordinatesHasItems);
+            PointFlash = new RelayCommand(OnUpdateFlash);
+            CollectCoordinatesHasItems = new RelayCommand(onCollectCoordinatesHasItems);
         }
 
         public bool ListHasItems { get; set; }
+
+        public RelayCommand CollectCoordinatesHasItems { get; set; }
+
+        public RelayCommand PointFlash { get; set; }
 
         protected override Task OnToolActivateAsync(bool active)
         {
@@ -54,13 +69,22 @@ namespace ProAppCoordConversionModule
         {
             var mp = geometry as MapPoint;
 
+            //Get the instance of the Main ViewModel from the dock pane
+
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+
             if (SelectFeatureEnable)
             {
-                Mediator.NotifyColleagues(Constants.SELECT_MAP_POINT, mp);
+                ViewModels.ProCollectTabViewModel pCollectTabView = pConvertTabView.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabView.SelectMapPointInternal.Execute(mp);
             }
             else
             {
-                Mediator.NotifyColleagues(Constants.VALIDATE_MAP_POINT, mp);
+                pConvertTabView.ValidateMapPointInternal.Execute(mp);
+
+                ViewModels.ProCollectTabViewModel pCollectTabView = pConvertTabView.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabView.ValidateMapPointInternal.Execute(mp);
             }
 
             return base.OnSketchCompleteAsync(geometry);
@@ -136,7 +160,9 @@ namespace ProAppCoordConversionModule
                     if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.None)
                         mp = GeometryEngine.Instance.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
-                    Mediator.NotifyColleagues(Constants.MOUSE_MOVE_POINT, mp);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pConvertTabView.MouseMoveInternal.Execute(mp);
                 }
             }
         }
@@ -173,9 +199,15 @@ namespace ProAppCoordConversionModule
 
                 if (mp != null)
                 {
-                    Mediator.NotifyColleagues(Constants.MOUSE_MOVE_POINT, mp);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pConvertTabView.MouseMoveInternal.Execute(mp);
+                    
                     if (!ListHasItems)
-                        Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
+                    {
+                        ViewModels.ProOutputCoordinateViewModel pOutCoordView = pConvertTabView.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                        pOutCoordView.RequestOutputCommand.Execute(null);
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using ProAppCoordConversionModule.Common.Enums;
 using ProAppCoordConversionModule.Views;
 using System;
 using System.Text.RegularExpressions;
@@ -42,7 +43,8 @@ namespace ProAppCoordConversionModule.Models
         public static bool ShowHemisphere { get; set; }
         public static bool IsOutputInProcess { get; set; }
         public static CoordinateTypes InputCategorySelection { get; set; }
-        public static AmbiguousCoordsView ambiguousCoordsViewDlg = new AmbiguousCoordsView();
+
+        public static ProAmbiguousCoordsView ambiguousCoordsViewDlg = new ProAmbiguousCoordsView();
 
         // only works with numeric values
         protected static bool ValidateNumericCoordinateMatch(Match m, string[] requiredGroupNames)

@@ -15,7 +15,8 @@
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using Jitbit.Utils;
 using ProAppCoordConversionModule.Views;
@@ -27,11 +28,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
+
 
 namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProCollectTabViewModel : ProTabBaseViewModel
     {
+
         public ProCollectTabViewModel()
         {
             ListBoxItemAddInPoint = null;
@@ -46,11 +50,12 @@ namespace ProAppCoordConversionModule.ViewModels
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
             PasteCoordinatesCommand = new RelayCommand(OnPasteCommand);
-
+           
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
-            Mediator.Register(Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
-            Mediator.Register(Constants.IMPORT_COORDINATES, OnImportCoordinates);
+
+            SetListBoxItemAddInPoint = new RelayCommand(OnSetListBoxItemAddInPoint);
+            ImportCoordinates = new RelayCommand(OnImportCoordinates);
         }
 
         /// <summary>
@@ -60,7 +65,8 @@ namespace ProAppCoordConversionModule.ViewModels
         /// <param name="e"></param>
         private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Mediator.NotifyColleagues(Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+            if (Module1.coordMapTool != null)
+                Module1.coordMapTool.CollectCoordinatesHasItems.Execute(CoordinateAddInPoints.Any());
         }
 
         private void OnImportCoordinates(object obj)
@@ -119,8 +125,9 @@ namespace ProAppCoordConversionModule.ViewModels
         private void ClearListBoxSelection()
         {
             UpdateHighlightedGraphics(true);
-            Mediator.NotifyColleagues(Constants.CollectListHasItems, CoordinateAddInPoints.Any());
-        }
+            if (Module1.coordMapTool != null)
+                Module1.coordMapTool.CollectCoordinatesHasItems.Execute(CoordinateAddInPoints.Any());
+       }
 
         public bool HasListBoxRightClickSelectedItem
         {
@@ -154,7 +161,11 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
                 proCoordGetter.Point = addinPoint.Point;
-                Mediator.NotifyColleagues(Constants.RequestOutputUpdate, null);
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCoordView = pConvertTabView.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                pOutCoordView.RequestOutputCommand.Execute(null);
             }
         }
 
@@ -180,6 +191,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand CopyCoordinateCommand { get; set; }
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
         public RelayCommand PasteCoordinatesCommand { get; set; }
+        public RelayCommand SetListBoxItemAddInPoint { get; set; }
+        public RelayCommand ImportCoordinates { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -210,7 +223,6 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        // Call CopyAllCoordinateOutputs event
         private void OnCopyAllCommand(object obj)
         {
             OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
@@ -296,8 +308,8 @@ namespace ProAppCoordConversionModule.ViewModels
                             }
                             csvExport.ExportToFile(path);
 
-                            System.Windows.Forms.MessageBox.Show(Properties.Resources.CSVExportSuccessfulMessage + path,
-                                Properties.Resources.CSVExportSuccessfulCaption);
+                            System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.CSVExportSuccessfulMessage + path,
+                                ProAppCoordConversionModule.Properties.Resources.CSVExportSuccessfulCaption);
                         }
                     }
                     catch (Exception ex)
@@ -424,7 +436,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 coordinates.Add(sb.ToString());
             }
 
-            Mediator.NotifyColleagues(Constants.IMPORT_COORDINATES, coordinates);
+            ImportCoordinates.Execute(coordinates);
         }
 
         #region overrides
@@ -433,7 +445,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(Properties.Resources.LoadMapMsg);
+                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -466,7 +478,7 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
+        public override void OnDisplayCoordinateTypeChanged(ProAppCoordConversionModule.Models.CoordinateConversionLibraryConfig obj)
         {
             base.OnDisplayCoordinateTypeChanged(obj);
 

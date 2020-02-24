@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace ProAppCoordConversionModule.Common
+namespace ProAppCoordConversionModule.Common.Behaviors
 {
     class WindowBehavior
     {

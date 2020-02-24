@@ -17,8 +17,9 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
+using ProAppCoordConversionModule.Common.Attributes;
 
-namespace ProAppCoordConversionModule.Common
+namespace ProAppCoordConversionModule.Common.ValueConverters
 {
     /// <summary>
     /// This class simply takes an enum and uses some reflection to obtain

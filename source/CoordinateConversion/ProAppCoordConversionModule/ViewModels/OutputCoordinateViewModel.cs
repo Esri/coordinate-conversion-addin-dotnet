@@ -20,12 +20,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.Helpers;
 using System.IO;
 using System.Globalization;
 using Microsoft.Win32;
 using System.Data;
 using System.Windows;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Views;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -46,29 +48,9 @@ namespace ProAppCoordConversionModule.ViewModels
             // set default CoordinateGetter
             coordinateGetter = new CoordinateGetBase();
 
-            /* KG - Commented since add new output coordinate and copy all coordinate outputs buttons are now in the OutputCoordinateView.xaml
-            Mediator.Register(Constants.AddNewOutputCoordinate, OnAddNewOutputCoordinate); 
-            Mediator.Register(Constants.CopyAllCoordinateOutputs, OnCopyAllCoordinateOutputs);
-             * */
-            Mediator.Register(Constants.SetCoordinateGetter, OnSetCoordinateGetter);
-            Mediator.Register(Constants.RequestOutputUpdate, OnOutputUpdate);
-            Mediator.Register(Constants.ClearOutputCoordinates, OnClearOutputs);
-
-            //for testing without a config file, init a few sample items
-            //OutputCoordinateList = new ObservableCollection<OutputCoordinateModel>();
-            ////var tempProps = new Dictionary<string, string>() { { "Lat", "70.49N" }, { "Lon", "40.32W" } };
-            ////var mgrsProps = new Dictionary<string, string>() { { "GZone", "17T" }, { "GSquare", "NE" }, { "Northing", "86309" }, { "Easting", "77770" } };
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DD", CType = CoordinateType.DD, OutputCoordinate = "70.49N 40.32W" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DMS", CType = CoordinateType.DMS, OutputCoordinate = "40°26'46\"N,79°58'56\"W", Format = "A0°B0'C0\"N X0°Y0'Z0\"E" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "MGRS", CType = CoordinateType.MGRS, OutputCoordinate = @"", Format = "Z S X00000 Y00000" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "UTM", CType = CoordinateType.UTM, OutputCoordinate = @"", Format = "Z#B X0 Y0" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "GARS", CType = CoordinateType.GARS, OutputCoordinate = @"", Format = "X#YQK" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "USNG", CType = CoordinateType.USNG, OutputCoordinate = @"", Format = "Z S X0 Y0" });
-            //OutputCoordinateList.Add(new OutputCoordinateModel { Name = "DDM", CType = CoordinateType.DDM, OutputCoordinate = @"", Format = "A0 B0.0### N X0 Y0.0### E" });
-
-            //DefaultFormatList = new ObservableCollection<DefaultFormatModel>();
-
-            //DefaultFormatList.Add(new DefaultFormatModel { CType = CoordinateType.DD, DefaultNameFormatDictionary = new SerializableDictionary<string, string> { { "70.49N 40.32W", "Y0.0#N X0.0#E" }, { "70.49N,40.32W", "Y0.0#N,X0.0#E" } } });
+            SetCoordinateCommand = new RelayCommand(OnSetCoordinateGetter);
+            RequestOutputCommand = new RelayCommand(OnOutputUpdate);
+            ClearOutputCoordinates = new RelayCommand(OnClearOutputs);
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
             .RegisterHandler(n => n.OutputCoordinateList, n => RaisePropertyChanged(() => OutputCoordinateList));
@@ -112,7 +94,7 @@ namespace ProAppCoordConversionModule.ViewModels
             if (outputCoordItem == null)
                 return;
 
-            var dlg = new EditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
+            var dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, GetInUseNames(), new OutputCoordinateModel() { CType = outputCoordItem.CType, Format = outputCoordItem.Format, Name = outputCoordItem.Name, SRName = outputCoordItem.SRName, SRFactoryCode = outputCoordItem.SRFactoryCode });
 
             var vm = dlg.DataContext as EditOutputCoordinateViewModel;
             vm.WindowTitle = Properties.Resources.TitleAddNewOutputCoordinate;
@@ -176,8 +158,10 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand ImportButtonCommand { get; set; }
         public RelayCommand ExportButtonCommand { get; set; }
         public RelayCommand ResetButtonCommand { get; set; }
+        public RelayCommand SetCoordinateCommand { get; set; }
+        public RelayCommand RequestOutputCommand { get; set; }
+        public RelayCommand ClearOutputCoordinates { get; set; }
 
-        // Call AddNewOutputCoordinate event
         private void OnAddNewOCCommand(object obj)
         {
             // Get name from user
@@ -188,8 +172,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 Format = Constants.DDCustomFormat
             });
         }
-
-        // Call CopyAllCoordinateOutputs event
+                
         private void OnCopyAllCommand(object obj)
         {
             this.OnCopyAllCoordinateOutputs(obj);
@@ -254,7 +237,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var outputCoordItem = GetOCMByName(obj as string);
             var InUseNames = GetInUseNames();
             InUseNames.Remove(outputCoordItem.Name);
-            var dlg = new EditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames,
+            var dlg = new ProEditOutputCoordinateView(CoordinateConversionLibraryConfig.AddInConfig.DefaultFormatList, InUseNames,
                 new OutputCoordinateModel()
                 {
                     CType = outputCoordItem.CType,

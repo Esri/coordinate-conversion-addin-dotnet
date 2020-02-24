@@ -14,7 +14,8 @@
   *   limitations under the License. 
   ******************************************************************************/
 
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;

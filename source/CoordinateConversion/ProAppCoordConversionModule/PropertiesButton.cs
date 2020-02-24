@@ -29,9 +29,10 @@ namespace ProAppCoordConversionModule
     {
         protected override void OnClick()
         {
-            var dlg = new EditPropertiesView();
+            //EditPropertiesView
+            //var dlg = new ProEditPropertiesView();
 
-            dlg.ShowDialog();
+            //dlg.ShowDialog();
         }
     }
 }

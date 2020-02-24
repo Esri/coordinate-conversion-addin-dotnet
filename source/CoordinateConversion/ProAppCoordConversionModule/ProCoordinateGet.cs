@@ -16,15 +16,16 @@
 
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ProAppCoordConversionModule.UI;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
+using ProAppCoordConversionModule.Common.Enums;
 using System;
-using ProAppCoordConversionModule.Common;
+using ProAppCoordConversionModule.UI;
 
 namespace ProAppCoordConversionModule
 {
-    public class ProCoordinateGet : CoordinateGetBase
+    public class ProCoordinateGet : ProAppCoordConversionModule.Models.CoordinateGetBase
     {
         public ProCoordinateGet()
         { }
@@ -173,8 +174,13 @@ namespace ProAppCoordConversionModule
             if (_dlg.SpatialReference != null)
             {
                 System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
-                Mediator.NotifyColleagues(Constants.SpatialReferenceSelected, string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
-            }
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ViewModels.ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCCVM = pConvertTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                EditOutputCoordinateViewModel pEditOutCCVM = pOutCCVM.dlg.DataContext as EditOutputCoordinateViewModel;
+                pEditOutCCVM.SpatialReferenceSelected.Execute(string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+             }
             _dlg = null;
             _isOpen = false;
         }
