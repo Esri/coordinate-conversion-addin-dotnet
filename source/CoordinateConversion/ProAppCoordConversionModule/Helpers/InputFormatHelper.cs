@@ -42,7 +42,7 @@ namespace ProAppCoordConversionModule.Helpers
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
                     ProAppCoordConversionModule.Properties.Resources.InvalidCoordCap);
             }
             else

@@ -137,12 +137,12 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (e.Message.ToLower() == ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
                         ProAppCoordConversionModule.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message);
                 }
 
             }
@@ -199,13 +199,13 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.AddLayerMsg,
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.AddLayerMsg,
                         ProAppCoordConversionModule.Properties.Resources.AddLayerCap);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Something went wrong.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
                 Debug.WriteLine("OnImportCSVFileCommand Error " + ex.ToString());
             }
         }
@@ -228,7 +228,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
                     return;
                 }
                 if (dlg.ShowDialog() == true)
@@ -299,7 +299,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
             }
             if (dlg.ShowDialog() == true)
             {

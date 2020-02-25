@@ -256,7 +256,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
                     ProAppCoordConversionModule.Properties.Resources.InvalidCoordCap);
             }
             else
@@ -390,7 +390,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var mapView = MapView.Active;
             if (mapView == null)
             {
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -404,12 +404,12 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (e.Message.ToLower() == ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
                         ProAppCoordConversionModule.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message);
                 }
             }
         }
@@ -482,7 +482,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
                     return;
                 }
                 if (dlg.ShowDialog() == true)
@@ -553,7 +553,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 dlg.DataContext = fieldVM;
             }
             else
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
             if (dlg.ShowDialog() == true)
             {
                 foreach (var item in headers)

@@ -173,7 +173,7 @@ namespace ProAppCoordConversionModule
         {
             if (_dlg.SpatialReference != null)
             {
-                System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
 
                 CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
                 ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;

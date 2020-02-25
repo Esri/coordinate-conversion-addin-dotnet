@@ -80,7 +80,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 

@@ -197,7 +197,7 @@ namespace ProAppCoordConversionModule.ViewModels
             if (!string.IsNullOrEmpty(name))
             {
                 // lets make sure
-                if (System.Windows.MessageBoxResult.Yes != System.Windows.MessageBox.Show(string.Format(Properties.Resources.FormattedRemove, name), Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
+                if (System.Windows.MessageBoxResult.Yes != ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format(Properties.Resources.FormattedRemove, name), Properties.Resources.LabelConfirmRemoval, System.Windows.MessageBoxButton.YesNo))
                     return;
 
                 foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
@@ -333,7 +333,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception)
             {
-                MessageBox.Show("Something went wrong.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
             }
         }
 
@@ -350,7 +350,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Count == 0)
                 {
-                    MessageBox.Show("No data available");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
                     return;
                 }
                 var saveDialog = new SaveFileDialog();
@@ -382,7 +382,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         file.WriteLine();
                     }
                 }
-                System.Windows.Forms.MessageBox.Show("File Exported to " + filePath);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("File Exported to " + filePath);
             }
             catch (Exception)
             {

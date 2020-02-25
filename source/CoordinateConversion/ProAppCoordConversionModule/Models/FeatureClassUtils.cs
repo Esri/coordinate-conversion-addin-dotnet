@@ -210,7 +210,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong");
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -446,7 +446,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ex.ToString());
             }
         }
 
@@ -526,7 +526,7 @@ namespace ProAppCoordConversionModule.Models
                 else
                 {
                     progressDialog.Hide();
-                    MessageBox.Show("ExcelToTable_conversion operation failed.");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("ExcelToTable_conversion operation failed.");
                 }
 
             }

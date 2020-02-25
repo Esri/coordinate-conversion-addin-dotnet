@@ -55,31 +55,31 @@ namespace ProAppCoordConversionModule.Views
             {
                 // no duplicates please
                 e.Handled = false;
-                MessageBox.Show(string.Format("The name '{0}' is already used.", vm.OutputCoordItem.Name));
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format("The name '{0}' is already used.", vm.OutputCoordItem.Name));
                 return;
             }
             else if (string.IsNullOrWhiteSpace(vm.OutputCoordItem.Name))
             {
                 e.Handled = false;
-                MessageBox.Show("Name is required.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Name is required.");
                 return;
             }
             else if (!alphanumericRegex.IsMatch(vm.OutputCoordItem.Name))
             {
                 e.Handled = false;
-                MessageBox.Show("The name should only contain alphabet and numbers.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The name should only contain alphabet and numbers.");
                 return;
             }
             else if (!nonNumericStartRegex.IsMatch(vm.OutputCoordItem.Name))
             {
                 e.Handled = false;
-                MessageBox.Show("The name should not start with a number.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The name should not start with a number.");
                 return;
             }
             else if (!characterLimitRegex.IsMatch(vm.OutputCoordItem.Name))
             {
                 e.Handled = false;
-                MessageBox.Show("The name must be 10 characters or less.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The name must be 10 characters or less.");
                 return;
             }
 
