@@ -163,9 +163,9 @@ namespace ProAppCoordConversionModule.ViewModels
                 proCoordGetter.Point = addinPoint.Point;
 
                 CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                ViewModels.ProOutputCoordinateViewModel pOutCoordView = pConvertTabView.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
-                pOutCoordView.RequestOutputCommand.Execute(null);
+                ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                pOutCoordVM.RequestOutputCommand.Execute(null);
             }
         }
 

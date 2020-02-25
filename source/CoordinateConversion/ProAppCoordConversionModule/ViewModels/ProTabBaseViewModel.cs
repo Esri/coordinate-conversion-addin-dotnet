@@ -54,8 +54,10 @@ namespace ProAppCoordConversionModule.ViewModels
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
 
             FlashCompleted = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashCompleted);
-                  
-           
+
+            if(Module1.proOutputCoordVM != null)
+                Module1.proOutputCoordVM.SetCoordinateCommand.Execute(proCoordGetter);
+
             RequestCoordinateCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnBCNeeded);
             
             CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
@@ -517,8 +519,8 @@ namespace ProAppCoordConversionModule.ViewModels
                         }
                     }
                     CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                    ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                    ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                    ProConvertTabViewModel pCvtTabVM  = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
                     pCollectTabVM.ImportCoordinates.Execute(ImportedData);
                 }
             }
@@ -598,8 +600,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
 
                 CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
                 pCollectTabVM.ImportCoordinates.Execute(ListDictionary);
             }
             
@@ -943,11 +945,15 @@ namespace ProAppCoordConversionModule.ViewModels
             catch { /* Conversion Failed */ }
 
             CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-            ViewModels.ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pConvertTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
 
-            EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
-            pEditOutCCVM.BroadcastCoordinateCommand.Execute(dict);
+            if(pOutCoordVM.dlg != null)
+            {
+                EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
+                pEditOutCCVM.BroadcastCoordinateCommand.Execute(dict);
+            }
+           
         }
 
         private CoordinateType GetCoordinateType(string input, out MapPoint point)

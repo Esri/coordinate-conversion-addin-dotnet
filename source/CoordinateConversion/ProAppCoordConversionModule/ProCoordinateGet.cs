@@ -176,11 +176,15 @@ namespace ProAppCoordConversionModule
                 System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
 
                 CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                ViewModels.ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                ViewModels.ProOutputCoordinateViewModel pOutCCVM = pConvertTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
-                EditOutputCoordinateViewModel pEditOutCCVM = pOutCCVM.dlg.DataContext as EditOutputCoordinateViewModel;
-                pEditOutCCVM.SpatialReferenceSelected.Execute(string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
-             }
+                ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+
+                if(pOutCoordVM.dlg != null)
+                {
+                    EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
+                    pEditOutCCVM.SpatialReferenceSelected.Execute(string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+                }
+            }
             _dlg = null;
             _isOpen = false;
         }

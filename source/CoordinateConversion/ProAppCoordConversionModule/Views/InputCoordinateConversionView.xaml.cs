@@ -30,8 +30,8 @@ namespace ProAppCoordConversionModule.Views
         private void input_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-            ViewModels.ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pConvertTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
             pOutCoordVM.ClearOutputCoordinates.Execute(null);
         }
     }

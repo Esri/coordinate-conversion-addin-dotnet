@@ -266,8 +266,8 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
 
                     CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                    ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                    ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                    ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
                     pCollectTabVM.ImportCoordinates.Execute(ImportedData);
                 }
             }
@@ -350,8 +350,8 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
 
                 CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                ProConvertTabViewModel pConvertTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                ProCollectTabViewModel pCollectTabVM = pConvertTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
                 pCollectTabVM.ImportCoordinates.Execute(lstDictonary);
             }
         }

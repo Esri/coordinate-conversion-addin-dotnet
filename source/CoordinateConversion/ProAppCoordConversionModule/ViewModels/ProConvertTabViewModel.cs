@@ -34,13 +34,12 @@ namespace ProAppCoordConversionModule.ViewModels
             OutputCCView = new ProOutputCoordinateView();
             OutputCCView.DataContext = new ProOutputCoordinateViewModel();
 
+            Module1.proOutputCoordVM = OutputCCView.DataContext as ProOutputCoordinateViewModel;
+
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new ProCollectTabViewModel();
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
-
-            ProOutputCoordinateViewModel pOutCoordVM = OutputCCView.DataContext as ProOutputCoordinateViewModel;
-            pOutCoordVM.SetCoordinateCommand.Execute(proCoordGetter);
         }
   
         public InputCoordinateConversionView InputCCView { get; set; }

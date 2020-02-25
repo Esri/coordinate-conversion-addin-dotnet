@@ -96,8 +96,8 @@ namespace ProAppCoordConversionModule.UI
         private void OnFlashAnimationCompletedCommand(object obj)
         {
             CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-            ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-            pConvertTabView.FlashCompleted.Execute(null);
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            pCvtTabVM.FlashCompleted.Execute(null);
         }
 
         public void RunFlashAnimation()

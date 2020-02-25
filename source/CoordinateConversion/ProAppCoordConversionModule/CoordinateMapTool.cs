@@ -72,19 +72,19 @@ namespace ProAppCoordConversionModule
             //Get the instance of the Main ViewModel from the dock pane
 
             CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-            ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
 
             if (SelectFeatureEnable)
             {
-                ViewModels.ProCollectTabViewModel pCollectTabView = pConvertTabView.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
-                pCollectTabView.SelectMapPointInternal.Execute(mp);
+                ViewModels.ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.SelectMapPointInternal.Execute(mp);
             }
             else
             {
-                pConvertTabView.ValidateMapPointInternal.Execute(mp);
+                pCvtTabVM.ValidateMapPointInternal.Execute(mp);
 
-                ViewModels.ProCollectTabViewModel pCollectTabView = pConvertTabView.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
-                pCollectTabView.ValidateMapPointInternal.Execute(mp);
+                ViewModels.ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.ValidateMapPointInternal.Execute(mp);
             }
 
             return base.OnSketchCompleteAsync(geometry);
@@ -161,8 +161,8 @@ namespace ProAppCoordConversionModule
                         mp = GeometryEngine.Instance.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
                     CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                    ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                    pConvertTabView.MouseMoveInternal.Execute(mp);
+                    ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pCvtTabVM.MouseMoveInternal.Execute(mp);
                 }
             }
         }
@@ -200,13 +200,13 @@ namespace ProAppCoordConversionModule
                 if (mp != null)
                 {
                     CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-                    ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-                    pConvertTabView.MouseMoveInternal.Execute(mp);
+                    ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pCvtTabVM.MouseMoveInternal.Execute(mp);
                     
                     if (!ListHasItems)
                     {
-                        ViewModels.ProOutputCoordinateViewModel pOutCoordView = pConvertTabView.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
-                        pOutCoordView.RequestOutputCommand.Execute(null);
+                        ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                        pOutCoordVM.RequestOutputCommand.Execute(null);
                     }
                 }
             }

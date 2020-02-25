@@ -51,8 +51,8 @@ namespace ProAppCoordConversionModule.ViewModels
             BroadcastCoordinateCommand = new RelayCommand(OnHandleBCCValues);
             
             CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
-            ViewModels.ProConvertTabViewModel pConvertTabView = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
-            pConvertTabView.RequestCoordinateCommand.Execute(null);
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            pCvtTabVM.RequestCoordinateCommand.Execute(null);
 
             ConfigCommand = new RelayCommand(OnConfigCommand);
 

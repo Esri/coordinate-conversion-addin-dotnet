@@ -52,6 +52,8 @@ namespace ProAppCoordConversionModule
 
         internal static CoordinateMapTool coordMapTool;
 
+        internal static ProAppCoordConversionModule.ViewModels.ProOutputCoordinateViewModel proOutputCoordVM;
+
         private static CoordinateConversionDockpaneViewModel _dockPane;
         internal static CoordinateConversionDockpaneViewModel CoordinateConversionVM
         {
