@@ -131,7 +131,7 @@ namespace ProAppCoordConversionModule.Models
                     sb.AppendFormat(fi, "{0:#}", Northing);
                     break;
                 default:
-                    throw new Exception("CoordinateUTM.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordUTMExcept);
             }
 
             return sb.ToString();

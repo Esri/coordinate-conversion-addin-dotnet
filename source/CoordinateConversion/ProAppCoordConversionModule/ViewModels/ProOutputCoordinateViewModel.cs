@@ -103,10 +103,10 @@ namespace ProAppCoordConversionModule.ViewModels
             try
             {
                 var openDialog = new OpenFileDialog();
-                openDialog.Title = "Open File";
+                openDialog.Title = Properties.Resources.FileDialogTitle;
                 openDialog.CheckFileExists = true;
                 openDialog.CheckPathExists = true;
-                openDialog.Filter = "csv files|*.csv";
+                openDialog.Filter = Properties.Resources.FileDialogFiltercsv;
                 if (openDialog.ShowDialog() == true)
                 {
                     var filePath = openDialog.FileName;
@@ -155,7 +155,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogError);
             }
         }
 
@@ -165,7 +165,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 if (CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Count == 0)
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("No data available");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogData);
                     return;
                 }
                 var saveDialog = new SaveFileDialog();
@@ -197,7 +197,7 @@ namespace ProAppCoordConversionModule.ViewModels
                         file.WriteLine();
                     }
                 }
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("File Exported to " + filePath);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FileExport + filePath);
             }
             catch (Exception)
             {

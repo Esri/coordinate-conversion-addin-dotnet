@@ -30,7 +30,7 @@ namespace ProAppCoordConversionModule.Models
         public virtual string Format(string format, object arg, IFormatProvider formatProvider)
         {
             // override this
-            throw new Exception("Must override CoordinateFormatterBase.Format!");
+            throw new Exception(Properties.Resources.CoordFBaseExcept);
         }
     }
 }

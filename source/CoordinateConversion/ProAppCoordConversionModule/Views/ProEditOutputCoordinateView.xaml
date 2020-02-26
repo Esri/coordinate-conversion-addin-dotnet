@@ -45,13 +45,13 @@
                     <TextBlock Text="{x:Static prop:Resources.HeaderName}" Margin="3,3,3,3" />
                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.Name, UpdateSourceTrigger=PropertyChanged}"  Margin="3,3,3,3" />
                 </Grid>
-                <GroupBox Header="Spatial Reference" Visibility="Collapsed">
+                <GroupBox Header="{x:Static prop:Resources.EditOutputHeader}" Visibility="Collapsed">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
+                        <Button Command="{Binding ConfigCommand}" ToolTip="{x:Static prop:Resources.EditOuputConfigure}" Margin="3,3,3,3">
                             <Image Source="/CoordinateConversion;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
                         </Button>
                         <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />

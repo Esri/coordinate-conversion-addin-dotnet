@@ -79,7 +79,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
+                                    <Button Command="{Binding ConfigCommand}" ToolTip="{x:Static prop:Resources.EditOuputConfigure}" Margin="3,3,3,3">
                                         <Image Source="/CoordinateConversion;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
                                     </Button>
                                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
@@ -123,7 +123,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
+                        <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="{x:Static prop:Resources.EditPropDisplay}" 
                     Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -142,7 +142,7 @@
         </TabItem>
         <TabItem Height="23" VerticalAlignment="Top">
             <TabItem.Header>
-                <TextBlock Text="Symbology" 
+                <TextBlock Text="{x:Static prop:Resources.EditPropSym}"
                    Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
             </TabItem.Header>
             <Grid MinHeight="350" MinWidth="330">
@@ -164,7 +164,7 @@
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Visibility="{Binding ShowLoadingProcess}">
                         <ProgressBar Name="pbStatus" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top"
                             IsIndeterminate="True" Height="12" Margin="20,20,20,10"/>
-                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Loading..."
+                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{x:Static prop:Resources.EditPropLoad}"
                                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
                     </StackPanel>
                     <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
@@ -176,7 +176,7 @@
                     <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
                                     Visibility="{Binding ShowControls}">
                         <TextBlock Text="Selected Color" HorizontalAlignment="Left" />
-                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="Choose Color">
+                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="{x:Static prop:Resources.EditPropColor}">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Grid>
@@ -219,7 +219,7 @@
                         </ListBox>
                     </Popup>
                 </StackPanel>
-                <GroupBox Grid.Row="2" Header="Choose Symbol" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
+                <GroupBox Grid.Row="2" Header="{x:Static prop:Resources.EditPropCSym}" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -269,9 +269,9 @@
                 </GroupBox>
                 <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding ShowControls}">
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
-                            Command="{Binding ApplyButtonCommand}">Apply</Button>
+                            Command="{Binding ApplyButtonCommand}" Content="{x:Static prop:Resources.ButtonApply}"/>
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
-                            Command="{Binding CancelButtonCommand}">Cancel</Button>
+                            Command="{Binding CancelButtonCommand}" Content="{x:Static prop:Resources.ButtonCancel}"/>
                 </StackPanel>
             </Grid>
         </TabItem>

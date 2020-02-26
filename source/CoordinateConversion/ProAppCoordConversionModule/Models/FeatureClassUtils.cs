@@ -146,7 +146,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsCFError);
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -210,7 +210,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsCFError);
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -526,7 +526,7 @@ namespace ProAppCoordConversionModule.Models
                 else
                 {
                     progressDialog.Hide();
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("ExcelToTable_conversion operation failed.");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsIFEError);
                 }
 
             }

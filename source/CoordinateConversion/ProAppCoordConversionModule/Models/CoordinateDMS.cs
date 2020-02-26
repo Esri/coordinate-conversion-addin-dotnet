@@ -249,7 +249,7 @@ namespace ProAppCoordConversionModule.Models
                     sb.AppendFormat(fi, " {0}° {1}\' {2:#}\" {3}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonSeconds, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
-                    throw new Exception("CoordinateDMS.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordDMSExcept);
             }
 
             return sb.ToString();

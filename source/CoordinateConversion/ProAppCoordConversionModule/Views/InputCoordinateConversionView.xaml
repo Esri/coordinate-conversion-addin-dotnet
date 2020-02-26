@@ -63,7 +63,7 @@
                       Margin="3,3,0,0"
                       IsChecked="{Binding IsSelectionToolActive}"
                       Style="{StaticResource BorderedTButtonStyle}"
-                      ToolTip="Select Point">
+                      ToolTip="{x:Static libprop:Resources.ToolTipCoordPoint}">
             <Image Width="18"
                    Height="18"
                    Source="/CoordinateConversion;component/Images/SelectionSelectTool16.png" />

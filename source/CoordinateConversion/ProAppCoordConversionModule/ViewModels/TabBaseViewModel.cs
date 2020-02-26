@@ -172,7 +172,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     var fileDialog = new Microsoft.Win32.OpenFileDialog();
                     fileDialog.CheckFileExists = true;
                     fileDialog.CheckPathExists = true;
-                    fileDialog.Filter = "csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx";
+                    fileDialog.Filter = Properties.Resources.FileDialogFilterAll;
                     // attemp to import
                     var fieldVM = new SelectCoordinateFieldsViewModel();
                     var result = fileDialog.ShowDialog();
@@ -205,8 +205,8 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
-                Debug.WriteLine("OnImportCSVFileCommand Error " + ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogError);
+                Debug.WriteLine(Properties.Resources.FailedImportCsv + ex.ToString());
             }
         }
 

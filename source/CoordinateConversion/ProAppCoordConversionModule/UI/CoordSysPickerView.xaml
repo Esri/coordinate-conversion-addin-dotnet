@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel LastChildFill="True">
@@ -20,7 +21,7 @@
                 </Style>
             </Grid.Resources>
 
-            <TextBlock Grid.Column ="0" Text="Current coordinate system:" Margin="10,5,5,5"/>
+            <TextBlock Grid.Column ="0" Text="{x:Static prop:Resources.CoordSysPickerHeader}" Margin="10,5,5,5"/>
             <TextBlock Grid.Column="1" Text="{Binding SelectedCoordinateSystemName}" TextWrapping="Wrap"/>
             <!--
             <TextBlock Grid.Column="2" Margin="0,5,10,5">
@@ -112,9 +113,9 @@
                                                                 <RowDefinition Height="10"></RowDefinition>
                                                             </Grid.RowDefinitions>
 
-                                                            <Label Content="Name:" Grid.Row="0" Grid.Column="0"></Label>
-                                                            <Label Content="WKID:" Grid.Row="1" Grid.Column="0"></Label>
-                                                            <Label Content="WKT:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top"></Label>
+                                                            <Label Content="{x:Static prop:Resources.CoordSysPickerName}" Grid.Row="0" Grid.Column="0"></Label>
+                                                            <Label Content="{x:Static prop:Resources.CoordSysPickerWKID}" Grid.Row="1" Grid.Column="0"></Label>
+                                                            <Label Content="{x:Static prop:Resources.CoordSysPickerWKT}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top"></Label>
 
                                                             <TextBlock Text="{Binding InternalName}" Grid.Row="0" Grid.Column="1"></TextBlock>
                                                             <TextBlock Text="{Binding WKID}" Grid.Row="1" Grid.Column="1"></TextBlock>

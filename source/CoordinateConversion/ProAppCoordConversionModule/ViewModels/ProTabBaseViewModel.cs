@@ -205,7 +205,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
             if (!isValidPoint.Result)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds", "Point is out of bounds",
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogPointBoundMsg, Properties.Resources.DialogPointBoundTitle,
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 return false;
             }
@@ -433,7 +433,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 var fileDialog = new Microsoft.Win32.OpenFileDialog();
                 fileDialog.CheckFileExists = true;
                 fileDialog.CheckPathExists = true;
-                fileDialog.Filter = "csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx";
+                fileDialog.Filter = Properties.Resources.FileDialogFilterAll;
                 // attemp to import
                 var fieldVM = new SelectCoordinateFieldsViewModel();
                 var result = fileDialog.ShowDialog();
@@ -459,8 +459,8 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
-                Debug.WriteLine("Error " + ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogError);
+                Debug.WriteLine(Properties.Resources.DebugWriteError + ex.ToString());
             }
         }
 
@@ -476,7 +476,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         fieldVM.AvailableFields.Add(header);
                         fieldVM.FieldCollection.Add(new ListBoxItem() { Name = header, Content = header, IsSelected = false });
-                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                        System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteHeader + " {0}", header);
                     }
                     dlg.DataContext = fieldVM;
                 }
@@ -1076,7 +1076,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteFailed + ex.Message);
                     return CoordinateType.Unknown;
                 }
             }
@@ -1212,7 +1212,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteFailed + ex.Message);
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 }
             }

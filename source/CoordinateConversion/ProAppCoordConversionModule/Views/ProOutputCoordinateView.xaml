@@ -36,11 +36,11 @@
                 <MenuItem
                     Command="{Binding DataContext.ConfigCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
                     CommandParameter="{Binding DataContext.Name}"
-                    Header="Configure" />
+                    Header="{x:Static prop:Resources.OutputConfigure}" />
                 <MenuItem
                     Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
                     CommandParameter="{Binding DataContext.Name}"
-                    Header="Delete" />
+                    Header="{x:Static prop:Resources.OutputDelete}" />
             </ContextMenu>
             <Style x:Key="DataGridColumnHeaderStyleCustom" TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Foreground" Value="{DynamicResource Esri_Gray160}"/>
@@ -347,7 +347,7 @@
 											    Margin="3,3,0,0"
 											    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
 											    CommandParameter="{Binding Value}"
-											    ToolTip="Copy"
+											    ToolTip="{x:Static prop:Resources.TooltipCopy}"
 											    Style="{StaticResource ImageButtonStyle}">
                                                 <Image
 												    Width="16"
@@ -398,11 +398,11 @@
             </Popup>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="btnReset" Content="{x:Static prop:Resources.Reset}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ResetButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ResetButtonCommand}" Style="{DynamicResource Esri_Button}"/>
                 <Button x:Name="btnImport" Content="{x:Static prop:Resources.Open}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ImportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ImportButtonCommand}" Style="{DynamicResource Esri_Button}"/>
                 <Button x:Name="btnExport" Content="{x:Static prop:Resources.Save}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ExportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ExportButtonCommand}" Style="{DynamicResource Esri_Button}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

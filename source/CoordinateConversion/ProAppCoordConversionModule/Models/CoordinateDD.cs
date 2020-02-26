@@ -229,7 +229,7 @@ namespace ProAppCoordConversionModule.Models
                     sb.AppendFormat(fi, " y = {0:0.0000##}", this.Lat);
                     break;
                 default:
-                    throw new Exception("CoordinateDD.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordDDExcept);
             }
 
             return sb.ToString();

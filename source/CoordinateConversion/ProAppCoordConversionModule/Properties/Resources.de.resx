@@ -117,475 +117,475 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddLayerCap" xml:space="preserve">
-    <value>Missing Layer</value>
-  </data>
-  <data name="AddLayerMsg" xml:space="preserve">
-    <value>Please add a basemap or a layer to the map.</value>
-  </data>
-  <data name="ButtonCancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="ButtonOK" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="CaptionOverwrite" xml:space="preserve">
-    <value>Overwrite Feature Class</value>
-  </data>
-  <data name="CategoryListDD" xml:space="preserve">
-    <value>DD</value>
-  </data>
-  <data name="CategoryListDDM" xml:space="preserve">
-    <value>DDM</value>
-  </data>
-  <data name="CategoryListDMS" xml:space="preserve">
-    <value>DMS</value>
-  </data>
-  <data name="CategoryListGARS" xml:space="preserve">
-    <value>GARS</value>
-  </data>
-  <data name="CategoryListMGRS" xml:space="preserve">
-    <value>MGRS</value>
-  </data>
-  <data name="CategoryListUSNG" xml:space="preserve">
-    <value>USNG</value>
-  </data>
-  <data name="CategoryListUTM" xml:space="preserve">
-    <value>UTM</value>
-  </data>
-  <data name="CoordsOutOfBoundsAddlMsg" xml:space="preserve">
-    <value>Please add a basemap or layer to the map.</value>
-  </data>
-  <data name="CoordsoutOfBoundsCaption" xml:space="preserve">
-    <value>Coordinates out of Bounds</value>
-  </data>
-  <data name="CoordsOutOfBoundsMsg" xml:space="preserve">
-    <value>The coordinates or measures are out of bounds.</value>
-  </data>
-  <data name="CSVExportSuccessfulCaption" xml:space="preserve">
-    <value>Export Successful</value>
-  </data>
-  <data name="CSVExportSuccessfulMessage" xml:space="preserve">
-    <value>Successfully exported to </value>
-  </data>
-  <data name="CSVLocationMessage" xml:space="preserve">
-    <value>Choose location to create CSV file</value>
-  </data>
-  <data name="CustomString" xml:space="preserve">
-    <value>Custom</value>
-  </data>
-  <data name="EnumCTDD" xml:space="preserve">
-    <value>DD</value>
-  </data>
-  <data name="EnumCTDDM" xml:space="preserve">
-    <value>DDM</value>
-  </data>
-  <data name="EnumCTDMS" xml:space="preserve">
-    <value>DMS</value>
-  </data>
-  <data name="EnumCTGARS" xml:space="preserve">
-    <value>GARS</value>
-  </data>
-  <data name="EnumCTMGRS" xml:space="preserve">
-    <value>MGRS</value>
-  </data>
-  <data name="EnumCTNone" xml:space="preserve">
-    <value>Default Map Unit</value>
-  </data>
-  <data name="EnumCTUSNG" xml:space="preserve">
-    <value>USNG</value>
-  </data>
-  <data name="EnumCTUTM" xml:space="preserve">
-    <value>UTM</value>
-  </data>
-  <data name="EnumSITDF" xml:space="preserve">
-    <value>Dual Field</value>
-  </data>
-  <data name="EnumSITSF" xml:space="preserve">
-    <value>Single Field</value>
-  </data>
-  <data name="FormattedRemove" xml:space="preserve">
-    <value>Remove {0}?</value>
-  </data>
-  <data name="HeaderAdvanced" xml:space="preserve">
-    <value>Advanced</value>
-  </data>
-  <data name="HeaderCollect" xml:space="preserve">
-    <value>Collect</value>
-  </data>
-  <data name="HeaderConvert" xml:space="preserve">
-    <value>Convert</value>
-  </data>
-  <data name="HeaderCoordinate" xml:space="preserve">
-    <value>Coordinate</value>
-  </data>
-  <data name="HeaderFlash" xml:space="preserve">
-    <value>Flash</value>
-  </data>
-  <data name="HeaderInput" xml:space="preserve">
-    <value>Input</value>
-  </data>
-  <data name="HeaderList" xml:space="preserve">
-    <value>List</value>
-  </data>
-  <data name="HeaderName" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="HeaderOutput" xml:space="preserve">
-    <value>Output</value>
-  </data>
-  <data name="InformationNotAvailableMsg" xml:space="preserve">
-    <value>No Field information associated with this point</value>
-  </data>
-  <data name="InvalidCoordCap" xml:space="preserve">
-    <value>Invalid Coordinate</value>
-  </data>
-  <data name="InvalidCoordMsg" xml:space="preserve">
-    <value>Please enter a valid coordinate</value>
-  </data>
-  <data name="KMLLocationMessage" xml:space="preserve">
-    <value>Choose location to create KMZ file</value>
-  </data>
-  <data name="LabelCategory" xml:space="preserve">
-    <value>Category</value>
-  </data>
-  <data name="LabelClearAll" xml:space="preserve">
-    <value>Clear All</value>
-  </data>
-  <data name="LabelClearAllCap" xml:space="preserve">
-    <value>Clear All Coordinates</value>
-  </data>
-  <data name="LabelClearGraphics" xml:space="preserve">
-    <value>Clear Graphics</value>
-  </data>
-  <data name="LabelConfirmRemoval" xml:space="preserve">
-    <value>Confirm Removal?</value>
-  </data>
-  <data name="LabelDisplayCoordinate" xml:space="preserve">
-    <value>Display Coordinate</value>
-  </data>
-  <data name="LabelExport" xml:space="preserve">
-    <value>Export</value>
-  </data>
-  <data name="LabelExportCap" xml:space="preserve">
-    <value>Export Coordinates</value>
-  </data>
-  <data name="LabelField1" xml:space="preserve">
-    <value>X Field (Longitude)</value>
-  </data>
-  <data name="LabelField2" xml:space="preserve">
-    <value>Y Field (Latitude)</value>
-  </data>
-  <data name="LabelFieldCombined" xml:space="preserve">
-    <value>X/Y</value>
-  </data>
-  <data name="LabelFormats" xml:space="preserve">
-    <value>Formats</value>
-  </data>
-  <data name="LabelImport" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="LabelImportCap" xml:space="preserve">
-    <value>Import Coordinates</value>
-  </data>
-  <data name="LabelInputType" xml:space="preserve">
-    <value>Input Type</value>
-  </data>
-  <data name="LabelSample" xml:space="preserve">
-    <value>Sample</value>
-  </data>
-  <data name="LabelSaveAs" xml:space="preserve">
-    <value>Save As</value>
-  </data>
-  <data name="LabelShowHemisphere" xml:space="preserve">
-    <value>Show N/S/E/W for hemisphere</value>
-  </data>
-  <data name="LabelShowHyphen" xml:space="preserve">
-    <value>Show - for S/W hemisphere</value>
-  </data>
-  <data name="LabelShowPlus" xml:space="preserve">
-    <value>Show + for N/E hemisphere</value>
-  </data>
-  <data name="LoadMapMsg" xml:space="preserve">
-    <value>Please wait while map loads...</value>
-  </data>
-  <data name="MenuLabelCopy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="MenuLabelCopyAll" xml:space="preserve">
-    <value>Copy All</value>
-  </data>
-  <data name="MenuLabelDelete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="MenuLabelDeleteAll" xml:space="preserve">
-    <value>Delete All</value>
-  </data>
-  <data name="MsgNoDataFound" xml:space="preserve">
-    <value>No data found.</value>
-  </data>
-  <data name="MsgOverwrite" xml:space="preserve">
-    <value>You've selected a feature class that already exists. Do you wish to replace it?</value>
-  </data>
-  <data name="Open" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="Popup" xml:space="preserve">
-    <value>Pop-up</value>
-  </data>
-  <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="ShowNSEW" xml:space="preserve">
-    <value>Show N/S/E/W</value>
-  </data>
-  <data name="ShowPlusHyphen" xml:space="preserve">
-    <value>Show +/-</value>
-  </data>
-  <data name="SpecialCharactersValidationMsg" xml:space="preserve">
-    <value>Characters '+','-','N','W','E' and 'S' are not allowed to define custom formatting.</value>
-  </data>
-  <data name="StringEasting" xml:space="preserve">
-    <value>Easting</value>
-  </data>
-  <data name="StringGridSq" xml:space="preserve">
-    <value>Grid Sq</value>
-  </data>
-  <data name="StringGZD" xml:space="preserve">
-    <value>GZD</value>
-  </data>
-  <data name="StringKey" xml:space="preserve">
-    <value>Key</value>
-  </data>
-  <data name="StringLat" xml:space="preserve">
-    <value>Lat</value>
-  </data>
-  <data name="StringLon" xml:space="preserve">
-    <value>Lon</value>
-  </data>
-  <data name="StringNoFormatFound" xml:space="preserve">
-    <value>No Format Found</value>
-  </data>
-  <data name="StringNorthing" xml:space="preserve">
-    <value>Northing</value>
-  </data>
-  <data name="StringQuadrant" xml:space="preserve">
-    <value>Quadrant</value>
-  </data>
-  <data name="StringZone" xml:space="preserve">
-    <value>Zone</value>
-  </data>
-  <data name="TitleAddNewOutputCoordinate" xml:space="preserve">
-    <value>Add New Output Coordinate</value>
-  </data>
-  <data name="TitleEditOutputCoordinate" xml:space="preserve">
-    <value>Edit Output Coordinate</value>
-  </data>
-  <data name="TitleEditProperties" xml:space="preserve">
-    <value>Edit Properties</value>
-  </data>
-  <data name="TitleSelectCoordinateFields" xml:space="preserve">
-    <value>Select Fields</value>
-  </data>
-  <data name="TitleSelectOutput" xml:space="preserve">
-    <value>Select output</value>
-  </data>
-  <data name="TooltipAdd" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="TooltipCopy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="TooltipCopyAll" xml:space="preserve">
-    <value>Copy All</value>
-  </data>
-  <data name="TooltipEditProperties" xml:space="preserve">
-    <value>Edit Properties</value>
-  </data>
-  <data name="TooltipMapPointTool" xml:space="preserve">
-    <value>Map Point Tool</value>
-  </data>
-  <data name="UnrecognizedDelimiter" xml:space="preserve">
-    <value>ImportCSV.GetSeparator(): Unrecognized field delimter.</value>
-  </data>
-  <data name="UseTwoFields" xml:space="preserve">
-    <value>Use two fields</value>
-  </data>
-  <data name="CoordDDExcept" xml:space="preserve">
-    <value>CoordinateDD.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="CoordDDMExcept" xml:space="preserve">
-    <value>CoordinateDDM.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="CoordDMSExcept" xml:space="preserve">
-    <value>CoordinateDMS.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="CoordFBaseExcept" xml:space="preserve">
-    <value>Must override CoordinateFormatterBase.Format!</value>
-  </data>
-  <data name="CoordGARSExcept" xml:space="preserve">
-    <value>CoordinateGARS.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="CoordMGRSExcept" xml:space="preserve">
-    <value>CoordinateMGRS.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="CoordSysPickerHeader" xml:space="preserve">
-    <value>Current coordinate system:</value>
-  </data>
-  <data name="CoordUTMExcept" xml:space="preserve">
-    <value>CoordinateUTM.ToString(): Invalid formatting string.</value>
-  </data>
-  <data name="FCLUtilsCFError" xml:space="preserve">
-    <value>Something went wrong</value>
-  </data>
-  <data name="FCLUtilsIFEError" xml:space="preserve">
-    <value>ExcelToTable_conversion operation failed.</value>
-  </data>
   <data name="AdditionalFieldName" xml:space="preserve">
-    <value>Field Name</value>
+    <value>Field Name de</value>
   </data>
   <data name="AdditionalFieldValue" xml:space="preserve">
-    <value>Field Value</value>
+    <value>Field Value de</value>
+  </data>
+  <data name="AddLayerCap" xml:space="preserve">
+    <value>Missing Layer de</value>
+  </data>
+  <data name="AddLayerMsg" xml:space="preserve">
+    <value>Please add a basemap or a layer to the map. de</value>
   </data>
   <data name="AmbiguousLatLon" xml:space="preserve">
-    <value>Lat / Lon</value>
+    <value>Lat / Lon de</value>
   </data>
   <data name="AmbiguousLonLat" xml:space="preserve">
-    <value>Lon / Lat</value>
+    <value>Lon / Lat de</value>
   </data>
   <data name="AmbiguousMsg" xml:space="preserve">
-    <value>Don't show me this message again</value>
+    <value>Don't show me this message again de</value>
   </data>
   <data name="AmbiguousTitle" xml:space="preserve">
-    <value>Ambiguous Coordinates</value>
+    <value>Ambiguous Coordinates de</value>
   </data>
   <data name="AmbiguoustxtCoords" xml:space="preserve">
-    <value>Ambiguous coordinates have been entered.  Please choose from the following:</value>
+    <value>Ambiguous coordinates have been entered.  Please choose from the following: de</value>
   </data>
   <data name="ButtonApply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Apply de</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Cancel de</value>
+  </data>
+  <data name="ButtonOK" xml:space="preserve">
+    <value>OK de</value>
+  </data>
+  <data name="CaptionOverwrite" xml:space="preserve">
+    <value>Overwrite Feature Class de</value>
+  </data>
+  <data name="CategoryListDD" xml:space="preserve">
+    <value>DD de</value>
+  </data>
+  <data name="CategoryListDDM" xml:space="preserve">
+    <value>DDM de</value>
+  </data>
+  <data name="CategoryListDMS" xml:space="preserve">
+    <value>DMS de</value>
+  </data>
+  <data name="CategoryListGARS" xml:space="preserve">
+    <value>GARS de</value>
+  </data>
+  <data name="CategoryListMGRS" xml:space="preserve">
+    <value>MGRS de</value>
+  </data>
+  <data name="CategoryListUSNG" xml:space="preserve">
+    <value>USNG de</value>
+  </data>
+  <data name="CategoryListUTM" xml:space="preserve">
+    <value>UTM de</value>
+  </data>
+  <data name="CoordDDExcept" xml:space="preserve">
+    <value>CoordinateDD.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CoordDDMExcept" xml:space="preserve">
+    <value>CoordinateDDM.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CoordDMSExcept" xml:space="preserve">
+    <value>CoordinateDMS.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CoordFBaseExcept" xml:space="preserve">
+    <value>Must override CoordinateFormatterBase.Format! de</value>
+  </data>
+  <data name="CoordGARSExcept" xml:space="preserve">
+    <value>CoordinateGARS.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CoordMGRSExcept" xml:space="preserve">
+    <value>CoordinateMGRS.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CoordsOutOfBoundsAddlMsg" xml:space="preserve">
+    <value>Please add a basemap or layer to the map. de</value>
+  </data>
+  <data name="CoordsoutOfBoundsCaption" xml:space="preserve">
+    <value>Coordinates out of Bounds de</value>
+  </data>
+  <data name="CoordsOutOfBoundsMsg" xml:space="preserve">
+    <value>The coordinates or measures are out of bounds. de</value>
   </data>
   <data name="CoordSysDialogTitle" xml:space="preserve">
-    <value>Pick a Coordinate System</value>
+    <value>Pick a Coordinate System de</value>
+  </data>
+  <data name="CoordSysPickerHeader" xml:space="preserve">
+    <value>Current coordinate system: de</value>
   </data>
   <data name="CoordSysPickerName" xml:space="preserve">
-    <value>Name:</value>
+    <value>Name: de</value>
   </data>
   <data name="CoordSysPickerWKID" xml:space="preserve">
-    <value>WKID:</value>
+    <value>WKID: de</value>
   </data>
   <data name="CoordSysPickerWKT" xml:space="preserve">
-    <value>WKT:</value>
+    <value>WKT: de</value>
+  </data>
+  <data name="CoordUTMExcept" xml:space="preserve">
+    <value>CoordinateUTM.ToString(): Invalid formatting string. de</value>
+  </data>
+  <data name="CSVExportSuccessfulCaption" xml:space="preserve">
+    <value>Export Successful de</value>
+  </data>
+  <data name="CSVExportSuccessfulMessage" xml:space="preserve">
+    <value>Successfully exported to  de</value>
+  </data>
+  <data name="CSVLocationMessage" xml:space="preserve">
+    <value>Choose location to create CSV file de</value>
+  </data>
+  <data name="CustomString" xml:space="preserve">
+    <value>Custom de</value>
   </data>
   <data name="DebugWriteError" xml:space="preserve">
-    <value>Error </value>
+    <value>Error  de</value>
   </data>
   <data name="DebugWriteFailed" xml:space="preserve">
-    <value>Failed to convert coordinate: </value>
+    <value>Failed to convert coordinate:  de</value>
   </data>
   <data name="DebugWriteHeader" xml:space="preserve">
-    <value>header :</value>
+    <value>header : de</value>
   </data>
   <data name="DialogData" xml:space="preserve">
-    <value>No data available</value>
+    <value>No data available de</value>
   </data>
   <data name="DialogError" xml:space="preserve">
-    <value>Something went wrong.</value>
+    <value>Something went wrong. de</value>
   </data>
   <data name="DialogPointBoundMsg" xml:space="preserve">
-    <value>Point is out of bounds</value>
+    <value>Point is out of bounds de</value>
   </data>
   <data name="DialogPointBoundTitle" xml:space="preserve">
-    <value>Point is out of bounds</value>
+    <value>Point is out of bounds de</value>
   </data>
   <data name="EditOuputConfigure" xml:space="preserve">
-    <value>Configure Spatial Reference</value>
+    <value>Configure Spatial Reference de</value>
   </data>
   <data name="EditOutputHeader" xml:space="preserve">
-    <value>Spatial Reference</value>
+    <value>Spatial Reference de</value>
   </data>
   <data name="EditPropColor" xml:space="preserve">
-    <value>Choose Color</value>
+    <value>Choose Color de</value>
   </data>
   <data name="EditPropCSym" xml:space="preserve">
-    <value>Choose Symbol</value>
+    <value>Choose Symbol de</value>
   </data>
   <data name="EditPropDisplay" xml:space="preserve">
-    <value>Display Ambiguous Coordinates Dialog</value>
+    <value>Display Ambiguous Coordinates Dialog de</value>
   </data>
   <data name="EditPropLoad" xml:space="preserve">
-    <value>Loading...</value>
+    <value>Loading... de</value>
   </data>
   <data name="EditPropSym" xml:space="preserve">
-    <value>Symbology</value>
+    <value>Symbology de</value>
+  </data>
+  <data name="EnumCTDD" xml:space="preserve">
+    <value>DD de</value>
+  </data>
+  <data name="EnumCTDDM" xml:space="preserve">
+    <value>DDM de</value>
+  </data>
+  <data name="EnumCTDMS" xml:space="preserve">
+    <value>DMS de</value>
+  </data>
+  <data name="EnumCTGARS" xml:space="preserve">
+    <value>GARS de</value>
+  </data>
+  <data name="EnumCTMGRS" xml:space="preserve">
+    <value>MGRS de</value>
+  </data>
+  <data name="EnumCTNone" xml:space="preserve">
+    <value>Default Map Unit de</value>
+  </data>
+  <data name="EnumCTUSNG" xml:space="preserve">
+    <value>USNG de</value>
+  </data>
+  <data name="EnumCTUTM" xml:space="preserve">
+    <value>UTM de</value>
+  </data>
+  <data name="EnumSITDF" xml:space="preserve">
+    <value>Dual Field de</value>
+  </data>
+  <data name="EnumSITSF" xml:space="preserve">
+    <value>Single Field de</value>
   </data>
   <data name="FailedImportCsv" xml:space="preserve">
-    <value>OnImportCSVFileCommand Error </value>
+    <value>OnImportCSVFileCommand Error  de</value>
   </data>
   <data name="FailedWriteLine" xml:space="preserve">
-    <value>Failed in OnImportCoordinates:</value>
+    <value>Failed in OnImportCoordinates: de</value>
+  </data>
+  <data name="FCLUtilsCFError" xml:space="preserve">
+    <value>Something went wrong de</value>
+  </data>
+  <data name="FCLUtilsIFEError" xml:space="preserve">
+    <value>ExcelToTable_conversion operation failed. de</value>
   </data>
   <data name="FileDialogFilterAll" xml:space="preserve">
-    <value>csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx</value>
+    <value>csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx de</value>
   </data>
   <data name="FileDialogFiltercsv" xml:space="preserve">
-    <value>csv files|*.csv</value>
+    <value>csv files|*.csv de</value>
   </data>
   <data name="FileDialogTitle" xml:space="preserve">
-    <value>Open File</value>
+    <value>Open File de</value>
   </data>
   <data name="FileExport" xml:space="preserve">
-    <value>File Exported to </value>
+    <value>File Exported to  de</value>
   </data>
-  <data name="OutputConfigure" xml:space="preserve">
-    <value>Configure</value>
+  <data name="FormattedRemove" xml:space="preserve">
+    <value>Remove {0}? de</value>
   </data>
-  <data name="OutputDelete" xml:space="preserve">
-    <value>Delete</value>
+  <data name="HeaderAdvanced" xml:space="preserve">
+    <value>Advanced de</value>
   </data>
-  <data name="ProgressDlg" xml:space="preserve">
-    <value>Processing.. Please wait</value>
+  <data name="HeaderCollect" xml:space="preserve">
+    <value>Collect de</value>
   </data>
-  <data name="SaveAsCSV" xml:space="preserve">
-    <value>CSV</value>
+  <data name="HeaderConvert" xml:space="preserve">
+    <value>Convert de</value>
   </data>
-  <data name="SaveAsFCL" xml:space="preserve">
-    <value>Feature class</value>
+  <data name="HeaderCoordinate" xml:space="preserve">
+    <value>Coordinate de</value>
   </data>
-  <data name="SaveAsKMZ" xml:space="preserve">
-    <value>KMZ</value>
+  <data name="HeaderFlash" xml:space="preserve">
+    <value>Flash de</value>
   </data>
-  <data name="SaveAsShape" xml:space="preserve">
-    <value>Shapefile</value>
+  <data name="HeaderInput" xml:space="preserve">
+    <value>Input de</value>
   </data>
-  <data name="SaveAsTitle" xml:space="preserve">
-    <value>Select Output</value>
+  <data name="HeaderList" xml:space="preserve">
+    <value>List de</value>
   </data>
-  <data name="SaveDialogTitle" xml:space="preserve">
-    <value>Save File</value>
+  <data name="HeaderName" xml:space="preserve">
+    <value>Name de</value>
   </data>
-  <data name="ToolTipCoordPoint" xml:space="preserve">
-    <value>Select Point</value>
+  <data name="HeaderOutput" xml:space="preserve">
+    <value>Output de</value>
+  </data>
+  <data name="InformationNotAvailableMsg" xml:space="preserve">
+    <value>No Field information associated with this point de</value>
+  </data>
+  <data name="InvalidCoordCap" xml:space="preserve">
+    <value>Invalid Coordinate de</value>
+  </data>
+  <data name="InvalidCoordMsg" xml:space="preserve">
+    <value>Please enter a valid coordinate de</value>
+  </data>
+  <data name="KMLLocationMessage" xml:space="preserve">
+    <value>Choose location to create KMZ file de</value>
+  </data>
+  <data name="LabelCategory" xml:space="preserve">
+    <value>Category de</value>
+  </data>
+  <data name="LabelClearAll" xml:space="preserve">
+    <value>Clear All de</value>
+  </data>
+  <data name="LabelClearAllCap" xml:space="preserve">
+    <value>Clear All Coordinates de</value>
+  </data>
+  <data name="LabelClearGraphics" xml:space="preserve">
+    <value>Clear Graphics de</value>
+  </data>
+  <data name="LabelConfirmRemoval" xml:space="preserve">
+    <value>Confirm Removal? de</value>
+  </data>
+  <data name="LabelDisplayCoordinate" xml:space="preserve">
+    <value>Display Coordinate de</value>
+  </data>
+  <data name="LabelExport" xml:space="preserve">
+    <value>Export de</value>
+  </data>
+  <data name="LabelExportCap" xml:space="preserve">
+    <value>Export Coordinates de</value>
+  </data>
+  <data name="LabelField1" xml:space="preserve">
+    <value>X Field (Longitude) de</value>
+  </data>
+  <data name="LabelField2" xml:space="preserve">
+    <value>Y Field (Latitude) de</value>
+  </data>
+  <data name="LabelFieldCombined" xml:space="preserve">
+    <value>X/Y de</value>
+  </data>
+  <data name="LabelFormats" xml:space="preserve">
+    <value>Formats de</value>
+  </data>
+  <data name="LabelImport" xml:space="preserve">
+    <value>Import de</value>
+  </data>
+  <data name="LabelImportCap" xml:space="preserve">
+    <value>Import Coordinates de</value>
+  </data>
+  <data name="LabelInputType" xml:space="preserve">
+    <value>Input Type de</value>
+  </data>
+  <data name="LabelSample" xml:space="preserve">
+    <value>Sample de</value>
+  </data>
+  <data name="LabelSaveAs" xml:space="preserve">
+    <value>Save As de</value>
+  </data>
+  <data name="LabelShowHemisphere" xml:space="preserve">
+    <value>Show N/S/E/W for hemisphere de</value>
+  </data>
+  <data name="LabelShowHyphen" xml:space="preserve">
+    <value>Show - for S/W hemisphere de</value>
+  </data>
+  <data name="LabelShowPlus" xml:space="preserve">
+    <value>Show + for N/E hemisphere de</value>
+  </data>
+  <data name="LoadMapMsg" xml:space="preserve">
+    <value>Please wait while map loads... de</value>
+  </data>
+  <data name="MenuLabelCopy" xml:space="preserve">
+    <value>Copy de</value>
+  </data>
+  <data name="MenuLabelCopyAll" xml:space="preserve">
+    <value>Copy All de</value>
+  </data>
+  <data name="MenuLabelDelete" xml:space="preserve">
+    <value>Delete de</value>
+  </data>
+  <data name="MenuLabelDeleteAll" xml:space="preserve">
+    <value>Delete All de</value>
   </data>
   <data name="MsgErrorName" xml:space="preserve">
-    <value>Name is required.</value>
+    <value>Name is required. de</value>
   </data>
   <data name="Msgis" xml:space="preserve">
-    <value>is already used.</value>
+    <value>is already used. de</value>
   </data>
   <data name="MsgLess" xml:space="preserve">
-    <value>The name must be 10 characters or less.</value>
+    <value>The name must be 10 characters or less. de</value>
+  </data>
+  <data name="MsgNoDataFound" xml:space="preserve">
+    <value>No data found. de</value>
   </data>
   <data name="MsgNumber" xml:space="preserve">
-    <value>The name should not start with a number.</value>
+    <value>The name should not start with a number. de</value>
   </data>
   <data name="MsgOthers" xml:space="preserve">
-    <value>The name should only contain alphabet and numbers.</value>
+    <value>The name should only contain alphabet and numbers. de</value>
+  </data>
+  <data name="MsgOverwrite" xml:space="preserve">
+    <value>You've selected a feature class that already exists. Do you wish to replace it? de</value>
   </data>
   <data name="MsgThe" xml:space="preserve">
-    <value>The name</value>
+    <value>The name de</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open de</value>
+  </data>
+  <data name="OutputConfigure" xml:space="preserve">
+    <value>Configure de</value>
+  </data>
+  <data name="OutputDelete" xml:space="preserve">
+    <value>Delete de</value>
+  </data>
+  <data name="Popup" xml:space="preserve">
+    <value>Pop-up de</value>
+  </data>
+  <data name="ProgressDlg" xml:space="preserve">
+    <value>Processing.. Please wait de</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset de</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save de</value>
+  </data>
+  <data name="SaveAsCSV" xml:space="preserve">
+    <value>CSV de</value>
+  </data>
+  <data name="SaveAsFCL" xml:space="preserve">
+    <value>Feature class de</value>
+  </data>
+  <data name="SaveAsKMZ" xml:space="preserve">
+    <value>KMZ de</value>
+  </data>
+  <data name="SaveAsShape" xml:space="preserve">
+    <value>Shapefile de</value>
+  </data>
+  <data name="SaveAsTitle" xml:space="preserve">
+    <value>Select Output de</value>
+  </data>
+  <data name="SaveDialogTitle" xml:space="preserve">
+    <value>Save File de</value>
+  </data>
+  <data name="ShowNSEW" xml:space="preserve">
+    <value>Show N/S/E/W de</value>
+  </data>
+  <data name="ShowPlusHyphen" xml:space="preserve">
+    <value>Show +/- de</value>
+  </data>
+  <data name="SpecialCharactersValidationMsg" xml:space="preserve">
+    <value>Characters '+','-','N','W','E' and 'S' are not allowed to define custom formatting. de</value>
+  </data>
+  <data name="StringEasting" xml:space="preserve">
+    <value>Easting de</value>
+  </data>
+  <data name="StringGridSq" xml:space="preserve">
+    <value>Grid Sq de</value>
+  </data>
+  <data name="StringGZD" xml:space="preserve">
+    <value>GZD de</value>
+  </data>
+  <data name="StringKey" xml:space="preserve">
+    <value>Key de</value>
+  </data>
+  <data name="StringLat" xml:space="preserve">
+    <value>Lat de</value>
+  </data>
+  <data name="StringLon" xml:space="preserve">
+    <value>Lon de</value>
+  </data>
+  <data name="StringNoFormatFound" xml:space="preserve">
+    <value>No Format Found de</value>
+  </data>
+  <data name="StringNorthing" xml:space="preserve">
+    <value>Northing de</value>
+  </data>
+  <data name="StringQuadrant" xml:space="preserve">
+    <value>Quadrant de</value>
+  </data>
+  <data name="StringZone" xml:space="preserve">
+    <value>Zone de</value>
+  </data>
+  <data name="TitleAddNewOutputCoordinate" xml:space="preserve">
+    <value>Add New Output Coordinate de</value>
+  </data>
+  <data name="TitleEditOutputCoordinate" xml:space="preserve">
+    <value>Edit Output Coordinate de</value>
+  </data>
+  <data name="TitleEditProperties" xml:space="preserve">
+    <value>Edit Properties de</value>
+  </data>
+  <data name="TitleSelectCoordinateFields" xml:space="preserve">
+    <value>Select Fields de</value>
+  </data>
+  <data name="TitleSelectOutput" xml:space="preserve">
+    <value>Select output de</value>
+  </data>
+  <data name="TooltipAdd" xml:space="preserve">
+    <value>Add de</value>
+  </data>
+  <data name="ToolTipCoordPoint" xml:space="preserve">
+    <value>Select Point de</value>
+  </data>
+  <data name="TooltipCopy" xml:space="preserve">
+    <value>Copy de</value>
+  </data>
+  <data name="TooltipCopyAll" xml:space="preserve">
+    <value>Copy All de</value>
+  </data>
+  <data name="TooltipEditProperties" xml:space="preserve">
+    <value>Edit Properties de</value>
+  </data>
+  <data name="TooltipMapPointTool" xml:space="preserve">
+    <value>Map Point Tool de</value>
+  </data>
+  <data name="UnrecognizedDelimiter" xml:space="preserve">
+    <value>ImportCSV.GetSeparator(): Unrecognized field delimter. de</value>
+  </data>
+  <data name="UseTwoFields" xml:space="preserve">
+    <value>Use two fields de</value>
   </data>
 </root>

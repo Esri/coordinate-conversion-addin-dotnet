@@ -133,7 +133,7 @@ namespace ProAppCoordConversionModule.Models
                     sb.AppendFormat(fi, "{0:#}", Key);
                     break;
                 default:
-                    throw new Exception("CoordinateGARS.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordGARSExcept);
             }
 
             return sb.ToString();

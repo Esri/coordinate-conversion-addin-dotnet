@@ -71,7 +71,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnImportCoordinates(object obj)
         {
-            var progressDialog = new ProgressDialog("Processing.. Please wait");
+            var progressDialog = new ProgressDialog(Properties.Resources.ProgressDlg);
             progressDialog.Show();
 
             try
@@ -116,7 +116,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Failed in OnImportCoordinates: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.FailedWriteLine + ex.Message);
             }
 
             progressDialog.Hide();

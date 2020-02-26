@@ -103,6 +103,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <AddInContent Include="Config.de.daml">
+      <SubType>Designer</SubType>
+    </AddInContent>
     <AddInContent Include="Config.daml">
       <SubType>Designer</SubType>
     </AddInContent>
@@ -143,6 +146,11 @@
     <Compile Include="Common\ValueConverters\BoolConverter.cs" />
     <Compile Include="Common\ValueConverters\EnumToFriendlyNameConverter.cs" />
     <Compile Include="Common\ValueConverters\MaxHeightConverter.cs" />
+    <Compile Include="Properties\Resources.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.de.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
@@ -308,6 +316,10 @@
     <EmbeddedResource Include="Properties\FileResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.de.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

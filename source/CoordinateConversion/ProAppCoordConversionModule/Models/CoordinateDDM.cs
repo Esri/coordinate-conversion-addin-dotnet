@@ -211,7 +211,7 @@ namespace ProAppCoordConversionModule.Models
                     sb.AppendFormat(fi, " {0}° {1:0.0#####}\' {2}", Math.Abs(this.LonDegrees), this.LonMinutes, this.LonDegrees < 0 ? "W" : "E");
                     break;
                 default:
-                    throw new Exception("CoordinateDDM.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordDDMExcept);
             }
 
             return sb.ToString();

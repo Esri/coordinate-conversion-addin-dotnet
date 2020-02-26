@@ -61,6 +61,24 @@ namespace ProAppCoordConversionModule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field Name.
+        /// </summary>
+        public static string AdditionalFieldName {
+            get {
+                return ResourceManager.GetString("AdditionalFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field Value.
+        /// </summary>
+        public static string AdditionalFieldValue {
+            get {
+                return ResourceManager.GetString("AdditionalFieldValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing Layer.
         /// </summary>
         public static string AddLayerCap {
@@ -75,6 +93,60 @@ namespace ProAppCoordConversionModule.Properties {
         public static string AddLayerMsg {
             get {
                 return ResourceManager.GetString("AddLayerMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lat / Lon.
+        /// </summary>
+        public static string AmbiguousLatLon {
+            get {
+                return ResourceManager.GetString("AmbiguousLatLon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lon / Lat.
+        /// </summary>
+        public static string AmbiguousLonLat {
+            get {
+                return ResourceManager.GetString("AmbiguousLonLat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t show me this message again.
+        /// </summary>
+        public static string AmbiguousMsg {
+            get {
+                return ResourceManager.GetString("AmbiguousMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ambiguous Coordinates.
+        /// </summary>
+        public static string AmbiguousTitle {
+            get {
+                return ResourceManager.GetString("AmbiguousTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ambiguous coordinates have been entered.  Please choose from the following:.
+        /// </summary>
+        public static string AmbiguoustxtCoords {
+            get {
+                return ResourceManager.GetString("AmbiguoustxtCoords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string ButtonApply {
+            get {
+                return ResourceManager.GetString("ButtonApply", resourceCulture);
             }
         }
         
@@ -169,6 +241,60 @@ namespace ProAppCoordConversionModule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CoordinateDD.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordDDExcept {
+            get {
+                return ResourceManager.GetString("CoordDDExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CoordinateDDM.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordDDMExcept {
+            get {
+                return ResourceManager.GetString("CoordDDMExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CoordinateDMS.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordDMSExcept {
+            get {
+                return ResourceManager.GetString("CoordDMSExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must override CoordinateFormatterBase.Format!.
+        /// </summary>
+        public static string CoordFBaseExcept {
+            get {
+                return ResourceManager.GetString("CoordFBaseExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CoordinateGARS.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordGARSExcept {
+            get {
+                return ResourceManager.GetString("CoordGARSExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CoordinateMGRS.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordMGRSExcept {
+            get {
+                return ResourceManager.GetString("CoordMGRSExcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please add a basemap or layer to the map..
         /// </summary>
         public static string CoordsOutOfBoundsAddlMsg {
@@ -192,6 +318,60 @@ namespace ProAppCoordConversionModule.Properties {
         public static string CoordsOutOfBoundsMsg {
             get {
                 return ResourceManager.GetString("CoordsOutOfBoundsMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick a Coordinate System.
+        /// </summary>
+        public static string CoordSysDialogTitle {
+            get {
+                return ResourceManager.GetString("CoordSysDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current coordinate system:.
+        /// </summary>
+        public static string CoordSysPickerHeader {
+            get {
+                return ResourceManager.GetString("CoordSysPickerHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name:.
+        /// </summary>
+        public static string CoordSysPickerName {
+            get {
+                return ResourceManager.GetString("CoordSysPickerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WKID:.
+        /// </summary>
+        public static string CoordSysPickerWKID {
+            get {
+                return ResourceManager.GetString("CoordSysPickerWKID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WKT:.
+        /// </summary>
+        public static string CoordSysPickerWKT {
+            get {
+                return ResourceManager.GetString("CoordSysPickerWKT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CoordinateUTM.ToString(): Invalid formatting string..
+        /// </summary>
+        public static string CoordUTMExcept {
+            get {
+                return ResourceManager.GetString("CoordUTMExcept", resourceCulture);
             }
         }
         
@@ -228,6 +408,132 @@ namespace ProAppCoordConversionModule.Properties {
         public static string CustomString {
             get {
                 return ResourceManager.GetString("CustomString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error .
+        /// </summary>
+        public static string DebugWriteError {
+            get {
+                return ResourceManager.GetString("DebugWriteError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert coordinate: .
+        /// </summary>
+        public static string DebugWriteFailed {
+            get {
+                return ResourceManager.GetString("DebugWriteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to header :.
+        /// </summary>
+        public static string DebugWriteHeader {
+            get {
+                return ResourceManager.GetString("DebugWriteHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data available.
+        /// </summary>
+        public static string DialogData {
+            get {
+                return ResourceManager.GetString("DialogData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong..
+        /// </summary>
+        public static string DialogError {
+            get {
+                return ResourceManager.GetString("DialogError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point is out of bounds.
+        /// </summary>
+        public static string DialogPointBoundMsg {
+            get {
+                return ResourceManager.GetString("DialogPointBoundMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point is out of bounds.
+        /// </summary>
+        public static string DialogPointBoundTitle {
+            get {
+                return ResourceManager.GetString("DialogPointBoundTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure Spatial Reference.
+        /// </summary>
+        public static string EditOuputConfigure {
+            get {
+                return ResourceManager.GetString("EditOuputConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatial Reference.
+        /// </summary>
+        public static string EditOutputHeader {
+            get {
+                return ResourceManager.GetString("EditOutputHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Color.
+        /// </summary>
+        public static string EditPropColor {
+            get {
+                return ResourceManager.GetString("EditPropColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Symbol.
+        /// </summary>
+        public static string EditPropCSym {
+            get {
+                return ResourceManager.GetString("EditPropCSym", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Ambiguous Coordinates Dialog.
+        /// </summary>
+        public static string EditPropDisplay {
+            get {
+                return ResourceManager.GetString("EditPropDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string EditPropLoad {
+            get {
+                return ResourceManager.GetString("EditPropLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbology.
+        /// </summary>
+        public static string EditPropSym {
+            get {
+                return ResourceManager.GetString("EditPropSym", resourceCulture);
             }
         }
         
@@ -318,6 +624,78 @@ namespace ProAppCoordConversionModule.Properties {
         public static string EnumSITSF {
             get {
                 return ResourceManager.GetString("EnumSITSF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OnImportCSVFileCommand Error .
+        /// </summary>
+        public static string FailedImportCsv {
+            get {
+                return ResourceManager.GetString("FailedImportCsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed in OnImportCoordinates:.
+        /// </summary>
+        public static string FailedWriteLine {
+            get {
+                return ResourceManager.GetString("FailedWriteLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong.
+        /// </summary>
+        public static string FCLUtilsCFError {
+            get {
+                return ResourceManager.GetString("FCLUtilsCFError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExcelToTable_conversion operation failed..
+        /// </summary>
+        public static string FCLUtilsIFEError {
+            get {
+                return ResourceManager.GetString("FCLUtilsIFEError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx.
+        /// </summary>
+        public static string FileDialogFilterAll {
+            get {
+                return ResourceManager.GetString("FileDialogFilterAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to csv files|*.csv.
+        /// </summary>
+        public static string FileDialogFiltercsv {
+            get {
+                return ResourceManager.GetString("FileDialogFiltercsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open File.
+        /// </summary>
+        public static string FileDialogTitle {
+            get {
+                return ResourceManager.GetString("FileDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Exported to .
+        /// </summary>
+        public static string FileExport {
+            get {
+                return ResourceManager.GetString("FileExport", resourceCulture);
             }
         }
         
@@ -673,11 +1051,56 @@ namespace ProAppCoordConversionModule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name is required..
+        /// </summary>
+        public static string MsgErrorName {
+            get {
+                return ResourceManager.GetString("MsgErrorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is already used..
+        /// </summary>
+        public static string Msgis {
+            get {
+                return ResourceManager.GetString("Msgis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name must be 10 characters or less..
+        /// </summary>
+        public static string MsgLess {
+            get {
+                return ResourceManager.GetString("MsgLess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No data found..
         /// </summary>
         public static string MsgNoDataFound {
             get {
                 return ResourceManager.GetString("MsgNoDataFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name should not start with a number..
+        /// </summary>
+        public static string MsgNumber {
+            get {
+                return ResourceManager.GetString("MsgNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name should only contain alphabet and numbers..
+        /// </summary>
+        public static string MsgOthers {
+            get {
+                return ResourceManager.GetString("MsgOthers", resourceCulture);
             }
         }
         
@@ -691,6 +1114,15 @@ namespace ProAppCoordConversionModule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The name.
+        /// </summary>
+        public static string MsgThe {
+            get {
+                return ResourceManager.GetString("MsgThe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open.
         /// </summary>
         public static string Open {
@@ -700,11 +1132,38 @@ namespace ProAppCoordConversionModule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configure.
+        /// </summary>
+        public static string OutputConfigure {
+            get {
+                return ResourceManager.GetString("OutputConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string OutputDelete {
+            get {
+                return ResourceManager.GetString("OutputDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pop-up.
         /// </summary>
         public static string Popup {
             get {
                 return ResourceManager.GetString("Popup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing.. Please wait.
+        /// </summary>
+        public static string ProgressDlg {
+            get {
+                return ResourceManager.GetString("ProgressDlg", resourceCulture);
             }
         }
         
@@ -723,6 +1182,60 @@ namespace ProAppCoordConversionModule.Properties {
         public static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CSV.
+        /// </summary>
+        public static string SaveAsCSV {
+            get {
+                return ResourceManager.GetString("SaveAsCSV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature class.
+        /// </summary>
+        public static string SaveAsFCL {
+            get {
+                return ResourceManager.GetString("SaveAsFCL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KMZ.
+        /// </summary>
+        public static string SaveAsKMZ {
+            get {
+                return ResourceManager.GetString("SaveAsKMZ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shapefile.
+        /// </summary>
+        public static string SaveAsShape {
+            get {
+                return ResourceManager.GetString("SaveAsShape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Output.
+        /// </summary>
+        public static string SaveAsTitle {
+            get {
+                return ResourceManager.GetString("SaveAsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save File.
+        /// </summary>
+        public static string SaveDialogTitle {
+            get {
+                return ResourceManager.GetString("SaveDialogTitle", resourceCulture);
             }
         }
         
@@ -894,6 +1407,15 @@ namespace ProAppCoordConversionModule.Properties {
         public static string TooltipAdd {
             get {
                 return ResourceManager.GetString("TooltipAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Point.
+        /// </summary>
+        public static string ToolTipCoordPoint {
+            get {
+                return ResourceManager.GetString("ToolTipCoordPoint", resourceCulture);
             }
         }
         

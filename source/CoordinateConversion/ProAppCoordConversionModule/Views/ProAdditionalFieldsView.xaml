@@ -131,8 +131,8 @@
             </DataGrid.RowStyle>
             <!--Visibility="{Binding SchedulerData.DataGridVisible,Mode=TwoWay,Converter={StaticResource visibilityConverter}}"-->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold"/>
-                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}"/>
+                <DataGridTextColumn Header="{x:Static prop:Resources.AdditionalFieldName}" Binding="{Binding Path=FieldName}" FontWeight="Bold"/>
+                <DataGridTextColumn Header="{x:Static prop:Resources.AdditionalFieldValue}" Binding="{Binding Path=FieldValue}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

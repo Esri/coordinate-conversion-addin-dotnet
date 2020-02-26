@@ -146,7 +146,7 @@ namespace ProAppCoordConversionModule.Models
                     //sb.Append(this.Northing.ToString().PadRight(5, '0'));
                     break;
                 default:
-                    throw new Exception("CoordinateMGRS.ToString(): Invalid formatting string.");
+                    throw new Exception(Properties.Resources.CoordMGRSExcept);
             }
 
             return sb.ToString();
