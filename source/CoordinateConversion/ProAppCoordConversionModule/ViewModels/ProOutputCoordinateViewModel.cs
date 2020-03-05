@@ -208,7 +208,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList = new System.Collections.ObjectModel.ObservableCollection<OutputCoordinateModel>();
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
-            RaisePropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
+            NotifyPropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
         }
 
         public override void OnDeleteCommand(object obj)

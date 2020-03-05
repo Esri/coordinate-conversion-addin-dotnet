@@ -6,11 +6,15 @@
     <Image>Images\AddinDesktop32.png</Image>
     <Author>Esri</Author>
     <Company>Esri</Company>
-    <Date>2/26/2020</Date>
+    <Date>3/4/2020</Date>
     <Subject>Framework</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
+  <dependencies>
+    <dependency name="ADCore.daml" />
+    <dependency name="ADMapping.daml" />
+  </dependencies>
   <categories>
     <updateCategory refID="esri_embeddableControls">
       <insertComponent id="ProAppCoordConversionModule_EmbeddableControl" className="UI.FlashEmbeddedControlViewModel">

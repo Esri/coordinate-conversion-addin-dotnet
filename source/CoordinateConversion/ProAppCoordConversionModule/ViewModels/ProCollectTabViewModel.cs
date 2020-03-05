@@ -154,7 +154,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // we are using this to know when the selection changes
                 // setting null will allow this setter to be called in multiple selection mode                
                 _ListBoxSelectedItem = null;
-                RaisePropertyChanged(() => ListBoxSelectedItem);
+                NotifyPropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
                 UpdateHighlightedGraphics(false);
@@ -178,7 +178,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // this works with the ListBoxSelectedItem 
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
-                RaisePropertyChanged(() => ListBoxSelectedIndex);
+                NotifyPropertyChanged(() => ListBoxSelectedIndex);
 
             }
         }
@@ -419,7 +419,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnSetListBoxItemAddInPoint(object obj)
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
-            RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
+            NotifyPropertyChanged(() => HasListBoxRightClickSelectedItem);
         }
 
         public override void OnPasteCommand(object obj)
@@ -518,7 +518,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 closestPoint.IsSelected = true;
                 ListBoxSelectedItem = closestPoint;
             }
-            RaisePropertyChanged(() => ListBoxSelectedItem);
+            NotifyPropertyChanged(() => ListBoxSelectedItem);
         }
 
         #endregion overrides

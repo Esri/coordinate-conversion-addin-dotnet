@@ -14,6 +14,7 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using ArcGIS.Desktop.Framework.Contracts;
 using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using System;
@@ -23,7 +24,7 @@ using System.Linq;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class EditOutputCoordinateViewModel : NotificationObject
+    public class EditOutputCoordinateViewModel : ViewModelBase
     {
         public EditOutputCoordinateViewModel() 
         {
@@ -81,7 +82,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _format = value;
-                RaisePropertyChanged(() => Format);
+                NotifyPropertyChanged(() => Format);
                 // KG - Commented out due to issues 380 and 381
                 //UpdateSample();
                 if (DefaultFormats != null)
@@ -137,7 +138,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 FormatSelection = FormatList.FirstOrDefault();
             }
 
-            RaisePropertyChanged(() => FormatList);
+            NotifyPropertyChanged(() => FormatList);
 
             OutputCoordItem.CType = GetCoordinateType();
             OutputCoordItem.Name = OutputCoordItem.CType.ToString();
@@ -155,7 +156,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 { 
                     _formatSelection = value;
                     OnFormatSelectionChanged();
-                    RaisePropertyChanged(() => FormatSelection);
+                    NotifyPropertyChanged(() => FormatSelection);
                 }
             }
         }
@@ -171,7 +172,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _outputCoordItem = value;
                 OnOutputCoordItemChanged();
-                RaisePropertyChanged(() => OutputCoordItem);
+                NotifyPropertyChanged(() => OutputCoordItem);
             }
         }
 
@@ -211,7 +212,7 @@ namespace ProAppCoordConversionModule.ViewModels
             else
             {
                 FormatExpanded = true;
-                RaisePropertyChanged(() => FormatExpanded);
+                NotifyPropertyChanged(() => FormatExpanded);
             }
         }
 
@@ -305,7 +306,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     break;
             }
 
-            RaisePropertyChanged(() => Sample);
+            NotifyPropertyChanged(() => Sample);
         }
 
         private void OnHandleBCCValues(object obj)
@@ -384,7 +385,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if(item == coordinateType.ToString())
                 {
                     CategorySelection = item;
-                    RaisePropertyChanged(() => CategorySelection);
+                    NotifyPropertyChanged(() => CategorySelection);
                 }
             }
         }
@@ -407,7 +408,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 OutputCoordItem.SRFactoryCode = Convert.ToInt32(temp[0]);
                 OutputCoordItem.SRName = temp[1];
-                RaisePropertyChanged(() => OutputCoordItem);
+                NotifyPropertyChanged(() => OutputCoordItem);
             }
         }
     }

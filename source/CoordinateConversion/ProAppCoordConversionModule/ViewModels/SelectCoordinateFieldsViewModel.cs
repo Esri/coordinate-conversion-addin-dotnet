@@ -16,10 +16,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ProAppCoordConversionModule.Helpers;
 using System.Windows.Controls;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class SelectCoordinateFieldsViewModel : NotificationObject
+    public class SelectCoordinateFieldsViewModel : ViewModelBase
     {
         public SelectCoordinateFieldsViewModel()
         {
@@ -39,8 +40,8 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 useTwoFields = value;
                 LabelField = useTwoFields ? Properties.Resources.LabelField1 : Properties.Resources.LabelFieldCombined;
-                RaisePropertyChanged(() => UseTwoFields);
-                RaisePropertyChanged(() => IsDialogComplete);
+                NotifyPropertyChanged(() => UseTwoFields);
+                NotifyPropertyChanged(() => IsDialogComplete);
             }
         }
 
@@ -51,8 +52,8 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 labelField = value;
-                RaisePropertyChanged(() => labelField);
-                RaisePropertyChanged(() => IsDialogComplete);
+                NotifyPropertyChanged(() => labelField);
+                NotifyPropertyChanged(() => IsDialogComplete);
             }
         }
 
@@ -63,8 +64,8 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 selectedField1 = value;
-                RaisePropertyChanged(() => SelectedField1);
-                RaisePropertyChanged(() => IsDialogComplete);
+                NotifyPropertyChanged(() => SelectedField1);
+                NotifyPropertyChanged(() => IsDialogComplete);
             }
         }
         private string selectedField2 = string.Empty;
@@ -74,8 +75,8 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 selectedField2 = value;
-                RaisePropertyChanged(() => SelectedField2);
-                RaisePropertyChanged(() => IsDialogComplete);
+                NotifyPropertyChanged(() => SelectedField2);
+                NotifyPropertyChanged(() => IsDialogComplete);
             }
         }
         
@@ -102,7 +103,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 dialogResult = value;
-                RaisePropertyChanged(() => DialogResult);
+                NotifyPropertyChanged(() => DialogResult);
             }
         }
 

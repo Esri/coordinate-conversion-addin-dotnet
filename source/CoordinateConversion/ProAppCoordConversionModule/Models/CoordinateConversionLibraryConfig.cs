@@ -14,6 +14,7 @@
   *   limitations under the License. 
   ******************************************************************************/
 
+using ArcGIS.Desktop.Framework.Contracts;
 using ProAppCoordConversionModule.Common.Enums;
 using ProAppCoordConversionModule.Helpers;
 using System;
@@ -25,7 +26,7 @@ using System.Xml.Serialization;
 
 namespace ProAppCoordConversionModule.Models
 {
-    public class CoordinateConversionLibraryConfig : NotificationObject
+    public class CoordinateConversionLibraryConfig : ViewModelBase
     {
         public CoordinateConversionLibraryConfig()
         {
@@ -44,7 +45,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 displayCoordinateType = value;
-                RaisePropertyChanged(() => DisplayCoordinateType);
+                NotifyPropertyChanged(() => DisplayCoordinateType);
             }
         }
 
@@ -55,7 +56,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 isCustomFormat = value;
-                RaisePropertyChanged(() => IsCustomFormat);
+                NotifyPropertyChanged(() => IsCustomFormat);
             }
         }
 
@@ -66,7 +67,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 displayAmbiguousCoordsDlg = value;
-                RaisePropertyChanged(() => DisplayAmbiguousCoordsDlg);
+                NotifyPropertyChanged(() => DisplayAmbiguousCoordsDlg);
             }
         }
 
@@ -80,7 +81,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 _isLatLong = value;
-                RaisePropertyChanged(() => isLatLong);
+                NotifyPropertyChanged(() => isLatLong);
             }
         }
 
@@ -91,7 +92,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 showPlusForDirection = value;
-                RaisePropertyChanged(() => ShowPlusForDirection);
+                NotifyPropertyChanged(() => ShowPlusForDirection);
             }
         }
 
@@ -102,7 +103,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 showHyphenForDirection = value;
-                RaisePropertyChanged(() => ShowHyphenForDirection);
+                NotifyPropertyChanged(() => ShowHyphenForDirection);
 
             }
         }
@@ -114,7 +115,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 showHemisphereIndicator = value;
-                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
+                NotifyPropertyChanged(() => IsHemisphereIndicatorChecked);
 
             }
         }
@@ -126,7 +127,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 isPlusHyphenChecked = value;
-                RaisePropertyChanged(() => IsPlusHyphenChecked);
+                NotifyPropertyChanged(() => IsPlusHyphenChecked);
             }
         }
 
@@ -206,12 +207,12 @@ namespace ProAppCoordConversionModule.Models
                 IsPlusHyphenChecked = temp.IsPlusHyphenChecked;
                 IsHemisphereIndicatorChecked = temp.IsHemisphereIndicatorChecked;
 
-                RaisePropertyChanged(() => IsPlusHyphenChecked);
-                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
-                RaisePropertyChanged(() => ShowPlusForDirection);
-                RaisePropertyChanged(() => ShowHyphenForDirection);
-                RaisePropertyChanged(() => OutputCoordinateList);
-                RaisePropertyChanged(() => DefaultFormatList);
+                NotifyPropertyChanged(() => IsPlusHyphenChecked);
+                NotifyPropertyChanged(() => IsHemisphereIndicatorChecked);
+                NotifyPropertyChanged(() => ShowPlusForDirection);
+                NotifyPropertyChanged(() => ShowHyphenForDirection);
+                NotifyPropertyChanged(() => OutputCoordinateList);
+                NotifyPropertyChanged(() => DefaultFormatList);
             }
             catch (Exception ex)
             {

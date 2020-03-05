@@ -96,12 +96,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isSelectionToolActive = false;
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
                 CoordinateMapTool.SelectFeatureEnable = false;
                 isToolActive = value;
                 ActivateMapTool(value);
 
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
             }
         }
 
@@ -115,12 +115,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isToolActive = false;
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
                 CoordinateMapTool.SelectFeatureEnable = true;
                 isSelectionToolActive = value;
                 ActivateMapTool(value);
 
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
             }
         }
 
@@ -644,12 +644,12 @@ namespace ProAppCoordConversionModule.ViewModels
             if (IsSelectionToolActive)
             {
                 IsSelectionToolActive = args.CurrentID == MapPointToolName;
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
             }
             else
             {
                 isToolActive = args.CurrentID == MapPointToolName;
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
             }
         }
 

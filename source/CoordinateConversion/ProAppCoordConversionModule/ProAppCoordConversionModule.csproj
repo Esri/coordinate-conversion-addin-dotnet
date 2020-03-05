@@ -123,7 +123,6 @@
     <Compile Include="Helpers\CoordinateConversionExtensions.cs" />
     <Compile Include="Helpers\ExportCSV.cs" />
     <Compile Include="Helpers\ImportCSV.cs" />
-    <Compile Include="Helpers\NotificationObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SerializableDictionary.cs" />
     <Compile Include="Helpers\Storyboard.cs" />

@@ -28,10 +28,11 @@ using Microsoft.Win32;
 using System.Data;
 using System.Windows;
 using ProAppCoordConversionModule.Views;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class OutputCoordinateViewModel : NotificationObject
+    public class OutputCoordinateViewModel : ViewModelBase
     {
         public OutputCoordinateViewModel()
         {
@@ -53,7 +54,7 @@ namespace ProAppCoordConversionModule.ViewModels
             ClearOutputCoordinates = new RelayCommand(OnClearOutputs);
 
             configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
-            .RegisterHandler(n => n.OutputCoordinateList, n => RaisePropertyChanged(() => OutputCoordinateList));
+            .RegisterHandler(n => n.OutputCoordinateList, n => NotifyPropertyChanged(() => OutputCoordinateList));
         }
 
         PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
@@ -341,7 +342,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList = new System.Collections.ObjectModel.ObservableCollection<OutputCoordinateModel>();
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
-            RaisePropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
+            NotifyPropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
         }
 
         public virtual void OnExportButtonCommand(object obj)

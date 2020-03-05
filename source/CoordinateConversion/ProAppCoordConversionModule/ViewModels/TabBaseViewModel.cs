@@ -24,11 +24,11 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Diagnostics;
-
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class TabBaseViewModel : NotificationObject
+    public class TabBaseViewModel : ViewModelBase
     {
         public TabBaseViewModel()
         {
@@ -87,7 +87,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _hasInputError = value;
-                RaisePropertyChanged(() => HasInputError);
+                NotifyPropertyChanged(() => HasInputError);
             }
         }
 
@@ -108,8 +108,8 @@ namespace ProAppCoordConversionModule.ViewModels
 
                 // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
                 //ProcessInput(_inputCoordinate);
-                
-                RaisePropertyChanged(() => InputCoordinate);
+
+                NotifyPropertyChanged(() => InputCoordinate);
             }
         }
 

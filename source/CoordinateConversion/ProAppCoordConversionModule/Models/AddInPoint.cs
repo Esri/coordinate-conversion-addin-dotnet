@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Contracts;
 using ProAppCoordConversionModule.Helpers;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace ProAppCoordConversionModule.Models
 {
-    public class AddInPoint : NotificationObject
+    public class AddInPoint : ViewModelBase
     {
         public AddInPoint()
         {
@@ -40,8 +41,8 @@ namespace ProAppCoordConversionModule.Models
             {
                 point = value;
 
-                RaisePropertyChanged(() => Point);
-                RaisePropertyChanged(() => Text);
+                NotifyPropertyChanged(() => Point);
+                NotifyPropertyChanged(() => Text);
             }
         }
         public string Text
@@ -70,7 +71,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 guid = value;
-                RaisePropertyChanged(() => GUID);
+                NotifyPropertyChanged(() => GUID);
             }
         }
         /// <summary>
@@ -86,7 +87,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 isSelected = value;
-                RaisePropertyChanged(() => IsSelected);
+                NotifyPropertyChanged(() => IsSelected);
             }
         }
 

@@ -1,11 +1,12 @@
-﻿using ProAppCoordConversionModule.Common.Enums;
+﻿using ArcGIS.Desktop.Framework.Contracts;
+using ProAppCoordConversionModule.Common.Enums;
 using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public partial class ProAmbiguousCoordsViewModel : NotificationObject
+    public partial class ProAmbiguousCoordsViewModel : ViewModelBase
     {
         public ProAmbiguousCoordsViewModel()
         {
@@ -29,7 +30,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 dialogResult = value;
-                RaisePropertyChanged(() => DialogResult);
+                NotifyPropertyChanged(() => DialogResult);
             }
         }
         private bool _checkedLatLon;
@@ -42,7 +43,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _checkedLatLon = value;
                 _checkedLonLat = !_checkedLatLon;
-                RaisePropertyChanged(() => CheckedLatLon);
+                NotifyPropertyChanged(() => CheckedLatLon);
             }
         }
 
@@ -53,7 +54,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _checkedLonLat = value;
                 _checkedLatLon = !_checkedLonLat;
-                RaisePropertyChanged(() => CheckedLonLat);
+                NotifyPropertyChanged(() => CheckedLonLat);
             }
         }
 

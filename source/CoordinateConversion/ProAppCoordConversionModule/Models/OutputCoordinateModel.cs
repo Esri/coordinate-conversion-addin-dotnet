@@ -19,10 +19,11 @@ using System.Collections.Generic;
 using System.Windows;
 using ProAppCoordConversionModule.Helpers;
 using System.Xml.Serialization;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.Models
 {
-    public class OutputCoordinateModel : NotificationObject
+    public class OutputCoordinateModel : ViewModelBase
     {
         public OutputCoordinateModel()
         {
@@ -45,7 +46,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 name = value;
-                RaisePropertyChanged(() => Name);
+                NotifyPropertyChanged(() => Name);
             }
         }
 
@@ -63,7 +64,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 _props = value;
-                RaisePropertyChanged(() => Props);
+                NotifyPropertyChanged(() => Props);
             }
         }
         #endregion
@@ -79,7 +80,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 outputCoordinate = value;
-                RaisePropertyChanged(() => OutputCoordinate);
+                NotifyPropertyChanged(() => OutputCoordinate);
             }
         }
 
@@ -100,7 +101,7 @@ namespace ProAppCoordConversionModule.Models
             set
             {
                 format = value;
-                RaisePropertyChanged(() => Format);
+                NotifyPropertyChanged(() => Format);
             }
         }
         #endregion Format
@@ -117,7 +118,7 @@ namespace ProAppCoordConversionModule.Models
                 if (srFactoryCode != value)
                 {
                     srFactoryCode = value;
-                    RaisePropertyChanged(() => SRFactoryCode);
+                    NotifyPropertyChanged(() => SRFactoryCode);
                 }
             }
         }
@@ -135,7 +136,7 @@ namespace ProAppCoordConversionModule.Models
                 if(srName != value)
                 {
                     srName = value;
-                    RaisePropertyChanged(() => SRName);
+                    NotifyPropertyChanged(() => SRName);
                 }
             }
         }
@@ -148,7 +149,7 @@ namespace ProAppCoordConversionModule.Models
             else
                 this.DVisibility = Visibility.Collapsed;
 
-            RaisePropertyChanged(() => DVisibility);
+            NotifyPropertyChanged(() => DVisibility);
         }
         #endregion
     }
