@@ -25,6 +25,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Diagnostics;
 using ArcGIS.Desktop.Framework.Contracts;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Catalog;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -169,10 +171,18 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (CheckMapLoaded())
                 {
                     CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = false;
-                    var fileDialog = new Microsoft.Win32.OpenFileDialog();
-                    fileDialog.CheckFileExists = true;
-                    fileDialog.CheckPathExists = true;
-                    fileDialog.Filter = Properties.Resources.FileDialogFilterAll;
+
+                    BrowseProjectFilter bf = new BrowseProjectFilter();
+                    bf.AddFilter(BrowseProjectFilter.GetFilter("esri_browseDialogFilters_textFiles_csv"));
+                    bf.AddFilter(BrowseProjectFilter.GetFilter("esri_browseDialogFilters_excel_files"));
+                    
+                    OpenItemDialog fileDialog = new OpenItemDialog
+                    {
+                        Title = Properties.Resources.FileDialogTitle,
+                        MultiSelect = false,
+                        BrowseFilter = bf,
+                    };
+                 
                     // attemp to import
                     var fieldVM = new SelectCoordinateFieldsViewModel();
                     var result = fileDialog.ShowDialog();
@@ -180,16 +190,18 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         var dlg = new ProSelectCoordinateFieldsView();
 
+                        Item selectedItem = fileDialog.Items.First();
+                        
                         var coordinates = new List<string>();
-                        var extension = Path.GetExtension(fileDialog.FileName);
+                        var extension = Path.GetExtension(selectedItem.Path);
                         switch (extension)
                         {
                             case ".csv":
-                                ImportFromCSV(fieldVM, dlg, coordinates, fileDialog.FileName);
+                                ImportFromCSV(fieldVM, dlg, coordinates, selectedItem.Path);
                                 break;
                             case ".xls":
                             case ".xlsx":
-                                ImportFromExcel(dlg, fileDialog, fieldVM);
+                                ImportFromExcel(dlg, selectedItem, fieldVM);
                                 break;
                             default:
                                 break;
@@ -273,12 +285,12 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        private void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        private void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Item diag, SelectCoordinateFieldsViewModel fieldVM)
         {
             ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
             FieldCollection = new List<object>();
-            var filename = diag.FileName;
+            var filename = diag.Path;
             string selectedCol1Key = "", selectedCol2Key = "";
             var selectedColumn = fieldVM.SelectedFields.ToArray();
             var lstDictonary = new List<Dictionary<string, Tuple<object, bool>>>();

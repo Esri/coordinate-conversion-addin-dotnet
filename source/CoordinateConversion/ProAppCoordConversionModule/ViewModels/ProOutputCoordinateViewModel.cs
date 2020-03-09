@@ -11,7 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Catalog;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -102,14 +103,22 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             try
             {
-                var openDialog = new OpenFileDialog();
-                openDialog.Title = Properties.Resources.FileDialogTitle;
-                openDialog.CheckFileExists = true;
-                openDialog.CheckPathExists = true;
-                openDialog.Filter = Properties.Resources.FileDialogFiltercsv;
+                BrowseProjectFilter bf = new BrowseProjectFilter("esri_browseDialogFilters_textFiles_csv");
+                bf.Name = Properties.Resources.FileDialogFiltercsv;
+
+                OpenItemDialog openDialog = new OpenItemDialog
+                {
+                    Title = Properties.Resources.FileDialogTitle,
+                    MultiSelect = false,
+                    BrowseFilter = bf,
+                };
+
+                
                 if (openDialog.ShowDialog() == true)
                 {
-                    var filePath = openDialog.FileName;
+                    Item selectedItem = openDialog.Items.First();
+                    var filePath = selectedItem.Path;
+               
                     var s = File.ReadAllText(filePath);
                     var dt = new DataTable();
                     string[] tableData = s.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -168,11 +177,20 @@ namespace ProAppCoordConversionModule.ViewModels
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogData);
                     return;
                 }
-                var saveDialog = new SaveFileDialog();
-                saveDialog.Title = "Save File";
-                saveDialog.Filter = "csv files|*.csv";
+
+                BrowseProjectFilter bf = new BrowseProjectFilter("esri_browseDialogFilters_textFiles_csv");
+                bf.Name = Properties.Resources.FileDialogFiltercsv;
+
+                SaveItemDialog saveDialog = new SaveItemDialog()
+                {
+                    Title = "Save File",
+                    DefaultExt = "csv",
+                    BrowseFilter = bf,
+                    OverwritePrompt = true
+                };
+            
                 saveDialog.ShowDialog();
-                var filePath = saveDialog.FileName;
+                var filePath = saveDialog.FilePath;
                 using (var file = File.CreateText(filePath))
                 {
                     var list = CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList
