@@ -151,9 +151,7 @@
       <DependentUpon>Resources.de.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\EditOutputCoordinateViewModel.cs" />
-    <Compile Include="ViewModels\OutputCoordinateViewModel.cs" />
     <Compile Include="ViewModels\SelectCoordinateFieldsViewModel.cs" />
-    <Compile Include="ViewModels\TabBaseViewModel.cs" />
     <Compile Include="Views\CCCollectTabView.xaml.cs">
       <DependentUpon>CCCollectTabView.xaml</DependentUpon>
     </Compile>

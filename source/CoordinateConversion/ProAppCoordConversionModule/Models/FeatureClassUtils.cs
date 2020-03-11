@@ -245,12 +245,12 @@ namespace ProAppCoordConversionModule.Models
                             var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMFeatureLayer;
                             var cimDisplayTable = cimFeatureDefinition.FeatureTable;
                             var displayField = cimDisplayTable.DisplayField;
-                            cimDisplayTable.DisplayField = TabBaseViewModel.CoordinateFieldName;
+                            cimDisplayTable.DisplayField = ProTabBaseViewModel.CoordinateFieldName;
                             featureLayer.SetDefinition(cimFeatureDefinition);
 
                             //set label property
                             var lc = featureLayer.LabelClasses.FirstOrDefault();
-                            lc.SetExpression(string.Format("[{0}]", TabBaseViewModel.CoordinateFieldName));
+                            lc.SetExpression(string.Format("[{0}]", ProTabBaseViewModel.CoordinateFieldName));
                             lc.SetExpressionEngine(LabelExpressionEngine.VBScript);
 
                             //Get simple renderer from feature layer 

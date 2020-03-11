@@ -38,23 +38,53 @@ using System.Windows.Threading;
 using Constants = ProAppCoordConversionModule.Helpers.Constants;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class ProTabBaseViewModel : TabBaseViewModel
+    public class ProTabBaseViewModel : ViewModelBase
     {
 
         public string MapPointToolName = CoordinateMapTool.ToolId;
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
+
+        public static string OutputFieldName = "OutputCoordinate";
+        public static string PointFieldName = "Point";
+        public static string CoordinateFieldName = "Coordinate";
+        public static string SelectedField1 = "";
+        public static string SelectedField2 = "";
 
         public ProTabBaseViewModel()
         {
-            ActivatePointToolCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashPointCommandAsync);
-            ViewDetailCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnViewDetailCommand);
+            HasInputError = false;
+            IsHistoryUpdate = true;
+            IsToolGenerated = false;
+
+            FieldCollection = new List<object>();
+
             FieldsCollection = new ObservableCollection<FieldsCollection>();
             ViewDetailsTitle = string.Empty;
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
 
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
+                .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
+
+
+            // commands
+            EditPropertiesDialogCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnEditPropertiesDialogCommand);
+            ImportCSVFileCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnImportCSVFileCommand);
+            CopyCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnCopyCommand);
+            PasteCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnPasteCommand);
+
+            NewMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnNewMapPointInternal);
+            ValidateMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnValidateMapPointInternal);
+            MouseMoveInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMouseMoveInternal);
+            SelectMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnSelectMapPointInternal);
+
+            ActivatePointToolCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMapToolCommand);
+            FlashPointCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashPointCommandAsync);
+            ViewDetailCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnViewDetailCommand);
+       
             FlashCompleted = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashCompleted);
 
             if(Module1.proOutputCoordVM != null)
@@ -65,7 +95,16 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
-
+              
+           
+        public ProAppCoordConversionModule.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ImportCSVFileCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand CopyCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand PasteCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand NewMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ValidateMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand SelectMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand MouseMoveInternal { get; set; }
         public ProAppCoordConversionModule.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
         public ProAppCoordConversionModule.Helpers.RelayCommand FlashPointCommand { get; set; }
         public ProAppCoordConversionModule.Helpers.RelayCommand ViewDetailCommand { get; set; }
@@ -73,6 +112,46 @@ namespace ProAppCoordConversionModule.ViewModels
         public ProAppCoordConversionModule.Helpers.RelayCommand RequestCoordinateCommand { get; set; }
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
+        public static List<object> FieldCollection { get; set; }
+        public static List<Dictionary<string, Tuple<object, bool>>> ImportedData { get; set; }
+        public static List<Dictionary<string, Tuple<object, bool>>> ListDictionary { get; set; }
+        public ObservableCollection<ListBoxItem> SelectedFieldItem { get; set; }
+        public bool IsHistoryUpdate { get; set; }
+
+        private bool _hasInputError = false;
+        public bool HasInputError
+        {
+            get { return _hasInputError; }
+            set
+            {
+                _hasInputError = value;
+                NotifyPropertyChanged(() => HasInputError);
+            }
+        }
+
+        private string _inputCoordinate;
+        public string InputCoordinate
+        {
+            get
+            {
+                return _inputCoordinate;
+            }
+
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
+                _inputCoordinate = value;
+
+                // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
+                //ProcessInput(_inputCoordinate);
+
+                NotifyPropertyChanged(() => InputCoordinate);
+            }
+        }
+
+        public bool IsToolGenerated { get; set; }
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
@@ -170,12 +249,10 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        #region overrides
-
-        public override bool OnNewMapPoint(object obj)
+        public virtual bool OnNewMapPoint(object obj)
         {
-            if (!base.OnNewMapPoint(obj))
-                return false;
+            //if (!base.OnNewMapPoint(obj))
+            //    return false;
             var input = obj as Dictionary<string, Tuple<object, bool>>;
             MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
@@ -187,7 +264,7 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnValidateMapPoint(object obj)
+        public void OnValidateMapPoint(object obj)
         {
             if (OnValidationSuccess(obj))
             {
@@ -197,8 +274,9 @@ namespace ProAppCoordConversionModule.ViewModels
 
         public bool OnValidationSuccess(object obj)
         {
-            if (!base.OnNewMapPoint(obj))
-                return false;
+            //if (!base.OnNewMapPoint(obj))
+            //    return false;
+
             var input = obj as Dictionary<string, Tuple<object, bool>>;
             MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
@@ -215,10 +293,10 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override bool OnMouseMove(object obj)
+        public bool OnMouseMove(object obj)
         {
-            if (!base.OnMouseMove(obj))
-                return false;
+            //if (!base.OnMouseMove(obj))
+            //    return false;
 
             var mp = obj as MapPoint;
 
@@ -231,9 +309,9 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
+        public virtual void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
         {
-            base.OnDisplayCoordinateTypeChanged(obj);
+            //base.OnDisplayCoordinateTypeChanged(obj);
 
             if (proCoordGetter != null && proCoordGetter.Point != null)
             {
@@ -274,17 +352,19 @@ namespace ProAppCoordConversionModule.ViewModels
             return result;
         }
 
-        public override string ProcessInput(string input)
+        public virtual string ProcessInput(string input)
         {
             if (input == "NA") return string.Empty;
 
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
+            
             // Must force non async here to avoid returning to base class early
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(input);
             }).Result;
+
             return processCoordinate(ccc);
         }
 
@@ -386,7 +466,7 @@ namespace ProAppCoordConversionModule.ViewModels
             return results;
         }
 
-        public override void OnEditPropertiesDialogCommand(object obj)
+        public void OnEditPropertiesDialogCommand(object obj)
         {
             //Get the active map view.
             var mapView = MapView.Active;
@@ -428,13 +508,14 @@ namespace ProAppCoordConversionModule.ViewModels
                    mapView.ViewingMode == ArcGIS.Core.CIM.MapViewingMode.SceneGlobal;
         }
 
-        public override void OnImportCSVFileCommand(object obj)
+        public void OnImportCSVFileCommand(object obj)
         {
             try
             {
-                BrowseProjectFilter bf = new BrowseProjectFilter();
-                bf.AddFilter(BrowseProjectFilter.GetFilter("esri_browseDialogFilters_textFiles_csv"));
-                bf.AddFilter(BrowseProjectFilter.GetFilter("esri_browseDialogFilters_excel_files"));
+                BrowseProjectFilter bf = new BrowseProjectFilter("esri_browseDialogFilters_excel_files");
+                bf.AddCanBeTypeId("text_csv");
+                bf.Name = Properties.Resources.FileDialogFilterAll;
+                bf.AddDontBrowseIntoTypeId("database_excel");
 
                 OpenItemDialog fileDialog = new OpenItemDialog
                 {
@@ -617,10 +698,52 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             
         }
-
-        #endregion overrides
+                
 
         #region Relay handlers
+
+        public virtual void OnCopyCommand(object obj)
+        {
+        }
+
+        public virtual void OnPasteCommand(object obj)
+        {
+        }
+
+        public virtual bool CheckMapLoaded()
+        {
+            return false;
+        }
+
+        public virtual List<Dictionary<string, Tuple<object, bool>>> ReadExcelInput(string fileName)
+        {
+            return new List<Dictionary<string, Tuple<object, bool>>>();
+        }
+
+        private void OnValidateMapPointInternal(object obj)
+        {
+            OnValidateMapPoint(obj);
+        }
+
+        private void OnSelectMapPointInternal(object obj)
+        {
+            OnMapPointSelection(obj);
+        }
+
+        public virtual void OnMapPointSelection(object obj)
+        {
+
+        }
+
+        private void OnNewMapPointInternal(object obj)
+        {
+            OnNewMapPoint(obj);
+        }
+
+        private void OnMouseMoveInternal(object obj)
+        {
+            OnMouseMove(obj);
+        }
 
         private void OnBCNeeded(object obj)
         {
@@ -1307,6 +1430,17 @@ namespace ProAppCoordConversionModule.ViewModels
 
     }
 
+    public class ImportCoordinatesList
+    {
+        public string lat { get; set; }
+        public string lon { get; set; }
+    }
+
+    public class FieldsCollection
+    {
+        public string FieldName { get; set; }
+        public string FieldValue { get; set; }
+    }
     public class CCCoordinate
     {
         public CCCoordinate() { }

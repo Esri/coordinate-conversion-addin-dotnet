@@ -13,19 +13,190 @@ using System.Threading.Tasks;
 using System.Windows;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Framework.Contracts;
+using ProAppCoordConversionModule.Helpers;
+using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class ProOutputCoordinateViewModel : OutputCoordinateViewModel
+    public class ProOutputCoordinateViewModel : ViewModelBase
     {
         string headers = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3},{4},{5},{6}"
                         , "CType", "DVisibility", "Format", "Name", "OutputCoordinate", "SRFactoryCode", "SRName");
 
-        #region overrides
-
+     
+        private CoordinateGetBase coordinateGetter;
         public ProEditOutputCoordinateView dlg = null;
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
 
-        public override void OnAddNewOutputCoordinate(object obj)
+        public ProOutputCoordinateViewModel()
+        {
+            ConfigCommand = new RelayCommand(OnConfigCommand);
+            ExpandCommand = new RelayCommand(OnExpandCommand);
+            DeleteCommand = new RelayCommand(OnDeleteCommand);
+            CopyCommand = new RelayCommand(OnCopyCommand);
+            AddNewOCCommand = new RelayCommand(OnAddNewOCCommand);
+            CopyAllCommand = new RelayCommand(OnCopyAllCommand);
+            ImportButtonCommand = new RelayCommand(OnImportButtonCommand);
+            ExportButtonCommand = new RelayCommand(OnExportButtonCommand);
+            ResetButtonCommand = new RelayCommand(OnResetButtonCommand);
+
+            // set default CoordinateGetter
+            coordinateGetter = new CoordinateGetBase();
+
+            SetCoordinateCommand = new RelayCommand(OnSetCoordinateGetter);
+            RequestOutputCommand = new RelayCommand(OnOutputUpdate);
+            ClearOutputCoordinates = new RelayCommand(OnClearOutputs);
+
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
+            .RegisterHandler(n => n.OutputCoordinateList, n => NotifyPropertyChanged(() => OutputCoordinateList));
+        }
+
+        
+
+        #region relay commands
+        [XmlIgnore]
+        public RelayCommand DeleteCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand ConfigCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand ExpandCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand CopyCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand AddNewOCCommand { get; set; }
+        [XmlIgnore]
+        public RelayCommand CopyAllCommand { get; set; }
+        public RelayCommand ImportButtonCommand { get; set; }
+        public RelayCommand ExportButtonCommand { get; set; }
+        public RelayCommand ResetButtonCommand { get; set; }
+        public RelayCommand SetCoordinateCommand { get; set; }
+        public RelayCommand RequestOutputCommand { get; set; }
+        public RelayCommand ClearOutputCoordinates { get; set; }
+
+        #endregion
+
+        private void OnClearOutputs(object obj)
+        {
+            ClearOutputs();
+        }
+
+        private void ClearOutputs()
+        {
+            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+            {
+                output.OutputCoordinate = "";
+                output.Props.Clear();
+            }
+        }
+
+        private void OnCopyAllCoordinateOutputs(object obj)
+        {
+            var sb = new StringBuilder();
+
+            string inputCoordinate = obj as string;
+
+            if (!string.IsNullOrWhiteSpace(inputCoordinate))
+                sb.AppendLine(inputCoordinate);
+
+            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+            {
+                sb.AppendLine(output.OutputCoordinate);
+            }
+
+            if (sb.Length > 0)
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(sb.ToString());
+            }
+        }
+
+        private void OnSetCoordinateGetter(object obj)
+        {
+            coordinateGetter = obj as CoordinateGetBase;
+        }
+
+        private void OnOutputUpdate(object obj)
+        {
+            UpdateOutputs();
+        }
+
+        public List<string> GetInUseNames()
+        {
+            return CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList.Select(oc => oc.Name).ToList();
+        }
+
+        public OutputCoordinateModel GetOCMByName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    if (item.Name == name)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private void OnExpandCommand(object obj)
+        {
+            var name = obj as string;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                foreach (var item in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+                {
+                    if (item.Name == name)
+                    {
+                        item.ToggleVisibility();
+                        return;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The bound list.
+        /// </summary>
+        public ObservableCollection<OutputCoordinateModel> OutputCoordinateList
+        {
+            get { return CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList; }
+        }
+
+        private void OnAddNewOCCommand(object obj)
+        {
+            // Get name from user
+            this.OnAddNewOutputCoordinate(new OutputCoordinateModel()
+            {
+                Name = CoordinateType.DD.ToString(),
+                CType = CoordinateType.DD,
+                Format = Constants.DDCustomFormat
+            });
+        }
+
+        private void OnCopyAllCommand(object obj)
+        {
+            this.OnCopyAllCoordinateOutputs(obj);
+        }
+
+        // copy parameter to clipboard
+        private void OnCopyCommand(object obj)
+        {
+            var coord = obj as string;
+
+            if (!string.IsNullOrWhiteSpace(coord))
+            {
+                // copy to clipboard
+                System.Windows.Clipboard.SetText(coord);
+            }
+        }
+
+        public void OnAddNewOutputCoordinate(object obj)
         {
             var outputCoordItem = obj as OutputCoordinateModel;
             if (outputCoordItem == null)
@@ -59,7 +230,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override void OnConfigCommand(object obj)
+        public void OnConfigCommand(object obj)
         {
             if (obj == null || string.IsNullOrWhiteSpace(obj as string))
                 return;
@@ -99,7 +270,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
         }
 
-        public override void OnImportButtonCommand(object obj)
+        public void OnImportButtonCommand(object obj)
         {
             try
             {
@@ -168,7 +339,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override void OnExportButtonCommand(object obj)
+        public  void OnExportButtonCommand(object obj)
         {
             try
             {
@@ -222,14 +393,14 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        public override void OnResetButtonCommand(object obj)
+        public void OnResetButtonCommand(object obj)
         {
             CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList = new System.Collections.ObjectModel.ObservableCollection<OutputCoordinateModel>();
             CoordinateConversionLibraryConfig.AddInConfig.SaveConfiguration();
             NotifyPropertyChanged(() => CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList);
         }
 
-        public override void OnDeleteCommand(object obj)
+        public void OnDeleteCommand(object obj)
         {
             var name = obj as string;
 
@@ -252,6 +423,160 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
         }
-        #endregion
+
+        public void UpdateOutputs()
+        {
+            foreach (var output in CoordinateConversionLibraryConfig.AddInConfig.OutputCoordinateList)
+            {
+                var props = new Dictionary<string, string>();
+                string coord = string.Empty;
+
+                switch (output.CType)
+                {
+                    case CoordinateType.DD:
+                        CoordinateDD cdd;
+                        if (coordinateGetter.CanGetDD(output.SRFactoryCode, out coord) &&
+                            CoordinateDD.TryParse(coord, out cdd, true))
+                        {
+                            output.OutputCoordinate = cdd.ToString(output.Format, new CoordinateDDFormatter());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add(Properties.Resources.StringLat, cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
+                                props.Add(Properties.Resources.StringLon, cdd.ToString("X" + splits[1].Trim(), new CoordinateDDFormatter()));
+                            }
+                            else
+                            {
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add(Properties.Resources.StringLon, cdd.ToString(splits[0].Trim(), new CoordinateDDFormatter()));
+                                    props.Add(Properties.Resources.StringLat, cdd.ToString("Y" + splits[1].Trim(), new CoordinateDDFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add(Properties.Resources.StringLat, cdd.Lat.ToString());
+                                    props.Add(Properties.Resources.StringLon, cdd.Lon.ToString());
+                                }
+                            }
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.DMS:
+                        CoordinateDMS cdms;
+                        if (coordinateGetter.CanGetDMS(output.SRFactoryCode, out coord) &&
+                            CoordinateDMS.TryParse(coord, out cdms, true))
+                        {
+                            output.OutputCoordinate = cdms.ToString(output.Format, new CoordinateDMSFormatter());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add(Properties.Resources.StringLat, cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
+                                props.Add(Properties.Resources.StringLon, cdms.ToString("X" + splits[1].Trim(), new CoordinateDMSFormatter()));
+                            }
+                            else
+                            {
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add(Properties.Resources.StringLon, cdms.ToString(splits[0].Trim(), new CoordinateDMSFormatter()));
+                                    props.Add(Properties.Resources.StringLat, cdms.ToString("Y" + splits[1].Trim(), new CoordinateDMSFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add(Properties.Resources.StringLat, cdms.ToString("A0°B0'C0.0\"N", new CoordinateDMSFormatter()));
+                                    props.Add(Properties.Resources.StringLon, cdms.ToString("X0°Y0'Z0.0\"E", new CoordinateDMSFormatter()));
+                                }
+                            }
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.DDM:
+                        CoordinateDDM ddm;
+                        if (coordinateGetter.CanGetDDM(output.SRFactoryCode, out coord) &&
+                            CoordinateDDM.TryParse(coord, out ddm, true))
+                        {
+                            output.OutputCoordinate = ddm.ToString(output.Format, new CoordinateDDMFormatter());
+                            var splits = output.Format.Split(new char[] { 'X' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                props.Add(Properties.Resources.StringLat, ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
+                                props.Add(Properties.Resources.StringLon, ddm.ToString("X" + splits[1].Trim(), new CoordinateDDMFormatter()));
+                            }
+                            else
+                            {
+                                splits = output.Format.Split(new char[] { 'Y' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() == 2)
+                                {
+                                    props.Add(Properties.Resources.StringLon, ddm.ToString(splits[0].Trim(), new CoordinateDDMFormatter()));
+                                    props.Add(Properties.Resources.StringLat, ddm.ToString("Y" + splits[1].Trim(), new CoordinateDDMFormatter()));
+                                }
+                                else
+                                {
+                                    props.Add(Properties.Resources.StringLat, ddm.ToString("A0°B0.0#####'N", new CoordinateDDMFormatter()));
+                                    props.Add(Properties.Resources.StringLon, ddm.ToString("X0°Y0.0#####'E", new CoordinateDDMFormatter()));
+                                }
+                            }
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.GARS:
+                        CoordinateGARS gars;
+                        if (coordinateGetter.CanGetGARS(output.SRFactoryCode, out coord) &&
+                            CoordinateGARS.TryParse(coord, out gars))
+                        {
+                            output.OutputCoordinate = gars.ToString(output.Format, new CoordinateGARSFormatter());
+                            props.Add(Properties.Resources.StringLon, gars.LonBand.ToString());
+                            props.Add(Properties.Resources.StringLat, gars.LatBand);
+                            props.Add(Properties.Resources.StringQuadrant, gars.Quadrant.ToString());
+                            props.Add(Properties.Resources.StringKey, gars.Key.ToString());
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.MGRS:
+                        CoordinateMGRS mgrs;
+                        if (coordinateGetter.CanGetMGRS(output.SRFactoryCode, out coord) &&
+                            CoordinateMGRS.TryParse(coord, out mgrs))
+                        {
+                            output.OutputCoordinate = mgrs.ToString(output.Format, new CoordinateMGRSFormatter());
+                            props.Add(Properties.Resources.StringGZD, mgrs.GZD);
+                            props.Add(Properties.Resources.StringGridSq, mgrs.GS);
+                            props.Add(Properties.Resources.StringEasting, mgrs.Easting.ToString("00000"));
+                            props.Add(Properties.Resources.StringNorthing, mgrs.Northing.ToString("00000"));
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.USNG:
+                        CoordinateUSNG usng;
+                        if (coordinateGetter.CanGetUSNG(output.SRFactoryCode, out coord) &&
+                            CoordinateUSNG.TryParse(coord, out usng))
+                        {
+                            output.OutputCoordinate = usng.ToString(output.Format, new CoordinateMGRSFormatter());
+                            props.Add(Properties.Resources.StringGZD, usng.GZD);
+                            props.Add(Properties.Resources.StringGridSq, usng.GS);
+                            props.Add(Properties.Resources.StringEasting, usng.Easting.ToString("00000"));
+                            props.Add(Properties.Resources.StringNorthing, usng.Northing.ToString("00000"));
+                            output.Props = props;
+                        }
+                        break;
+                    case CoordinateType.UTM:
+                        CoordinateUTM utm;
+                        if (coordinateGetter.CanGetUTM(output.SRFactoryCode, out coord) &&
+                            CoordinateUTM.TryParse(coord, out utm))
+                        {
+                            output.OutputCoordinate = utm.ToString(output.Format, new CoordinateUTMFormatter());
+                            var usingBand = output.Format.Contains("B");
+                            props.Add(Properties.Resources.StringZone, utm.Zone.ToString() + (usingBand ? utm.Band : utm.Hemi));
+                            props.Add(Properties.Resources.StringEasting, utm.Easting.ToString("000000"));
+                            props.Add(Properties.Resources.StringNorthing, utm.Northing.ToString("0000000"));
+                            output.Props = props;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    
     }
 }

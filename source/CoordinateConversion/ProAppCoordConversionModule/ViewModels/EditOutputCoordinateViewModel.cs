@@ -55,14 +55,14 @@ namespace ProAppCoordConversionModule.ViewModels
             ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
             pCvtTabVM.RequestCoordinateCommand.Execute(null);
 
-            ConfigCommand = new RelayCommand(OnConfigCommand);
+            //ConfigCommand = new RelayCommand(OnConfigCommand);
 
             SpatialReferenceSelected = new RelayCommand(OnSpatialReferenceSelected);
         }
 
         public RelayCommand SpatialReferenceSelected { get; set; }
         public RelayCommand BroadcastCoordinateCommand { get; set; }
-        public RelayCommand ConfigCommand { get; set; }
+        //public RelayCommand ConfigCommand { get; set; }
 
         private static Dictionary<CoordinateType, string> ctdict = new Dictionary<CoordinateType,string>();
         public ObservableCollection<string> CategoryList { get; set; }
@@ -390,11 +390,11 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        private void OnConfigCommand(object obj)
-        {
-            // need to get consumer to ask for spatial reference
-            //Mediator.NotifyColleagues(Constants.SelectSpatialReference, null);
-        }
+        //private void OnConfigCommand(object obj)
+        //{
+        //    // need to get consumer to ask for spatial reference
+        //    //Mediator.NotifyColleagues(Constants.SelectSpatialReference, null);
+        //}
 
         private void OnSpatialReferenceSelected(object obj)
         {
