@@ -16,17 +16,16 @@
 
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateSystemAddin.UI;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
-using CoordinateConversionLibrary;
-using System;
 using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
+using ProAppCoordConversionModule.Common.Enums;
+using System;
+using ProAppCoordConversionModule.UI;
 
 namespace ProAppCoordConversionModule
 {
-    public class ProCoordinateGet : CoordinateConversionLibrary.Models.CoordinateGetBase
+    public class ProCoordinateGet : ProAppCoordConversionModule.Models.CoordinateGetBase
     {
         public ProCoordinateGet()
         { }
@@ -174,8 +173,17 @@ namespace ProAppCoordConversionModule
         {
             if (_dlg.SpatialReference != null)
             {
-                System.Windows.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SpatialReferenceSelected, string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format("You picked {0}", _dlg.SpatialReference.Name), "Pick Coordinate System");
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+
+                if(pOutCoordVM.dlg != null)
+                {
+                    EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
+                    pEditOutCCVM.SpatialReferenceSelected.Execute(string.Format("{0}::{1}", _dlg.SpatialReference.Wkid, _dlg.SpatialReference.Name));
+                }
             }
             _dlg = null;
             _isOpen = false;

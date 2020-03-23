@@ -19,11 +19,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
-using CoordinateConversionLibrary.Helpers;
+using ProAppCoordConversionModule.Helpers;
 
-namespace CoordinateConversionLibrary.Views
+namespace ProAppCoordConversionModule.Views
 {
     /// <summary>
     /// Interaction logic for ProOutputCoordinateView.xaml

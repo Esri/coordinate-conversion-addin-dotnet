@@ -3,9 +3,8 @@ using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 namespace ProAppCoordConversionModule.ViewModels
 {
     class ProEditPropertiesViewModel : ProTabBaseViewModel
@@ -42,9 +42,9 @@ namespace ProAppCoordConversionModule.ViewModels
             CancelButtonCommand = new RelayCommand(OnCancelButtonCommand);
             ApplyButtonCommand = new RelayCommand(OnApplyButtonCommand);
             FormatSelection = CoordinateConversionLibraryConfig.AddInConfig.FormatSelection;
-            if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection == ProAppCoordConversionModule.Properties.Resources.CustomString)
             {
-                _categorySelection = FormatList.Where(x => x == CoordinateConversionLibrary.Properties.Resources.CustomString).FirstOrDefault();
+                _categorySelection = FormatList.Where(x => x == ProAppCoordConversionModule.Properties.Resources.CustomString).FirstOrDefault();
                 FormatExpanded = true;
                 IsEnableExpander = true;
                 Format = CoordinateBase.InputCustomFormat;
@@ -76,7 +76,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _showLoadingProcess = value;
                 ShowControls = (value == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-                RaisePropertyChanged(() => ShowLoadingProcess);
+                NotifyPropertyChanged(() => ShowLoadingProcess);
             }
         }
 
@@ -88,7 +88,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _showControls = value;
-                RaisePropertyChanged(() => ShowControls);
+                NotifyPropertyChanged(() => ShowControls);
             }
         }
 
@@ -100,7 +100,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _arrowRotation = value;
-                RaisePropertyChanged(() => ArrowRotation);
+                NotifyPropertyChanged(() => ArrowRotation);
             }
         }
 
@@ -114,7 +114,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _selectedTabIndex = value;
                 OnTabSelectionChanged();
-                RaisePropertyChanged(() => SelectedTabIndex);
+                NotifyPropertyChanged(() => SelectedTabIndex);
             }
         }
 
@@ -128,7 +128,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 _isPopUpOpen = value;
                 ArrowRotation = _isPopUpOpen ? 180 : 0;
-                RaisePropertyChanged(() => IsPopUpOpen);
+                NotifyPropertyChanged(() => IsPopUpOpen);
             }
         }
 
@@ -142,7 +142,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _colorPickerCollection = value;
-                RaisePropertyChanged(() => ColorPickerCollection);
+                NotifyPropertyChanged(() => ColorPickerCollection);
             }
         }
 
@@ -171,7 +171,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     });
                 }
                 IsPopUpOpen = false;
-                RaisePropertyChanged(() => SelectedColor);
+                NotifyPropertyChanged(() => SelectedColor);
             }
         }
         private System.Windows.Media.Brush _selectedBrush;
@@ -181,7 +181,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _selectedBrush = value;
-                RaisePropertyChanged(() => SelectedBrush);
+                NotifyPropertyChanged(() => SelectedBrush);
             }
         }
 
@@ -195,7 +195,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _selectedSymbolImage = value;
-                RaisePropertyChanged(() => SelectedSymbolImage);
+                NotifyPropertyChanged(() => SelectedSymbolImage);
             }
         }
         private string _selectedSymbolText { get; set; }
@@ -208,7 +208,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _selectedSymbolText = value;
-                RaisePropertyChanged(() => SelectedSymbolText);
+                NotifyPropertyChanged(() => SelectedSymbolText);
             }
         }
 
@@ -246,7 +246,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _symbolCollections = value;
-                RaisePropertyChanged(() => SymbolCollections);
+                NotifyPropertyChanged(() => SymbolCollections);
             }
         }
 
@@ -266,7 +266,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _coordinateTypeCollections = value;
-                RaisePropertyChanged(() => CoordinateTypeCollections);
+                NotifyPropertyChanged(() => CoordinateTypeCollections);
             }
         }
 
@@ -284,7 +284,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (!IsInitialCall)
                     CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = false;
                 OnCategorySelectionChanged();
-                RaisePropertyChanged(() => SelectedCoordinateType);
+                NotifyPropertyChanged(() => SelectedCoordinateType);
             }
         }
 
@@ -301,14 +301,14 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (IsNotValidInput(value))
                 {
                     IsValidFormat = false;
-                    throw new ArgumentException(CoordinateConversionLibrary.Properties.Resources.SpecialCharactersValidationMsg);
+                    throw new ArgumentException(ProAppCoordConversionModule.Properties.Resources.SpecialCharactersValidationMsg);
                 }
                 else
                 {
                     _format = value;
                     IsValidFormat = true;
                     UpdateCustomFormatPreview();
-                    RaisePropertyChanged(() => Format);
+                    NotifyPropertyChanged(() => Format);
                 }
             }
         }
@@ -327,7 +327,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     _formatSelection = value;
                     CoordinateBase.InputFormatSelection = value;
                     OnFormatSelectionChanged();
-                    RaisePropertyChanged(() => FormatSelection);
+                    NotifyPropertyChanged(() => FormatSelection);
                 }
             }
         }
@@ -364,7 +364,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _formatExpanded = value;
-                RaisePropertyChanged(() => FormatExpanded);
+                NotifyPropertyChanged(() => FormatExpanded);
             }
         }
         private bool _isEnableExpander { get; set; }
@@ -377,7 +377,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _isEnableExpander = value;
-                RaisePropertyChanged(() => IsEnableExpander);
+                NotifyPropertyChanged(() => IsEnableExpander);
             }
         }
 
@@ -392,7 +392,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 dialogResult = value;
-                RaisePropertyChanged(() => DialogResult);
+                NotifyPropertyChanged(() => DialogResult);
             }
         }
 
@@ -406,7 +406,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _symbols = value;
-                RaisePropertyChanged(() => Symbols);
+                NotifyPropertyChanged(() => Symbols);
             }
         }
 
@@ -418,7 +418,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 _popupDataCollections = value;
-                RaisePropertyChanged(() => PopupDataCollections);
+                NotifyPropertyChanged(() => PopupDataCollections);
             }
         }
 
@@ -433,7 +433,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 showPlusForDirection = value;
                 CoordinateBase.ShowPlus = value;
                 UpdateCustomFormatPreview();
-                RaisePropertyChanged(() => ShowPlusForDirection);
+                NotifyPropertyChanged(() => ShowPlusForDirection);
             }
         }
 
@@ -446,7 +446,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 showHyphenForDirection = value;
                 CoordinateBase.ShowHyphen = value;
                 UpdateCustomFormatPreview();
-                RaisePropertyChanged(() => ShowHyphenForDirection);
+                NotifyPropertyChanged(() => ShowHyphenForDirection);
             }
         }
 
@@ -460,7 +460,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 CoordinateBase.ShowHemisphere = value;
                 ShowPlusForDirection = false;
                 ShowHyphenForDirection = false;
-                RaisePropertyChanged(() => IsHemisphereIndicatorChecked);
+                NotifyPropertyChanged(() => IsHemisphereIndicatorChecked);
             }
         }
 
@@ -471,7 +471,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 plusHyphenForDirectionVisibility = value;
-                RaisePropertyChanged(() => PlusHyphenForDirectionVisibility);
+                NotifyPropertyChanged(() => PlusHyphenForDirectionVisibility);
             }
         }
 
@@ -482,7 +482,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 hemisphereIndicatorVisibility = value;
-                RaisePropertyChanged(() => HemisphereIndicatorVisibility);
+                NotifyPropertyChanged(() => HemisphereIndicatorVisibility);
             }
         }
 
@@ -494,7 +494,7 @@ namespace ProAppCoordConversionModule.ViewModels
             {
                 isPlusHyphenChecked = value;
                 IsPlusHyphenEnabled = value;
-                RaisePropertyChanged(() => IsPlusHyphenChecked);
+                NotifyPropertyChanged(() => IsPlusHyphenChecked);
             }
         }
 
@@ -505,7 +505,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isHemisphereIndicatorEnabled = value;
-                RaisePropertyChanged(() => IsHemisphereIndicatorEnabled);
+                NotifyPropertyChanged(() => IsHemisphereIndicatorEnabled);
             }
         }
 
@@ -516,7 +516,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isPlusHyphenEnabled = value;
-                RaisePropertyChanged(() => IsPlusHyphenEnabled);
+                NotifyPropertyChanged(() => IsPlusHyphenEnabled);
             }
         }
 
@@ -527,7 +527,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 customFormatPreview = value;
-                RaisePropertyChanged(() => CustomFormatPreview);
+                NotifyPropertyChanged(() => CustomFormatPreview);
             }
         }
         #endregion
@@ -548,7 +548,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType = SelectedCoordinateType;
             CoordinateConversionLibraryConfig.AddInConfig.DisplayAmbiguousCoordsDlg = DisplayAmbiguousCoordsDlg;
             CoordinateConversionLibraryConfig.AddInConfig.FormatSelection = FormatSelection;
-            if (FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection == ProAppCoordConversionModule.Properties.Resources.CustomString)
             {
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
                 CoordinateConversionLibraryConfig.AddInConfig.CategorySelection = CategorySelection;
@@ -659,7 +659,7 @@ namespace ProAppCoordConversionModule.ViewModels
 
         private void OnFormatSelectionChanged()
         {
-            if (FormatSelection != CoordinateConversionLibrary.Properties.Resources.CustomString)
+            if (FormatSelection != ProAppCoordConversionModule.Properties.Resources.CustomString)
             {
                 _format = GetFormatFromDefaults();
                 UpdateSample();
@@ -674,7 +674,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 IsHemisphereIndicatorChecked = false;
                 IsPlusHyphenChecked = false;
                 CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat = true;
-                RaisePropertyChanged(() => FormatExpanded);
+                NotifyPropertyChanged(() => FormatExpanded);
             }
             ShowSymbols();
         }
@@ -682,7 +682,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             var item = DefaultFormats.FirstOrDefault(i => i.CType == GetCoordinateType());
             if (item == null)
-                return CoordinateConversionLibrary.Properties.Resources.StringNoFormatFound;
+                return ProAppCoordConversionModule.Properties.Resources.StringNoFormatFound;
             return item.DefaultNameFormatDictionary.Select(x => x.Value).FirstOrDefault();
         }
         private CoordinateType GetCoordinateType()
@@ -776,7 +776,7 @@ namespace ProAppCoordConversionModule.ViewModels
                     break;
             }
 
-            RaisePropertyChanged(() => Sample);
+            NotifyPropertyChanged(() => Sample);
         }
 
         private void OnCategorySelectionChanged()
@@ -791,11 +791,11 @@ namespace ProAppCoordConversionModule.ViewModels
                 return;
 
             if (selectedCoordinateType != CoordinateType.Default.ToString())
-                list.Add(CoordinateConversionLibrary.Properties.Resources.CustomString);
+                list.Add(ProAppCoordConversionModule.Properties.Resources.CustomString);
 
             FormatList = list;
             if ((
-                (!FormatList.Contains(FormatSelection) || FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+                (!FormatList.Contains(FormatSelection) || FormatSelection == ProAppCoordConversionModule.Properties.Resources.CustomString)
                 && !CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                 )
             {
@@ -803,13 +803,13 @@ namespace ProAppCoordConversionModule.ViewModels
                 FormatSelection = FormatList.FirstOrDefault();
             }
 
-            RaisePropertyChanged(() => FormatList);
+            NotifyPropertyChanged(() => FormatList);
 
             if (!CoordinateConversionLibraryConfig.AddInConfig.IsCustomFormat)
                 Format = GetFormatFromDefaults();
             else
                 Format = CoordinateBase.InputCustomFormat;
-            RaisePropertyChanged(() => Format);
+            NotifyPropertyChanged(() => Format);
         }
 
         private ObservableCollection<string> GetFormatList(string CategorySelection)
@@ -829,7 +829,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (item == coordinateType.ToString())
                 {
                     CategorySelection = item;
-                    RaisePropertyChanged(() => SelectedCoordinateType);
+                    NotifyPropertyChanged(() => SelectedCoordinateType);
                 }
             }
         }
@@ -866,7 +866,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
             }
 
-            return CoordinateConversionLibrary.Properties.Resources.CustomString;
+            return ProAppCoordConversionModule.Properties.Resources.CustomString;
         }
 
         private async void OnTabSelectionChanged()
@@ -954,7 +954,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if ((SelectedCoordinateType == CoordinateTypes.DD || SelectedCoordinateType == CoordinateTypes.DDM
                 || SelectedCoordinateType == CoordinateTypes.DMS || SelectedCoordinateType == CoordinateTypes.Default)
-                && FormatSelection == CoordinateConversionLibrary.Properties.Resources.CustomString)
+                && FormatSelection == ProAppCoordConversionModule.Properties.Resources.CustomString)
             {
                 PlusHyphenForDirectionVisibility = Visibility.Visible;
                 HemisphereIndicatorVisibility = Visibility.Visible;

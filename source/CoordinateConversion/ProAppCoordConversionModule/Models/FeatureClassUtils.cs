@@ -30,10 +30,10 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Mapping;
 
-using CoordinateConversionLibrary;
+using ProAppCoordConversionModule.Common.Enums;
 using System.Windows;
 using System.Linq;
-using CoordinateConversionLibrary.ViewModels;
+using ProAppCoordConversionModule.ViewModels;
 
 namespace ProAppCoordConversionModule.Models
 {
@@ -50,7 +50,7 @@ namespace ProAppCoordConversionModule.Models
         {
             //Prep the dialog
             SaveItemDialog saveItemDlg = new SaveItemDialog();
-            saveItemDlg.Title = CoordinateConversionLibrary.Properties.Resources.TitleSelectOutput;
+            saveItemDlg.Title = ProAppCoordConversionModule.Properties.Resources.TitleSelectOutput;
             saveItemDlg.OverwritePrompt = true;
             if (!string.IsNullOrEmpty(previousLocation))
                 saveItemDlg.InitialLocation = previousLocation;
@@ -146,7 +146,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsCFError);
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -210,7 +210,7 @@ namespace ProAppCoordConversionModule.Models
             {
                 var layer = MapView.Active.Map.GetLayersAsFlattenedList().Where(x => x.Name == Path.GetFileNameWithoutExtension(layerName)).FirstOrDefault();
                 if (layer == null)
-                    MessageBox.Show("Something went wrong");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsCFError);
                 else
                     await QueuedTask.Run(() =>
                     {
@@ -245,12 +245,12 @@ namespace ProAppCoordConversionModule.Models
                             var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMFeatureLayer;
                             var cimDisplayTable = cimFeatureDefinition.FeatureTable;
                             var displayField = cimDisplayTable.DisplayField;
-                            cimDisplayTable.DisplayField = TabBaseViewModel.CoordinateFieldName;
+                            cimDisplayTable.DisplayField = ProTabBaseViewModel.CoordinateFieldName;
                             featureLayer.SetDefinition(cimFeatureDefinition);
 
                             //set label property
                             var lc = featureLayer.LabelClasses.FirstOrDefault();
-                            lc.SetExpression(string.Format("[{0}]", TabBaseViewModel.CoordinateFieldName));
+                            lc.SetExpression(string.Format("[{0}]", ProTabBaseViewModel.CoordinateFieldName));
                             lc.SetExpressionEngine(LabelExpressionEngine.VBScript);
 
                             //Get simple renderer from feature layer 
@@ -261,7 +261,7 @@ namespace ProAppCoordConversionModule.Models
                                 //var outline = SymbolFactory.ConstructStroke(ColorFactory.RedRGB, 1.0, SimpleLineStyle.Solid);
                                 //var s = SymbolFactory.ConstructPolygonSymbol(ColorFactory.RedRGB, SimpleFillStyle.Null, outline);                                
                                 var s = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 3.0);
-                                if (isKML) s.SetSize(CoordinateConversionLibrary.Constants.SymbolSize);
+                                if (isKML) s.SetSize(ProAppCoordConversionModule.Helpers.Constants.SymbolSize);
                                 CIMSymbolReference symbolRef = new CIMSymbolReference() { Symbol = s };
                                 currentRenderer.Symbol = symbolRef;
 
@@ -446,7 +446,7 @@ namespace ProAppCoordConversionModule.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ex.ToString());
             }
         }
 
@@ -526,7 +526,7 @@ namespace ProAppCoordConversionModule.Models
                 else
                 {
                     progressDialog.Hide();
-                    MessageBox.Show("ExcelToTable_conversion operation failed.");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.FCLUtilsIFEError);
                 }
 
             }

@@ -18,7 +18,7 @@ using ArcGIS.Desktop.Framework.Controls;
 using System.Xml.Linq;
 using System.Windows.Data;
 using System.Windows;
-using CoordinateConversionLibrary.Helpers;
+using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule.UI
 {
@@ -95,7 +95,9 @@ namespace ProAppCoordConversionModule.UI
 
         private void OnFlashAnimationCompletedCommand(object obj)
         {
-            Mediator.NotifyColleagues("FLASH_COMPLETED", null);
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            pCvtTabVM.FlashCompleted.Execute(null);
         }
 
         public void RunFlashAnimation()

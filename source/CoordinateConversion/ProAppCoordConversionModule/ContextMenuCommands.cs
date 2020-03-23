@@ -20,7 +20,7 @@ using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Geometry;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Models;
 
 namespace ProAppCoordConversionModule
 {

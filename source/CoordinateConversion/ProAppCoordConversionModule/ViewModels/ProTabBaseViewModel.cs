@@ -20,52 +20,138 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.ViewModels;
+using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.ViewModels;
 using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
-using ProAppCoordConversionModule.Models;
-using CoordinateConversionLibrary.Views;
+using ProAppCoordConversionModule.Views;
 using System.IO;
 using System.Text;
 using System.Linq;
-using CoordinateConversionLibrary;
+using ProAppCoordConversionModule.Common.Enums;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Reflection;
-using ProAppCoordConversionModule.Views;
 using System.Diagnostics;
-using ProAppCoordConversionModule.Helpers;
 using System.Windows.Threading;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProAppCoordConversionModule.ViewModels
 {
-    public class ProTabBaseViewModel : TabBaseViewModel
+    public class ProTabBaseViewModel : ViewModelBase
     {
-        // This name should correlate to the name specified in Config.esriaddinx - Tool id="ProAppCoordConversionModule_CoordinateMapTool"
-        internal const string MapPointToolName = "ProAppCoordConversionModule_CoordinateMapTool";
+
+        public string MapPointToolName = CoordinateMapTool.ToolId;
+        PropertyObserver<CoordinateConversionLibraryConfig> configObserver;
+
+        public static string OutputFieldName = "OutputCoordinate";
+        public static string PointFieldName = "Point";
+        public static string CoordinateFieldName = "Coordinate";
+        public static string SelectedField1 = "";
+        public static string SelectedField2 = "";
 
         public ProTabBaseViewModel()
         {
-            ActivatePointToolCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnMapToolCommand);
-            FlashPointCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnFlashPointCommandAsync);
-            ViewDetailCommand = new CoordinateConversionLibrary.Helpers.RelayCommand(OnViewDetailCommand);
+            HasInputError = false;
+            IsHistoryUpdate = true;
+            IsToolGenerated = false;
+
+            FieldCollection = new List<object>();
+
             FieldsCollection = new ObservableCollection<FieldsCollection>();
             ViewDetailsTitle = string.Empty;
             ListDictionary = new List<Dictionary<string, Tuple<object, bool>>>();
-            Mediator.Register(CoordinateConversionLibrary.Constants.RequestCoordinateBroadcast, OnBCNeeded);
-            Mediator.Register("FLASH_COMPLETED", OnFlashCompleted);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SetCoordinateGetter, proCoordGetter);
+
+            configObserver = new PropertyObserver<CoordinateConversionLibraryConfig>(CoordinateConversionLibraryConfig.AddInConfig)
+                .RegisterHandler(n => n.DisplayCoordinateType, OnDisplayCoordinateTypeChanged);
+
+
+            // commands
+            EditPropertiesDialogCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnEditPropertiesDialogCommand);
+            ImportCSVFileCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnImportCSVFileCommand);
+            CopyCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnCopyCommand);
+            PasteCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnPasteCommand);
+
+            NewMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnNewMapPointInternal);
+            ValidateMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnValidateMapPointInternal);
+            MouseMoveInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMouseMoveInternal);
+            SelectMapPointInternal = new ProAppCoordConversionModule.Helpers.RelayCommand(OnSelectMapPointInternal);
+
+            ActivatePointToolCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnMapToolCommand);
+            FlashPointCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashPointCommandAsync);
+            ViewDetailCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnViewDetailCommand);
+       
+            FlashCompleted = new ProAppCoordConversionModule.Helpers.RelayCommand(OnFlashCompleted);
+
+            if(Module1.proOutputCoordVM != null)
+                Module1.proOutputCoordVM.SetCoordinateCommand.Execute(proCoordGetter);
+
+            RequestCoordinateCommand = new ProAppCoordConversionModule.Helpers.RelayCommand(OnBCNeeded);
+            
             CoordinateBase.ShowAmbiguousEventHandler += ShowAmbiguousEventHandler;
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
         }
-
-        public CoordinateConversionLibrary.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand FlashPointCommand { get; set; }
-        public CoordinateConversionLibrary.Helpers.RelayCommand ViewDetailCommand { get; set; }
+              
+           
+        public ProAppCoordConversionModule.Helpers.RelayCommand EditPropertiesDialogCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ImportCSVFileCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand CopyCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand PasteCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand NewMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ValidateMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand SelectMapPointInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand MouseMoveInternal { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ActivatePointToolCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand FlashPointCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand ViewDetailCommand { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand FlashCompleted { get; set; }
+        public ProAppCoordConversionModule.Helpers.RelayCommand RequestCoordinateCommand { get; set; }
 
         public static ProCoordinateGet proCoordGetter = new ProCoordinateGet();
+        public static List<object> FieldCollection { get; set; }
+        public static List<Dictionary<string, Tuple<object, bool>>> ImportedData { get; set; }
+        public static List<Dictionary<string, Tuple<object, bool>>> ListDictionary { get; set; }
+        public ObservableCollection<ListBoxItem> SelectedFieldItem { get; set; }
+        public bool IsHistoryUpdate { get; set; }
+
+        private bool _hasInputError = false;
+        public bool HasInputError
+        {
+            get { return _hasInputError; }
+            set
+            {
+                _hasInputError = value;
+                NotifyPropertyChanged(() => HasInputError);
+            }
+        }
+
+        private string _inputCoordinate;
+        public string InputCoordinate
+        {
+            get
+            {
+                return _inputCoordinate;
+            }
+
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
+                _inputCoordinate = value;
+
+                // DJH - Removed the following to allow for the Enter key to be pressed to validate coordinates
+                //ProcessInput(_inputCoordinate);
+
+                NotifyPropertyChanged(() => InputCoordinate);
+            }
+        }
+
+        public bool IsToolGenerated { get; set; }
         public String PreviousTool { get; set; }
         public static ObservableCollection<AddInPoint> CoordinateAddInPoints { get; set; }
         public ObservableCollection<FieldsCollection> FieldsCollection { get; set; }
@@ -91,12 +177,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isSelectionToolActive = false;
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
                 CoordinateMapTool.SelectFeatureEnable = false;
                 isToolActive = value;
                 ActivateMapTool(value);
 
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
             }
         }
 
@@ -110,12 +196,12 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 isToolActive = false;
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
                 CoordinateMapTool.SelectFeatureEnable = true;
                 isSelectionToolActive = value;
                 ActivateMapTool(value);
 
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
             }
         }
 
@@ -163,12 +249,10 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        #region overrides
-
-        public override bool OnNewMapPoint(object obj)
+        public virtual bool OnNewMapPoint(object obj)
         {
-            if (!base.OnNewMapPoint(obj))
-                return false;
+            //if (!base.OnNewMapPoint(obj))
+            //    return false;
             var input = obj as Dictionary<string, Tuple<object, bool>>;
             MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
@@ -180,18 +264,19 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnValidateMapPoint(object obj)
+        public void OnValidateMapPoint(object obj)
         {
             if (OnValidationSuccess(obj))
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NEW_MAP_POINT, obj);
+                 this.NewMapPointInternal.Execute(obj);
             }
         }
 
         public bool OnValidationSuccess(object obj)
         {
-            if (!base.OnNewMapPoint(obj))
-                return false;
+            //if (!base.OnNewMapPoint(obj))
+            //    return false;
+
             var input = obj as Dictionary<string, Tuple<object, bool>>;
             MapPoint mp = (input != null) ? input.Where(x => x.Key == PointFieldName).Select(x => x.Value.Item1).FirstOrDefault() as MapPoint : obj as MapPoint;
             if (mp == null)
@@ -200,7 +285,7 @@ namespace ProAppCoordConversionModule.ViewModels
             var isValidPoint = QueuedTask.Run(async () => { return await IsValidPoint(mp); });
             if (!isValidPoint.Result)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Point is out of bounds", "Point is out of bounds",
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogPointBoundMsg, Properties.Resources.DialogPointBoundTitle,
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 return false;
             }
@@ -208,10 +293,10 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override bool OnMouseMove(object obj)
+        public bool OnMouseMove(object obj)
         {
-            if (!base.OnMouseMove(obj))
-                return false;
+            //if (!base.OnMouseMove(obj))
+            //    return false;
 
             var mp = obj as MapPoint;
 
@@ -224,9 +309,9 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
+        public virtual void OnDisplayCoordinateTypeChanged(CoordinateConversionLibraryConfig obj)
         {
-            base.OnDisplayCoordinateTypeChanged(obj);
+            //base.OnDisplayCoordinateTypeChanged(obj);
 
             if (proCoordGetter != null && proCoordGetter.Point != null)
             {
@@ -251,8 +336,8 @@ namespace ProAppCoordConversionModule.ViewModels
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.InvalidCoordMsg,
-                    CoordinateConversionLibrary.Properties.Resources.InvalidCoordCap);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
+                    ProAppCoordConversionModule.Properties.Resources.InvalidCoordCap);
             }
             else
             {
@@ -267,17 +352,19 @@ namespace ProAppCoordConversionModule.ViewModels
             return result;
         }
 
-        public override string ProcessInput(string input)
+        public virtual string ProcessInput(string input)
         {
             if (input == "NA") return string.Empty;
 
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
+            
             // Must force non async here to avoid returning to base class early
             var ccc = QueuedTask.Run(() =>
             {
                 return GetCoordinateType(input);
             }).Result;
+
             return processCoordinate(ccc);
         }
 
@@ -379,13 +466,13 @@ namespace ProAppCoordConversionModule.ViewModels
             return results;
         }
 
-        public override void OnEditPropertiesDialogCommand(object obj)
+        public void OnEditPropertiesDialogCommand(object obj)
         {
             //Get the active map view.
             var mapView = MapView.Active;
             if (mapView == null)
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -397,14 +484,14 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception e)
             {
-                if (e.Message.ToLower() == CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
+                if (e.Message.ToLower() == ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsMsg.ToLower())
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + System.Environment.NewLine + CoordinateConversionLibrary.Properties.Resources.CoordsOutOfBoundsAddlMsg,
-                        CoordinateConversionLibrary.Properties.Resources.CoordsoutOfBoundsCaption);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message + System.Environment.NewLine + ProAppCoordConversionModule.Properties.Resources.CoordsOutOfBoundsAddlMsg,
+                        ProAppCoordConversionModule.Properties.Resources.CoordsoutOfBoundsCaption);
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(e.Message);
                 }
             }
         }
@@ -421,14 +508,22 @@ namespace ProAppCoordConversionModule.ViewModels
                    mapView.ViewingMode == ArcGIS.Core.CIM.MapViewingMode.SceneGlobal;
         }
 
-        public override void OnImportCSVFileCommand(object obj)
+        public void OnImportCSVFileCommand(object obj)
         {
             try
             {
-                var fileDialog = new Microsoft.Win32.OpenFileDialog();
-                fileDialog.CheckFileExists = true;
-                fileDialog.CheckPathExists = true;
-                fileDialog.Filter = "csv files|*.csv|Excel 97-2003 Workbook (*.xls)|*.xls|Excel Workbook (*.xlsx)|*.xlsx";
+                BrowseProjectFilter bf = new BrowseProjectFilter("esri_browseDialogFilters_excel_files");
+                bf.AddCanBeTypeId("text_csv");
+                bf.Name = Properties.Resources.FileDialogFilterAll;
+                bf.AddDontBrowseIntoTypeId("database_excel");
+
+                OpenItemDialog fileDialog = new OpenItemDialog
+                {
+                    Title = Properties.Resources.FileDialogTitle,
+                    MultiSelect = false,
+                    BrowseFilter = bf,
+                };
+
                 // attemp to import
                 var fieldVM = new SelectCoordinateFieldsViewModel();
                 var result = fileDialog.ShowDialog();
@@ -436,16 +531,18 @@ namespace ProAppCoordConversionModule.ViewModels
                 {
                     var dlg = new ProSelectCoordinateFieldsView();
 
+                    Item selectedItem = fileDialog.Items.First();
+
                     var coordinates = new List<string>();
-                    var extension = Path.GetExtension(fileDialog.FileName);
+                    var extension = Path.GetExtension(selectedItem.Path);
                     switch (extension)
                     {
                         case ".csv":
-                            ImportFromCSV(fieldVM, dlg, coordinates, fileDialog.FileName);
+                            ImportFromCSV(fieldVM, dlg, coordinates, selectedItem.Path);
                             break;
                         case ".xls":
                         case ".xlsx":
-                            ImportFromExcel(dlg, fileDialog, fieldVM);
+                            ImportFromExcel(dlg, selectedItem, fieldVM);
                             break;
                         default:
                             break;
@@ -454,8 +551,8 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Something went wrong.");
-                Debug.WriteLine("Error " + ex.ToString());
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.DialogError);
+                Debug.WriteLine(Properties.Resources.DebugWriteError + ex.ToString());
             }
         }
 
@@ -471,13 +568,13 @@ namespace ProAppCoordConversionModule.ViewModels
                     {
                         fieldVM.AvailableFields.Add(header);
                         fieldVM.FieldCollection.Add(new ListBoxItem() { Name = header, Content = header, IsSelected = false });
-                        System.Diagnostics.Debug.WriteLine("header : {0}", header);
+                        System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteHeader + " {0}", header);
                     }
                     dlg.DataContext = fieldVM;
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
                     return;
                 }
                 if (dlg.ShowDialog() == true)
@@ -513,16 +610,19 @@ namespace ProAppCoordConversionModule.ViewModels
                             ImportedData.Add(dict);
                         }
                     }
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ImportedData);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ProConvertTabViewModel pCvtTabVM  = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                    pCollectTabVM.ImportCoordinates.Execute(ImportedData);
                 }
             }
         }
 
-        public static async void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Microsoft.Win32.OpenFileDialog diag, SelectCoordinateFieldsViewModel fieldVM)
+        public static async void ImportFromExcel(ProSelectCoordinateFieldsView dlg, Item diag, SelectCoordinateFieldsViewModel fieldVM)
         {
             ImportedData = new List<Dictionary<string, Tuple<object, bool>>>();
             List<string> headers = new List<string>();
-            var filename = diag.FileName;
+            var filename = diag.Path;
             string selectedCol1Key = "", selectedCol2Key = "";
             var selectedColumn = fieldVM.SelectedFields.ToArray();
             var columnCollection = new List<string>();
@@ -545,7 +645,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 dlg.DataContext = fieldVM;
             }
             else
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.MsgNoDataFound);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.MsgNoDataFound);
             if (dlg.ShowDialog() == true)
             {
                 foreach (var item in headers)
@@ -590,13 +690,60 @@ namespace ProAppCoordConversionModule.ViewModels
                     }
                     ListDictionary.Add(dict);
                 }
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, ListDictionary);
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.ImportCoordinates.Execute(ListDictionary);
             }
+            
+        }
+                
+
+        #region Relay handlers
+
+        public virtual void OnCopyCommand(object obj)
+        {
         }
 
-        #endregion overrides
+        public virtual void OnPasteCommand(object obj)
+        {
+        }
 
-        #region Mediator handlers
+        public virtual bool CheckMapLoaded()
+        {
+            return false;
+        }
+
+        public virtual List<Dictionary<string, Tuple<object, bool>>> ReadExcelInput(string fileName)
+        {
+            return new List<Dictionary<string, Tuple<object, bool>>>();
+        }
+
+        private void OnValidateMapPointInternal(object obj)
+        {
+            OnValidateMapPoint(obj);
+        }
+
+        private void OnSelectMapPointInternal(object obj)
+        {
+            OnMapPointSelection(obj);
+        }
+
+        public virtual void OnMapPointSelection(object obj)
+        {
+
+        }
+
+        private void OnNewMapPointInternal(object obj)
+        {
+            OnNewMapPoint(obj);
+        }
+
+        private void OnMouseMoveInternal(object obj)
+        {
+            OnMouseMove(obj);
+        }
 
         private void OnBCNeeded(object obj)
         {
@@ -612,7 +759,7 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateMapTool.AllowUpdates = true;
         }
 
-        #endregion Mediator handlers
+        #endregion Relay handlers
 
         private void SetAsCurrentToolAsync()
         {
@@ -631,12 +778,12 @@ namespace ProAppCoordConversionModule.ViewModels
             if (IsSelectionToolActive)
             {
                 IsSelectionToolActive = args.CurrentID == MapPointToolName;
-                RaisePropertyChanged(() => IsSelectionToolActive);
+                NotifyPropertyChanged(() => IsSelectionToolActive);
             }
             else
             {
                 isToolActive = args.CurrentID == MapPointToolName;
-                RaisePropertyChanged(() => IsToolActive);
+                NotifyPropertyChanged(() => IsToolActive);
             }
         }
 
@@ -729,7 +876,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // Note: The Map Point Tool is required to be active to enable flash overlay
                 MapView.Active.PanTo(projectedPoint, new TimeSpan(0, 0, 1));
 
-                Mediator.NotifyColleagues("UPDATE_FLASH", point);
+                if(Module1.coordMapTool != null) Module1.coordMapTool.PointFlash.Execute(point);
             });
         }
 
@@ -790,7 +937,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 if (!FieldsCollection.Any())
                 {
                     htmlString = htmlString + "<tr valign=\"top\"><td class=\"attrName\">"
-                        + CoordinateConversionLibrary.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
+                        + ProAppCoordConversionModule.Properties.Resources.InformationNotAvailableMsg + "</td></tr>";
                 }
 
                 htmlString = htmlString + "</tbody></table></div>"
@@ -931,7 +1078,16 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch { /* Conversion Failed */ }
 
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.BroadcastCoordinateValues, dict);
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+            ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+
+            if(pOutCoordVM.dlg != null)
+            {
+                EditOutputCoordinateViewModel pEditOutCCVM = pOutCoordVM.dlg.DataContext as EditOutputCoordinateViewModel;
+                pEditOutCCVM.BroadcastCoordinateCommand.Execute(dict);
+            }
+           
         }
 
         private CoordinateType GetCoordinateType(string input, out MapPoint point)
@@ -1054,7 +1210,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteFailed + ex.Message);
                     return CoordinateType.Unknown;
                 }
             }
@@ -1190,7 +1346,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed to convert coordinate: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine(Properties.Resources.DebugWriteFailed + ex.Message);
                     return new CCCoordinate() { Type = CoordinateType.Unknown, Point = null };
                 }
             }
@@ -1274,6 +1430,17 @@ namespace ProAppCoordConversionModule.ViewModels
 
     }
 
+    public class ImportCoordinatesList
+    {
+        public string lat { get; set; }
+        public string lon { get; set; }
+    }
+
+    public class FieldsCollection
+    {
+        public string FieldName { get; set; }
+        public string FieldValue { get; set; }
+    }
     public class CCCoordinate
     {
         public CCCoordinate() { }

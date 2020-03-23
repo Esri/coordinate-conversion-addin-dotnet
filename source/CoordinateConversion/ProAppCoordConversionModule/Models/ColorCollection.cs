@@ -1,4 +1,4 @@
-﻿using CoordinateConversionLibrary.Helpers;
+﻿using ProAppCoordConversionModule.Helpers;
 
 namespace ProAppCoordConversionModule.Models
 {

@@ -1,13 +1,12 @@
-﻿<UserControl x:Class="CoordinateConversionLibrary.Views.ProOutputCoordinateView"
+﻿<UserControl x:Class="ProAppCoordConversionModule.Views.ProOutputCoordinateView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-            xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-            xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
-            xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
+            xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+            xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
             xmlns:Behaviors="clr-namespace:ArcGIS.Desktop.Internal.Framework.Behaviors;assembly=ArcGIS.Desktop.Framework"
             x:Name="ocView"
             d:DesignHeight="150"
@@ -19,29 +18,29 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Image
                 x:Key="expandImg"
                 Width="16"
                 Height="16"
                 x:Shared="false"
-                Source="/CoordinateConversionLibrary;component/Images/TablePlusExpand16_d.png" />
+                Source="/CoordinateConversion;component/Images/TablePlusExpand16_d.png" />
             <Image
                 x:Key="collapseImg"
                 Width="16"
                 Height="16"
                 x:Shared="false"
-                Source="/CoordinateConversionLibrary;component/Images/TableMinusCollaps16_d.png" />
+                Source="/CoordinateConversion;component/Images/TableMinusCollaps16_d.png" />
             <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
                 <MenuItem
                     Command="{Binding DataContext.ConfigCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
                     CommandParameter="{Binding DataContext.Name}"
-                    Header="Configure" />
+                    Header="{x:Static prop:Resources.OutputConfigure}" />
                 <MenuItem
                     Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
                     CommandParameter="{Binding DataContext.Name}"
-                    Header="Delete" />
+                    Header="{x:Static prop:Resources.OutputDelete}" />
             </ContextMenu>
             <Style x:Key="DataGridColumnHeaderStyleCustom" TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Foreground" Value="{DynamicResource Esri_Gray160}"/>
@@ -208,7 +207,7 @@
 						    Width="10"
 						    Height="10"
 						    Cursor="Hand"
-						    Source="/CoordinateConversionLibrary;component/Images/RowHandle.png" />
+						    Source="/CoordinateConversion;component/Images/RowHandle.png" />
                     </DataTemplate>
                 </DataGrid.RowHeaderTemplate>
                 <DataGrid.RowStyle>
@@ -234,7 +233,7 @@
                                 <Image
 								    Height="18"
 								    Width="18"
-								    Source="/CoordinateConversionLibrary;component/Images/hand.png" />
+								    Source="/CoordinateConversion;component/Images/hand.png" />
                             </Button>
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
@@ -299,7 +298,7 @@
                                 <Image
 								    Width="18"
 								    Height="18"
-								    Source="/CoordinateConversionLibrary;component/Images/copyall.png" />
+								    Source="/CoordinateConversion;component/Images/copyall.png" />
                             </Button>
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
@@ -312,7 +311,7 @@
                                     <Image
 									    Width="16"
 									    Height="16"
-									    Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
+									    Source="/CoordinateConversion;component/Images/EditCopy16.png" />
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -348,12 +347,12 @@
 											    Margin="3,3,0,0"
 											    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
 											    CommandParameter="{Binding Value}"
-											    ToolTip="Copy"
+											    ToolTip="{x:Static prop:Resources.TooltipCopy}"
 											    Style="{StaticResource ImageButtonStyle}">
                                                 <Image
 												    Width="16"
 												    Height="16"
-												    Source="/CoordinateConversionLibrary;component/Images/EditCopy16.png" />
+												    Source="/CoordinateConversion;component/Images/EditCopy16.png" />
                                             </Button>
                                         </Grid>
                                     </DataTemplate>
@@ -387,7 +386,7 @@
 						    Width="16"
 						    Height="16"
 						    Margin="5,0,0,0"
-						    Source="/CoordinateConversionLibrary;component/Images/hand.png" />
+						    Source="/CoordinateConversion;component/Images/hand.png" />
                         <TextBlock
 						    Margin="8,0,0,0"
 						    VerticalAlignment="Center"
@@ -399,11 +398,11 @@
             </Popup>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="btnReset" Content="{x:Static prop:Resources.Reset}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ResetButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ResetButtonCommand}" Style="{DynamicResource Esri_Button}"/>
                 <Button x:Name="btnImport" Content="{x:Static prop:Resources.Open}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ImportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ImportButtonCommand}" Style="{DynamicResource Esri_Button}"/>
                 <Button x:Name="btnExport" Content="{x:Static prop:Resources.Save}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
-                Command="{Binding ExportButtonCommand}" Style="{DynamicResource TransparentButtonStyle}"/>
+                Command="{Binding ExportButtonCommand}" Style="{DynamicResource Esri_Button}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

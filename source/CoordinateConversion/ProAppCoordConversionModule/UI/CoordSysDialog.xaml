@@ -1,11 +1,11 @@
-﻿<Window x:Class="CoordinateSystemAddin.UI.CoordSysDialog"
+﻿<Window x:Class="ProAppCoordConversionModule.UI.CoordSysDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:coordpicker="clr-namespace:CoordinateSystemAddin.UI"
-        xmlns:common="clr-namespace:CoordinateSystemAddin.Common"
-        Title="Pick a Coordinate System" Height="400" Width="650">
+        xmlns:coordpicker="clr-namespace:ProAppCoordConversionModule.UI"
+        xmlns:common="clr-namespace:ProAppCoordConversionModule.Common.ValueConverters"
+        xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+        Title="{x:Static prop:Resources.CoordSysDialogTitle}" Height="400" Width="650">
     <Grid>
-
         <Grid.Resources>
             <common:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"></common:BoolToVisibilityConverter>
             <common:ReverseBoolConverter x:Key="reverseBoolConverter"></common:ReverseBoolConverter>
@@ -37,8 +37,8 @@
                         <Setter Property="Height" Value="24"></Setter>
                     </Style>
                 </StackPanel.Resources>
-                <Button Content="OK" Click="Close_OnClick" HorizontalAlignment="Right" x:Name="OK"></Button>
-                <Button Content="Cancel" Click="Close_OnClick" HorizontalAlignment="Right" x:Name="Cancel"></Button>
+                <Button Content="{x:Static prop:Resources.ButtonOK}" Click="Close_OnClick" HorizontalAlignment="Right" x:Name="OK"></Button>
+                <Button Content="{x:Static prop:Resources.ButtonCancel}" Click="Close_OnClick" HorizontalAlignment="Right" x:Name="Cancel"></Button>
             </StackPanel>
 
         </Grid>

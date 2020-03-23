@@ -24,7 +24,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Threading;
 
-namespace CoordinateSystemAddin.UI {
+namespace ProAppCoordConversionModule.UI {
     internal class CoordSystemInfo {
         public string Region { get; set; }
         public string Name { get; set; }

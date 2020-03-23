@@ -1,4 +1,4 @@
-﻿using CoordinateConversionLibrary.Helpers;
+﻿using ProAppCoordConversionModule.Helpers;
 using System.Windows.Controls;
 
 namespace ProAppCoordConversionModule.UI

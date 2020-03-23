@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArcGIS defaultAssembly="CoordinateConversion.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="4.0.0.0" desktopVersion="2.2">
+    <Name>Coordinate Conversion</Name>
+    <Description>Quickly convert coordinates between several formats.</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>Esri</Author>
+    <Company>Esri</Company>
+    <Date>2/25/2020</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <dependencies>
+    <dependency name="ADCore.daml" />
+    <dependency name="ADMapping.daml" />
+  </dependencies>
+  <categories>
+    <updateCategory refID="esri_embeddableControls">
+      <insertComponent id="ProAppCoordConversionModule_EmbeddableControl" className="UI.FlashEmbeddedControlViewModel">
+        <content className="UI.FlashEmbeddedControl" />
+      </insertComponent>
+    </updateCategory>
+  </categories>
+  <modules>
+    <insertModule id="ProAppCoordConversionModule_Module" className="Module1" autoLoad="false" caption="Module1">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="ProAppCoordConversionModule_Tab1" caption="New Tab">
+          <group refID="ProAppCoordConversionModule_Group1"/>
+        </tab>-->
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="ProAppCoordConversionModule_Group1" caption="Coordinate Conversion" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <button refID="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" size="large" />
+          <!--<tool refID="ProAppCoordConversionModule_CoordinateMapTool" size="large" />
+          <button refID="ProAppCoordConversionModule_PropertiesButton" size="large" />-->
+        </group>
+      </groups>
+      <controls>
+        <!-- add your controls here -->
+        <button id="ProAppCoordConversionModule_CoordinateConversionDockpane_ShowButton" caption="Coordinate Conversion" className="CoordinateConversionDockpane_ShowButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Coordinate Conversion">Convert coordinate notation from one notation format to another.<disabledText /></tooltip>
+        </button>
+        <button id="ProAppCoordConversionModule_ContextCopyDDButton" caption="DD" className="ContextCopyDD" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy DD Coordinate">
+          </tooltip>
+        </button>
+        <button id="ProAppCoordConversionModule_ContextCopyDDMButton" caption="DDM" className="ContextCopyDDM" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy DDM Coordinate">
+          </tooltip>
+        </button>
+        <button id="ProAppCoordConversionModule_ContextCopyDMSButton" caption="DMS" className="ContextCopyDMS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy DMS Coordinate">
+          </tooltip>
+        </button>
+        <!--<button id="ProAppCoordConversionModule_ContextCopyGARSButton" caption="GARS" className="ContextCopyGARS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy GARS Coordinate"></tooltip>
+        </button>-->
+        <button id="ProAppCoordConversionModule_ContextCopyMGRSButton" caption="MGRS" className="ContextCopyMGRS" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy MGRS Coordinate">
+          </tooltip>
+        </button>
+        <button id="ProAppCoordConversionModule_ContextCopyUSNGButton" caption="USNG" className="ContextCopyUSNG" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy USNG Coordinate">
+          </tooltip>
+        </button>
+        <button id="ProAppCoordConversionModule_ContextCopyUTMButton" caption="UTM" className="ContextCopyUTM" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Copy UTM Coordinate">
+          </tooltip>
+        </button>
+        <tool id="ProAppCoordConversionModule_CoordinateMapTool" caption="Map Point Tool" className="CoordinateMapTool" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png" condition="esri_mapping_mapPane">
+          <tooltip heading="Coordinate Conversion">Map Point Tool<disabledText /></tooltip>
+        </tool>
+        <button id="ProAppCoordConversionModule_PropertiesButton" caption="Properties" className="PropertiesButton" loadOnClick="true" smallImage="Images\coordinate-conversion-16.png" largeImage="Images\coordinate-conversion-32.png">
+          <tooltip heading="Coordiante Conversion Properties">Edit Properties<disabledText /></tooltip>
+        </button>
+      </controls>
+      <dockPanes>
+        <dockPane id="ProAppCoordConversionModule_CoordinateConversionDockpane" caption="Coordinate Conversion" className="CoordinateConversionDockpaneViewModel" keytip="DockPane" initiallyVisible="true" dock="group" dockWith="esri_core_contentsDockPane">
+          <content className="CoordinateConversionDockpaneView" />
+        </dockPane>
+      </dockPanes>
+      <menus>
+        <menu id="ProAppCoordConversionModule_ContextCopyMenu" caption="Copy Coordinate">
+          <button refID="ProAppCoordConversionModule_ContextCopyDDButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyDDMButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyDMSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyGARSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyMGRSButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyUSNGButton" />
+          <button refID="ProAppCoordConversionModule_ContextCopyUTMButton" />
+        </menu>
+      </menus>
+    </insertModule>
+    <!-- Update the mapping module. Insert our custom button into the layers existing context menu. -->
+    <!-- NOTE: This context menu "Convert Coordinates" was added for Pro 2.2 to the mapping pop-up
+         so the custom one below has been removed from this pop-up -->
+    <updateModule refID="esri_mapping">
+      <menus>
+        <updateMenu refID="esri_mapping_selection2DContextMenu">
+          <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
+        </updateMenu>
+        <!--<updateMenu refID="esri_mapping_popupToolContextMenu">
+          <insertMenu refID="ProAppCoordConversionModule_ContextCopyMenu" separator="true" />
+        </updateMenu>-->
+      </menus>
+    </updateModule>
+  </modules>
+</ArcGIS>

@@ -19,11 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
-using CoordinateConversionLibrary.Views;
-using CoordinateConversionLibrary.Models;
-using CoordinateConversionLibrary.Helpers;
+using ProAppCoordConversionModule.Views;
+using ProAppCoordConversionModule.Models;
+using ProAppCoordConversionModule.Helpers;
 using ArcGIS.Core.Geometry;
-using CoordinateConversionLibrary.ViewModels;
+using ProAppCoordConversionModule.ViewModels;
 using System.ComponentModel;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
@@ -32,9 +32,8 @@ using System.Collections.ObjectModel;
 using ArcGIS.Desktop.Mapping.Events;
 using ArcGIS.Core.Data;
 using System.Text.RegularExpressions;
-using ProAppCoordConversionModule.ViewModels;
 using System.Windows.Controls;
-using CoordinateConversionLibrary;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
 
 namespace ProAppCoordConversionModule
 {
@@ -126,8 +125,8 @@ namespace ProAppCoordConversionModule
                     return null;
                 });
 
-                if(pointd != null)
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.NewMapPointSelection, pointd);
+                //if(pointd != null)
+                //    Mediator.NotifyColleagues(Constants.NewMapPointSelection, pointd);
             }
         }
 

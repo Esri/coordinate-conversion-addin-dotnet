@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"                    
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions" 
-             mc:Ignorable="d" Title="Select Output" WindowStartupLocation="CenterScreen" Topmost="True" d:DesignHeight="170" d:DesignWidth="190" SizeToContent="WidthAndHeight">
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+             mc:Ignorable="d" Title="{x:Static prop:Resources.SaveAsTitle}" WindowStartupLocation="CenterScreen" Topmost="True" d:DesignHeight="170" d:DesignWidth="190" SizeToContent="WidthAndHeight">
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,14 +21,14 @@
     </controls:ProWindow.Style>
     <StackPanel Margin="10">
         <StackPanel>
-            <RadioButton IsChecked="{Binding FeatureIsChecked}" x:Name="rbFeature" Content="Feature class" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
-            <RadioButton IsChecked="{Binding ShapeIsChecked}" x:Name="rbShape" Content="Shapefile" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
-            <RadioButton IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="KMZ" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
-            <RadioButton IsChecked="{Binding CSVIsChecked}" x:Name="rbCSV" Content="CSV" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
+            <RadioButton IsChecked="{Binding FeatureIsChecked}" x:Name="rbFeature" Content="{x:Static prop:Resources.SaveAsFCL}" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
+            <RadioButton IsChecked="{Binding ShapeIsChecked}" x:Name="rbShape" Content="{x:Static prop:Resources.SaveAsShape}" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top"/>
+            <RadioButton IsChecked="{Binding KmlIsChecked}" x:Name="rbKml" Content="{x:Static prop:Resources.SaveAsKMZ}" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
+            <RadioButton IsChecked="{Binding CSVIsChecked}" x:Name="rbCSV" Content="{x:Static prop:Resources.SaveAsCSV}" HorizontalAlignment="Left" Margin="3,3,0,0" VerticalAlignment="Top" />
         </StackPanel>
         <StackPanel Height="35" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-            <Button x:Name="btnOk" Content="OK" Click="Button_Click" Style="{DynamicResource Esri_Button}" />
-            <Button x:Name="btnCancel" Content="Cancel" IsCancel="True" Style="{DynamicResource Esri_Button}" />
+            <Button x:Name="btnOk" Content="{x:Static prop:Resources.ButtonOK}" Click="Button_Click" Style="{DynamicResource Esri_Button}" />
+            <Button x:Name="btnCancel" Content="{x:Static prop:Resources.ButtonCancel}" IsCancel="True" Style="{DynamicResource Esri_Button}" />
         </StackPanel>
 
     </StackPanel>

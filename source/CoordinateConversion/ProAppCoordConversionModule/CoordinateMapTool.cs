@@ -19,8 +19,11 @@ using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ProAppCoordConversionModule.UI;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
+using ProAppCoordConversionModule.Common.Enums;
+
 
 namespace ProAppCoordConversionModule
 {
@@ -29,20 +32,32 @@ namespace ProAppCoordConversionModule
         public static bool AllowUpdates = true;
         public static bool SelectFeatureEnable = false;
 
+        public static string ToolId
+        {
+            // Important: this must match the Tool ID used in the DAML
+            get { return "ProAppCoordConversionModule_CoordinateMapTool"; }
+        }
+
         public CoordinateMapTool()
         {
             IsSketchTool = true;
             SketchType = SketchGeometryType.Point;
             UseSnapping = true;
 
+            Module1.coordMapTool = this;
+
             //Set the tools OverlayControlID to the DAML id of the embeddable control
             OverlayControlID = "ProAppCoordConversionModule_EmbeddableControl";
-            Mediator.Register("UPDATE_FLASH", OnUpdateFlash);
 
-            Mediator.Register(CoordinateConversionLibrary.Constants.CollectListHasItems, onCollectCoordinatesHasItems);
+            PointFlash = new RelayCommand(OnUpdateFlash);
+            CollectCoordinatesHasItems = new RelayCommand(onCollectCoordinatesHasItems);
         }
 
         public bool ListHasItems { get; set; }
+
+        public RelayCommand CollectCoordinatesHasItems { get; set; }
+
+        public RelayCommand PointFlash { get; set; }
 
         protected override Task OnToolActivateAsync(bool active)
         {
@@ -54,13 +69,22 @@ namespace ProAppCoordConversionModule
         {
             var mp = geometry as MapPoint;
 
+            //Get the instance of the Main ViewModel from the dock pane
+
+            CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+            ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+
             if (SelectFeatureEnable)
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.SELECT_MAP_POINT, mp);
+                ViewModels.ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.SelectMapPointInternal.Execute(mp);
             }
             else
             {
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.VALIDATE_MAP_POINT, mp);
+                pCvtTabVM.ValidateMapPointInternal.Execute(mp);
+
+                ViewModels.ProCollectTabViewModel pCollectTabVM = pCvtTabVM.CollectTabView.DataContext as ViewModels.ProCollectTabViewModel;
+                pCollectTabVM.ValidateMapPointInternal.Execute(mp);
             }
 
             return base.OnSketchCompleteAsync(geometry);
@@ -133,10 +157,12 @@ namespace ProAppCoordConversionModule
             {
                 if (mp != null)
                 {
-                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None)
+                    if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.None)
                         mp = GeometryEngine.Instance.Project(mp, SpatialReferences.WGS84) as MapPoint;
 
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pCvtTabVM.MouseMoveInternal.Execute(mp);
                 }
             }
         }
@@ -159,8 +185,8 @@ namespace ProAppCoordConversionModule
                         try
                         {
                             // for now we will always project to WGS84
-                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.None
-                                && CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateConversionLibrary.CoordinateTypes.Default)
+                            if (CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.None
+                                && CoordinateConversionLibraryConfig.AddInConfig.DisplayCoordinateType != CoordinateTypes.Default)
                                 temp = GeometryEngine.Instance.Project(temp, SpatialReferences.WGS84) as MapPoint;
 
                             return temp;
@@ -173,9 +199,15 @@ namespace ProAppCoordConversionModule
 
                 if (mp != null)
                 {
-                    Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.MOUSE_MOVE_POINT, mp);
+                    CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                    ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                    pCvtTabVM.MouseMoveInternal.Execute(mp);
+                    
                     if (!ListHasItems)
-                        Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+                    {
+                        ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                        pOutCoordVM.RequestOutputCommand.Execute(null);
+                    }
                 }
             }
         }

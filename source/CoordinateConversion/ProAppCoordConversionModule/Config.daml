@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ArcGIS defaultAssembly="CoordinateConversion.dll" defaultNamespace="ProAppCoordConversionModule" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
   <AddInInfo id="{dfc85d8b-d2c1-405b-bd03-9a26740d842c}" version="4.0.0.0" desktopVersion="2.2">
     <Name>Coordinate Conversion</Name>
@@ -5,11 +6,15 @@
     <Image>Images\AddinDesktop32.png</Image>
     <Author>Esri</Author>
     <Company>Esri</Company>
-    <Date>6/26/2018</Date>
+    <Date>3/11/2020</Date>
     <Subject>Framework</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
+  <dependencies>
+    <dependency name="ADCore.daml" />
+    <dependency name="ADMapping.daml" />
+  </dependencies>
   <categories>
     <updateCategory refID="esri_embeddableControls">
       <insertComponent id="ProAppCoordConversionModule_EmbeddableControl" className="UI.FlashEmbeddedControlViewModel">

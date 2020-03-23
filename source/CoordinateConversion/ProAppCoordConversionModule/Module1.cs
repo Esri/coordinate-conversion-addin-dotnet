@@ -23,6 +23,8 @@ namespace ProAppCoordConversionModule
     {
         private static Module1 _this = null;
 
+        private const string _dockPaneID = "ProAppCoordConversionModule_CoordinateConversionDockpane";
+
         /// <summary>
         /// Retrieve the singleton instance to this module here
         /// </summary>
@@ -47,6 +49,23 @@ namespace ProAppCoordConversionModule
         }
 
         #endregion Overrides
+
+        internal static CoordinateMapTool coordMapTool;
+
+        internal static ProAppCoordConversionModule.ViewModels.ProOutputCoordinateViewModel proOutputCoordVM;
+
+        private static CoordinateConversionDockpaneViewModel _dockPane;
+        internal static CoordinateConversionDockpaneViewModel CoordinateConversionVM
+        {
+            get
+            {
+                if (_dockPane == null)
+                {
+                    _dockPane = FrameworkApplication.DockPaneManager.Find(_dockPaneID) as CoordinateConversionDockpaneViewModel;
+                }
+                return _dockPane;
+            }
+        }
 
     }
 }

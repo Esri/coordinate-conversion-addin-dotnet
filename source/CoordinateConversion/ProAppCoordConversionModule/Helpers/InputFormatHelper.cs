@@ -1,7 +1,7 @@
 ﻿using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -42,8 +42,8 @@ namespace ProAppCoordConversionModule.Helpers
                     output.OutputCoordinate = "";
                     output.Props.Clear();
                 }
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.InvalidCoordMsg,
-                    CoordinateConversionLibrary.Properties.Resources.InvalidCoordCap);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.InvalidCoordMsg,
+                    ProAppCoordConversionModule.Properties.Resources.InvalidCoordCap);
             }
             else
             {

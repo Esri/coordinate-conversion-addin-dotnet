@@ -31,7 +31,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 featureIsChecked = value;
-                RaisePropertyChanged(() => FeatureIsChecked);
+                NotifyPropertyChanged(() => FeatureIsChecked);
             }
         }
 
@@ -46,7 +46,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 shapeIsChecked = value;
-                RaisePropertyChanged(() => ShapeIsChecked);
+                NotifyPropertyChanged(() => ShapeIsChecked);
             }
         }
 
@@ -61,7 +61,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 kmlIsChecked = value;
-                RaisePropertyChanged(() => KmlIsChecked);
+                NotifyPropertyChanged(() => KmlIsChecked);
             }
         }
 
@@ -76,7 +76,7 @@ namespace ProAppCoordConversionModule.ViewModels
             set
             {
                 csvIsChecked = value;
-                RaisePropertyChanged(() => CSVIsChecked);
+                NotifyPropertyChanged(() => CSVIsChecked);
             }
         }
     }  

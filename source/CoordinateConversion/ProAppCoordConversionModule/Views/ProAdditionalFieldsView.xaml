@@ -5,11 +5,10 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-            xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-            xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
-            xmlns:viewModels="clr-namespace:CoordinateConversionLibrary.ViewModels;assembly=CoordinateConversionLibrary"
+            xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+            xmlns:viewModels="clr-namespace:ProAppCoordConversionModule.ViewModels"
             xmlns:Behaviors="clr-namespace:ArcGIS.Desktop.Internal.Framework.Behaviors;assembly=ArcGIS.Desktop.Framework"
-             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Helpers"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Title="{Binding ViewDetailsTitle}" 
@@ -17,12 +16,12 @@
              SizeToContent="WidthAndHeight"          
              helpers:DialogCloser.DialogResult="{Binding DialogResult}"
              ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Cursor="Arrow" Topmost="True"
-             d:Height="210" d:Width="280">
+             d:DesignHeight="210" d:DesignWidth="280">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml" />
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <viewModels:EditOutputCoordinateViewModel x:Key="viewModelEdit" />
         </ResourceDictionary>
@@ -132,8 +131,8 @@
             </DataGrid.RowStyle>
             <!--Visibility="{Binding SchedulerData.DataGridVisible,Mode=TwoWay,Converter={StaticResource visibilityConverter}}"-->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Field Name" Binding="{Binding Path=FieldName}" FontWeight="Bold"/>
-                <DataGridTextColumn Header="Field Value" Binding="{Binding Path=FieldValue}"/>
+                <DataGridTextColumn Header="{x:Static prop:Resources.AdditionalFieldName}" Binding="{Binding Path=FieldName}" FontWeight="Bold"/>
+                <DataGridTextColumn Header="{x:Static prop:Resources.AdditionalFieldValue}" Binding="{Binding Path=FieldValue}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

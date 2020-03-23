@@ -13,14 +13,14 @@
 // limitations under the License.
 
 using System.Collections.ObjectModel;
-using CoordinateConversionLibrary.Views;
-using CoordinateConversionLibrary.ViewModels;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Views;
+using ProAppCoordConversionModule.ViewModels;
+using ProAppCoordConversionModule.Helpers;
+using ProAppCoordConversionModule.Models;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
-using ProAppCoordConversionModule.Models;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+
 
 namespace ProAppCoordConversionModule.ViewModels
 {
@@ -34,12 +34,14 @@ namespace ProAppCoordConversionModule.ViewModels
             OutputCCView = new ProOutputCoordinateView();
             OutputCCView.DataContext = new ProOutputCoordinateViewModel();
 
+            Module1.proOutputCoordVM = OutputCCView.DataContext as ProOutputCoordinateViewModel;
+
             CollectTabView = new CCCollectTabView();
             CollectTabView.DataContext = new ProCollectTabViewModel();
 
             InputCoordinateHistoryList = new ObservableCollection<string>();
         }
-
+  
         public InputCoordinateConversionView InputCCView { get; set; }
         public ProOutputCoordinateView OutputCCView { get; set; }
         public CCCollectTabView CollectTabView { get; set; }
@@ -67,8 +69,10 @@ namespace ProAppCoordConversionModule.ViewModels
 
             // KG - Added so output component will updated when user clicks on the map 
             //      not when mouse move event is fired.
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
 
+            ViewModels.ProOutputCoordinateViewModel pOutCoordView = this.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+            pOutCoordView.RequestOutputCommand.Execute(null);
+           
             return true;
         }
 
@@ -76,7 +80,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -84,7 +88,10 @@ namespace ProAppCoordConversionModule.ViewModels
             CoordinateMapTool.AllowUpdates = false;
 
             ProcessInputValue(InputCoordinate);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
+            ViewModels.ProOutputCoordinateViewModel pOutCoordView = this.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+            pOutCoordView.RequestOutputCommand.Execute(null);
+
             await QueuedTask.Run(() =>
             {
                 if (obj == null)

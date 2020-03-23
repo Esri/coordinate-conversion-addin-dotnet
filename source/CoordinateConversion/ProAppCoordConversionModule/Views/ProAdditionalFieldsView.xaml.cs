@@ -1,4 +1,4 @@
-﻿using CoordinateConversionLibrary.Models;
+﻿using ProAppCoordConversionModule.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

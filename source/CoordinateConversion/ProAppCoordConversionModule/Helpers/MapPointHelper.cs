@@ -14,8 +14,8 @@
 
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Models;
 using ProAppCoordConversionModule.ViewModels;
 using System;
 using System.Collections.Generic;

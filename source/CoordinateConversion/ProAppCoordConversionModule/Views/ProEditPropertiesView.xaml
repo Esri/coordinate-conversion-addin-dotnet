@@ -1,13 +1,14 @@
-﻿<controls:ProWindow x:Class="CoordinateConversionLibrary.Views.ProEditPropertiesView"
+﻿<controls:ProWindow x:Class="ProAppCoordConversionModule.Views.ProEditPropertiesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"                      
-             xmlns:local="clr-namespace:CoordinateConversionLibrary;assembly=CoordinateConversionLibrary"
-             xmlns:prop="clr-namespace:CoordinateConversionLibrary.Properties;assembly=CoordinateConversionLibrary"
-             xmlns:helpers="clr-namespace:CoordinateConversionLibrary.Helpers;assembly=CoordinateConversionLibrary"
+             xmlns:local="clr-namespace:ProAppCoordConversionModule.Common.ValueConverters"
+             xmlns:prop="clr-namespace:ProAppCoordConversionModule.Properties"
+             xmlns:helpers="clr-namespace:ProAppCoordConversionModule.Helpers"
+             xmlns:enums="clr-namespace:ProAppCoordConversionModule.Common.Enums"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
@@ -19,14 +20,14 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
-                <ResourceDictionary Source="/CoordinateConversionLibrary;component/MAResourceDictionary.xaml"/>
+                <ResourceDictionary Source="../Common/MAResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:EnumToFriendlyNameConverter x:Key="enumItemsConverter" />
             <ObjectDataProvider x:Key="coordinateTypes"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:TypeExtension TypeName="local:CoordinateTypes" />
+                    <x:TypeExtension TypeName="enums:CoordinateTypes" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
@@ -78,8 +79,8 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Command="{Binding ConfigCommand}" ToolTip="Configure Spatial Reference" Margin="3,3,3,3">
-                                        <Image Source="/CoordinateConversionLibrary;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
+                                    <Button Command="{Binding ConfigCommand}" ToolTip="{x:Static prop:Resources.EditOuputConfigure}" Margin="3,3,3,3">
+                                        <Image Source="/CoordinateConversion;component/Images/GeoprocessingEnvironmentSettings16.png" Width="16" Height="16" />
                                     </Button>
                                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRName}" IsReadOnly="True"  Margin="3,3,3,3" />
                                     <TextBox Grid.Column="1" Text="{Binding Path=OutputCoordItem.SRFactoryCode}" IsReadOnly="True"  Margin="3,3,3,3" Visibility="Hidden"/>
@@ -122,7 +123,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="Display Ambiguous Coordinates Dialog" 
+                        <CheckBox x:Name="cbDisplayAmbiguousCoordsDlg" Content="{x:Static prop:Resources.EditPropDisplay}" 
                     Width="229" Margin="3,8,3,5" IsChecked="{Binding DisplayAmbiguousCoordsDlg}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -141,7 +142,7 @@
         </TabItem>
         <TabItem Height="23" VerticalAlignment="Top">
             <TabItem.Header>
-                <TextBlock Text="Symbology" 
+                <TextBlock Text="{x:Static prop:Resources.EditPropSym}"
                    Margin="3,3,0,0" Style="{DynamicResource Esri_TextBlockRegular}" />
             </TabItem.Header>
             <Grid MinHeight="350" MinWidth="330">
@@ -163,7 +164,7 @@
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Visibility="{Binding ShowLoadingProcess}">
                         <ProgressBar Name="pbStatus" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top"
                             IsIndeterminate="True" Height="12" Margin="20,20,20,10"/>
-                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="Loading..."
+                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis"  Text="{x:Static prop:Resources.EditPropLoad}"
                                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
                     </StackPanel>
                     <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
@@ -175,7 +176,7 @@
                     <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Left"
                                     Visibility="{Binding ShowControls}">
                         <TextBlock Text="Selected Color" HorizontalAlignment="Left" />
-                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="Choose Color">
+                        <Button Command="{Binding SelectedButtonCommand}" HorizontalAlignment="Left" Height="25" Width="25" VerticalAlignment="Center" Margin="0,10,0,0" ToolTip="{x:Static prop:Resources.EditPropColor}">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Grid>
@@ -188,7 +189,7 @@
                                         <Rectangle Fill="{Binding SelectedBrush}" HorizontalAlignment="Center" Height="25"  Width="25"
                                                    Stroke="White" StrokeThickness="3" VerticalAlignment="Center" Grid.Column="1">
                                         </Rectangle>
-                                        <Image Source="../Images/DownArrow.png" Height="9" Width="9" 
+                                        <Image Source="/CoordinateConversion;component/Images/DownArrow.png" Height="9" Width="9" 
                         	                        Canvas.ZIndex="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                                             <Image.LayoutTransform>
                                                 <RotateTransform Angle="{Binding ArrowRotation}"/>
@@ -218,7 +219,7 @@
                         </ListBox>
                     </Popup>
                 </StackPanel>
-                <GroupBox Grid.Row="2" Header="Choose Symbol" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
+                <GroupBox Grid.Row="2" Header="{x:Static prop:Resources.EditPropCSym}" Visibility="{Binding ShowControls}" Margin="0,10,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -268,9 +269,9 @@
                 </GroupBox>
                 <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding ShowControls}">
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
-                            Command="{Binding ApplyButtonCommand}">Apply</Button>
+                            Command="{Binding ApplyButtonCommand}" Content="{x:Static prop:Resources.ButtonApply}"/>
                     <Button Style="{DynamicResource Esri_Button}" Width="120" Height="24"
-                            Command="{Binding CancelButtonCommand}">Cancel</Button>
+                            Command="{Binding CancelButtonCommand}" Content="{x:Static prop:Resources.ButtonCancel}"/>
                 </StackPanel>
             </Grid>
         </TabItem>

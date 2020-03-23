@@ -15,11 +15,10 @@
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using CoordinateConversionLibrary;
-using CoordinateConversionLibrary.Helpers;
-using CoordinateConversionLibrary.Models;
-using Jitbit.Utils;
+using ProAppCoordConversionModule.Common.Enums;
+using ProAppCoordConversionModule.Helpers;
 using ProAppCoordConversionModule.Models;
+using Jitbit.Utils;
 using ProAppCoordConversionModule.Views;
 using System;
 using System.Collections;
@@ -29,11 +28,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Constants = ProAppCoordConversionModule.Helpers.Constants;
+
 
 namespace ProAppCoordConversionModule.ViewModels
 {
     public class ProCollectTabViewModel : ProTabBaseViewModel
     {
+
         public ProCollectTabViewModel()
         {
             ListBoxItemAddInPoint = null;
@@ -48,11 +50,12 @@ namespace ProAppCoordConversionModule.ViewModels
             CopyCoordinateCommand = new RelayCommand(OnCopyCommand);
             CopyAllCoordinatesCommand = new RelayCommand(OnCopyAllCommand);
             PasteCoordinatesCommand = new RelayCommand(OnPasteCommand);
-
+           
             // Listen to collection changed event and notify colleagues
             CoordinateAddInPoints.CollectionChanged += CoordinateAddInPoints_CollectionChanged;
-            Mediator.Register(CoordinateConversionLibrary.Constants.SetListBoxItemAddInPoint, OnSetListBoxItemAddInPoint);
-            Mediator.Register(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, OnImportCoordinates);
+
+            SetListBoxItemAddInPoint = new RelayCommand(OnSetListBoxItemAddInPoint);
+            ImportCoordinates = new RelayCommand(OnImportCoordinates);
         }
 
         /// <summary>
@@ -62,12 +65,13 @@ namespace ProAppCoordConversionModule.ViewModels
         /// <param name="e"></param>
         private void CoordinateAddInPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
+            if (Module1.coordMapTool != null)
+                Module1.coordMapTool.CollectCoordinatesHasItems.Execute(CoordinateAddInPoints.Any());
         }
 
         private void OnImportCoordinates(object obj)
         {
-            var progressDialog = new ProgressDialog("Processing.. Please wait");
+            var progressDialog = new ProgressDialog(Properties.Resources.ProgressDlg);
             progressDialog.Show();
 
             try
@@ -112,7 +116,7 @@ namespace ProAppCoordConversionModule.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Failed in OnImportCoordinates: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.FailedWriteLine + ex.Message);
             }
 
             progressDialog.Hide();
@@ -121,8 +125,9 @@ namespace ProAppCoordConversionModule.ViewModels
         private void ClearListBoxSelection()
         {
             UpdateHighlightedGraphics(true);
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.CollectListHasItems, CoordinateAddInPoints.Any());
-        }
+            if (Module1.coordMapTool != null)
+                Module1.coordMapTool.CollectCoordinatesHasItems.Execute(CoordinateAddInPoints.Any());
+       }
 
         public bool HasListBoxRightClickSelectedItem
         {
@@ -149,14 +154,18 @@ namespace ProAppCoordConversionModule.ViewModels
                 // we are using this to know when the selection changes
                 // setting null will allow this setter to be called in multiple selection mode                
                 _ListBoxSelectedItem = null;
-                RaisePropertyChanged(() => ListBoxSelectedItem);
+                NotifyPropertyChanged(() => ListBoxSelectedItem);
 
                 // update selections
                 UpdateHighlightedGraphics(false);
 
                 var addinPoint = CoordinateAddInPoints.Where(x => x.IsSelected).FirstOrDefault();
                 proCoordGetter.Point = addinPoint.Point;
-                Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.RequestOutputUpdate, null);
+
+                CoordinateConversionDockpaneViewModel ccVM = Module1.CoordinateConversionVM;
+                ViewModels.ProConvertTabViewModel pCvtTabVM = ccVM.ConvertTabView.DataContext as ViewModels.ProConvertTabViewModel;
+                ViewModels.ProOutputCoordinateViewModel pOutCoordVM = pCvtTabVM.OutputCCView.DataContext as ViewModels.ProOutputCoordinateViewModel;
+                pOutCoordVM.RequestOutputCommand.Execute(null);
             }
         }
 
@@ -169,7 +178,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 // this works with the ListBoxSelectedItem 
                 // without this the un-selecting of 1 will not trigger an update
                 _ListBoxSelectedIndex = value;
-                RaisePropertyChanged(() => ListBoxSelectedIndex);
+                NotifyPropertyChanged(() => ListBoxSelectedIndex);
 
             }
         }
@@ -182,6 +191,8 @@ namespace ProAppCoordConversionModule.ViewModels
         public RelayCommand CopyCoordinateCommand { get; set; }
         public RelayCommand CopyAllCoordinatesCommand { get; set; }
         public RelayCommand PasteCoordinatesCommand { get; set; }
+        public RelayCommand SetListBoxItemAddInPoint { get; set; }
+        public RelayCommand ImportCoordinates { get; set; }
 
         private void OnDeletePointCommand(object obj)
         {
@@ -212,7 +223,6 @@ namespace ProAppCoordConversionModule.ViewModels
             }
         }
 
-        // Call CopyAllCoordinateOutputs event
         private void OnCopyAllCommand(object obj)
         {
             OnCopyAllCoordinateOutputs(CoordinateAddInPoints.ToList());
@@ -269,12 +279,12 @@ namespace ProAppCoordConversionModule.ViewModels
                                                          ccMapPointList,
                                                          MapView.Active.Map.SpatialReference,
                                                          MapView.Active,
-                                                         CoordinateConversionLibrary.GeomType.Point);
+                                                         GeomType.Point);
                         }
                         else if (vm.ShapeIsChecked || vm.KmlIsChecked)
                         {
                             var ccMapPointList = GetMapPointExportFormat(CoordinateAddInPoints);
-                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, CoordinateConversionLibrary.GeomType.Point, vm.KmlIsChecked);
+                            await fcUtils.CreateFCOutput(path, SaveAsType.Shapefile, ccMapPointList, MapView.Active.Map.SpatialReference, MapView.Active, GeomType.Point, vm.KmlIsChecked);
                         }
                         else if (vm.CSVIsChecked)
                         {
@@ -298,8 +308,8 @@ namespace ProAppCoordConversionModule.ViewModels
                             }
                             csvExport.ExportToFile(path);
 
-                            System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulMessage + path,
-                                CoordinateConversionLibrary.Properties.Resources.CSVExportSuccessfulCaption);
+                            ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.CSVExportSuccessfulMessage + path,
+                                ProAppCoordConversionModule.Properties.Resources.CSVExportSuccessfulCaption);
                         }
                     }
                     catch (Exception ex)
@@ -409,7 +419,7 @@ namespace ProAppCoordConversionModule.ViewModels
         private void OnSetListBoxItemAddInPoint(object obj)
         {
             ListBoxItemAddInPoint = obj as AddInPoint;
-            RaisePropertyChanged(() => HasListBoxRightClickSelectedItem);
+            NotifyPropertyChanged(() => HasListBoxRightClickSelectedItem);
         }
 
         public override void OnPasteCommand(object obj)
@@ -426,7 +436,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 coordinates.Add(sb.ToString());
             }
 
-            Mediator.NotifyColleagues(CoordinateConversionLibrary.Constants.IMPORT_COORDINATES, coordinates);
+            ImportCoordinates.Execute(coordinates);
         }
 
         #region overrides
@@ -435,7 +445,7 @@ namespace ProAppCoordConversionModule.ViewModels
         {
             if (MapView.Active == null)
             {
-                System.Windows.Forms.MessageBox.Show(CoordinateConversionLibrary.Properties.Resources.LoadMapMsg);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ProAppCoordConversionModule.Properties.Resources.LoadMapMsg);
                 return;
             }
 
@@ -468,7 +478,7 @@ namespace ProAppCoordConversionModule.ViewModels
             return true;
         }
 
-        public override void OnDisplayCoordinateTypeChanged(CoordinateConversionLibrary.Models.CoordinateConversionLibraryConfig obj)
+        public override void OnDisplayCoordinateTypeChanged(ProAppCoordConversionModule.Models.CoordinateConversionLibraryConfig obj)
         {
             base.OnDisplayCoordinateTypeChanged(obj);
 
@@ -508,7 +518,7 @@ namespace ProAppCoordConversionModule.ViewModels
                 closestPoint.IsSelected = true;
                 ListBoxSelectedItem = closestPoint;
             }
-            RaisePropertyChanged(() => ListBoxSelectedItem);
+            NotifyPropertyChanged(() => ListBoxSelectedItem);
         }
 
         #endregion overrides
